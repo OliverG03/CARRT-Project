@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robotiq_2f_85_macro_wrapper">
+  <!-- Minimal macro to satisfy kortex xacro include.
+       Accepts prefix and fake_sensor_commands parameters to match expected call signature. -->
+  <xacro:macro name="robotiq_2f_85_macro" params="prefix='' fake_sensor_commands='false'">
+
+    <!-- Minimal left finger -->
+    <link name="${prefix}robotiq_85_left_link"/>
+    <joint name="${prefix}robotiq_85_left_knuckle_joint" type="revolute">
+      <parent link="${prefix}robotiq_85_left_link"/>
+      <child  link="${prefix}robotiq_85_left_knuckle_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <axis   xyz="0 1 0"/>
+      <limit effort="50" velocity="1.0" lower="-1.57" upper="1.57"/>
+    </joint>
+    <link name="${prefix}robotiq_85_left_knuckle_link"/>
+
+    <!-- Minimal right finger -->
+    <link name="${prefix}robotiq_85_right_link"/>
+    <joint name="${prefix}robotiq_85_right_knuckle_joint" type="revolute">
+      <parent link="${prefix}robotiq_85_right_link"/>
+      <child  link="${prefix}robotiq_85_right_knuckle_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <axis   xyz="0 1 0"/>
+      <limit effort="50" velocity="1.0" lower="-1.57" upper="1.57"/>
+    </joint>
+    <link name="${prefix}robotiq_85_right_knuckle_link"/>
+
+    <!-- Simple placeholder transmissions (non-binding placeholders) -->
+    <transmission name="${prefix}robotiq_left_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}robotiq_85_left_knuckle_joint"/>
+      <actuator name="${prefix}robotiq_left_actuator"/>
+    </transmission>
+
+    <transmission name="${prefix}robotiq_right_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}robotiq_85_right_knuckle_joint"/>
+      <actuator name="${prefix}robotiq_right_actuator"/>
+    </transmission>
+
+  </xacro:macro>
+</robot>
