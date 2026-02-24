@@ -1,3 +1,5 @@
+# apriltag_key.py
+
 # NONE placeholder until locations are imported from AprilTag vision node
 
 # Define a Master Key (class) to store AprilTag IDs and corresponding information on objects:
@@ -8,18 +10,17 @@
 # - Destination information (e.g., "shelf", "bin", etc.)
 # - Any other relevant metadata for task execution and planning.
 
-import clear_table, give_medication, pick_dropped_bottle
-import vision_apriltag
-
+from geometry_msgs.msg import Pose
 
 class AprilTagObject:
-    def __init__(self, name, ID, object_type, adl_used, grasp_offset, approach_vector, gripper_width, destination):
+    def __init__(self, name, ID, object_type, adl_used, 
+                 grasp_offset, approach_vector, gripper_width, destination):
         self.name = name
         self.ID = ID
         self.object_type = object_type
         self.adl_used = adl_used
-        self.grasp_offset = grasp_offset
-        self.approach_vector = approach_vector
+        self.grasp_offset = grasp_offset # [x,y,z]
+        self.approach_vector = approach_vector ###???
         self.gripper_width = gripper_width
         self.destination = destination
 
@@ -28,8 +29,12 @@ class AprilTagObject:
         # This is a placeholder for the actual computation logic.
         # In a real implementation, you'd use the tag_pose, grasp_offset, and approach_vector
         # to calculate the final grasp pose for the robot.
-        grasp_pose = tag_pose  # Replace with actual computation
-        return grasp_pose
+        grasp = Pose()
+        grasp.position.x = tag_pose.position.x + self.grasp_offset[0]
+        grasp.position.y = tag_pose.position.y + self.grasp_offset[1]
+        grasp.position.z = tag_pose.position.z + self.grasp_offset[2]
+        grasp.orientation = tag_pose.orientation
+        return grasp
     
 # define a key to map AprilTag IDs to their corresponding drop-off locations or other relevant metadata for task execution
 # - QR codes placed where objects should be dropped off (e.g., "shelf 1", "bin", etc.)
@@ -37,32 +42,23 @@ class AprilTagLocation:
     def __init__(self, name, ID, location_type, coordinates):
         self.name = name
         self.ID = ID
+        self.location_type = location_type
         self.coordinates = coordinates # get when AprilTag evaluated
+        
+    def get_coordinates(self, tag_pose):
+        """Compute the location coordinates based on the tag pose."""
+        # This is a placeholder for the actual computation logic.
+        # In a real implementation, you'd use the tag_pose to determine the exact coordinates of the location.
+        return tag_pose.position
     
 LOCATIONS = {
+    # drop off for water bottle / medication (near user, edge of table, etc.)
+    5: AprilTagLocation("Near User",5,"handover", ),
     # drop off for medication bottle (shelf, spot 1)
-    1: AprilTagLocation(
-        name="Shelf 1",
-        ID=1,
-        self.coordinates=None
-    ),
-    # drop off for water bottle (near user)
-    2: AprilTagLocation(
-        name="Near User",
-        ID=2,
-        self.coordinates=None
-    ),
+    6: AprilTagLocation("Shelf 1",6,"shelf"),
     # drop off for household objects
-    3: AprilTagLocation(
-        name="Shelf 2",
-        ID=3,
-        self.coordinates=None
-    ),
-    4: AprilTagLocation(
-        name="Bin",
-        ID=4,
-        self.coordinates=None
-    )
+    7: AprilTagLocation("Shelf 2",7,"shelf"),
+    8: AprilTagLocation("Bin",8,"bin")
 }
     
 # define objects with their corresponding AprilTag IDs and metadata
@@ -101,18 +97,8 @@ OBJECTS = {
         destination="Shelf 2"
     ),
     4: AprilTagObject(
-        name="Toy Car",
+        name="Cube",
         ID=4,
-        object_type="Household Object",
-        adl_used=clear_table,
-        grasp_offset=[0, 0, 0.05],
-        approach_vector=[0, 0, -1],
-        gripper_width=0.06,
-        destination="Bin"
-    ),
-    5: AprilTagObject(
-        name="Rubik's Cube",
-        ID=5,
         object_type="Household Object",
         adl_used=clear_table,
         grasp_offset=[0, 0, 0.05],
@@ -120,4 +106,5 @@ OBJECTS = {
         gripper_width=0.05,
         destination="Bin"
     )
+    
 }
