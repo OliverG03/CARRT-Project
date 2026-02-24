@@ -3,6 +3,9 @@ from rclpy.node import Node
 from moveit_msgs.msg import CollisionObject
 from shape_msgs.msg import SolidPrimitive
 from geometry_msgs.msg import Pose
+from moveit_msgs.msg import MotionPlanRequest
+from moveit_msgs.srv import GetMotionPlan
+
 
 # Note: In a real ADL task, you'd use the moveit_py library 
 # for more complex planning, but rclpy is the base.
