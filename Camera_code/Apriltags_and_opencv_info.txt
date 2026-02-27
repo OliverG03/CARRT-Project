@@ -1,0 +1,37 @@
+OpenCV and Apriltags info:
+
+SETTING UP THE LIBRARY:
+	OPENCV:
+		To set up the OpenCV library, use pip and the virtual environment:
+		pip install opencv-python
+
+
+	APRILTAGS:
+		For the apriltags library, I ended up using pupil-apriltags, since the regular apriltags library kept failing to install:
+		pip install pupil-apriltags
+
+		-if you can get the regular apriltags library to install, the only difference between the two is how the detector is initialized
+		-pupil-apriltags detector:
+			detector = Detector(families='tag36h11', nthreads=1, quad_decimate=1.0, quad_sigma=0.0, refine_edges=1, decode_sharpening=0.25, debug=0)
+
+		-apriltags detector:
+			detector = apriltag("tag36h11")
+			
+
+APRILTAG TAG FAMILIES:
+
+	Apriltags works by detecting tags from a tag family specified in the code. 
+	Link to the tag family I used: https://github.com/AprilRobotics/apriltag-imgs/tree/master/tag36h11
+	- The tag family has over 500 unique tags, and they all correspond to numbers.
+	- To use the tags from this GitHub repo, the size of the image needs to be increased, the default size they come at does not work. I managed to do this by scaling up the image in a drawing program.
+
+INITIALIZATION:
+	Apriltags:
+		from apriltag import apriltag
+
+	Pupil-april tags:
+		from pupil_apriltags import Detector
+
+
+HOW IT WORKS:
+The tag reader works by reading tags in an infinite while loop.
