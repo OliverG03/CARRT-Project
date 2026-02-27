@@ -4,28 +4,15 @@
 # Create a class to hold vision functionality for AprilTag detection and pose estimation.
 
 # QR Code Placement Specifications:
-# AprilTags placed on MANIPULATED objects
+# AprilTags placed on manipulated objects
 # - QR codes placed on sides that the object can be grasped from (side of cube / bottle)
-# AprilTags placed on DESTINATION locations
+# AprilTags placed on destination locations
 # - QR codes placed where objects should be dropped off (e.g., "shelf 1", "bin", etc.)
 
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Pose
-from sensor_msgs.msg import Image
-from cv_bridge import CvBridge
-import cv2
-import numpy as np
-from pupil_apriltags import Detector
 
-from adl_tasks.apriltag_key import OBJECTS, LOCATIONS
-from adl_tasks.srv import GetTagPose  # custom service, defined below
-
-DETECTION_TIMEOUT = 5.0 # seconds
-
-CAMERA_TOPIC = "/wrist_mounted_camera/color/image_raw"
-
-TAG_SIZE = 0.05 # meters, adjust based on actual tag size used
 
 class VisionAprilTagNode(Node):
     def __init__(self):
