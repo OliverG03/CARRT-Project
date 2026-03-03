@@ -29,7 +29,7 @@ from cv_bridge import CvBridge
 from pupil_apriltags import Detector
 
 from adl_tasks.apriltag_key import OBJECTS, LOCATIONS
-from adl_tasks.srv import GetTagPose  # custom service, defined below
+from adl_interfaces.srv import GetTagPose  # custom service, defined below
 
 DETECTION_TIMEOUT = 5.0 # seconds
 

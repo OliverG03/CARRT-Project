@@ -3,117 +3,364 @@
 # - Return to home position
 # - Move to a specific/predefined pose
 # - Move to a pose defined by an AprilTag detection (using the QR key as a lookup)
+# - Emergency stop
+# - Internal-use/helper functions denoted with "_" at start of name
 
-from moveit_py import MoveItPy
-from geometry_msgs.msg import Pose, PoseStamped
+
+# helper to execute movement commands
+from __future__ import annotations
+import time as _time
+
+from control_msgs.action import GripperCommand
+from geometry_msgs.msg import Pose
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from moveit_msgs.action import MoveGroup
+from moveit_msgs.msg import (
+    MotionPlanRequest,
+    Constraints,
+    JointConstraint,
+    PositionConstraint,
+    OrientationConstraint,
+    BoundingVolume,
+)
+from shape_msgs.msg import SolidPrimitive
+from rclpy.action import ActionClient
+import rclpy
 
 # Helper class to complete basic MoveIt2 functions for the various ADLS
 # can also hold emergency stop or other safety functions
 # initialize arm and gripper, and other movement tasks
 class MoveItHelper:
+    
+    ### INTERNAL CLASS DEFINITIONS!
+    
+    # HOME --- Joint values pulled from gen3.srdf (kinova_gen3_7dof...)
+    # Source: group_state name="Home", group="manipulator"
+    HOME_JOINTS = {
+        "joint_1": 0.0,     
+        "joint_2": 0.26,
+        "joint_3": 3.14,
+        "joint_4": -2.27,   # ~-130° wrist-1 (creates elbow-up config)
+        "joint_5": 0.0,     # wrist-2 centered
+        "joint_6": 0.96,    # ~55° wrist-3 (roughly downward-facing EEF)
+        "joint_7": 1.57, 
+    }   
+    
+    # RETRACT --- safe intermediate pose from floor-level grab/pick
+    # Source: group_state name="Retract" group="manipulator" in gen3.srdf
+    RETRACT_JOINTS = {
+        "joint_1": 0.0,
+        "joint_2": -0.35,
+        "joint_3": 3.14,
+        "joint_4": -2.54,
+        "joint_5": 0.0,
+        "joint_6": -0.87,
+        "joint_7": 1.57,
+    }
+    
+    # joint name list in order, from urdf file
+    ARM_JOINT_NAMES = [
+        "joint_1", "joint_2", "joint_3", 
+        "joint_4", "joint_5", "joint_6", "joint_7"
+    ]
+    
+    # gripper knuckle joint name (for gripper control)
+    # verified with:    ros2 topic echo /joint_states --once | grep -i knuckle
+    GRIPPER_JOINT_NAMES = ["robotiq_85_left_knuckle_joint"]
+    
+    # planning group names from gen3.srdf
+    ARM_GROUP = "manipulator"
+    GRIPPER_GROUP = "gripper"
+    
+    # end effector link
+    ### verify with:    ros2 run tf2_tools view_frames
+    END_EFFECTOR = "end_effector_link"
+    
+    # MoveGroup action server name
+    # verified with:    ros2 action list | grep -i move
+    MOVE_ACTION = "/move_action"
+    GRIPPER_ACTION = "/robotiq_gripper_controller/gripper_cmd"
+    
+    # planning params: conservative for safety
+    PLANNING_TIME = 5.0  # max time to find a solution
+    VELOCITY_SCALE = 0.3  # 30% max velocity
+    ACCEL_SCALE = 0.3  # 30% max acceleration
+    
+    #####
+
+    # begin class definition
     def __init__(self, node):
-        # initialize MoveIt2 core
+
         self.node = node
-        self.moveit = MoveItPy(node_name=node.get_name())
         
-        # get arm control from MoveIt name
-        self.arm = self.moveit.get_planning_component("manipulator")
+        # action client - drive execution        
+        self.move_client = ActionClient(node, MoveGroup, self.MOVE_ACTION)
         
-        # get gripper control from MoveIt name
-        try: 
-            self.gripper = self.moveit.get_planning_component("gripper")
-        except Exception:
-            self.gripper = None
-            node.get_logger().warn("Gripper component not found in MoveIt configuration.")
+        # store last goal handle so emergency stop can cancel if necessary
+        self._last_goal_handle = None
     
-        self.gripper_joint = ["gen3_robotiq_85_left_knuckle_joint"]
-        
-        # publisher for gripper control
-        try: 
+        # gripper cmd action client
+        # "/robotiq_gripper_controller/gripper_cmd"
+        self._gripper_client = ActionClient(
+            node, GripperCommand, self.GRIPPER_ACTION
+        )
+    
+        # gripper trajectory publisher, for grab_object function force/speed
+        try:
             self.gripper_pub = node.create_publisher(
-                JointTrajectory,
+                JointTrajectory, 
                 "/robotiq_gripper_controller/joint_trajectory",
-                10 # queue size
+                10
             )
-        except Exception:
+        except Exception as e:
             self.gripper_pub = None
-            node.get_logger().warn("Gripper publisher could not be created. Check topic name and MoveIt configuration.")
+            node.get_logger().warn(f"Gripper publisher not created: {e}")
+        
+        node.get_logger().info("MoveItHelper initialized.")
+        
+    # --- INTERNAL NODE --- #
+    # build a motion plan request and send as a goal
+    # called by public movement functions below
     
-    # move to Kinova's predefined home position
+    # send request via MoveGroup action. return true on success
+    def _send_goal(self, request: MotionPlanRequest, timeout: float = 30.0) -> bool:
+        # give 5s for move_group
+        if not self.move_client.wait_for_server(timeout_sec=5.0):
+            self.node.get_logger().error(
+                f"MoveGroup action server {self.MOVE_ACTION} not available."
+            )
+            return False
+    
+        goal = MoveGroup.Goal()
+        goal.request = request
+        goal.planning_options.plan_only = False     
+        goal.planning_options.replan = True          # allow replanning if plan fails
+        goal.planning_options.replan_attempts = 3    # number of replanning attempts
+
+        # send goal and spin until complete or timeout
+        future = self.move_client.send_goal_async(goal)
+        ###rclpy.spin_until_future_complete(self.node, future, timeout_sec=timeout)
+        if not self._wait_for_future(future, timeout):
+            self.node.get_logger().error("MoveGroup goal send timed out.")
+            return False
+        
+        goal_handle = future.result()
+        if goal_handle is None or not goal_handle.accepted:
+            self.node.get_logger().error("MoveGroup goal rejected.")
+            return False
+    
+        # store handle for emergency stop
+        self._last_goal_handle = goal_handle
+        
+        # wait for exec result
+        result_future = goal_handle.get_result_async()
+        ###rclpy.spin_until_future_complete(self.node, result_future, timeout_sec=timeout)
+        if not self._wait_for_future(result_future, timeout):
+            self.node.get_logger().error("MoveGroup result timed out.")
+            return False
+        
+        result = result_future.result()
+        if result is None:
+            self.node.get_logger().error("MoveGroup result timed out.")
+            return False
+        
+        error_code = result.result.error_code.val
+        if error_code != 1: # fail
+            self.node.get_logger().error(
+                f"MoveGroup execution failed with error code {error_code}.\n"
+                 "Common codes: -1=FAILURE, -5=NO_IK_SOLUTION, "
+                 "-10=GOAL_IN_COLLISION, -12=PLANNING_FAILED\n"
+            )
+            return False
+        return True
+    
+    # send gripper goal directly
+    def _send_gripper_goal(self, position: float, max_effort: float = 40.0) -> bool:
+        # give 5s for gripper action server
+        if not self._gripper_client.wait_for_server(timeout_sec=5.0):
+            self.node.get_logger().error(
+                "GripperCommand action server not available."
+            )
+            return False
+        
+        # get goal position and effort
+        goal = GripperCommand.Goal()
+        goal.command.position = float(position)
+        goal.command.max_effort = float(max_effort)
+    
+        future = self._gripper_client.send_goal_async(goal)
+        if not self._wait_for_future(future, timeout=10.0):
+            self.node.get_logger().error("GripperCommand goal send timed out.")
+            return False
+        
+        goal_handle = future.result()
+        if goal_handle is None or not goal_handle.accepted:
+            self.node.get_logger().error("GripperCommand goal rejected.")
+            return False
+        
+        result_future = goal_handle.get_result_async()
+        if not self._wait_for_future(result_future, timeout=10.0):
+            self.node.get_logger().error("GripperCommand result timed out.")
+            return False
+        
+        result = result_future.result()
+        if result is None:
+            self.node.get_logger().error("GripperCommand result timed out.")
+            return False
+        
+        self.node.get_logger().info(
+            f"Gripper reached position={result.result.position:.3f} "
+            f"stalled={result.result.stalled} "
+            f"reached_goal={result.result.reached_goal}"
+        )
+        return True
+
+    
+    # build a motion plan request with standard planning parameters
+    def _base_request(self, group: str) -> MotionPlanRequest:
+        req = MotionPlanRequest()
+        req.group_name = group
+        req.num_planning_attempts = 5
+        req.allowed_planning_time = self.PLANNING_TIME
+        req.max_velocity_scaling_factor = self.VELOCITY_SCALE
+        req.max_acceleration_scaling_factor = self.ACCEL_SCALE
+        
+        # workspace bounds
+        req.workspace_parameters.header.frame_id = "base_link"
+        req.workspace_parameters.min_corner.x = -1.5
+        req.workspace_parameters.min_corner.y = -1.5
+        req.workspace_parameters.min_corner.z = -0.5
+        req.workspace_parameters.max_corner.x = 1.5
+        req.workspace_parameters.max_corner.y = 1.5
+        req.workspace_parameters.max_corner.z = 2.0
+        
+        return req
+    
+    # define a wait control rule
+    # wait for a future without reentering a spin loop. true if done
+    def _wait_for_future(self, future, timeout: float) -> bool:
+        start = _time.monotonic()
+        while rclpy.ok() and not future.done():
+            if _time.monotonic() - start > timeout:
+                return False
+            _time.sleep(0.05)
+        return future.done()
+    
+    # --- ARM MOTION --- #
+    
+    # move to Kinova's predefined home position (srdf file)
     def go_home(self):
-        """Move the robot to its predefined home position."""
-        self.arm.set_start_state_to_current_state()
-        self.arm.set_goal_state(configuration_name="Home")
-        # plan and execute 
-        plan = self.arm.plan()
-        if not plan:
-            self.node.get_logger().error("Planning to home position failed.")
-            return False
-        self.arm.execute(plan)
-        return True
+        self.node.get_logger().info("go_home: planning to HOME_JOINTS...")
+        return self._go_to_joint_config(self.HOME_JOINTS)
+    
+    # move to retract pose, for intermediate and floor picks
+    def go_retract(self):
+        self.node.get_logger().info("go_retract: planning to RETRACT_JOINTS...")
+        return self._go_to_joint_config(self.RETRACT_JOINTS)
+    
+    # plan and execute to a dict of joint values
+    def _go_to_joint_config(self, joint_config: dict) -> bool:
+        req = self._base_request(self.ARM_GROUP)
         
-    def go_to_pose(self, pose: Pose, frame_id="base_link"):
-        """Move the robot to a specific pose."""
-        pose_stamped = PoseStamped()
-        pose_stamped.header.frame_id = frame_id
-        pose_stamped.header.stamp = self.node.get_clock().now().to_msg()
-        pose_stamped.pose = pose
+        constraints = Constraints()
+        for joint_name, pos in joint_config.items():
+            jc = JointConstraint()
+            jc.joint_name = joint_name
+            jc.position = float(pos)
+            # tolerance: +/- 0.05 rad unless .01 is needed
+            jc.tolerance_above = 0.05
+            jc.tolerance_below = 0.05
+            jc.weight = 1.0
+            constraints.joint_constraints.append(jc)
         
-        self.arm.set_start_state_to_current_state()
-        self.arm.set_goal_state(pose_stamped_msg=pose_stamped, pose_link="tool_frame")
-        plan = self.arm.plan()
-        if not plan:
-            self.node.get_logger().error("Planning to specified pose failed.")
-            return False
-        self.arm.execute(plan)
-        return True
+        req.goal_constraints = [constraints]
+        return self._send_goal(req, timeout=60.0)
+    
+    # move arm end effector to a specific target pose in the frame    
+    def go_to_pose(self, pose: Pose, frame_id="base_link") -> bool:
+        self.node.get_logger().info(
+            f"go_to_pose: planning to pose at {pose.position.x:.3f},"
+            f"{pose.position.y:.3f}, {pose.position.z:.3f}"
+        )
+        req = self._base_request(self.ARM_GROUP)
+        
+        # position constraint - 5mm tolerance around the target pose
+        # increase if error occurs
+        pos_constraint = PositionConstraint()
+        pos_constraint.header.frame_id = frame_id
+        pos_constraint.link_name = self.END_EFFECTOR
+        bv = BoundingVolume()   # small box around target pose
+        prim = SolidPrimitive()
+        prim.type = SolidPrimitive.SPHERE
+        prim.dimensions = [0.005]  # 5mm radius
+        bv.primitives = [prim]
+        bv.primitive_poses = [pose]
+        pos_constraint.constraint_region = bv
+        pos_constraint.weight = 1.0
+        
+        # orientation constraint - ~6 deg on each axis
+        # increase if planner struggles
+        ori_constraint = OrientationConstraint()
+        ori_constraint.header.frame_id = frame_id
+        ori_constraint.link_name = self.END_EFFECTOR
+        ori_constraint.orientation = pose.orientation
+        ori_constraint.absolute_x_axis_tolerance = 0.1
+        ori_constraint.absolute_y_axis_tolerance = 0.1
+        ori_constraint.absolute_z_axis_tolerance = 0.1
+        ori_constraint.weight = 1.0
+        
+        constraints = Constraints()
+        constraints.position_constraints.append(pos_constraint)
+        constraints.orientation_constraints.append(ori_constraint)
+        req.goal_constraints = [constraints]
+        
+        return self._send_goal(req)
+    
+    # --- GRIPPER MOTION --- #
+    
+    # plan and execute gripper movement to a specific angle
+    def _move_gripper(self, joint_pos_rad:float) -> bool:
+        # Joint Range: 0.0 rad = fully open,
+        #              0.8 rad = full closed
+        req = self._base_request(self.GRIPPER_GROUP)
+        
+        constraints = Constraints()
+        jc = JointConstraint()
+        jc.joint_name = self.GRIPPER_JOINT_NAMES[0]
+        jc.position = float(joint_pos_rad)
+        jc.tolerance_above = 0.05
+        jc.tolerance_below = 0.05
+        jc.weight = 1.0
+        constraints.joint_constraints.append(jc)
+        
+        req.goal_constraints = [constraints]
+        return self._send_goal(req)
     
     # open gripper to full extension before moving to grasp pose
     def open_gripper(self):
-        if not self.gripper:
-            self.node.get_logger().error("Gripper component not available. Cannot open gripper.")
-            return False        
-        self.gripper.set_start_state_to_current_state()
-        self.gripper.set_goal_state(configuration_name="Open")
-        plan = self.gripper.plan()
-        if not plan:
-            self.node.get_logger().error("Planning to open gripper failed.")
-            return False
-        self.gripper.execute(plan)
-        return True
+        self.node.get_logger().info("open_gripper(): opening gripper fully...")
+        return self._send_gripper_goal(position=0.0, max_effort=20.0)
             
     # close gripper to full closed position
     def close_gripper(self):
-        if not self.gripper:
-            self.node.get_logger().error("Gripper component not available. Cannot close gripper.")
-            return False
-        self.gripper.set_start_state_to_current_state()
-        self.gripper.set_goal_state(configuration_name="Close")
-        plan = self.gripper.plan()
-        if not plan:
-            self.node.get_logger().error("Planning to close gripper failed.")
-            return False
-        self.gripper.execute(plan)
-        return True
+        self.node.get_logger().info("close_gripper(): closing gripper fully...")
+        return self._send_gripper_goal(position=0.8, max_effort=40.0)
 
     # after moving to grasp pose with an open gripper using other functions, call to close around the object
     # given object's position, desired speed, and force, close on the object
-    def grab_object(self, position, speed, force):
+    def grab_object(self, position: float, speed: float, force: float) -> bool:
         if not self.gripper_pub:
             self.node.get_logger().error("Gripper publisher not available. Cannot execute grab.")
             return False
-        
+    
         traj = JointTrajectory()
-        traj.joint_names = self.gripper_joint
+        traj.joint_names = list(self.GRIPPER_JOINT_NAMES)
         
         # create a trajectory point to close gripper around object
         point = JointTrajectoryPoint()
-        point.positions = [position]  # Desired gripper position (e.g., width closed)
-        point.velocities = [speed]  # Desired speed of closing
-        point.effort = [force]  # Desired force to apply when closing
-        
-        # 
+        point.positions = [float(position)]  # Desired gripper position (e.g., width closed)
+        point.velocities = [float(speed)]  # Desired speed of closing
+        point.effort = [float(force)]  # Desired force to apply when closing
         point.time_from_start.sec = 1
         
         # add the point to the trajectory and publish to gripper control topic
@@ -121,24 +368,23 @@ class MoveItHelper:
         self.gripper_pub.publish(traj)
         # debug logging
         self.node.get_logger().info(
-            f"Closing gripper on object: position={position}, speed={speed}, force={force}"
+            f"grab_object: position={position:.3f}rad, speed={speed}m/s, force={force}N"
         )
         return True
+    
+    # --- SAFETY STOP --- #
     
     # halt any current movement and return home
     def emergency_stop(self):
         """Emergency stop function to immediately halt all robot movements."""
-        
         self.node.get_logger().warn("Emergency stop activated! Halting all movements.")
         
-        self.arm.set_start_state_to_current_state()  # Stop current arm movement
-        if self.gripper:
-            self.gripper.set_start_state_to_current_state()  # Stop current gripper movement
-        self.arm.set_goal_state(configuration_name="Home")  # Optionally move to a safe position
-        plan = self.arm.plan()
-        if plan:
-            self.arm.execute(plan)  # Execute the stop command
-        else: 
-            self.node.get_logger().error("Planning for emergency stop failed.")
-            return False
-        return True
+        # cancel any active goals to stop current motion
+        if self._last_goal_handle is not None:
+            cancel_future = self._last_goal_handle.cancel_goal_async()
+            ###rclpy.spin_until_future_complete(self.node, cancel_future, timeout_sec=3.0)
+            self._wait_for_future(cancel_future, timeout=3.0)
+            self._last_goal_handle = None
+        
+        # best effort recovery - go_home() also calls _send_goal
+        return self.go_home()

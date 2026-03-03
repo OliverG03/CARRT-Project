@@ -1,5 +1,12 @@
-# clear_table.py
+# clear_table.py - ROS2 node to clear a table of objects using vision and motion planning (and helper_moves)
+# Robot Action Cycle:
+# 1. Look at table, identify an object via AprilTag
+# 2. Plan a path to the object
+# 3. Pick the object
+# 4. Plan a path to the object's destination
 
+import time
+import threading
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String, Int32MultiArray
@@ -10,12 +17,6 @@ from adl_interfaces.srv import GetTagPose
 
 CLEAR_TABLE_IDS = [2, 3, 4] # cup, remote, cube
 
-# Robot Action Cycle:
-# 1. Look at table, identify an object via AprilTag
-# 2. Plan a path to the object
-# 3. Pick the object
-# 4. Plan a path to the object's destination
-
 class clearTableNode(Node):
     # to do on initialization: get list of objects from the scene or a database to know what to remove
     def __init__(self):
@@ -24,6 +25,10 @@ class clearTableNode(Node):
         
         # arm helper
         self.arm = MoveItHelper(self)
+        
+        # first to home position
+        self.get_logger().info('Moving to home position on startup...')
+        threading.Thread(target=self.arm.go_home, daemon=True).start()
         
         # vision service client
         self.vision_client = self.create_client(GetTagPose, 'get_tag_pose')
@@ -36,7 +41,7 @@ class clearTableNode(Node):
         self.id_sub = self.create_subscription(
             Int32MultiArray, 
             '/detected_tag_ids', 
-            lambda msg: setattr(self, 'visible_ids', msg.data), # update visible IDs on each message
+            lambda msg: setattr(self, 'visible_ids', list(msg.data)), # update visible IDs on each message
             10
         )
         
@@ -56,7 +61,16 @@ class clearTableNode(Node):
         if msg.data == 'clear_table' and not self.executing:
             self.get_logger().info('Received clear_table command. Starting task...')
             self.executing = True
+            t = threading.Thread(target=self.run_task, daemon=True) # run task in separate thread to avoid blocking
+            t.start()
+            
+    def run_task(self):
+        try:
             self.execute_task()
+        ### make sure works properly
+        except Exception as e:
+            self.get_logger().error(f'Error during clear_table task: {e}')
+        finally:
             self.executing = False
         
     # call vision service to get pose for given ID    
@@ -64,7 +78,14 @@ class clearTableNode(Node):
         request = GetTagPose.Request()
         request.tag_id = tag_id
         future = self.vision_client.call_async(request)
-        rclpy.spin_until_future_complete(self, future)
+        
+        # wait for response with timeout (no spin, in a callback)
+        ###timeout = 5.0  # seconds
+        ###start_time = self.get_clock().now().nanoseconds / 1e9
+        while rclpy.ok() and not future.done():
+            time.sleep(0.01) # small sleep to prevent busy waiting
+        
+        # get response and check for success
         response = future.result()
         if response and response.success:
             return response.pose
@@ -192,9 +213,16 @@ class clearTableNode(Node):
 def main(args=None):
     rclpy.init(args=args)
     node = clearTableNode()
+    
+    # allow multithreading for background threads
+    # to run with executor consecutively
+    
+    executor = rclpy.executors.MultiThreadedExecutor()
+    executor.add_node(node)
+    
     # get objects
     try:
-        rclpy.spin(node)
+        executor.spin()
     except KeyboardInterrupt:
         pass
     finally:
