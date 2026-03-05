@@ -14,7 +14,7 @@ import time as _time
 from control_msgs.action import GripperCommand
 from geometry_msgs.msg import Pose
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
-from moveit_msgs.action import MoveGroup
+from moveit_msgs.action import MoveGroup, ExecuteTrajectory
 from moveit_msgs.msg import (
     MotionPlanRequest,
     Constraints,
@@ -22,9 +22,13 @@ from moveit_msgs.msg import (
     PositionConstraint,
     OrientationConstraint,
     BoundingVolume,
+    RobotState,
 )
+from moveit_msgs.srv import GetStateValidity, GetCartesianPath
+from sensor_msgs.msg import JointState
 from shape_msgs.msg import SolidPrimitive
 from rclpy.action import ActionClient
+from std_msgs.msg import Header
 import rclpy
 
 # Helper class to complete basic MoveIt2 functions for the various ADLS
@@ -82,7 +86,7 @@ class MoveItHelper:
     GRIPPER_ACTION = "/robotiq_gripper_controller/gripper_cmd"
     
     # planning params: conservative for safety
-    PLANNING_TIME = 5.0  # max time to find a solution
+    PLANNING_TIME = 10.0  # max time to find a solution
     VELOCITY_SCALE = 0.3  # 30% max velocity
     ACCEL_SCALE = 0.3  # 30% max acceleration
     
@@ -92,17 +96,20 @@ class MoveItHelper:
     def __init__(self, node):
 
         self.node = node
-        
         # action client - drive execution        
         self.move_client = ActionClient(node, MoveGroup, self.MOVE_ACTION)
-        
         # store last goal handle so emergency stop can cancel if necessary
         self._last_goal_handle = None
-    
         # gripper cmd action client
         # "/robotiq_gripper_controller/gripper_cmd"
         self._gripper_client = ActionClient(
             node, GripperCommand, self.GRIPPER_ACTION
+        )
+        self._validity_client = node.create_client(
+            GetStateValidity, '/check_state_validity'
+        )
+        self._cartesian_client = node.create_client(
+            GetCartesianPath, '/compute_cartesian_path'
         )
     
         # gripper trajectory publisher, for grab_object function force/speed
@@ -124,6 +131,8 @@ class MoveItHelper:
     
     # send request via MoveGroup action. return true on success
     def _send_goal(self, request: MotionPlanRequest, timeout: float = 30.0) -> bool:
+        self.check_start_state() # check for collisions before planning, get errors for each
+        
         # give 5s for move_group
         if not self.move_client.wait_for_server(timeout_sec=5.0):
             self.node.get_logger().error(
@@ -135,7 +144,7 @@ class MoveItHelper:
         goal.request = request
         goal.planning_options.plan_only = False     
         goal.planning_options.replan = True          # allow replanning if plan fails
-        goal.planning_options.replan_attempts = 3    # number of replanning attempts
+        goal.planning_options.replan_attempts = 5    # number of replanning attempts
 
         # send goal and spin until complete or timeout
         future = self.move_client.send_goal_async(goal)
@@ -220,7 +229,7 @@ class MoveItHelper:
     def _base_request(self, group: str) -> MotionPlanRequest:
         req = MotionPlanRequest()
         req.group_name = group
-        req.num_planning_attempts = 5
+        req.num_planning_attempts = 10
         req.allowed_planning_time = self.PLANNING_TIME
         req.max_velocity_scaling_factor = self.VELOCITY_SCALE
         req.max_acceleration_scaling_factor = self.ACCEL_SCALE
@@ -248,10 +257,104 @@ class MoveItHelper:
     
     # --- ARM MOTION --- #
     
+    def go_cartesian(self, waypoints: list,
+                     max_step: float = 0.01, 
+                     jump_thresh: float = 0.0,
+                     avoid_collisions: bool = True) -> bool:
+        if not self._cartesian_client.wait_for_service(timeout_sec=5.0):
+            self.node.get_logger().error(
+                "GetCartesianPath service not available."
+            )
+            return False
+        
+        req = GetCartesianPath.Request()
+        req.header.frame_id = "base_link"
+        req.group_name = self.ARM_GROUP
+        req.link_name = self.END_EFFECTOR
+        req.waypoints = waypoints
+        req.max_step = max_step
+        req.jump_threshold = jump_thresh
+        req.avoid_collisions = avoid_collisions
+        req.start_state.is_diff = True
+        
+        future = self._cartesian_client.call_async(req)
+        if not self._wait_for_future(future, timeout=30.0):
+            self.node.get_logger().error("GetCartesianPath call timed out.")
+            return False
+        resp = future.result()
+        if resp is None:
+            self.node.get_logger().error("GetCartesianPath call failed.")
+            return False
+        fraction = resp.fraction
+        self.node.get_logger().info(
+            f"Cartesian path computed with {fraction*100:.1f}% success."
+        )
+        if fraction < 0.99:
+            self.node.get_logger().error(
+                f"Cartesian path only {fraction*100:.1f}% complete — aborting."
+            )
+            return False
+        
+        # execute the planned Cartesian path
+        if not hasattr(self, "_exec_client"):
+            self._exec_client = ActionClient(
+                self.node, ExecuteTrajectory, "/execute_trajectory"
+            )
+        if not self._exec_client.wait_for_server(timeout_sec=5.0):
+            self.node.get_logger().error(
+                "ExecuteTrajectory action server not available."
+            )
+            return False
+        
+        goal = ExecuteTrajectory.Goal()
+        goal.trajectory = resp.solution
+        
+        future2 = self._exec_client.send_goal_async(goal)
+        if not self._wait_for_future(future2, timeout=30.0):
+            self.node.get_logger().error("ExecuteTrajectory goal send timed out.")
+            return False
+        
+        gh = future2.result()
+        if gh is None or not gh.accepted:
+            self.node.get_logger().error("ExecuteTrajectory goal rejected.")
+            return False
+        
+        result_future = gh.get_result_async()
+        if not self._wait_for_future(result_future, timeout=30.0):
+            self.node.get_logger().error("ExecuteTrajectory result timed out.")
+            return False
+        
+        result = result_future.result()
+        if result is None:
+            self.node.get_logger().error("ExecuteTrajectory result timed out.")
+            return False
+        
+        err = result.result.error_code.val
+        if err != 1:
+            self.node.get_logger().error(
+                f"ExecuteTrajectory failed with error code {err}."
+            )
+            return False
+        _time.sleep(0.8) # delay to complete execution
+        return True
+
+    
     # move to Kinova's predefined home position (srdf file)
-    def go_home(self):
+    def go_home(self, retries: int = 2) -> bool:
         self.node.get_logger().info("go_home: planning to HOME_JOINTS...")
-        return self._go_to_joint_config(self.HOME_JOINTS)
+        _time.sleep(1.5) # wait for valid state before planning
+        for attempt in range(retries):
+            result = self._go_to_joint_config(self.HOME_JOINTS)
+            if result:
+                self.node.get_logger().info("go_home: success.")
+                return True
+            if attempt < retries:
+                self.node.get_logger().warn(
+                    f"go_home attempt {attempt+1} failed — retrying..."
+                )
+                _time.sleep(2.0)
+        self.node.get_logger().error("go_home: all tries failed.")
+        return False
     
     # move to retract pose, for intermediate and floor picks
     def go_retract(self):
@@ -277,12 +380,14 @@ class MoveItHelper:
         return self._send_goal(req, timeout=60.0)
     
     # move arm end effector to a specific target pose in the frame    
-    def go_to_pose(self, pose: Pose, frame_id="base_link") -> bool:
+    def go_to_pose(self, pose: Pose, frame_id="base_link", 
+                   z_rot_tolerance: float = 3.14) -> bool:
         self.node.get_logger().info(
             f"go_to_pose: planning to pose at {pose.position.x:.3f},"
             f"{pose.position.y:.3f}, {pose.position.z:.3f}"
         )
         req = self._base_request(self.ARM_GROUP)
+        req.start_state.is_diff = True
         
         # position constraint - 5mm tolerance around the target pose
         # increase if error occurs
@@ -304,9 +409,9 @@ class MoveItHelper:
         ori_constraint.header.frame_id = frame_id
         ori_constraint.link_name = self.END_EFFECTOR
         ori_constraint.orientation = pose.orientation
-        ori_constraint.absolute_x_axis_tolerance = 0.1
-        ori_constraint.absolute_y_axis_tolerance = 0.1
-        ori_constraint.absolute_z_axis_tolerance = 0.1
+        ori_constraint.absolute_x_axis_tolerance = 0.4
+        ori_constraint.absolute_y_axis_tolerance = 0.4
+        ori_constraint.absolute_z_axis_tolerance = z_rot_tolerance
         ori_constraint.weight = 1.0
         
         constraints = Constraints()
@@ -314,7 +419,30 @@ class MoveItHelper:
         constraints.orientation_constraints.append(ori_constraint)
         req.goal_constraints = [constraints]
         
+        #if seed_joints:
+        #    for name, pos in seed_joints.items():
+        #        jc = JointConstraint()
+        #        jc.joint_name = name
+        #        jc.position = float(pos)
+        #        jc.tolerance_above = 0.8
+        #        jc.tolerance_below = 0.8
+        #        jc.weight = 0.3
+        #        constraints.joint_constraints.append(jc)
+        
         return self._send_goal(req)
+    
+    def _joints_to_constraints(self, joint_dict: dict, 
+                    tolerance: float = 0.05) -> Constraints:
+        constraints = Constraints()
+        for name, pos in joint_dict.items():
+            jc = JointConstraint()
+            jc.joint_name = name
+            jc.position = float(pos)
+            jc.tolerance_above = tolerance
+            jc.tolerance_below = tolerance
+            jc.weight = 0.3
+            constraints.joint_constraints.append(jc)
+        return constraints
     
     # --- GRIPPER MOTION --- #
     
@@ -342,9 +470,9 @@ class MoveItHelper:
         return self._send_gripper_goal(position=0.0, max_effort=20.0)
             
     # close gripper to full closed position
-    def close_gripper(self):
-        self.node.get_logger().info("close_gripper(): closing gripper fully...")
-        return self._send_gripper_goal(position=0.8, max_effort=40.0)
+    def close_gripper(self, width: float = 0.8, force: float = 40.0):
+        self.node.get_logger().info(f"close_gripper(): closing gripper to width={width:.3f}rad, force={force:.1f}N")
+        return self._send_gripper_goal(position=width, max_effort=force)
 
     # after moving to grasp pose with an open gripper using other functions, call to close around the object
     # given object's position, desired speed, and force, close on the object
@@ -388,3 +516,29 @@ class MoveItHelper:
         
         # best effort recovery - go_home() also calls _send_goal
         return self.go_home()
+    
+    # --- DEV FUNCTIONS --- #
+    
+    def check_start_state(self):
+        if not self._validity_client.wait_for_service(timeout_sec=2.0):
+            self.node.get_logger().info("GetStateValidity service not available.")
+            return
+        req = GetStateValidity.Request()
+        req.group_name = self.ARM_GROUP
+        # empty, use current
+        future = self._validity_client.call_async(req)
+        self._wait_for_future(future, 5.0)
+        
+        resp = future.result()
+        if resp is None:
+            return
+        if resp.valid:
+            self.node.get_logger().info('Start state: VALID — no collisions.')
+        else:
+            self.node.get_logger().error(f'Start state: INVALID — {len(resp.contacts)} contact(s):')
+            for c in resp.contacts:
+                self.node.get_logger().error(
+                    f'  COLLISION: [{c.body_name_1}] <-> [{c.body_name_2}]  '
+                    f'depth={c.depth:.4f}m'
+                )
+        

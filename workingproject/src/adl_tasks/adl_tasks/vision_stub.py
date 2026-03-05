@@ -27,6 +27,16 @@ from std_msgs.msg import Int32MultiArray        # for tag detection results (tag
 from adl_interfaces.srv import GetTagPose 
 from adl_tasks.apriltag_key import OBJECTS, LOCATIONS
 
+def real_z(real_height_from_floor: float) -> float:
+    return real_height_from_floor - WHEELCHAIR_BASE_HEIGHT
+
+WHEELCHAIR_BASE_HEIGHT = 0.36195 # meters - matches chair height
+TABLE_HEIGHT = 0.45
+TABLE_SURFACE_Z = real_z(TABLE_HEIGHT) 
+
+TABLE_POS_X = 0.4064 + 0.55 / 2.0 # match static_scene
+TABLE_POS_Y = 0  # match static_scene
+
 # tag is flat (face-up) on the table
 def flat_orientation():
     q = Quaternion()
@@ -65,26 +75,26 @@ STUB_POSES = {
     # - OBJECTS (IDs 0-4) - #
     
     # water bottle on floor, on side (qr code up)
-    0: make_pose(0.30, 0.20, 0.04, flat_orientation),
-    # medication bottle on shelf, upright
-    1: make_pose(0.50, -0.15, 0.50, side_orientation),
-    # cup on table, upright
-    2: make_pose(0.45, 0.05, 0.50, side_orientation),
-    # TV remote on table, flat, right of cup
-    3: make_pose(0.45, -0.10, 0.50, flat_orientation),
-    # Cube: on table, flat, left of cup
-    4: make_pose(0.45, 0.15, 0.50, flat_orientation),
+    0: make_pose(0.30, 0.00, real_z(0.034), flat_orientation),
+    # medication bottle on shelf, upright, tag to robot
+    1: make_pose(TABLE_POS_X, -0.15, TABLE_SURFACE_Z + 0.05, side_orientation),
+    # cup on table, upright, tag to robot
+    2: make_pose(TABLE_POS_X - 0.10, -0.10, TABLE_SURFACE_Z + 0.05, side_orientation),
+    # TV remote on table, flat, tag facing up
+    3: make_pose(TABLE_POS_X - 0.10, 0.10,  TABLE_SURFACE_Z + 0.008, flat_orientation),
+    # Cube: on table, flat, tag facing up
+    4: make_pose(TABLE_POS_X - 0.15, 0.0,  TABLE_SURFACE_Z + 0.033, flat_orientation),
     
     # - LOCATIONS (IDs 5-8) - #
     
     # Near User: drop off at table's edge
-    5: make_pose(0.35, 0.30, 0.50, flat_orientation),
+    5: make_pose(0.40, 0.0,         TABLE_SURFACE_Z + 0.05, flat_orientation),
     # Shelf Drop-off 1: Cup Object return
-    6: make_pose(0.50, -0.30, 0.55, flat_orientation),
+    6: make_pose(TABLE_POS_X - 0.10, 0.15, TABLE_SURFACE_Z + 0.20, flat_orientation), # maybe 0.60
     # Shelf Drop-off 2: Remote Object return
-    7: make_pose(0.50, -0.45, 0.55, flat_orientation),
+    7: make_pose(TABLE_POS_X - 0.10, -0.15, TABLE_SURFACE_Z + 0.20, flat_orientation), # maybe 0.60
     # Bin Drop-off: Cube Object return (right edge of table)
-    8: make_pose(0.50, -0.30, 0.50, flat_orientation),
+    8: make_pose(0.45, -0.35, real_z(0.10), flat_orientation),
 }
 
 # --- STUB VISION NODE --- #
@@ -99,6 +109,10 @@ class VisionStubNode(Node):
             'get_tag_pose', 
             self.handle_get_tag_pose
         )
+        
+        # consider adding removal of object after "picked"
+        #self.picked_ids = set() # track which objects have been "picked" to simulate them being removed from the scene
+        #self.pick_srv = self.create_service()
         
         # publish stub IDs as always-visible @ 10Hz
         # mirrors vision_apriltag's detected_tag_ids

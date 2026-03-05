@@ -5,12 +5,14 @@
 # 3. Pick the object
 # 4. Plan a path to the object's destination
 
+import copy
 import time
 import threading
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String, Int32MultiArray
-
+from std_msgs.msg import String, Int32MultiArray, Header
+from moveit_msgs.msg import CollisionObject, PlanningScene
+from geometry_msgs.msg import Pose
 from adl_tasks.helper_moves import MoveItHelper
 from adl_tasks.apriltag_key import OBJECTS, LOCATIONS
 from adl_interfaces.srv import GetTagPose
@@ -51,6 +53,10 @@ class clearTableNode(Node):
             '/adl_command', 
             self.command_callback, 
             10
+        )
+        
+        self._picked_pub = self.create_publisher(
+            Int32MultiArray, '/picked_ids', 10
         )
         
         self.executing = False # flag to prevent overlapping commands
@@ -154,60 +160,121 @@ class clearTableNode(Node):
             self.get_logger().error(f'Cannot remove object {obj.name} (ID {tag_id}). Pose is None.')
             return False
         
-        grasp_pose = obj.compute_grasp_pose(tag_pose)
-        
-        
+        grasp_pose = obj.compute_grasp_pose(tag_pose)       # final grasp
+        approach_pose = obj.compute_approach_pose(tag_pose) # standoff
+
+        lift_pose = copy.deepcopy(grasp_pose)
+        lift_pose.position.z += 0.20 # 20cm lift clearance
+  
         # -- pick sequence -- #
         
-        # 1. open gripper before moving to grasp
+        # 1. move to APPROACH pose
         if not self.arm.open_gripper():
             self.get_logger().error(f'Failed to open gripper for object {obj.name} (ID {tag_id}).')
             return False
-        # 2. move to grasp pose
-        if not self.arm.go_to_pose(grasp_pose):
-            self.get_logger().error(
-                f'Failed to move to grasp pose for object {obj.name}.'
-                )
-            return False
-        # 3. close gripper to grasp
-        ### need to replace close_gripper with grab_object, to specify close constraints
-        if not self.arm.close_gripper():
-            self.get_logger().error(f'Failed to close gripper on object {obj.name} (ID {tag_id}).')
+        self.get_logger().info(
+            f'[{obj.name}] Stage 1: approach '
+            f'({approach_pose.position.x:.3f}, '
+            f'{approach_pose.position.y:.3f}, '
+            f'{approach_pose.position.z:.3f})'
+        )
+        # approach with go_to_pose (non-cartesian path in FRONT of object)
+        if not self.arm.go_to_pose(approach_pose):
+            self.get_logger().error(f'Failed to move to approach pose for object {obj.name} (ID {tag_id}).')
             return False
         
-        # -- get destination -- #
+        # 2. cartesian move to GRASP pose
+        # remove collision object before so fingers dont collide
+        self._remove_collision_object(f"obj_{tag_id}", tag_id=tag_id)
+        time.sleep(0.3) # wait for scene update
+        self.get_logger().info(
+            f'[{obj.name}] Stage 2: push to grasp (cartesian) '
+            f'({grasp_pose.position.x:.3f}, '
+            f'{grasp_pose.position.y:.3f}, '
+            f'{grasp_pose.position.z:.3f})'
+        )
+        if not self.arm.go_cartesian([grasp_pose], avoid_collisions=False): ### debug: diable collisions, since obj removed
+            self.get_logger().error(f'Failed to move to grasp pose for object {obj.name} (ID {tag_id}).')
+            self._restore_collision_object(tag_id, tag_pose) # restore if failed to grasp
+            return False
+        
+        # 3. close gripper around object based on width data
+        self.get_logger().info(
+            f'[{obj.name}] Stage 3: close gripper begun. Closing to width {obj.gripper_width}m'
+        ) 
+        ### SHOULDNT use close_gripper for real control, will crush objects
+        if not self.arm.close_gripper(width=obj.gripper_width, force=obj.gripper_force):
+            self.get_logger().error(f'Failed to close gripper for object {obj.name} (ID {tag_id}).')
+            self._restore_collision_object(tag_id, tag_pose) # restore if failed to grasp
+            return False
+        ### DEBUG ABOVE
+        time.sleep(0.5) # wait for gripper action to complete
+        
+        # 4. lift straight up in z to avoid collisions
+        self.get_logger().info(
+            f'[{obj.name}] Stage 4: lift up to z={lift_pose.position.z:.3f})'
+        )
+        if not self.arm.go_cartesian([lift_pose]):
+            self.get_logger().error(f'Failed to lift object [{obj.name}]. Dropping and going home.')
+            self.arm.open_gripper() # drop object if failed to lift
+            self.arm.go_home()
+            return False
+
+        # 5. move to destination location (non-cartesian)
         dest_pose = self.get_pose(obj.destination)
         if dest_pose is None:
-            # drop failed - open gripper, return home
-            self.arm.open_gripper()
+            self.get_logger().error(f'Failed to get destination pose for object {obj.name} (ID {tag_id}).')
+            self.arm.open_gripper() # drop object if failed to get destination
             self.arm.go_home()
-            self.get_logger().error(
-                f'Cannot get destination pose for object {obj.name} (ID {tag_id}).'
-                f'Aborting place sequence, returning home.'
-            )
             return False
         
-        # -- place sequence -- #
-        
-        # 1. move to destination
+        self.get_logger().info(
+            f'[{obj.name}] Stage 5: move to destination '
+            f'({dest_pose.position.x:.3f}, '
+            f'{dest_pose.position.y:.3f}, '
+            f'{dest_pose.position.z:.3f})'
+        )
         if not self.arm.go_to_pose(dest_pose):
-            self.get_logger().error(
-                f'Failed to reach destination for object {obj.name}.'
-            )
-            self.arm.open_gripper() # drop object if we can't reach destination
+            self.get_logger().error(f'Failed to move to destination for object {obj.name}.')
+            self.arm.open_gripper() # drop object if failed to move to destination
             self.arm.go_home()
             return False
-        # 2. open gripper to release object
-        if not self.arm.open_gripper():
-            self.get_logger().error(
-                f'Failed to open gripper at destination.'
-            )
-            return False
-        # return home after placing to avoid collisions and prepare for next object
-        self.arm.go_home()
         
+        # 6. release and go home
+        self.arm.open_gripper()
+        time.sleep(0.3) # wait for gripper to open
+        self.arm.go_home()
         return True
-            
+    
+    
+    
+    # helper: remove collision object from MoveIt scene by ID 
+    def _remove_collision_object(self, object_id: str, tag_id: int = None):
+        # create and publish collision object message with REMOVE operation
+        if tag_id is not None:
+            msg = Int32MultiArray()
+            msg.data = [tag_id]
+            self._picked_pub.publish(msg)
+        
+        if not hasattr(self, '_scene_pub'):
+            self._scene_pub = self.create_publisher(PlanningScene, '/planning_scene', 10)
+        
+        co = CollisionObject()
+        co.header = Header()
+        co.header.frame_id = 'base_link'
+        co.id = object_id
+        co.operation = CollisionObject.REMOVE
+        
+        scene = PlanningScene()
+        scene.is_diff = True
+        scene.world.collision_objects = [co]
+        self._scene_pub.publish(scene)
+        self.get_logger().info(f'Removed collision object {object_id} from planning scene.')
+        time.sleep(0.2) # allow delay for update
+        
+    def _restore_collision_object(self, tag_id: int, pose: Pose):
+        self.get_logger().info(f'Restoring collision object for tag ID {tag_id} after failed grasp.')    
+        time.sleep(1.5) # wait one cycle
         
         
 def main(args=None):

@@ -20,23 +20,23 @@ OBJECT_SHAPES = {
     # water bottle
     0: {"shape": "cylinder", 
         "radius": 0.0335, "height": 0.22,
-        "r": 0.2, "g": 0.6, "b": 1.0},
+        "r": 0.2, "g": 0.6, "b": 1.0}, # blue
     # medication bottle
     1: {"shape": "cylinder",
         "radius": 0.03, "height": 0.08,
-        "r": 0.9, "g": 0.7, "b": 0.1},
+        "r": 0.9, "g": 0.7, "b": 0.1}, # yellow
     # cup
     2: {"shape": "cylinder",
         "radius": 0.0375, "height": 0.10,
-        "r": 0.8, "g": 0.3, "b": 0.3},
+        "r": 0.8, "g": 0.3, "b": 0.3}, # red
     # tv remote
     3: {"shape": "box",
         "sx": 0.14, "sy": 0.043, "sz": 0.015,
-        "r": 0.2, "g": 0.2, "b": 0.2},
+        "r": 0.2, "g": 0.2, "b": 0.2}, # dark gray
     # cube
     4: {"shape": "box",
         "sx": 0.065, "sy": 0.065, "sz": 0.065,
-        "r": 0.3, "g": 0.8, "b": 0.3},
+        "r": 0.4, "g": 0.8, "b": 0.4}, # green
 }
 
 class SceneFromVisionNode(Node):
@@ -182,7 +182,21 @@ class SceneFromVisionNode(Node):
             prim.dimensions = [shape["sx"], shape["sy"], shape["sz"]]
         
         co.primitives = [prim]
-        co.primitive_poses = [pose]
+        # get correct pose
+        oriented_pose = Pose()
+        oriented_pose.position = pose.position
+        
+        if tag_id == 0:
+            # water bottle: pose is on its side (facing up)
+            oriented_pose.orientation.x = 0.0
+            oriented_pose.orientation.y = 0.707
+            oriented_pose.orientation.z = 0.0
+            oriented_pose.orientation.w = 0.707
+        else:
+            # else, upright
+            oriented_pose.orientation.w = 1.0
+            
+        co.primitive_poses = [oriented_pose]
         return co
     
     # helper: create object color message for given ID
