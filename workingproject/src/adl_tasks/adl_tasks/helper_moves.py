@@ -6,10 +6,15 @@
 # - Emergency stop
 # - Internal-use/helper functions denoted with "_" at start of name
 
+# Allow for more complex movement functions: 
+# - cartesian/non-cartesian
+# - gripper control with position, speed, and force parameters
+# - offset poses for approach and lift
 
 # helper to execute movement commands
 from __future__ import annotations
 import time as _time
+import threading
 
 from control_msgs.action import GripperCommand
 from geometry_msgs.msg import Pose
@@ -23,6 +28,9 @@ from moveit_msgs.msg import (
     OrientationConstraint,
     BoundingVolume,
     RobotState,
+    AttachedCollisionObject,
+    PlanningScene,
+    
 )
 from moveit_msgs.srv import GetStateValidity, GetCartesianPath
 from sensor_msgs.msg import JointState
@@ -75,9 +83,6 @@ class MoveItHelper:
     # planning group names from gen3.srdf
     ARM_GROUP = "manipulator"
     GRIPPER_GROUP = "gripper"
-    
-    # end effector link
-    ### verify with:    ros2 run tf2_tools view_frames
     END_EFFECTOR = "end_effector_link"
     
     # MoveGroup action server name
@@ -129,6 +134,34 @@ class MoveItHelper:
     # build a motion plan request and send as a goal
     # called by public movement functions below
     
+    # define a wait control rule
+    # wait for a future without reentering a spin loop. true if done
+    def _wait_for_future(self, future, timeout: float) -> bool:
+        start = _time.monotonic()
+        while rclpy.ok() and not future.done():
+            if _time.monotonic() - start > timeout:
+                return False
+            _time.sleep(0.05)
+        return future.done()     
+    
+    # build a motion plan request with standard planning parameters
+    def _base_request(self, group: str) -> MotionPlanRequest:
+        req = MotionPlanRequest()
+        req.group_name = group
+        req.num_planning_attempts = 10
+        req.allowed_planning_time = self.PLANNING_TIME
+        req.max_velocity_scaling_factor = self.VELOCITY_SCALE
+        req.max_acceleration_scaling_factor = self.ACCEL_SCALE
+        # workspace bounds
+        req.workspace_parameters.header.frame_id = "base_link"
+        req.workspace_parameters.min_corner.x = -1.5
+        req.workspace_parameters.min_corner.y = -1.5
+        req.workspace_parameters.min_corner.z = -0.5
+        req.workspace_parameters.max_corner.x = 1.5
+        req.workspace_parameters.max_corner.y = 1.5
+        req.workspace_parameters.max_corner.z = 2.0
+        return req
+ 
     # send request via MoveGroup action. return true on success
     def _send_goal(self, request: MotionPlanRequest, timeout: float = 30.0) -> bool:
         self.check_start_state() # check for collisions before planning, get errors for each
@@ -160,10 +193,7 @@ class MoveItHelper:
     
         # store handle for emergency stop
         self._last_goal_handle = goal_handle
-        
-        # wait for exec result
         result_future = goal_handle.get_result_async()
-        ###rclpy.spin_until_future_complete(self.node, result_future, timeout_sec=timeout)
         if not self._wait_for_future(result_future, timeout):
             self.node.get_logger().error("MoveGroup result timed out.")
             return False
@@ -214,7 +244,6 @@ class MoveItHelper:
         
         result = result_future.result()
         if result is None:
-            self.node.get_logger().error("GripperCommand result timed out.")
             return False
         
         self.node.get_logger().info(
@@ -224,37 +253,7 @@ class MoveItHelper:
         )
         return True
 
-    
-    # build a motion plan request with standard planning parameters
-    def _base_request(self, group: str) -> MotionPlanRequest:
-        req = MotionPlanRequest()
-        req.group_name = group
-        req.num_planning_attempts = 10
-        req.allowed_planning_time = self.PLANNING_TIME
-        req.max_velocity_scaling_factor = self.VELOCITY_SCALE
-        req.max_acceleration_scaling_factor = self.ACCEL_SCALE
-        
-        # workspace bounds
-        req.workspace_parameters.header.frame_id = "base_link"
-        req.workspace_parameters.min_corner.x = -1.5
-        req.workspace_parameters.min_corner.y = -1.5
-        req.workspace_parameters.min_corner.z = -0.5
-        req.workspace_parameters.max_corner.x = 1.5
-        req.workspace_parameters.max_corner.y = 1.5
-        req.workspace_parameters.max_corner.z = 2.0
-        
-        return req
-    
-    # define a wait control rule
-    # wait for a future without reentering a spin loop. true if done
-    def _wait_for_future(self, future, timeout: float) -> bool:
-        start = _time.monotonic()
-        while rclpy.ok() and not future.done():
-            if _time.monotonic() - start > timeout:
-                return False
-            _time.sleep(0.05)
-        return future.done()
-    
+
     # --- ARM MOTION --- #
     
     def go_cartesian(self, waypoints: list,
@@ -310,7 +309,7 @@ class MoveItHelper:
         goal.trajectory = resp.solution
         
         future2 = self._exec_client.send_goal_async(goal)
-        if not self._wait_for_future(future2, timeout=30.0):
+        if not self._wait_for_future(future2, 30.0):
             self.node.get_logger().error("ExecuteTrajectory goal send timed out.")
             return False
         
@@ -320,13 +319,12 @@ class MoveItHelper:
             return False
         
         result_future = gh.get_result_async()
-        if not self._wait_for_future(result_future, timeout=30.0):
+        if not self._wait_for_future(result_future, 30.0):
             self.node.get_logger().error("ExecuteTrajectory result timed out.")
             return False
         
         result = result_future.result()
         if result is None:
-            self.node.get_logger().error("ExecuteTrajectory result timed out.")
             return False
         
         err = result.result.error_code.val
@@ -348,13 +346,101 @@ class MoveItHelper:
             if result:
                 self.node.get_logger().info("go_home: success.")
                 return True
-            if attempt < retries:
+            if attempt < retries - 1:
                 self.node.get_logger().warn(
                     f"go_home attempt {attempt+1} failed — retrying..."
                 )
                 _time.sleep(2.0)
-        self.node.get_logger().error("go_home: all tries failed.")
-        return False
+        self.node.get_logger().error("go_home: all tries failed. Trying collision-disabled path.")
+        return self._go_home_recovery() # try one more time with collision disabled
+    
+    def _go_home_recovery(self) -> bool:  
+        # last resort recovery: may disable before real-world sim to protect environment and hardware
+        
+        current_joints = {}
+        recieved = threading.Event()        
+        
+        def _js_cb(msg):
+            for name, pos in zip(msg.name, msg.position):
+                if name in self.HOME_JOINTS:
+                    current_joints[name] = pos
+            if len(current_joints) == len(self.HOME_JOINTS):
+                recieved.set()
+   
+        sub = self.node.create_subscription(
+            JointState, "/joint_states", _js_cb, 10
+        )
+        recieved.wait(timeout=3.0)
+        self.node.destroy_subscription(sub)
+        
+        if len(current_joints) < len(self.HOME_JOINTS):
+            self.node.get_logger().error(
+                "Failed to get current joint states for collision-disabled planning."
+            )
+            return False
+        
+        req = self._base_request(self.ARM_GROUP)
+        
+        js = JointState()
+        js.name = list(current_joints.keys())
+        js.position = [current_joints[name] for name in js.name]
+        req.start_state.joint_state = js
+        req.start_state.is_diff = False
+        
+        # goal : HOME JOINTS
+        constraints = Constraints()
+        for joint_name, pos in self.HOME_JOINTS.items():
+            jc = JointConstraint()
+            jc.joint_name = joint_name
+            jc.position = float(pos)
+            jc.tolerance_above = 0.05
+            jc.tolerance_below = 0.05
+            jc.weight = 1.0
+            constraints.joint_constraints.append(jc)
+        req.goal_constraints = [constraints]
+        
+        if not self.move_client.wait_for_server(timeout_sec=5.0):
+            self.node.get_logger().error(
+                f"MoveGroup action server {self.MOVE_ACTION} not available."
+            )
+            return False
+    
+        goal = MoveGroup.Goal()
+        goal.request = req
+        goal.planning_options.plan_only = False
+        goal.planning_options.replan = False          # no replanning, just one try
+        goal.planning_options.replan_attempts = 0    # no replanning attempts
+        
+        future = self.move_client.send_goal_async(goal)
+        if not self._wait_for_future(future, 30.0):
+            self.node.get_logger().error("MoveGroup goal send timed out.")
+            return False
+        
+        goal_handle = future.result()
+        if goal_handle is None or not goal_handle.accepted:
+            self.node.get_logger().error("MoveGroup goal rejected.")
+            return False
+        
+        result_future = goal_handle.get_result_async()
+        if not self._wait_for_future(result_future, 60.0):
+            self.node.get_logger().error("MoveGroup result timed out.")
+            return False
+        
+        result = result_future.result()
+        if result is None:
+            return False
+        
+        success = result.result.error_code.val == 1
+        if success:
+            self.node.get_logger().info(
+                "go_to_joint_config_no_coll: succeeded with collisions allowed."
+            )
+        else:
+            self.node.get_logger().error(
+                "go_to_joint_config_no_coll: failed even with collisions allowed."
+            )
+        return success
+    
     
     # move to retract pose, for intermediate and floor picks
     def go_retract(self):
@@ -364,8 +450,8 @@ class MoveItHelper:
     # plan and execute to a dict of joint values
     def _go_to_joint_config(self, joint_config: dict) -> bool:
         req = self._base_request(self.ARM_GROUP)
-        
         constraints = Constraints()
+        
         for joint_name, pos in joint_config.items():
             jc = JointConstraint()
             jc.joint_name = joint_name
@@ -419,18 +505,9 @@ class MoveItHelper:
         constraints.orientation_constraints.append(ori_constraint)
         req.goal_constraints = [constraints]
         
-        #if seed_joints:
-        #    for name, pos in seed_joints.items():
-        #        jc = JointConstraint()
-        #        jc.joint_name = name
-        #        jc.position = float(pos)
-        #        jc.tolerance_above = 0.8
-        #        jc.tolerance_below = 0.8
-        #        jc.weight = 0.3
-        #        constraints.joint_constraints.append(jc)
-        
         return self._send_goal(req)
-    
+
+    """    
     def _joints_to_constraints(self, joint_dict: dict, 
                     tolerance: float = 0.05) -> Constraints:
         constraints = Constraints()
@@ -443,26 +520,9 @@ class MoveItHelper:
             jc.weight = 0.3
             constraints.joint_constraints.append(jc)
         return constraints
+    """
     
     # --- GRIPPER MOTION --- #
-    
-    # plan and execute gripper movement to a specific angle
-    def _move_gripper(self, joint_pos_rad:float) -> bool:
-        # Joint Range: 0.0 rad = fully open,
-        #              0.8 rad = full closed
-        req = self._base_request(self.GRIPPER_GROUP)
-        
-        constraints = Constraints()
-        jc = JointConstraint()
-        jc.joint_name = self.GRIPPER_JOINT_NAMES[0]
-        jc.position = float(joint_pos_rad)
-        jc.tolerance_above = 0.05
-        jc.tolerance_below = 0.05
-        jc.weight = 1.0
-        constraints.joint_constraints.append(jc)
-        
-        req.goal_constraints = [constraints]
-        return self._send_goal(req)
     
     # open gripper to full extension before moving to grasp pose
     def open_gripper(self):
@@ -496,9 +556,56 @@ class MoveItHelper:
         self.gripper_pub.publish(traj)
         # debug logging
         self.node.get_logger().info(
-            f"grab_object: position={position:.3f}rad, speed={speed}m/s, force={force}N"
+            f"grab_object SUCCESS: position={position:.3f}rad, speed={speed}m/s, force={force}N"
         )
         return True
+    
+    # --- SCENE ATTACHMENT --- #
+    def attach_object(self, object_id: str, links: list = None):
+        # attach collision object to EEF for grasping and moving
+        if not hasattr(self, "_scene_pub"):
+            self._scene_pub = self.node.create_publisher(
+                PlanningScene, '/planning_scene', 10
+            )
+        aco = AttachedCollisionObject()
+        aco.link_name = self.END_EFFECTOR
+        aco.object.header.frame_id = 'base_link' # world frame
+        aco.object.id = str(object_id)
+        aco.object.operation = aco.object.ADD # constant value
+        
+        # links can touch the fingers
+        aco.touch_links = links or [
+        "robotiq_85_left_finger_tip_link",
+        "robotiq_85_right_finger_tip_link",
+        "robotiq_85_left_inner_knuckle_link",
+        "robotiq_85_right_inner_knuckle_link",
+        ] ### CHECK IF CORRECT
+        
+        scene = PlanningScene()
+        scene.is_diff = True
+        scene.robot_state.attached_collision_objects = [aco]
+        scene.robot_state.is_diff = True
+        self._scene_pub.publish(scene)
+        self.node.get_logger().info(f"attach_object: published attachment of {object_id} to {self.END_EFFECTOR}.")
+        
+    def detach_object(self, object_id: str):
+        if not hasattr(self, "_scene_pub"):
+            self._scene_pub = self.node.create_publisher(
+                PlanningScene, '/planning_scene', 10
+            )
+        aco = AttachedCollisionObject()
+        aco.link_name = self.END_EFFECTOR
+        aco.object.header.frame_id = 'base_link' # world frame
+        aco.object.id = str(object_id)
+        aco.object.operation = aco.object.REMOVE # constant value
+    
+        scene = PlanningScene()
+        scene.is_diff = True
+        scene.robot_state.attached_collision_objects = [aco]
+        scene.robot_state.is_diff = True
+        self._scene_pub.publish(scene)
+        self.node.get_logger().info(f"detach_object: published detachment of {object_id} from {self.END_EFFECTOR}.")
+    
     
     # --- SAFETY STOP --- #
     
@@ -537,8 +644,7 @@ class MoveItHelper:
         else:
             self.node.get_logger().error(f'Start state: INVALID — {len(resp.contacts)} contact(s):')
             for c in resp.contacts:
+                depth = getattr(c, 'depth', 0.0)
                 self.node.get_logger().error(
-                    f'  COLLISION: [{c.body_name_1}] <-> [{c.body_name_2}]  '
-                    f'depth={c.depth:.4f}m'
+                    f'  COLLISION: [0] <-> [1], depth={depth:.4f}m'
                 )
-        
