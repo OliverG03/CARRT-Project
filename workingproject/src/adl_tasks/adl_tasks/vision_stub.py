@@ -70,21 +70,21 @@ STUB_POSES = {
         flat_orientation
     ),
     # medication bottle on shelf, upright, tag to robot
-    1: make_pose(
-        TABLE_POS_X - 0.15, TABLE_POS_Y + 0.20, 
-        TABLE_SURFACE_Z + MEDICATION_HEIGHT / 2.0, 
-        side_orientation
-    ),
+    #1: make_pose(
+    #    TABLE_POS_X - 0.20, TABLE_POS_Y - 0.20, 
+    #    TABLE_SURFACE_Z + MEDICATION_HEIGHT / 2.0, 
+    #    side_orientation
+    #),
     # cup on table, upright, tag to robot
     2: make_pose(
-        TABLE_POS_X - 0.10, TABLE_POS_Y - 0.10, 
+        TABLE_POS_X - 0.10, TABLE_POS_Y - 0.20, 
         TABLE_SURFACE_Z + CUP_HEIGHT / 2.0, 
         side_orientation
     ),
     # TV remote on table, flat, tag facing up
     ### correct to make QR code be at bottom end of remote later
     3: make_pose(
-        TABLE_POS_X - 0.20, TABLE_POS_Y + 0.10,  
+        TABLE_POS_X - 0.20, TABLE_POS_Y - 0.10,  
         TABLE_SURFACE_Z + REMOTE_THICKNESS / 2.0, 
         flat_orientation
     ),

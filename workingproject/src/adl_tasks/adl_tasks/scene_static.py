@@ -87,6 +87,7 @@ class StaticSceneNode(Node):
                 TABLE_X, TABLE_Y, TABLE_THICKNESS,
                 TABLE_POS_X, TABLE_POS_Y, TABLE_CENTER_Z
             ),
+            ### ADD TABLE LEGS HERE BEFORE REAL WORLD TEST
             
             # SHELF
             # - floor board

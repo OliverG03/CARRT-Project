@@ -181,7 +181,6 @@ class MoveItHelper:
 
         # send goal and spin until complete or timeout
         future = self.move_client.send_goal_async(goal)
-        ###rclpy.spin_until_future_complete(self.node, future, timeout_sec=timeout)
         if not self._wait_for_future(future, timeout):
             self.node.get_logger().error("MoveGroup goal send timed out.")
             return False
@@ -335,7 +334,24 @@ class MoveItHelper:
             return False
         _time.sleep(0.8) # delay to complete execution
         return True
-
+    
+    # plan and execute to a dict of joint values
+    def _go_to_joint_config(self, joint_config: dict) -> bool:
+        req = self._base_request(self.ARM_GROUP)
+        constraints = Constraints()
+        
+        for joint_name, pos in joint_config.items():
+            jc = JointConstraint()
+            jc.joint_name = joint_name
+            jc.position = float(pos)
+            # tolerance: +/- 0.05 rad unless .01 is needed
+            jc.tolerance_above = 0.05
+            jc.tolerance_below = 0.05
+            jc.weight = 1.0
+            constraints.joint_constraints.append(jc)
+        
+        req.goal_constraints = [constraints]
+        return self._send_goal(req, timeout=60.0)    
     
     # move to Kinova's predefined home position (srdf file)
     def go_home(self, retries: int = 2) -> bool:
@@ -447,23 +463,7 @@ class MoveItHelper:
         self.node.get_logger().info("go_retract: planning to RETRACT_JOINTS...")
         return self._go_to_joint_config(self.RETRACT_JOINTS)
     
-    # plan and execute to a dict of joint values
-    def _go_to_joint_config(self, joint_config: dict) -> bool:
-        req = self._base_request(self.ARM_GROUP)
-        constraints = Constraints()
-        
-        for joint_name, pos in joint_config.items():
-            jc = JointConstraint()
-            jc.joint_name = joint_name
-            jc.position = float(pos)
-            # tolerance: +/- 0.05 rad unless .01 is needed
-            jc.tolerance_above = 0.05
-            jc.tolerance_below = 0.05
-            jc.weight = 1.0
-            constraints.joint_constraints.append(jc)
-        
-        req.goal_constraints = [constraints]
-        return self._send_goal(req, timeout=60.0)
+    # --- Pose Space --- #
     
     # move arm end effector to a specific target pose in the frame    
     def go_to_pose(self, pose: Pose, frame_id="base_link", 
@@ -506,21 +506,6 @@ class MoveItHelper:
         req.goal_constraints = [constraints]
         
         return self._send_goal(req)
-
-    """    
-    def _joints_to_constraints(self, joint_dict: dict, 
-                    tolerance: float = 0.05) -> Constraints:
-        constraints = Constraints()
-        for name, pos in joint_dict.items():
-            jc = JointConstraint()
-            jc.joint_name = name
-            jc.position = float(pos)
-            jc.tolerance_above = tolerance
-            jc.tolerance_below = tolerance
-            jc.weight = 0.3
-            constraints.joint_constraints.append(jc)
-        return constraints
-    """
     
     # --- GRIPPER MOTION --- #
     
@@ -560,7 +545,26 @@ class MoveItHelper:
         )
         return True
     
+    # --- SAFETY STOP --- #
+    
+    # halt any current movement and return home
+    def emergency_stop(self):
+        """Emergency stop function to immediately halt all robot movements."""
+        self.node.get_logger().warn("Emergency stop activated! Halting all movements.")
+        
+        # cancel any active goals to stop current motion
+        if self._last_goal_handle is not None:
+            cancel_future = self._last_goal_handle.cancel_goal_async()
+            ###rclpy.spin_until_future_complete(self.node, cancel_future, timeout_sec=3.0)
+            self._wait_for_future(cancel_future, timeout=3.0)
+            self._last_goal_handle = None
+        
+        # best effort recovery - go_home() also calls _send_goal
+        return self.go_home()    
+    
+    
     # --- SCENE ATTACHMENT --- #
+    
     def attach_object(self, object_id: str, links: list = None):
         # attach collision object to EEF for grasping and moving
         if not hasattr(self, "_scene_pub"):
@@ -607,22 +611,7 @@ class MoveItHelper:
         self.node.get_logger().info(f"detach_object: published detachment of {object_id} from {self.END_EFFECTOR}.")
     
     
-    # --- SAFETY STOP --- #
-    
-    # halt any current movement and return home
-    def emergency_stop(self):
-        """Emergency stop function to immediately halt all robot movements."""
-        self.node.get_logger().warn("Emergency stop activated! Halting all movements.")
-        
-        # cancel any active goals to stop current motion
-        if self._last_goal_handle is not None:
-            cancel_future = self._last_goal_handle.cancel_goal_async()
-            ###rclpy.spin_until_future_complete(self.node, cancel_future, timeout_sec=3.0)
-            self._wait_for_future(cancel_future, timeout=3.0)
-            self._last_goal_handle = None
-        
-        # best effort recovery - go_home() also calls _send_goal
-        return self.go_home()
+
     
     # --- DEV FUNCTIONS --- #
     

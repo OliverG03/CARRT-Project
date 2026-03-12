@@ -293,9 +293,8 @@ class clearTableNode(Node):
         ) 
         if not self.arm.close_gripper(width=obj.gripper_width, force=obj.gripper_force):
             self.get_logger().error(f'Failed to close gripper for object {obj.name} (ID {tag_id}).')
-            #self._restore_collision_object(tag_id, tag_pose) # restore if failed to grasp
             return False
-        time.sleep(0.5) # wait for gripper action to complete
+        time.sleep(0.5) 
         # attach to EEF avoid collisions during transit
         self.arm.attach_object(obj_id)
         time.sleep(0.2) # wait for attach to register
@@ -303,7 +302,7 @@ class clearTableNode(Node):
         # 4. lift straight up in z to avoid collisions
         # - a) clear surface (collisions off)
         lift_clear_p = copy.deepcopy(grasp_pose)
-        lift_clear_p.position.z += 0.15
+        lift_clear_p.position.z += 0.10
         self.get_logger().info(
             f'[{obj.name}] Stage 4: lift up to z={lift_pose.position.z:.3f})'
         )
@@ -348,7 +347,7 @@ class clearTableNode(Node):
             f'{dest_pose.position.y:.3f}, '
             f'{dest_pose.position.z:.3f})'
         )
-        if not self.arm.go_cartesian([dest_pose], avoid_collisions=False): # disable collisions since object is attached
+        if not self.arm.go_to_pose(dest_pose): # disable collisions since object is attached
             self.get_logger().error(f'Failed to move to destination for object {obj.name}. Dropping and going home.')
             self.arm.open_gripper() # drop object if failed to move
             self.arm.detach_object(obj_id) # detach to avoid issues with scene update
@@ -365,8 +364,10 @@ class clearTableNode(Node):
         
         # 8. retreat upward
         self.get_logger().info(f'[{obj.name}] Stage 8: retreat up after placing')
-        if not self.arm.go_cartesian([dest_pull_up], avoid_collisions=True): #
+        if not self.arm.go_to_pose(dest_pull_up): #
             self.get_logger().warn(f'Failed to retreat after placing object {obj.name}. Going home.')
+            self.arm.go_home()
+            return True
         
         # 9. return to home
         self.get_logger().info(f'[{obj.name}] Stage 9: return home')
@@ -396,9 +397,9 @@ class clearTableNode(Node):
         self.get_logger().info(f'Removed collision object {object_id} from planning scene.')
         time.sleep(0.2) # allow delay for update
         
-    def _restore_collision_object(self, tag_id: int, pose: Pose):
-        self.get_logger().info(f'Restoring collision object for tag ID {tag_id} after failed grasp.')    
-        time.sleep(0.5) # wait
+    #    def _restore_collision_object(self, tag_id: int, pose: Pose):
+    #        self.get_logger().info(f'Restoring collision object for tag ID {tag_id} after failed grasp.')    
+    #        time.sleep(0.5) # wait
         
     # return XY distance from base_link origin to object's pose
     # allows to sort object for planning (closest first)

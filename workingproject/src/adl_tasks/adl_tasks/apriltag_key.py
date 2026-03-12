@@ -22,7 +22,8 @@ from adl_tasks.adl_config import (
     MEDICATION_DIAMETER, MEDICATION_RADIUS, MEDICATION_HEIGHT, MEDICATION_GRASP_Z,
     CUP_DIAMETER, CUP_RADIUS, CUP_HEIGHT, CUP_GRASP_Z,
     REMOTE_WIDTH, REMOTE_LENGTH, REMOTE_THICKNESS, REMOTE_GRASP_Z,
-    CUBE_SIZE, CUBE_GRASP_Z,
+    CUBE_SIZE, CUBE_GRASP_Z, FINGER_REACH, GRASP_CLEARANCE,
+    SHELF1_DROP_X, SHELF2_DROP_X,
 )
 
 # --- Gripper Approach --- #
@@ -31,7 +32,7 @@ from adl_tasks.adl_config import (
 def _meters_to_rads(diameter_m: float) -> float:
     # convert object diameter to gripper opening in radians
     # assumes gripper opens symmetrically around center, with max width of 0.085 m at 0.708 rad
-    return 0.8 * (1 - diameter_m / 0.085)
+    return 0.8 * max(0.0, min(1.0, diameter_m / 0.085))
 
 # --- Destination Pose Orientations --- #
 
@@ -163,13 +164,10 @@ class AprilTagObject:
             grasp.orientation.w = float(q[3])
             return grasp
         
-        elif self.approach_type == "top":
+        else:
             # tag Z points up, gripper approach from above
             # gripper_matrix = np.column_stack([tag_x, tag_y, -tag_z])
             grasp.orientation = top_down_orientation() # default to top-down approach orientation
-            return grasp
-        
-        grasp.orientation = side_approach_orientation() # default to side approach orientation
         return grasp
     
     def compute_approach_pose(self, tag_pose: Pose, standoff: float = 0.15) -> Pose:
@@ -205,14 +203,16 @@ class AprilTagObject:
 
 
 # --- LOCATIONS --- #
+_DROP_CLEARANCE = FINGER_REACH + GRASP_CLEARANCE # EEF pose
 
 # make these pull from macros for proper sizing / positioning
 LOCATIONS = {
     # drop off for water bottle / medication (near user, edge of table, etc.)
-    "Near User": _make_dest_pose(HANDOVER_POS_X, HANDOVER_POS_Y, HANDOVER_Z, "side"), # handoff near user, upright ### FIX X to pull from config
-    "Shelf 1 (Left)": _make_dest_pose(SHELF_POS_X - 0.05, SHELF_POS_Y, SHELF_DROP_Z, "side"), # cup drop, upright
-    "Shelf 2 (Right)": _make_dest_pose(SHELF_POS_X + 0.05, SHELF_POS_Y, SHELF_DROP_Z, "top"), # remote drop, down
-    "Bin": _make_dest_pose(BIN_POS_X, BIN_POS_Y, BIN_DROP_Z, "top") # cube drop
+    "Near User": _make_dest_pose(
+        HANDOVER_POS_X, HANDOVER_POS_Y, HANDOVER_Z + _DROP_CLEARANCE, "side"), # handoff near user, upright ### FIX X to pull from config
+    "Shelf 1 (Left)": _make_dest_pose(SHELF1_DROP_X, SHELF_POS_Y, SHELF_DROP_Z + _DROP_CLEARANCE, "side"), # cup drop, upright
+    "Shelf 2 (Right)": _make_dest_pose(SHELF2_DROP_X, SHELF_POS_Y, SHELF_DROP_Z + _DROP_CLEARANCE, "top"), # remote drop, down
+    "Bin": _make_dest_pose(BIN_POS_X, BIN_POS_Y, BIN_DROP_Z + _DROP_CLEARANCE, "top") # cube drop
 }
     
 # --- OBJECTS --- #
