@@ -245,6 +245,10 @@ class clearTableNode(Node):
         approach_pose = obj.compute_approach_pose(tag_pose) # standoff
         dest_pose = obj.destination
         
+        self.get_logger().info(f"Tag pose: {tag_pose}")
+        self.get_logger().info(f"Grasp pose: {grasp_pose}")
+        self.get_logger().info(f"Approach pose: {approach_pose}")
+        
         # straight up from grasp pose
         lift_pose = copy.deepcopy(grasp_pose)
         lift_pose.position.z += STANDOFF_Z # 20cm lift clearance
