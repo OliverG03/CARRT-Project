@@ -130,7 +130,7 @@ ros2 topic pub --once /adl_command std_msgs/msg/String "{data: 'clear_table'}" `
 ```chmod +x /home/jjorr/workspace/launch_ros2.sh```
 
 # RUN IT
-```/home/jjorr/workspace/launch_ros2.sh```
+```/home/(username)/workspace/launch_ros2.sh```
 
 # TO STOP TASK
 In a new terminal run:
