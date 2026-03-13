@@ -96,35 +96,28 @@ In Ubuntu run:
 This should allow you to write a script that combines all terminal processes needed to run sim into one.
 
 ## Script-Copy and Paste
-#!/bin/bash
+```#!/bin/bash
 cd /home/(username)/workspace/CARRT-Project/workingproject
-## Build
-colcon build --symlink-install --packages-select adl_tasks
+colcon build --symlink-install --packages-select adl_tasks ##Build
 source /home/(username)/workspace/CARRT-Project/install/setup.bash
 source /opt/ros/jazzy/setup.bash
 source /home(username)/workspace/ros2_kortex_ws/install/setup.bash
-##T1 - Arm & Simulator
 ros2 launch kinova_gen3_7dof_robotiq_2f_85_moveit_config robot.launch.py robot_ip:=192.168.0.1 use_fake_hardware:=true & 
-sleep 5
-##T2 - Static Scene
-ros2 run adl_tasks scene_static &
-##T3 - Vision Node
-ros2 run adl_tasks vision_stub &
-##T4 - Vision Converter
-ros2 run adl_tasks scene_from_vision &
-##T5 - Clear Table Task
-ros2 run adl_tasks clear_table &
+sleep 5 ## T1 - Arm & Simulator
+ros2 run adl_tasks scene_static & ##T2 - Static Scene
+ros2 run adl_tasks vision_stub & ##T3 - Vision Node
+ros2 run adl_tasks scene_from_vision & ##T4 - Vision Converter
+ros2 run adl_tasks clear_table & ##T5 - Clear Table Task
 sleep 10
-##T6 - Trigger Command
-ros2 topic pub --once /adl_command std_msgs/msg/String "{data: 'clear_table'}" ```
+ros2 topic pub --once /adl_command std_msgs/msg/String "{data: 'clear_table'}" ##T6 - Trigger Command ```
 
-## Make it an executable 
+## Make it an executable
 ```chmod +x /home/{username}/workspace/launch_ros2.sh```
 
 ## RUN IT
 ```/home/(username)/workspace/launch_ros2.sh```
 
-# TO STOP TASK
+## TO STOP TASK
 In a new terminal run:
 ```pkill -f ros2```
 
