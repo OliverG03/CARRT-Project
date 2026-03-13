@@ -1,0 +1,129 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "T1: Arm & Simulator",
+      "type": "shell",
+      "command": "colcon build --symlink-install --packages-select adl_tasks && source install/setup.bash && source /opt/ros/jazzy/setup.bash && source ~/workspace/ros2_kortex_ws/install/setup.bash && ros2 launch kinova_gen3_7dof_robotiq_2f_85_moveit_config robot.launch.py robot_ip:=192.168.0.1 use_fake_hardware:=true",
+      "options": {
+        "cwd": "/home/jjorr/workspace/ros2_kortex_ws",
+        "shell": {
+          "executable": "C:\\Windows\\System32\\wsl.exe",
+          "args": ["-e", "bash", "-c"]
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "ros2",
+        "name": "T1: Arm & Simulator"
+      }
+    },
+    {
+      "label": "T2: Static Scene",
+      "type": "shell",
+      "command": "colcon build --symlink-install --packages-select adl_tasks && source install/setup.bash && source /opt/ros/jazzy/setup.bash && source ~/workspace/ros2_kortex_ws/install/setup.bash && ros2 run adl_tasks scene_static",
+      "options": {
+        "cwd": "/home/jjorr/workspace/ros2_kortex_ws",
+        "shell": {
+          "executable": "C:\\Windows\\System32\\wsl.exe",
+          "args": ["-e", "bash", "-c"]
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "ros2",
+        "name": "T2: Static Scene"
+      }
+    },
+    {
+      "label": "T3: Vision Node",
+      "type": "shell",
+      "command": "colcon build --symlink-install --packages-select adl_tasks && source install/setup.bash && source /opt/ros/jazzy/setup.bash && source ~/workspace/ros2_kortex_ws/install/setup.bash && ros2 run adl_tasks vision_stub",
+      "options": {
+        "cwd": "/home/jjorr/workspace/ros2_kortex_ws",
+        "shell": {
+          "executable": "C:\\Windows\\System32\\wsl.exe",
+          "args": ["-e", "bash", "-c"]
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "ros2",
+        "name": "T3: Vision Node"
+      }
+    },
+    {
+      "label": "T4: Vision Converter",
+      "type": "shell",
+      "command": "colcon build --symlink-install --packages-select adl_tasks && source install/setup.bash && source /opt/ros/jazzy/setup.bash && source ~/workspace/ros2_kortex_ws/install/setup.bash && ros2 run adl_tasks scene_from_vision",
+      "options": {
+        "cwd": "/home/jjorr/workspace/ros2_kortex_ws",
+        "shell": {
+          "executable": "C:\\Windows\\System32\\wsl.exe",
+          "args": ["-e", "bash", "-c"]
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "ros2",
+        "name": "T4: Vision Converter"
+      }
+    },
+    {
+      "label": "T5: Clear Table Task",
+      "type": "shell",
+      "command": "colcon build --symlink-install --packages-select adl_tasks && source install/setup.bash && source /opt/ros/jazzy/setup.bash && source ~/workspace/ros2_kortex_ws/install/setup.bash && ros2 run adl_tasks clear_table",
+      "options": {
+        "cwd": "/home/jjorr/workspace/ros2_kortex_ws",
+        "shell": {
+          "executable": "C:\\Windows\\System32\\wsl.exe",
+          "args": ["-e", "bash", "-c"]
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "ros2",
+        "name": "T5: Clear Table Task"
+      }
+    },
+    {
+      "label": "T6: Call Task Command",
+      "type": "shell",
+      "command": "source /opt/ros/jazzy/setup.bash && source ~/workspace/ros2_kortex_ws/install/setup.bash && ros2 topic pub --once /adl_command std_msgs/msg/String \"{data: 'clear_table'}\"",
+      "options": {
+        "cwd": "/home/jjorr/workspace/ros2_kortex_ws",
+        "shell": {
+          "executable": "C:\\Windows\\System32\\wsl.exe",
+          "args": ["-e", "bash", "-c"]
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "group": "ros2",
+        "name": "T6: Call Task Command"
+      }
+    },
+    {
+      "label": "🚀 Launch All ROS2",
+      "dependsOn": [
+        "T1: Arm & Simulator",
+        "T2: Static Scene",
+        "T3: Vision Node",
+        "T4: Vision Converter",
+        "T5: Clear Table Task",
+        "T6: Call Task Command"
+      ],
+      "dependsOrder": "sequence",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
