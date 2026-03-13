@@ -7,12 +7,12 @@
 #
 # Objects spawned match STUB_POSES in vision_stub.py exactly.
 # Positions are in Gazebo world frame (base_link = world in sim).
- 
+
 import rclpy
 from rclpy.node import Node
 from ros_gz_interfaces.srv import SpawnEntity
 from geometry_msgs.msg import Pose
- 
+
 from adl_tasks.adl_config import (
     real_z,
     TABLE_SURFACE_Z, TABLE_POS_X, TABLE_POS_Y,
@@ -21,12 +21,11 @@ from adl_tasks.adl_config import (
     REMOTE_THICKNESS,
     CUBE_SIZE,
 )
- 
+
 # --- SDF Templates ---
- 
+
 def cube_sdf(size: float, r: float, g: float, b: float) -> str:
-    half = size / 2.0
-    inertia = (1.0 / 6.0) * 0.2 * size ** 2  # solid cube inertia
+    inertia = (1.0 / 6.0) * 0.2 * size ** 2
     return f"""<?xml version="1.0"?>
 <sdf version="1.6">
   <model name="cube">
@@ -53,7 +52,7 @@ def cube_sdf(size: float, r: float, g: float, b: float) -> str:
     </link>
   </model>
 </sdf>"""
- 
+
 def cylinder_sdf(radius: float, length: float,
                  r: float, g: float, b: float, a: float = 1.0,
                  mass: float = 0.3) -> str:
@@ -85,7 +84,7 @@ def cylinder_sdf(radius: float, length: float,
     </link>
   </model>
 </sdf>"""
- 
+
 def box_sdf(x: float, y: float, z: float,
             r: float, g: float, b: float) -> str:
     mass = 0.1
@@ -118,12 +117,11 @@ def box_sdf(x: float, y: float, z: float,
     </link>
   </model>
 </sdf>"""
- 
- 
+
+
 # --- Spawn Objects ---
-# Each entry: (name, sdf_string, pose_x, pose_y, pose_z)
 # Positions match STUB_POSES in vision_stub.py exactly
- 
+
 def make_pose(x, y, z) -> Pose:
     p = Pose()
     p.position.x = float(x)
@@ -131,7 +129,7 @@ def make_pose(x, y, z) -> Pose:
     p.position.z = float(z)
     p.orientation.w = 1.0
     return p
- 
+
 SPAWN_OBJECTS = [
     # Cube (ID 4) — orange, on table, tag facing up
     {
@@ -140,7 +138,7 @@ SPAWN_OBJECTS = [
         "pose": make_pose(
             TABLE_POS_X - 0.15,
             TABLE_POS_Y,
-            TABLE_SURFACE_Z + CUBE_SIZE / 2.0   # sitting on table surface
+            TABLE_SURFACE_Z + CUBE_SIZE / 2.0
         ),
     },
     # Cup (ID 2) — red, upright on table
@@ -170,26 +168,26 @@ SPAWN_OBJECTS = [
         "pose": make_pose(
             0.30,
             0.00,
-            real_z(BOTTLE_RADIUS)   # resting on floor
+            real_z(BOTTLE_RADIUS)
         ),
     },
 ]
- 
- 
+
+
 class SpawnSimObjectsNode(Node):
     def __init__(self):
         super().__init__('spawn_sim_objects_node')
         self.get_logger().info('Spawn Sim Objects Node started.')
- 
+
         self._client = self.create_client(SpawnEntity, '/world/empty/create')
- 
+
         self.get_logger().info('Waiting for Gazebo spawn service...')
         while not self._client.wait_for_service(timeout_sec=2.0):
             self.get_logger().warn('Gazebo spawn service not available, waiting...')
- 
+
         self.get_logger().info('Gazebo ready. Spawning objects...')
         self._spawn_all()
- 
+
     def _spawn_all(self):
         spawned = 0
         for obj in SPAWN_OBJECTS:
@@ -204,17 +202,17 @@ class SpawnSimObjectsNode(Node):
                 )
             else:
                 self.get_logger().error(f"Failed to spawn '{obj['name']}'.")
- 
+
         self.get_logger().info(
             f'Done. Spawned {spawned}/{len(SPAWN_OBJECTS)} objects.'
         )
- 
+
     def _spawn(self, name: str, sdf: str, pose: Pose) -> bool:
         req = SpawnEntity.Request()
         req.name = name
         req.xml = sdf
         req.initial_pose = pose
- 
+
         future = self._client.call_async(req)
         start = self.get_clock().now()
         while not future.done():
@@ -223,7 +221,7 @@ class SpawnSimObjectsNode(Node):
             if elapsed > 10.0:
                 self.get_logger().error(f"Spawn request for '{name}' timed out.")
                 return False
- 
+
         result = future.result()
         if result is None:
             return False
@@ -231,14 +229,14 @@ class SpawnSimObjectsNode(Node):
             self.get_logger().error(f"Spawn failed for '{name}': {result.status_message}")
             return False
         return True
- 
- 
+
+
 def main(args=None):
     rclpy.init(args=args)
     node = SpawnSimObjectsNode()
     node.destroy_node()
     rclpy.shutdown()
- 
- 
+
+
 if __name__ == '__main__':
     main()
