@@ -1,4 +1,5 @@
-# vision_stub.py - dynamic vision testing stub
+# ------ vision_stub.py ------ #
+# dynamic vision testing stub
 
 # does NOT include actual vision processing / AprilTag detection
 # implements same GetTagPose service like vision_apriltag.py
@@ -19,11 +20,11 @@ from adl_tasks.adl_config import (
     real_z,
     TABLE_SURFACE_Z, TABLE_POS_X, TABLE_POS_Y,
     SHELF_POS_X, SHELF_POS_Y,
-    BIN_POS_X, BIN_POS_Y, BIN_DROP_Z,
-    SHELF_DROP_Z, HANDOVER_Z,
-    BOTTLE_RADIUS, CUBE_SIZE, REMOTE_THICKNESS,
-    MEDICATION_HEIGHT,
-    CUP_HEIGHT,
+    BIN_POS_X, BIN_POS_Y,
+    HANDOVER_Z,
+    BOTTLE_DIAMETER, CUBE_SIZE, REMOTE_THICKNESS,
+    MEDICATION_HEIGHT, MEDICATION_RADIUS,
+    CUP_HEIGHT, CUP_RADIUS,
 )
 
 # --- Orientation
@@ -39,7 +40,7 @@ def flat_orientation() -> Quaternion:
 def side_orientation() -> Quaternion:
     q = Quaternion()
     q.x = 0.0
-    q.y = 0.707
+    q.y = -0.707
     q.z = 0.0
     q.w = 0.707
     return q
@@ -62,41 +63,43 @@ def make_pose(x: float, y: float, z: float,
 STUB_POSES = {
     
     # - OBJECTS (IDs 0-4) - #
+    ### to move towards BACK WALL -- +X
+    ### to move towards SHELF/BIN -- +Y
     
     # water bottle on floor, on side (qr code up)
     0: make_pose(
         0.30, 0.00, 
-        real_z(BOTTLE_RADIUS), 
+        real_z(BOTTLE_DIAMETER), ### FACE ON TOP OF BOTTLE, total width needed
         flat_orientation
     ),
-    # medication bottle on shelf, upright, tag to robot
+    # medication bottle upright, tag to robot
     #1: make_pose(
-    #    TABLE_POS_X - 0.20, TABLE_POS_Y - 0.20, 
+    #    (TABLE_POS_X - 0.20) + MEDICATION_RADIUS, TABLE_POS_Y - 0.20, 
     #    TABLE_SURFACE_Z + MEDICATION_HEIGHT / 2.0, 
     #    side_orientation
     #),
     # cup on table, upright, tag to robot
     2: make_pose(
-        TABLE_POS_X - 0.10, TABLE_POS_Y - 0.20, 
+        (TABLE_POS_X - 0.10) + CUP_RADIUS, (TABLE_POS_Y - 0.20), 
         TABLE_SURFACE_Z + CUP_HEIGHT / 2.0, 
         side_orientation
     ),
     # TV remote on table, flat, tag facing up
     ### correct to make QR code be at bottom end of remote later
     3: make_pose(
-        TABLE_POS_X - 0.20, TABLE_POS_Y - 0.10,  
-        TABLE_SURFACE_Z + REMOTE_THICKNESS / 2.0, 
+        (TABLE_POS_X), TABLE_POS_Y - 0.15,  
+        TABLE_SURFACE_Z + REMOTE_THICKNESS, 
         flat_orientation
     ),
     # Cube: on table, flat, tag facing up
     4: make_pose(
-        TABLE_POS_X - 0.15, TABLE_POS_Y, 
-        TABLE_SURFACE_Z + CUBE_SIZE / 2.0, 
+        TABLE_POS_X - 0.18, TABLE_POS_Y - 0.15, 
+        TABLE_SURFACE_Z + CUBE_SIZE, 
         flat_orientation
     ),
 }
 
-OBJECT_IDS = set(OBJECTS.keys())
+OBJECT_IDS = set(STUB_POSES.keys())
 
 # --- STUB VISION NODE --- #
 
@@ -162,8 +165,9 @@ class VisionStubNode(Node):
         if self._scene_locked:
             return
 
+        visible = set(STUB_POSES.keys()) - self._picked_ids
         msg = Int32MultiArray()
-        msg.data = sorted(OBJECT_IDS - self._picked_ids)
+        msg.data = sorted(visible)
         self._id_publisher.publish(msg)
         
     # --- Service Handler: mirrors vision_apriltag's interface

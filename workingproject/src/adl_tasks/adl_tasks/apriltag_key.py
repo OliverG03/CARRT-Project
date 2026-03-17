@@ -1,4 +1,4 @@
-# apriltag_key.py
+# ------ apriltag_key.py ------ #
 
 # Define a Master Key (class) to store AprilTag IDs and corresponding information on objects:
 # - AprilTag ID
@@ -13,17 +13,24 @@ from scipy.spatial.transform import Rotation
 import numpy as np
 
 from adl_tasks.adl_config import (
-    TABLE_SURFACE_Z,
-    SHELF_POS_X, SHELF_POS_Y,
-    BIN_POS_X, BIN_POS_Y, 
-    BIN_DROP_Z, SHELF_DROP_Z, HANDOVER_Z,
-    HANDOVER_POS_X, HANDOVER_POS_Y, 
-    BOTTLE_DIAMETER, BOTTLE_RADIUS, BOTTLE_HEIGHT, BOTTLE_GRASP_Z,
-    MEDICATION_DIAMETER, MEDICATION_RADIUS, MEDICATION_HEIGHT, MEDICATION_GRASP_Z,
-    CUP_DIAMETER, CUP_RADIUS, CUP_HEIGHT, CUP_GRASP_Z,
-    REMOTE_WIDTH, REMOTE_LENGTH, REMOTE_THICKNESS, REMOTE_GRASP_Z,
-    CUBE_SIZE, CUBE_GRASP_Z, FINGER_REACH, GRASP_CLEARANCE,
-    SHELF1_DROP_X, SHELF2_DROP_X,
+    # Location Dimensions
+    TABLE_SURFACE_Z, GRASP_CLEARANCE, FINGER_REACH, # table, etc.
+    SHELF_POS_X, SHELF1_POS_Y, SHELF2_POS_Y,        # shelf
+    BIN_POS_X, BIN_POS_Y, REMOTE_DROP_Z,            # bin
+    HANDOVER_POS_X, HANDOVER_POS_Y,                 # handover
+    # Object Dimensions
+    BOTTLE_DIAMETER, BOTTLE_RADIUS, BOTTLE_HEIGHT, 
+    MEDICATION_DIAMETER, MEDICATION_RADIUS, MEDICATION_HEIGHT, 
+    CUP_DIAMETER, CUP_RADIUS, CUP_HEIGHT, 
+    REMOTE_WIDTH, REMOTE_LENGTH, REMOTE_THICKNESS, REMOTE_TAG_FROM_END, 
+    REMOTE_LENGTH_AXIS, BOTTLE_LENGTH_AXIS,
+    CUBE_SIZE, 
+    # X Values
+    SHELF_DROP_X, BIN_DROP_X,
+    # Grasp Z Values
+    BOTTLE_GRASP_Z, MEDICATION_GRASP_Z, CUP_GRASP_Z, REMOTE_GRASP_Z, CUBE_GRASP_Z, 
+    # Drop Z Values
+    BOTTLE_DROP_Z, MEDICATION_DROP_Z, CUP_DROP_Z, REMOTE_DROP_Z, CUBE_DROP_Z,  
 )
 
 # --- Gripper Approach --- #
@@ -32,7 +39,7 @@ from adl_tasks.adl_config import (
 def _meters_to_rads(diameter_m: float) -> float:
     # convert object diameter to gripper opening in radians
     # assumes gripper opens symmetrically around center, with max width of 0.085 m at 0.708 rad
-    return 0.8 * max(0.0, min(1.0, diameter_m / 0.085))
+    return 0.8 * (1 - diameter_m/0.085)
 
 # --- Destination Pose Orientations --- #
 
@@ -41,8 +48,8 @@ def side_approach_orientation():
     # tag placed facing robot, perpendicular to the ground
     # open with vertical allowance, so gripper can close around small/thin objects from sides
     q = Quaternion()
-    q.x = 0.0
-    q.y = 0.707
+    q.x = 0.707
+    q.y = 0.0
     q.z = 0.0
     q.w = 0.707
     return q
@@ -80,12 +87,14 @@ class AprilTagObject:
     
     def __init__(self, name, ID, object_type, adl_used, approach_type,
                  grasp_offset, gripper_width, 
-                 gripper_force, gripper_speed, destination):
+                 gripper_force, gripper_speed, destination,
+                 dest_approach_type: str = "side"):
         self.name = name
         self.ID = ID
         self.object_type = object_type  ### consider if necessary
         self.adl_used = adl_used        ### consider if necessary
-        self.approach_type = approach_type
+        self.approach_type = approach_type           # how the object is PICKED
+        self.dest_approach_type = dest_approach_type # how the object is PLACED
         self.grasp_offset = grasp_offset            # [x,y,z] -> offset from tag pose to grasp point
         self.gripper_width = gripper_width          # max: 0.085 = fully open
         self.gripper_force = gripper_force          # Newtons
@@ -108,7 +117,7 @@ class AprilTagObject:
         return (xy_dist < self.AT_DEST_XY_TOLERANCE and
                 z_dist  < self.AT_DEST_Z_TOLERANCE)
 
-    def compute_grasp_pose(self, tag_pose, standoff = 0.12):
+    def compute_grasp_pose(self, tag_pose: Pose, standoff = 0.12):
         """
         Compute the grasp pose based on the tag pose.
         Tag Frame: (AprilTag / ROS2):
@@ -128,9 +137,6 @@ class AprilTagObject:
         # tag pose: position (x,y,z) and orientation (quaternion)
         # returned from vision node
         grasp = Pose()
-        grasp.position.x = tag_pose.position.x + self.grasp_offset[0]
-        grasp.position.y = tag_pose.position.y + self.grasp_offset[1]
-        grasp.position.z = tag_pose.position.z + self.grasp_offset[2]
         
         # Get Tag Pose
         tag_q = tag_pose.orientation
@@ -138,10 +144,21 @@ class AprilTagObject:
         tag_axes = tag_rot.as_matrix() # get tag axes as rotation matrix
         tag_x = tag_axes[:,0] # tag X axis
         tag_y = tag_axes[:,1] # tag Y axis
-        tag_z = tag_axes[:,2] # tag Z axis
+        tag_z = tag_axes[:,2] # tag Z axis        
         
-        # derive orientation from approach vector
+        # Grasp Offset in TAG FRAME
+        dx, dy, dz = self.grasp_offset
+        world_offset = tag_x * dx + tag_y * dy + tag_z * dz
+    
+        grasp.position.x = float(tag_pose.position.x + world_offset[0])
+        grasp.position.y = float(tag_pose.position.y + world_offset[1])
+        grasp.position.z = float(tag_pose.position.z + world_offset[2])
+    
+        # orientation from approach vector
         if self.approach_type == "side":
+            grasp.orientation = side_approach_orientation()
+            return grasp
+            '''
             # tag is on vertical surface, facing robot.
             # tag z toward robot, along gripper approach
             gripper_matrix = np.column_stack([tag_x, tag_y, tag_z]) 
@@ -153,7 +170,6 @@ class AprilTagObject:
             gripper_matrix = u @ vt
             if np.linalg.det(gripper_matrix) < 0: # ensure right-handed coordinate system
                 gripper_matrix[:, -1] *= -1
-                gripper_matrix = u @ vt
             
             # convert gripper_matrix back to quaternion for grasp orientation
             gripper_rot = Rotation.from_matrix(gripper_matrix)
@@ -163,12 +179,62 @@ class AprilTagObject:
             grasp.orientation.z = float(q[2])
             grasp.orientation.w = float(q[3])
             return grasp
+            '''
+        # TOP approach:
+        # top down, yaw along tag to be pinched properly
+        world_down = np.array([0.0, 0.0, -1.0])
+        if self.ID == 3: 
+            length_axis = tag_y if REMOTE_LENGTH_AXIS == "y" else tag_x
+            width_axis = tag_x if REMOTE_LENGTH_AXIS == "y" else tag_y
+            
+            # shift along length
+            center_shift = (REMOTE_LENGTH/2.0 - REMOTE_TAG_FROM_END)
+            grasp.position.x = float(grasp.position.x + length_axis[0] * center_shift)
+            grasp.position.y = float(grasp.position.y + length_axis[1] * center_shift)
+            grasp.position.z = float(grasp.position.z + length_axis[2] * center_shift)
+            
+            gripper_x = width_axis
+        elif self.ID == 0:
+            # water bottle above grasp, bottle on side
+            length_axis = tag_y if BOTTLE_LENGTH_AXIS == "y" else tag_x
+            gripper_x = tag_x if BOTTLE_LENGTH_AXIS == "y" else tag_y
+            
+            # 
+        else:    
+            # cube top-grasp
+            gripper_x = tag_x
+            
+        # -- Build Gripper Frame --
+        gripper_z = world_down
+        gripper_x = gripper_x / np.linalg.norm(gripper_x)
         
+        gripper_x = gripper_x - gripper_z * np.dot(gripper_x, gripper_z)
+        norm = np.linalg.norm(gripper_x)
+        if norm < 1e-6:
+            gripper_x = np.array([1.0, 0.0, 0.0]) # default if parallel to down
         else:
-            # tag Z points up, gripper approach from above
-            # gripper_matrix = np.column_stack([tag_x, tag_y, -tag_z])
-            grasp.orientation = top_down_orientation() # default to top-down approach orientation
+            gripper_x = gripper_x / norm
+        
+        gripper_y = np.cross(gripper_z, gripper_x)
+        gripper_y = gripper_y / np.linalg.norm(gripper_y)
+        
+        gripper_matrix = np.column_stack([gripper_x, gripper_y, gripper_z])
+        
+        u, _, vt = np.linalg.svd(gripper_matrix)
+        gripper_matrix = u @ vt
+        if np.linalg.det(gripper_matrix) < 0:
+            gripper_matrix[:, -1] *= -1
+
+        gripper_rot = Rotation.from_matrix(gripper_matrix)
+        q = gripper_rot.as_quat()
+        grasp.orientation.x = float(q[0])
+        grasp.orientation.y = float(q[1])
+        grasp.orientation.z = float(q[2])
+        grasp.orientation.w = float(q[3])
         return grasp
+        
+        
+            
     
     def compute_approach_pose(self, tag_pose: Pose, standoff: float = 0.15) -> Pose:
         """Compute the approach pose based on the tag pose and the stored approach vector."""
@@ -185,17 +251,17 @@ class AprilTagObject:
         approach.orientation = grasp.orientation
         
         if self.approach_type == "side":
-            # side approach +tag Z axis
-            approach.position.x = grasp.position.x - standoff * tag_z[0]
-            approach.position.y = grasp.position.y - standoff * tag_z[1] 
-            approach.position.z = grasp.position.z - standoff * tag_z[2]
+            # side approach(world -X {### or -Y depending on tag orientation??? }) - tag Z axis is approach direction
+            approach.position.x = grasp.position.x - standoff # * tag_z[0]
+            approach.position.y = grasp.position.y # - standoff * tag_z[1] 
+            approach.position.z = grasp.position.z # - standoff * tag_z[2]
         elif self.approach_type == "top": 
             # top-down approach -tag Z axis
             approach.position.x = grasp.position.x
             approach.position.y = grasp.position.y
             approach.position.z = grasp.position.z + standoff
         else:
-            self.logger().warn(f"Unknown approach type {self.approach_type} for object {self.name}. Defaulting to top-down approach.")
+            #print(f"Unknown approach type {self.approach_type} for object {self.name}. Defaulting to top-down approach.")
             approach.position.x = grasp.position.x
             approach.position.y = grasp.position.y
             approach.position.z = grasp.position.z + standoff # default approach straight down from above
@@ -203,16 +269,34 @@ class AprilTagObject:
 
 
 # --- LOCATIONS --- #
-_DROP_CLEARANCE = FINGER_REACH + GRASP_CLEARANCE # EEF pose
+#_DROP_CLEARANCE = FINGER_REACH + GRASP_CLEARANCE # EEF pose
 
 # make these pull from macros for proper sizing / positioning
 LOCATIONS = {
     # drop off for water bottle / medication (near user, edge of table, etc.)
-    "Near User": _make_dest_pose(
-        HANDOVER_POS_X, HANDOVER_POS_Y, HANDOVER_Z + _DROP_CLEARANCE, "side"), # handoff near user, upright ### FIX X to pull from config
-    "Shelf 1 (Left)": _make_dest_pose(SHELF1_DROP_X, SHELF_POS_Y, SHELF_DROP_Z + _DROP_CLEARANCE, "side"), # cup drop, upright
-    "Shelf 2 (Right)": _make_dest_pose(SHELF2_DROP_X, SHELF_POS_Y, SHELF_DROP_Z + _DROP_CLEARANCE, "top"), # remote drop, down
-    "Bin": _make_dest_pose(BIN_POS_X, BIN_POS_Y, BIN_DROP_Z + _DROP_CLEARANCE, "top") # cube drop
+    "Near User (Medication)": _make_dest_pose(
+        HANDOVER_POS_X, HANDOVER_POS_Y, 
+        MEDICATION_DROP_Z, "side"
+    ), 
+    "Near User (Bottle)": _make_dest_pose(
+        HANDOVER_POS_X, HANDOVER_POS_Y,
+        BOTTLE_DROP_Z, "side"
+    ),
+    # drop for cube object
+    "Shelf 1 (Left)": _make_dest_pose(
+        SHELF_DROP_X, SHELF1_POS_Y, 
+        CUBE_DROP_Z, "side"
+    ), 
+    # drop for cup
+    "Shelf 2 (Right)": _make_dest_pose(
+        SHELF_DROP_X, SHELF2_POS_Y, 
+        CUP_DROP_Z, "side"
+    ),
+    # drop for remote
+    "Bin": _make_dest_pose(
+        BIN_DROP_X, BIN_POS_Y, 
+        REMOTE_DROP_Z, "side"
+    )
 }
     
 # --- OBJECTS --- #
@@ -237,7 +321,7 @@ OBJECTS = {
         gripper_force=  15.0,
         gripper_speed=  0.03, # slow, avoid rolling
         
-        destination=    LOCATIONS["Near User"] # hand off near user
+        destination=    LOCATIONS["Near User (Bottle)"] # hand off near user
     ),
     # medication bottle (ADL task 2: give medication to user)
     # tag on side of bottle (>=2x) -> facing robot horizontally
@@ -254,7 +338,7 @@ OBJECTS = {
         gripper_force=  10,
         gripper_speed=  0.03,
         
-        destination=    LOCATIONS["Near User"] # hand off near user
+        destination=    LOCATIONS["Near User (Medication)"] # hand off near user
     ),
     # household objects (ADL task 3: clear household objects)
     # upright facing robot
@@ -271,7 +355,7 @@ OBJECTS = {
         gripper_force=  10,
         gripper_speed=  0.03,
         
-        destination=    LOCATIONS["Shelf 1 (Left)"] # Shelf 1
+        destination=    LOCATIONS["Shelf 2 (Right)"] # Shelf 2
     ),
     # tag on top of remote, facing up
     # approach from ABOVE, grab at midpoint, offset from where QR is placed (below buttons, roku remote)
@@ -287,7 +371,7 @@ OBJECTS = {
         gripper_force=  10,
         gripper_speed=  0.03,
         
-        destination=LOCATIONS["Shelf 2 (Right)"] # Shelf 2
+        destination=    LOCATIONS["Bin"] # Bin
     ),
     # tag on top of cube, facing up
     # approach from SIDE, grab at midpoint, where QR is placed
@@ -303,6 +387,6 @@ OBJECTS = {
         gripper_force=  10,
         gripper_speed=  0.03,
 
-        destination=LOCATIONS["Bin"]
+        destination=    LOCATIONS["Shelf 1 (Left)"] # Shelf 1
     ),
 }
