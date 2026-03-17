@@ -18,7 +18,6 @@ import time as _time
 import copy as _copy
 import threading
 from threading import Lock
-import math
 
 from control_msgs.action import GripperCommand
 from geometry_msgs.msg import Pose
@@ -34,7 +33,6 @@ from moveit_msgs.msg import (
     RobotState,
     AttachedCollisionObject,
     PlanningScene,
-    
 )
 from moveit_msgs.srv import GetStateValidity, GetCartesianPath
 from sensor_msgs.msg import JointState
@@ -43,15 +41,14 @@ from rclpy.action import ActionClient
 from std_msgs.msg import Header
 import rclpy
 
+from adl_tasks.motion_profiles import DEFAULT_PROFILE, PoseTolerance
+
 # Helper class to complete basic MoveIt2 functions for the various ADLS
 # can also hold emergency stop or other safety functions
 # initialize arm and gripper, and other movement tasks
 class MoveItHelper:
     
-    ### INTERNAL CLASS DEFINITIONS!
-    
-    # HOME --- Joint values pulled from gen3.srdf (kinova_gen3_7dof...)
-    # Source: group_state name="Home", group="manipulator"
+    # --- HOME --- Joint values pulled from gen3.srdf (kinova_gen3_7dof...)
     HOME_JOINTS = {
         "joint_1": 0.0,     
         "joint_2": 0.26,
@@ -62,8 +59,7 @@ class MoveItHelper:
         "joint_7": 1.57, 
     }   
     
-    # RETRACT --- safe intermediate pose from floor-level grab/pick
-    # Source: group_state name="Retract" group="manipulator" in gen3.srdf
+    # --- RETRACT --- safe intermediate pose from floor-level grab/pick
     RETRACT_JOINTS = {
         "joint_1": 0.0,
         "joint_2": -0.35,
@@ -74,52 +70,34 @@ class MoveItHelper:
         "joint_7": 1.57,
     }
     
-    # joint name list in order, from urdf file
+    # Arm Control
     ARM_JOINT_NAMES = [
         "joint_1", "joint_2", "joint_3", 
         "joint_4", "joint_5", "joint_6", "joint_7"
     ]
     
-    # gripper knuckle joint name (for gripper control)
-    # verified with:    ros2 topic echo /joint_states --once | grep -i knuckle
+    # Gripper Control
     GRIPPER_JOINT_NAMES = ["robotiq_85_left_knuckle_joint"]
     
-    # planning group names from gen3.srdf
+    # Planning Groups
     ARM_GROUP = "manipulator"
     GRIPPER_GROUP = "gripper"
     END_EFFECTOR = "end_effector_link"
     
-    # MoveGroup action server name
-    # verified with:    ros2 action list | grep -i move
+    # Server Names
     MOVE_ACTION = "/move_action"
     GRIPPER_ACTION = "/robotiq_gripper_controller/gripper_cmd"
     
-    # planning params: conservative for safety
-    PLANNING_TIME = 10.0  # max time to find a solution
-    VELOCITY_SCALE = 0.2  # lower to reduce ExecuteTrajectory control failures
-    ACCEL_SCALE = 0.15
-    
-    #####
+    # ---
 
-    # begin class definition
     def __init__(self, node):
 
-        self.node = node
-        # action client - drive execution        
+        self.node = node     
         self.move_client = ActionClient(node, MoveGroup, self.MOVE_ACTION)
-        # store last goal handle so emergency stop can cancel if necessary
         self._last_goal_handle = None
-        # gripper cmd action client
-        # "/robotiq_gripper_controller/gripper_cmd"
-        self._gripper_client = ActionClient(
-            node, GripperCommand, self.GRIPPER_ACTION
-        )
-        self._validity_client = node.create_client(
-            GetStateValidity, '/check_state_validity'
-        )
-        self._cartesian_client = node.create_client(
-            GetCartesianPath, '/compute_cartesian_path'
-        )
+        self._gripper_client = ActionClient(node, GripperCommand, self.GRIPPER_ACTION)
+        self._validity_client = node.create_client(GetStateValidity, '/check_state_validity')
+        self._cartesian_client = node.create_client(GetCartesianPath, '/compute_cartesian_path')
         
         self._js_lock = Lock()
         self._latest_joint_state: JointState | None = None
@@ -147,9 +125,7 @@ class MoveItHelper:
         
     # --- INTERNAL NODE --- #
     # build a motion plan request and send as a goal
-    # called by public movement functions below
-    
-    # define a wait control rule
+
     # wait for a future without reentering a spin loop. true if done
     def _wait_for_future(self, future, timeout: float) -> bool:
         start = _time.monotonic()
@@ -189,20 +165,20 @@ class MoveItHelper:
         try:
             self.wait_for_settle(timeout=3.0)
         except Exception as e:
-            self.node.get_logger().warn(f"_recover_after_failure: wait_for_settle failed: {e}")
+            pass
 
         # 4) Small cooldown so controllers don’t reject the next goal immediately
         _time.sleep(1.0)
         self.wait_for_settle(timeout=5.0)
         
     # build a motion plan request with standard planning parameters
-    def _base_request(self, group: str) -> MotionPlanRequest:
+    def _base_request(self, group: str, profile=DEFAULT_PROFILE) -> MotionPlanRequest:
         req = MotionPlanRequest()
         req.group_name = group
         req.num_planning_attempts = 10
-        req.allowed_planning_time = self.PLANNING_TIME
-        req.max_velocity_scaling_factor = self.VELOCITY_SCALE
-        req.max_acceleration_scaling_factor = self.ACCEL_SCALE
+        req.allowed_planning_time = profile.planning_time
+        req.max_velocity_scaling_factor = profile.velocity_scaling
+        req.max_acceleration_scaling_factor = profile.accel_scaling
         # workspace bounds
         req.workspace_parameters.header.frame_id = "base_link"
         req.workspace_parameters.min_corner.x = -1.5
@@ -258,6 +234,7 @@ class MoveItHelper:
             self._recover_after_failure("result is None")
             return False
         
+        ### consider modulating
         error_code = result.result.error_code.val
         if error_code != 1: # fail
             self.node.get_logger().error(
@@ -337,11 +314,44 @@ class MoveItHelper:
         self.node.get_logger().warn("Timed out waiting for complete arm joint state from /joint_states.")
         return None
     
+    def get_arm_joint_positions(self, timeout: float = 1.0):
+        js = self._get_arm_joint_snapshot(timeout=timeout)
+        if js is None:
+            return None
+        return {name: pos for name, pos in zip(js.name, js.position)}
+    
+    def go_to_joint_positions(self, joint_targets: dict) -> bool:
+        req = self._base_request(self.ARM_GROUP)
+        constraints = Constraints()
+        for joint_name, pos in joint_targets.items():
+            jc = JointConstraint()
+            jc.joint_name = joint_name
+            jc.position = float(pos)
+            jc.tolerance_above = 0.05
+            jc.tolerance_below = 0.05
+            jc.weight = 1.0
+            constraints.joint_constraints.append(jc)
+        req.goal_constraints = [constraints]
+        return self._send_goal(req, timeout=60.0)
+    
+    def look_at_table(self) -> bool:
+        ### to use from home position
+        # rotate wrist so camera on top can see the table clearly
+        joints = self.get_arm_joint_positions(timeout=1.0)
+        if joints is None:
+            self.node.get_logger().error("look_at_table: no joints snapshot.")
+            return False
+        # rotate by 180 degrees to stop EEF from blocking table view
+        joints["joint_7"] += 3.14159
+        ok = self.go_to_joint_positions(joints)
+        _time.sleep(0.5)
+        return ok
+    
     def go_cartesian(self, waypoints: list,
                      max_step: float = 0.01, 
                      jump_thresh: float = 0.0,
                      avoid_collisions: bool = True,
-                     min_fraction: float = 0.99,
+                     min_fraction: float = 0.995,
                      fallback_to_pose: bool = False,
                      joint_locks: dict | None = None) -> bool:
         if not self._cartesian_client.wait_for_service(timeout_sec=5.0):
@@ -469,6 +479,7 @@ class MoveItHelper:
         
         req.goal_constraints = [constraints]
         return self._send_goal(req, timeout=60.0)
+    
     
     def _apply_real_start_state(self, req: MotionPlanRequest, timeout: float = 1.0) -> bool:
         js = self._get_arm_joint_snapshot(timeout=timeout)
@@ -651,72 +662,66 @@ class MoveItHelper:
         
     # --- Pose Space --- #
     
-    ### OUTDATED
-    # move arm end effector to a specific target pose in the frame    
-    def go_to_pose(self, pose: Pose, frame_id="base_link", 
-                   z_rot_tolerance: float = 3.14,
-                   xy_rot_tolerance: float = 0.4,
-                   joint_locks:dict | None = None,
-                   pos_tolerance: float = 0.02) -> bool:
+
+    # move arm end effector to a specific oriented pose in the frame
+       
+    def go_to_pose(self, pose: Pose, 
+                   frame_id="base_link", 
+                   tol: PoseTolerance | None = None,
+                   orientation_required: bool = True, 
+                   joint_locks: dict | None = None) -> bool:
+        tol = tol or PoseTolerance()
+        
         self.node.get_logger().info(
             f"go_to_pose: planning to pose at {pose.position.x:.3f},"
             f"{pose.position.y:.3f}, {pose.position.z:.3f}"
         )
+        
         req = self._base_request(self.ARM_GROUP)
         req.start_state.is_diff = True
         
-        # position constraint - 5mm tolerance around the target pose
-        # increase if error occurs
         pos_constraint = PositionConstraint()
         pos_constraint.header.frame_id = frame_id
         pos_constraint.link_name = self.END_EFFECTOR
-        bv = BoundingVolume()   # small box around target pose
+        bv = BoundingVolume()
         prim = SolidPrimitive()
         prim.type = SolidPrimitive.SPHERE
-        prim.dimensions = [float(pos_tolerance)]  # 2cm radius
+        prim.dimensions = [float(tol.pos)]
         bv.primitives = [prim]
         bv.primitive_poses = [pose]
         pos_constraint.constraint_region = bv
         pos_constraint.weight = 1.0
         
-        # orientation constraint - ~6 deg on each axis
-        # increase if planner struggles
-        ori_constraint = OrientationConstraint()
-        ori_constraint.header.frame_id = frame_id
-        ori_constraint.link_name = self.END_EFFECTOR
-        ori_constraint.orientation = pose.orientation
-        ori_constraint.absolute_x_axis_tolerance = xy_rot_tolerance
-        ori_constraint.absolute_y_axis_tolerance = xy_rot_tolerance
-        ori_constraint.absolute_z_axis_tolerance = z_rot_tolerance
-        ori_constraint.weight = 1.0
-        
         constraints = Constraints()
         constraints.position_constraints.append(pos_constraint)
-        constraints.orientation_constraints.append(ori_constraint)
+
+        if orientation_required:
+            ori_constraint = OrientationConstraint()
+            ori_constraint.header.frame_id = frame_id
+            ori_constraint.link_name = self.END_EFFECTOR
+            ori_constraint.orientation = pose.orientation
+            ori_constraint.absolute_x_axis_tolerance = tol.ori_xy
+            ori_constraint.absolute_y_axis_tolerance = tol.ori_xy
+            ori_constraint.absolute_z_axis_tolerance = tol.ori_z
+            ori_constraint.weight = 1.0
+            constraints.orientation_constraints.append(ori_constraint)
         
         if joint_locks:
-            for joint_name, (pos, tol) in joint_locks.items():
+            for joint_name, (pos, tol_j) in joint_locks.items():
                 jc = JointConstraint()
                 jc.joint_name = joint_name
                 jc.position = float(pos)
-                jc.tolerance_above = float(tol)
-                jc.tolerance_below = float(tol)
+                jc.tolerance_above = float(tol_j)
+                jc.tolerance_below = float(tol_j)
                 jc.weight = 1.0
                 constraints.joint_constraints.append(jc)
         
         req.goal_constraints = [constraints]
-        
         return self._send_goal(req)
-    
-    def get_arm_joint_positions(self, timeout: float = 1.0) -> dict | None:
-        js = self._get_arm_joint_snapshot(timeout=timeout)
-        if js is None:
-            return None
-        return {n: float(p) for n, p in zip(js.name, js.position)}
     
     # move arm end effector to a specific target pose in the frame  
     def go_to_position(self, pose: Pose, frame_id="base_link", 
-                       tolerance: float = 0.03) -> bool:
+                       tolerance: float = 0.05) -> bool:
         self.node.get_logger().info(
             f"go_to_position: ({pose.position.x:.3f},"
             f"{pose.position.y:.3f}, {pose.position.z:.3f}) - orientation free"
@@ -747,8 +752,9 @@ class MoveItHelper:
         dest_pose: Pose,
         standoff_z: float = 0.25,
         above_pos_tol: float = 0.06,
-        align_xy_tol: float = 0.20,
+        align_xy_tol: float = 0.35,
         align_z_tol: float = 3.14,
+        require_orientation: bool = False,
     ) -> tuple[bool, Pose]:
         """
         Move above destination and align wrist to destination orientation.
@@ -757,60 +763,29 @@ class MoveItHelper:
         above = _copy.deepcopy(dest_pose)
         above.position.z += float(standoff_z)
 
-        # Step 1: reach above position with loose orientation
-        ok = self.go_to_pose(
-            above,
-            z_rot_tolerance=align_z_tol,
-            xy_rot_tolerance=0.6,
-            pos_tolerance=above_pos_tol,
-        )
-        if not ok:
-            # fallback: position-only above destination
-            ok = self.go_to_position(above, tolerance=above_pos_tol)
-            if not ok:
+        # 1. Reach for above position (no orientation)
+        if not self.go_to_position(above, tolerance= above_pos_tol):
+            above.position.z += 0.1  # try 1 further attempt
+            if not self.go_to_position(above, tolerance= above_pos_tol + 0.02):
                 return False, above
-
-        # Step 2: align wrist to destination orientation at above position
-        align_pose = _copy.deepcopy(above)
-        align_pose.orientation = _copy.deepcopy(dest_pose.orientation)
-        ok = self.go_to_pose(
-            align_pose,
-            z_rot_tolerance=align_z_tol,
-            xy_rot_tolerance=0.6,
-            pos_tolerance=above_pos_tol,
-        )
-        if not ok:
-            # keep going; try higher above drop location
-            above.position.z += 0.10 
-            if not self.go_to_pose(
-                above,
-                z_rot_tolerance=align_z_tol,
-                xy_rot_tolerance=0.6,
-                pos_tolerance=above_pos_tol,
-            ):
-                return False, align_pose
+        # 2. Align orientation while above
+        if require_orientation:
             align_pose = _copy.deepcopy(above)
             align_pose.orientation = _copy.deepcopy(dest_pose.orientation)
             ok = self.go_to_pose(
                 align_pose,
-                z_rot_tolerance=align_z_tol,
-                xy_rot_tolerance=0.6,
-                pos_tolerance=above_pos_tol,
+                tol=PoseTolerance(
+                    pos=above_pos_tol,
+                    ori_xy=align_xy_tol,
+                    ori_z=align_z_tol,
+                ),
+                orientation_required=True,
             )
             if not ok:
                 return False, align_pose
-
-        # then tighten
-        if align_xy_tol < 0.6:
-            ok = self.go_to_pose(
-                align_pose,
-                z_rot_tolerance=align_z_tol,
-                xy_rot_tolerance=align_xy_tol,
-                pos_tolerance=above_pos_tol,
-            )
-            if not ok:
-                return False, align_pose
-        return True, align_pose
+            return True, align_pose
+        
+        return True, above
         
     def go_to_side_approach(
         self,
@@ -833,12 +808,9 @@ class MoveItHelper:
                 return False
         return self.go_to_pose(
             approach_pose,
-            xy_rot_tolerance=xy_rot_tolerance,
-            z_rot_tolerance=z_rot_tolerance,
+            tol = PoseTolerance(pos=0.03, ori_xy=xy_rot_tolerance, ori_z=z_rot_tolerance),
+            orientation_required=True,
         )
-        
-        
-        
     
     # --- GRIPPER MOTION --- #
     
@@ -916,7 +888,7 @@ class MoveItHelper:
         "robotiq_85_right_finger_tip_link",
         "robotiq_85_left_inner_knuckle_link",
         "robotiq_85_right_inner_knuckle_link",
-        ] ### CHECK IF CORRECT
+        ] 
         
         scene = PlanningScene()
         scene.is_diff = True

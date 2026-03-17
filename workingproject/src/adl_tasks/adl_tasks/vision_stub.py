@@ -111,6 +111,7 @@ class VisionStubNode(Node):
         self._picked_ids: set = set() 
         # track if locked (executing)
         self._scene_locked: bool = False
+        self._vision_enabled: bool = True
         
         # --- GetTagPose service 
         # same name and interface as vision_apriltag
@@ -131,6 +132,7 @@ class VisionStubNode(Node):
         # --- Subscriptions
         self.create_subscription(Int32MultiArray,   '/picked_ids', self._on_picked_ids, 10)
         self.create_subscription(Bool,              '/scene_lock', self._on_scene_lock, 10)
+        self.create_subscription(Bool,              '/vision_enable', self._on_vision_enable, 10)
         
         self.create_timer(0.1, self._publish_ids)
         
@@ -147,10 +149,9 @@ class VisionStubNode(Node):
     
     def _on_picked_ids(self, msg: Int32MultiArray):
         for tid in msg.data:
-            if tid in OBJECT_IDS and tid not in self._picked_ids:
-                self._picked_ids.add(tid)
-                self.get_logger().info(f"Stub: ID {tid} ({OBJECTS[tid].name}) marked as picked/removed.")
-    
+            self._picked_ids.add(tid)
+            self.get_logger().info(f"Stub: ID {tid} ({OBJECTS[tid].name}) marked as picked/removed.")
+
     def _on_scene_lock(self, msg: Bool):
         self._scene_locked = msg.data
         self.get_logger().info(
@@ -158,16 +159,22 @@ class VisionStubNode(Node):
             ("LOCKED" if msg.data else "UNLOCKED") + "."
         )
         
+    def _on_vision_enable(self, msg: Bool):
+        self._vision_enabled = msg.data
+        self.get_logger().info(
+            "Stub: Vision " +
+            ("ENABLED" if msg.data else "DISABLED") + "."
+        )
+        
     # --- ID Publisher
     
     # publish all defined stub IDs as visible, exclude found
     def _publish_ids(self):
-        if self._scene_locked:
+        if self._scene_locked or not self._vision_enabled:
             return
 
-        visible = set(STUB_POSES.keys()) - self._picked_ids
         msg = Int32MultiArray()
-        msg.data = sorted(visible)
+        msg.data = sorted(OBJECT_IDS - self._picked_ids)
         self._id_publisher.publish(msg)
         
     # --- Service Handler: mirrors vision_apriltag's interface
