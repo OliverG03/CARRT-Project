@@ -422,6 +422,9 @@ class clearTableNode(Node):
                 self.arm.wait_for_settle(timeout=3.0)
                 # self.arm.go_home()
                 return False
+           self.get_logger().info(f'[{obj.name}] Returning home before transit...')
+           if not self.arm.go_home():
+               self.get_logger().warn('Failed to go home before transit, attempting anyway...')      
     
         # 5. move to destination location (non-cartesian)
         self.get_logger().info(
