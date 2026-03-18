@@ -211,7 +211,10 @@ class clearTableNode(Node):
                 )
                 skipped.add(tag_id)
                 idx += 1
-                self.arm.go_home() # return to home before next attempt
+                self.arm.stop_motion()         # cancel any lingering goals
+                time.sleep(3.0)                # let controller fully clear
+                self.arm.go_home()             # return to home before next attempt
+                time.sleep(2.0)                # let controller settle after home
                 self.arm.look_at_table()
                 self.vision.set_enabled(True) # update scene between grasps
                 time.sleep(0.5) # wait for vision update after look ### maybe add to look_at_table method since its needed every time
