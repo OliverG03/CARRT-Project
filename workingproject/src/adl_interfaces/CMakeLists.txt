@@ -12,7 +12,8 @@ find_package(geometry_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/GetTagPose.srv"
-  DEPENDENCIES geometry_msgs
+  "msg/AdlTaskStatus.msg"
+  DEPENDENCIES geometry_msgs builtin_interfaces
 )
 
 if(BUILD_TESTING)

@@ -26,7 +26,7 @@ from adl_tasks.adl_config import (
     SHELF_TOTAL_WIDTH, SHELF_DEPTH, SHELF_THICKNESS, SHELF_HEIGHT,
     SHELF_POS_X, SHELF_POS_Y, SHELF_FLOOR_Z,
     WCWALL_X, WCWALL_Y, WCWALL_Z, WCWALL_POS_X, WCWALL_POS_Y, WCWALL_POS_Z,
-    BIN_WIDTH, BIN_DEPTH, BIN_HEIGHT, BIN_POS_X, BIN_POS_Y, BIN_DROP_Z,
+    BIN_WIDTH, BIN_DEPTH, BIN_HEIGHT, BIN_POS_X, BIN_POS_Y,
     BACKWALL_X, BACKWALL_Y, BACKWALL_Z, BACKWALL_POS_X, BACKWALL_POS_Y, BACKWALL_POS_Z,
     FLOOR_X, FLOOR_Y, FLOOR_Z, FLOOR_POS_Z,
 )
@@ -87,8 +87,18 @@ class StaticSceneNode(Node):
                 TABLE_X, TABLE_Y, TABLE_THICKNESS,
                 TABLE_POS_X, TABLE_POS_Y, TABLE_CENTER_Z
             ),
-            ### ADD TABLE LEGS HERE BEFORE REAL WORLD TEST
-            
+            ### ADD FRONT TABLE LEGS HERE BEFORE REAL WORLD TEST
+            make_box(
+                frame, 'table_leg_1', 
+                TABLE_X, TABLE_Y, TABLE_THICKNESS,
+                TABLE_POS_X, TABLE_POS_Y, TABLE_CENTER_Z
+            ),
+            make_box(
+                frame, 'table_leg_2', 
+                TABLE_X, TABLE_Y, TABLE_THICKNESS,
+                TABLE_POS_X, TABLE_POS_Y, TABLE_CENTER_Z
+            ),
+
             # SHELF
             # - floor board
             make_box(

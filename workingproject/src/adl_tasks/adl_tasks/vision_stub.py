@@ -1,4 +1,5 @@
-# vision_stub.py - dynamic vision testing stub
+# ------ vision_stub.py ------ #
+# dynamic vision testing stub
 
 # does NOT include actual vision processing / AprilTag detection
 # implements same GetTagPose service like vision_apriltag.py
@@ -19,11 +20,11 @@ from adl_tasks.adl_config import (
     real_z,
     TABLE_SURFACE_Z, TABLE_POS_X, TABLE_POS_Y,
     SHELF_POS_X, SHELF_POS_Y,
-    BIN_POS_X, BIN_POS_Y, BIN_DROP_Z,
-    SHELF_DROP_Z, HANDOVER_Z,
-    BOTTLE_RADIUS, CUBE_SIZE, REMOTE_THICKNESS,
-    MEDICATION_HEIGHT,
-    CUP_HEIGHT,
+    BIN_POS_X, BIN_POS_Y,
+    HANDOVER_Z,
+    BOTTLE_DIAMETER, CUBE_SIZE, REMOTE_THICKNESS,
+    MEDICATION_HEIGHT, MEDICATION_RADIUS,
+    CUP_HEIGHT, CUP_RADIUS,
 )
 
 # --- Orientation
@@ -39,7 +40,7 @@ def flat_orientation() -> Quaternion:
 def side_orientation() -> Quaternion:
     q = Quaternion()
     q.x = 0.0
-    q.y = 0.707
+    q.y = -0.707
     q.z = 0.0
     q.w = 0.707
     return q
@@ -62,41 +63,43 @@ def make_pose(x: float, y: float, z: float,
 STUB_POSES = {
     
     # - OBJECTS (IDs 0-4) - #
+    ### to move towards BACK WALL -- +X
+    ### to move towards SHELF/BIN -- +Y
     
     # water bottle on floor, on side (qr code up)
     0: make_pose(
         0.30, 0.00, 
-        real_z(BOTTLE_RADIUS), 
+        real_z(BOTTLE_DIAMETER), ### FACE ON TOP OF BOTTLE, total width needed
         flat_orientation
     ),
-    # medication bottle on shelf, upright, tag to robot
+    # medication bottle upright, tag to robot
     #1: make_pose(
-    #    TABLE_POS_X - 0.20, TABLE_POS_Y - 0.20, 
+    #    (TABLE_POS_X - 0.20) + MEDICATION_RADIUS, TABLE_POS_Y - 0.20, 
     #    TABLE_SURFACE_Z + MEDICATION_HEIGHT / 2.0, 
     #    side_orientation
     #),
     # cup on table, upright, tag to robot
     2: make_pose(
-        TABLE_POS_X - 0.10, TABLE_POS_Y - 0.20, 
+        (TABLE_POS_X - 0.10) + CUP_RADIUS, (TABLE_POS_Y - 0.20), 
         TABLE_SURFACE_Z + CUP_HEIGHT / 2.0, 
         side_orientation
     ),
     # TV remote on table, flat, tag facing up
     ### correct to make QR code be at bottom end of remote later
     3: make_pose(
-        TABLE_POS_X - 0.20, TABLE_POS_Y - 0.10,  
-        TABLE_SURFACE_Z + REMOTE_THICKNESS / 2.0, 
+        (TABLE_POS_X), TABLE_POS_Y - 0.15,  
+        TABLE_SURFACE_Z + REMOTE_THICKNESS, 
         flat_orientation
     ),
     # Cube: on table, flat, tag facing up
     4: make_pose(
-        TABLE_POS_X - 0.15, TABLE_POS_Y, 
-        TABLE_SURFACE_Z + CUBE_SIZE / 2.0, 
+        TABLE_POS_X - 0.18, TABLE_POS_Y - 0.15, 
+        TABLE_SURFACE_Z + CUBE_SIZE, 
         flat_orientation
     ),
 }
 
-OBJECT_IDS = set(OBJECTS.keys())
+OBJECT_IDS = set(STUB_POSES.keys())
 
 # --- STUB VISION NODE --- #
 
@@ -108,6 +111,7 @@ class VisionStubNode(Node):
         self._picked_ids: set = set() 
         # track if locked (executing)
         self._scene_locked: bool = False
+        self._vision_enabled: bool = True
         
         # --- GetTagPose service 
         # same name and interface as vision_apriltag
@@ -128,6 +132,7 @@ class VisionStubNode(Node):
         # --- Subscriptions
         self.create_subscription(Int32MultiArray,   '/picked_ids', self._on_picked_ids, 10)
         self.create_subscription(Bool,              '/scene_lock', self._on_scene_lock, 10)
+        self.create_subscription(Bool,              '/vision_enable', self._on_vision_enable, 10)
         
         self.create_timer(0.1, self._publish_ids)
         
@@ -144,10 +149,9 @@ class VisionStubNode(Node):
     
     def _on_picked_ids(self, msg: Int32MultiArray):
         for tid in msg.data:
-            if tid in OBJECT_IDS and tid not in self._picked_ids:
-                self._picked_ids.add(tid)
-                self.get_logger().info(f"Stub: ID {tid} ({OBJECTS[tid].name}) marked as picked/removed.")
-    
+            self._picked_ids.add(tid)
+            self.get_logger().info(f"Stub: ID {tid} ({OBJECTS[tid].name}) marked as picked/removed.")
+
     def _on_scene_lock(self, msg: Bool):
         self._scene_locked = msg.data
         self.get_logger().info(
@@ -155,11 +159,18 @@ class VisionStubNode(Node):
             ("LOCKED" if msg.data else "UNLOCKED") + "."
         )
         
+    def _on_vision_enable(self, msg: Bool):
+        self._vision_enabled = msg.data
+        self.get_logger().info(
+            "Stub: Vision " +
+            ("ENABLED" if msg.data else "DISABLED") + "."
+        )
+        
     # --- ID Publisher
     
     # publish all defined stub IDs as visible, exclude found
     def _publish_ids(self):
-        if self._scene_locked:
+        if self._scene_locked or not self._vision_enabled:
             return
 
         msg = Int32MultiArray()

@@ -1,4 +1,5 @@
-# helper_moves.py
+# ------ helper_moves.py ------ #
+
 # Hold basic movements for general use across multiple tasks.
 # - Return to home position
 # - Move to a specific/predefined pose
@@ -14,7 +15,9 @@
 # helper to execute movement commands
 from __future__ import annotations
 import time as _time
+import copy as _copy
 import threading
+from threading import Lock
 
 from control_msgs.action import GripperCommand
 from geometry_msgs.msg import Pose
@@ -30,7 +33,6 @@ from moveit_msgs.msg import (
     RobotState,
     AttachedCollisionObject,
     PlanningScene,
-    
 )
 from moveit_msgs.srv import GetStateValidity, GetCartesianPath
 from sensor_msgs.msg import JointState
@@ -39,15 +41,14 @@ from rclpy.action import ActionClient
 from std_msgs.msg import Header
 import rclpy
 
+from adl_tasks.motion_profiles import DEFAULT_PROFILE, PoseTolerance
+
 # Helper class to complete basic MoveIt2 functions for the various ADLS
 # can also hold emergency stop or other safety functions
 # initialize arm and gripper, and other movement tasks
 class MoveItHelper:
     
-    ### INTERNAL CLASS DEFINITIONS!
-    
-    # HOME --- Joint values pulled from gen3.srdf (kinova_gen3_7dof...)
-    # Source: group_state name="Home", group="manipulator"
+    # --- HOME --- Joint values pulled from gen3.srdf (kinova_gen3_7dof...)
     HOME_JOINTS = {
         "joint_1": 0.0,     
         "joint_2": 0.26,
@@ -58,8 +59,7 @@ class MoveItHelper:
         "joint_7": 1.57, 
     }   
     
-    # RETRACT --- safe intermediate pose from floor-level grab/pick
-    # Source: group_state name="Retract" group="manipulator" in gen3.srdf
+    # --- RETRACT --- safe intermediate pose from floor-level grab/pick
     RETRACT_JOINTS = {
         "joint_1": 0.0,
         "joint_2": -0.35,
@@ -70,51 +70,44 @@ class MoveItHelper:
         "joint_7": 1.57,
     }
     
-    # joint name list in order, from urdf file
+    # Arm Control
     ARM_JOINT_NAMES = [
         "joint_1", "joint_2", "joint_3", 
         "joint_4", "joint_5", "joint_6", "joint_7"
     ]
     
-    # gripper knuckle joint name (for gripper control)
-    # verified with:    ros2 topic echo /joint_states --once | grep -i knuckle
+    # Gripper Control
     GRIPPER_JOINT_NAMES = ["robotiq_85_left_knuckle_joint"]
     
-    # planning group names from gen3.srdf
+    # Planning Groups
     ARM_GROUP = "manipulator"
     GRIPPER_GROUP = "gripper"
     END_EFFECTOR = "end_effector_link"
     
-    # MoveGroup action server name
-    # verified with:    ros2 action list | grep -i move
+    # Server Names
     MOVE_ACTION = "/move_action"
     GRIPPER_ACTION = "/robotiq_gripper_controller/gripper_cmd"
     
-    # planning params: conservative for safety
-    PLANNING_TIME = 10.0  # max time to find a solution
-    VELOCITY_SCALE = 0.3  # 30% max velocity
-    ACCEL_SCALE = 0.3  # 30% max acceleration
-    
-    #####
+    # ---
 
-    # begin class definition
     def __init__(self, node):
 
-        self.node = node
-        # action client - drive execution        
+        self.node = node     
         self.move_client = ActionClient(node, MoveGroup, self.MOVE_ACTION)
-        # store last goal handle so emergency stop can cancel if necessary
         self._last_goal_handle = None
-        # gripper cmd action client
-        # "/robotiq_gripper_controller/gripper_cmd"
-        self._gripper_client = ActionClient(
-            node, GripperCommand, self.GRIPPER_ACTION
-        )
-        self._validity_client = node.create_client(
-            GetStateValidity, '/check_state_validity'
-        )
-        self._cartesian_client = node.create_client(
-            GetCartesianPath, '/compute_cartesian_path'
+        self._gripper_client = ActionClient(node, GripperCommand, self.GRIPPER_ACTION)
+        self._validity_client = node.create_client(GetStateValidity, '/check_state_validity')
+        self._cartesian_client = node.create_client(GetCartesianPath, '/compute_cartesian_path')
+        
+        self._js_lock = Lock()
+        self._latest_joint_state: JointState | None = None
+        self._latest_joint_state_time = 0.0
+
+        self._js_sub = node.create_subscription(
+            JointState,
+            "/joint_states",
+            self._on_joint_state,
+            50,
         )
     
         # gripper trajectory publisher, for grab_object function force/speed
@@ -132,9 +125,7 @@ class MoveItHelper:
         
     # --- INTERNAL NODE --- #
     # build a motion plan request and send as a goal
-    # called by public movement functions below
-    
-    # define a wait control rule
+
     # wait for a future without reentering a spin loop. true if done
     def _wait_for_future(self, future, timeout: float) -> bool:
         start = _time.monotonic()
@@ -142,16 +133,52 @@ class MoveItHelper:
             if _time.monotonic() - start > timeout:
                 return False
             _time.sleep(0.05)
-        return future.done()     
+        return future.done()    
     
+    def _on_joint_state(self, msg: JointState) -> None:
+        with self._js_lock:
+            self._latest_joint_state = msg
+            self._latest_joint_state_time = _time.monotonic() 
+            
+    def _recover_after_failure(self, context: str = "") -> None:
+        self.node.get_logger().warn(f"_recover_after_failure(): {context}")
+
+        # 1) Cancel MoveGroup goal if still around
+        try:
+            if self._last_goal_handle is not None:
+                cancel_future = self._last_goal_handle.cancel_goal_async()
+                self._wait_for_future(cancel_future, timeout=2.0)
+                self._last_goal_handle = None
+        except Exception as e:
+            self.node.get_logger().warn(f"_recover_after_failure: cancel MoveGroup failed: {e}")
+
+        # 2) Cancel ExecuteTrajectory goal if you have one
+        try:
+            if getattr(self, "_last_exec_goal_handle", None) is not None:
+                cancel_future = self._last_exec_goal_handle.cancel_goal_async()
+                self._wait_for_future(cancel_future, timeout=2.0)
+                self._last_exec_goal_handle = None
+        except Exception as e:
+            self.node.get_logger().warn(f"_recover_after_failure: cancel ExecuteTrajectory failed: {e}")
+
+        # 3) Wait for physical settle
+        try:
+            self.wait_for_settle(timeout=3.0)
+        except Exception as e:
+            pass
+
+        # 4) Small cooldown so controllers don’t reject the next goal immediately
+        _time.sleep(1.0)
+        self.wait_for_settle(timeout=5.0)
+        
     # build a motion plan request with standard planning parameters
-    def _base_request(self, group: str) -> MotionPlanRequest:
+    def _base_request(self, group: str, profile=DEFAULT_PROFILE) -> MotionPlanRequest:
         req = MotionPlanRequest()
         req.group_name = group
         req.num_planning_attempts = 10
-        req.allowed_planning_time = self.PLANNING_TIME
-        req.max_velocity_scaling_factor = self.VELOCITY_SCALE
-        req.max_acceleration_scaling_factor = self.ACCEL_SCALE
+        req.allowed_planning_time = profile.planning_time
+        req.max_velocity_scaling_factor = profile.velocity_scaling
+        req.max_acceleration_scaling_factor = profile.accel_scaling
         # workspace bounds
         req.workspace_parameters.header.frame_id = "base_link"
         req.workspace_parameters.min_corner.x = -1.5
@@ -165,6 +192,7 @@ class MoveItHelper:
     # send request via MoveGroup action. return true on success
     def _send_goal(self, request: MotionPlanRequest, timeout: float = 30.0) -> bool:
         self.check_start_state() # check for collisions before planning, get errors for each
+        self._apply_real_start_state(request, timeout=1.0)
         
         # give 5s for move_group
         if not self.move_client.wait_for_server(timeout_sec=5.0):
@@ -183,11 +211,13 @@ class MoveItHelper:
         future = self.move_client.send_goal_async(goal)
         if not self._wait_for_future(future, timeout):
             self.node.get_logger().error("MoveGroup goal send timed out.")
+            self._recover_after_failure("send_goal_async timed out")
             return False
         
         goal_handle = future.result()
         if goal_handle is None or not goal_handle.accepted:
             self.node.get_logger().error("MoveGroup goal rejected.")
+            self._recover_after_failure("goal rejected")
             return False
     
         # store handle for emergency stop
@@ -195,21 +225,32 @@ class MoveItHelper:
         result_future = goal_handle.get_result_async()
         if not self._wait_for_future(result_future, timeout):
             self.node.get_logger().error("MoveGroup result timed out.")
+            self._recover_after_failure("get_result_async timed out")
             return False
         
         result = result_future.result()
         if result is None:
             self.node.get_logger().error("MoveGroup result timed out.")
+            self._recover_after_failure("result is None")
             return False
         
+        ### consider modulating
         error_code = result.result.error_code.val
         if error_code != 1: # fail
             self.node.get_logger().error(
-                f"MoveGroup execution failed with error code {error_code}.\n"
-                 "Common codes: -1=FAILURE, -5=NO_IK_SOLUTION, "
-                 "-10=GOAL_IN_COLLISION, -12=PLANNING_FAILED\n"
+                "MoveGroup execution failed.\n"
+                f"  error_code.val = {error_code}\n"
+                f"  group_name      = {request.group_name}\n"
+                f"  num_attempts    = {request.num_planning_attempts}\n"
+                f"  allowed_time    = {request.allowed_planning_time}\n"
+                f"  vel_scale       = {request.max_velocity_scaling_factor}\n"
+                f"  accel_scale     = {request.max_acceleration_scaling_factor}\n"
+                "If this persists, check move_group / controller logs for the meaning of this code "
+                "(often control abort, invalid start state, or planning pipeline failure)."
             )
+            self._recover_after_failure(f"MoveGroup error_code={error_code}")
             return False
+        self.wait_for_settle(timeout=4.0)
         return True
     
     # send gripper goal directly
@@ -255,24 +296,81 @@ class MoveItHelper:
 
     # --- ARM MOTION --- #
     
+    # get JS containing the arm joints in order, use /joint_states
+    def _get_arm_joint_snapshot(self, timeout: float = 1.0) -> JointState | None:
+        start = _time.monotonic()
+        while _time.monotonic() - start < timeout:
+            with self._js_lock:
+                msg = self._latest_joint_state
+            if msg is not None:
+                name_to_pos = {n: p for n, p in zip(msg.name, msg.position)}
+                if all(j in name_to_pos for j in self.ARM_JOINT_NAMES):
+                    js = JointState()
+                    js.name = list(self.ARM_JOINT_NAMES)
+                    js.position = [float(name_to_pos[j]) for j in self.ARM_JOINT_NAMES]
+                    return js
+            _time.sleep(0.02)
+
+        self.node.get_logger().warn("Timed out waiting for complete arm joint state from /joint_states.")
+        return None
+    
+    def get_arm_joint_positions(self, timeout: float = 1.0):
+        js = self._get_arm_joint_snapshot(timeout=timeout)
+        if js is None:
+            return None
+        return {name: pos for name, pos in zip(js.name, js.position)}
+    
+    def go_to_joint_positions(self, joint_targets: dict) -> bool:
+        req = self._base_request(self.ARM_GROUP)
+        constraints = Constraints()
+        for joint_name, pos in joint_targets.items():
+            jc = JointConstraint()
+            jc.joint_name = joint_name
+            jc.position = float(pos)
+            jc.tolerance_above = 0.05
+            jc.tolerance_below = 0.05
+            jc.weight = 1.0
+            constraints.joint_constraints.append(jc)
+        req.goal_constraints = [constraints]
+        return self._send_goal(req, timeout=60.0)
+    
+    def look_at_table(self) -> bool:
+        ### to use from home position
+        # rotate wrist so camera on top can see the table clearly
+        joints = self.get_arm_joint_positions(timeout=1.0)
+        if joints is None:
+            self.node.get_logger().error("look_at_table: no joints snapshot.")
+            return False
+        # rotate by 180 degrees to stop EEF from blocking table view
+        joints["joint_7"] += 3.14159
+        ok = self.go_to_joint_positions(joints)
+        _time.sleep(0.5)
+        return ok
+    
     def go_cartesian(self, waypoints: list,
                      max_step: float = 0.01, 
                      jump_thresh: float = 0.0,
-                     avoid_collisions: bool = True) -> bool:
+                     avoid_collisions: bool = True,
+                     min_fraction: float = 0.995,
+                     fallback_to_pose: bool = False,
+                     joint_locks: dict | None = None) -> bool:
         if not self._cartesian_client.wait_for_service(timeout_sec=5.0):
             self.node.get_logger().error(
                 "GetCartesianPath service not available."
             )
             return False
-        
+        if not waypoints:
+            self.node.get_logger().error("No waypoints provided for Cartesian path.")
+            return False
+                
         req = GetCartesianPath.Request()
         req.header.frame_id = "base_link"
         req.group_name = self.ARM_GROUP
         req.link_name = self.END_EFFECTOR
         req.waypoints = waypoints
-        req.max_step = max_step
-        req.jump_threshold = jump_thresh
-        req.avoid_collisions = avoid_collisions
+        req.max_step = float(max_step)
+        req.jump_threshold = float(jump_thresh)
+        req.avoid_collisions = bool(avoid_collisions)
         req.start_state.is_diff = True
         
         future = self._cartesian_client.call_async(req)
@@ -283,15 +381,42 @@ class MoveItHelper:
         if resp is None:
             self.node.get_logger().error("GetCartesianPath call failed.")
             return False
-        fraction = resp.fraction
+        fraction = float(resp.fraction)
         self.node.get_logger().info(
             f"Cartesian path computed with {fraction*100:.1f}% success."
         )
-        if fraction < 0.99:
+        
+        if fraction < min_fraction:
+            last = waypoints[-1] ## allow back up to last position
             self.node.get_logger().error(
                 f"Cartesian path only {fraction*100:.1f}% complete — aborting."
+                f"Last waypoint was ({last.position.x:.3f}, {last.position.y:.3f}, {last.position.z:.3f})."
             )
+            if fallback_to_pose:
+                self.node.get_logger().warn(
+                    "Attempting fallback to go_to_pose for final waypoint."
+                )
+                return self.go_to_pose(last)
             return False
+        
+        if joint_locks:
+            traj = resp.solution.joint_trajectory
+            name_to_idx = {n: i for i, n in enumerate(traj.joint_names)}
+            missing = [j for j in joint_locks if j not in name_to_idx]
+            if missing:
+                self.node.get_logger().error(
+                    f"Joint locks specified for {missing} but they are not in the trajectory joint names."
+                )
+                return False
+            for point in traj.points:
+                for joint, (pos, tol) in joint_locks.items():
+                    idx = name_to_idx[joint]
+                    if abs(point.positions[idx] - pos) > tol:
+                        self.node.get_logger().error(
+                            f"Cartesian path point violates joint lock for {joint}: "
+                            f"{point.positions[idx]:.3f} vs lock at {pos:.3f} with tol {tol:.3f}."
+                        )
+                        return False
         
         # execute the planned Cartesian path
         if not hasattr(self, "_exec_client"):
@@ -317,6 +442,8 @@ class MoveItHelper:
             self.node.get_logger().error("ExecuteTrajectory goal rejected.")
             return False
         
+        self._last_exec_goal_handle = gh
+        
         result_future = gh.get_result_async()
         if not self._wait_for_future(result_future, 30.0):
             self.node.get_logger().error("ExecuteTrajectory result timed out.")
@@ -332,7 +459,7 @@ class MoveItHelper:
                 f"ExecuteTrajectory failed with error code {err}."
             )
             return False
-        _time.sleep(0.8) # delay to complete execution
+        self.wait_for_settle(timeout=3.0)
         return True
     
     # plan and execute to a dict of joint values
@@ -351,12 +478,25 @@ class MoveItHelper:
             constraints.joint_constraints.append(jc)
         
         req.goal_constraints = [constraints]
-        return self._send_goal(req, timeout=60.0)    
+        return self._send_goal(req, timeout=60.0)
     
+    
+    def _apply_real_start_state(self, req: MotionPlanRequest, timeout: float = 1.0) -> bool:
+        js = self._get_arm_joint_snapshot(timeout=timeout)
+        if js is None or not js.name or len(js.name) != len(self.ARM_JOINT_NAMES):
+            # Fallback: let move_group use its internal "current state"
+            req.start_state.is_diff = True
+            return False
+
+        req.start_state.joint_state = js
+        req.start_state.is_diff = False
+        return True
+        
     # move to Kinova's predefined home position (srdf file)
     def go_home(self, retries: int = 2) -> bool:
         self.node.get_logger().info("go_home: planning to HOME_JOINTS...")
-        _time.sleep(1.5) # wait for valid state before planning
+        self.wait_for_settle(timeout=3.0) # ensure arm is still before trying to go home
+        _time.sleep(1.0) ### increase and compare 
         for attempt in range(retries):
             result = self._go_to_joint_config(self.HOME_JOINTS)
             if result:
@@ -457,55 +597,220 @@ class MoveItHelper:
             )
         return success
     
-    
     # move to retract pose, for intermediate and floor picks
     def go_retract(self):
         self.node.get_logger().info("go_retract: planning to RETRACT_JOINTS...")
         return self._go_to_joint_config(self.RETRACT_JOINTS)
     
+    # wait for settle: wait till arm has stopped moving
+    # compare max_joint_delta across arms with a timeout
+    def wait_for_settle(
+        self,
+        timeout: float = 3.0,
+        poll_dt: float = 0.1,
+        max_joint_delta: float = 0.002) -> bool:
+
+        prev = self._get_arm_joint_snapshot(timeout=1.0)
+        if prev is None:
+            _time.sleep(min(timeout, 0.5))
+            return False
+        prev_pos = list(prev.position)
+        start = _time.monotonic()
+
+        while _time.monotonic() - start < timeout:
+            _time.sleep(poll_dt)
+            cur = self._get_arm_joint_snapshot(timeout=1.0)
+            if cur is None:
+                continue
+
+            deltas = [abs(a - b) for a, b in zip(cur.position, prev_pos)]
+            if max(deltas) < max_joint_delta:
+                return True
+
+            prev_pos = list(cur.position)
+
+        self.node.get_logger().warn("wait_for_settle: timed out; arm may still be moving.")
+        return False
+    
+    # cehck if there is a new joint state message
+    def wait_for_joint_state_ready(self, timeout: float = 3.0) -> bool:
+        start = _time.monotonic()
+        while _time.monotonic() - start < timeout:
+            js = self._get_arm_joint_snapshot(timeout=0.2)
+            if js is not None and len(js.name) == len(self.ARM_JOINT_NAMES):
+                return True
+            _time.sleep(0.05)
+        return False
+    
+    def stop_motion(self, timeout: float = 2.0) -> bool:
+        try:
+            if self._last_goal_handle is not None:
+                cancel_future = self._last_goal_handle.cancel_goal_async()
+                self._wait_for_future(cancel_future, timeout=timeout)
+                self._last_goal_handle = None
+        except Exception as e:
+            self.node.get_logger().warn(f"stop_motion: failed to cancel MoveGroup goal: {e}")
+
+        # Cancel last ExecuteTrajectory goal
+        try:
+            if hasattr(self, "_last_exec_goal_handle") and self._last_exec_goal_handle is not None:
+                cancel_future = self._last_exec_goal_handle.cancel_goal_async()
+                self._wait_for_future(cancel_future, timeout=timeout)
+                self._last_exec_goal_handle = None
+        except Exception as e:
+            self.node.get_logger().warn(f"stop_motion: failed to cancel ExecuteTrajectory goal: {e}")
+        
     # --- Pose Space --- #
     
-    # move arm end effector to a specific target pose in the frame    
-    def go_to_pose(self, pose: Pose, frame_id="base_link", 
-                   z_rot_tolerance: float = 3.14) -> bool:
+
+    # move arm end effector to a specific oriented pose in the frame
+       
+    def go_to_pose(self, pose: Pose, 
+                   frame_id="base_link", 
+                   tol: PoseTolerance | None = None,
+                   orientation_required: bool = True, 
+                   joint_locks: dict | None = None) -> bool:
+        tol = tol or PoseTolerance()
+        
         self.node.get_logger().info(
             f"go_to_pose: planning to pose at {pose.position.x:.3f},"
             f"{pose.position.y:.3f}, {pose.position.z:.3f}"
         )
+        
         req = self._base_request(self.ARM_GROUP)
         req.start_state.is_diff = True
         
-        # position constraint - 5mm tolerance around the target pose
-        # increase if error occurs
         pos_constraint = PositionConstraint()
         pos_constraint.header.frame_id = frame_id
         pos_constraint.link_name = self.END_EFFECTOR
-        bv = BoundingVolume()   # small box around target pose
+        bv = BoundingVolume()
         prim = SolidPrimitive()
         prim.type = SolidPrimitive.SPHERE
-        prim.dimensions = [0.005]  # 5mm radius
+        prim.dimensions = [float(tol.pos)]
         bv.primitives = [prim]
         bv.primitive_poses = [pose]
         pos_constraint.constraint_region = bv
         pos_constraint.weight = 1.0
         
-        # orientation constraint - ~6 deg on each axis
-        # increase if planner struggles
-        ori_constraint = OrientationConstraint()
-        ori_constraint.header.frame_id = frame_id
-        ori_constraint.link_name = self.END_EFFECTOR
-        ori_constraint.orientation = pose.orientation
-        ori_constraint.absolute_x_axis_tolerance = 0.4
-        ori_constraint.absolute_y_axis_tolerance = 0.4
-        ori_constraint.absolute_z_axis_tolerance = z_rot_tolerance
-        ori_constraint.weight = 1.0
+        constraints = Constraints()
+        constraints.position_constraints.append(pos_constraint)
+
+        if orientation_required:
+            ori_constraint = OrientationConstraint()
+            ori_constraint.header.frame_id = frame_id
+            ori_constraint.link_name = self.END_EFFECTOR
+            ori_constraint.orientation = pose.orientation
+            ori_constraint.absolute_x_axis_tolerance = tol.ori_xy
+            ori_constraint.absolute_y_axis_tolerance = tol.ori_xy
+            ori_constraint.absolute_z_axis_tolerance = tol.ori_z
+            ori_constraint.weight = 1.0
+            constraints.orientation_constraints.append(ori_constraint)
+        
+        if joint_locks:
+            for joint_name, (pos, tol_j) in joint_locks.items():
+                jc = JointConstraint()
+                jc.joint_name = joint_name
+                jc.position = float(pos)
+                jc.tolerance_above = float(tol_j)
+                jc.tolerance_below = float(tol_j)
+                jc.weight = 1.0
+                constraints.joint_constraints.append(jc)
+        
+        req.goal_constraints = [constraints]
+        return self._send_goal(req)
+    
+    # move arm end effector to a specific target pose in the frame  
+    def go_to_position(self, pose: Pose, frame_id="base_link", 
+                       tolerance: float = 0.05) -> bool:
+        self.node.get_logger().info(
+            f"go_to_position: ({pose.position.x:.3f},"
+            f"{pose.position.y:.3f}, {pose.position.z:.3f}) - orientation free"
+        )
+        req = self._base_request(self.ARM_GROUP)
+        req.start_state.is_diff = True
+        
+        pos_constraint = PositionConstraint()
+        pos_constraint.header.frame_id = frame_id
+        pos_constraint.link_name = self.END_EFFECTOR
+        bv = BoundingVolume()   
+        prim = SolidPrimitive()
+        prim.type = SolidPrimitive.SPHERE
+        prim.dimensions = [float(tolerance)]
+        bv.primitives = [prim]
+        bv.primitive_poses = [pose]
+        pos_constraint.constraint_region = bv
+        pos_constraint.weight = 1.0
         
         constraints = Constraints()
         constraints.position_constraints.append(pos_constraint)
-        constraints.orientation_constraints.append(ori_constraint)
         req.goal_constraints = [constraints]
         
         return self._send_goal(req)
+
+    def move_above_and_align_drop(
+        self,
+        dest_pose: Pose,
+        standoff_z: float = 0.25,
+        above_pos_tol: float = 0.06,
+        align_xy_tol: float = 0.35,
+        align_z_tol: float = 3.14,
+        require_orientation: bool = False,
+    ) -> tuple[bool, Pose]:
+        """
+        Move above destination and align wrist to destination orientation.
+        Returns (ok, above_pose).
+        """
+        above = _copy.deepcopy(dest_pose)
+        above.position.z += float(standoff_z)
+
+        # 1. Reach for above position (no orientation)
+        if not self.go_to_position(above, tolerance= above_pos_tol):
+            above.position.z += 0.1  # try 1 further attempt
+            if not self.go_to_position(above, tolerance= above_pos_tol + 0.02):
+                return False, above
+        # 2. Align orientation while above
+        if require_orientation:
+            align_pose = _copy.deepcopy(above)
+            align_pose.orientation = _copy.deepcopy(dest_pose.orientation)
+            ok = self.go_to_pose(
+                align_pose,
+                tol=PoseTolerance(
+                    pos=above_pos_tol,
+                    ori_xy=align_xy_tol,
+                    ori_z=align_z_tol,
+                ),
+                orientation_required=True,
+            )
+            if not ok:
+                return False, align_pose
+            return True, align_pose
+        
+        return True, above
+        
+    def go_to_side_approach(
+        self,
+        approach_pose: Pose,
+        pre_z_offset: float = 0.1,
+        pos_tol: float = 0.08,
+        xy_rot_tolerance: float = 0.6,
+        z_rot_tolerance: float = 3.14,
+        backoff_x: float = 0.05,
+    ) -> bool:
+        pre = _copy.deepcopy(approach_pose)
+        pre.position.z += float(pre_z_offset)
+        pre.position.x += float(backoff_x)
+        if not self.go_to_position(pre, tolerance=pos_tol):
+            pre2 = _copy.deepcopy(pre)
+            pre2.position.z += float(pre_z_offset)  # back off more in z if first try fails
+            pre2.position.x -= float(backoff_x)  # back off more if first try fails
+            if not self.go_to_position(pre2, tolerance=pos_tol):
+                #self.node.get_logger().error("go_to_side_approach: failed to reach pre-approach position.")
+                return False
+        return self.go_to_pose(
+            approach_pose,
+            tol = PoseTolerance(pos=0.03, ori_xy=xy_rot_tolerance, ori_z=z_rot_tolerance),
+            orientation_required=True,
+        )
     
     # --- GRIPPER MOTION --- #
     
@@ -583,7 +888,7 @@ class MoveItHelper:
         "robotiq_85_right_finger_tip_link",
         "robotiq_85_left_inner_knuckle_link",
         "robotiq_85_right_inner_knuckle_link",
-        ] ### CHECK IF CORRECT
+        ] 
         
         scene = PlanningScene()
         scene.is_diff = True

@@ -1,4 +1,4 @@
-# vision_apriltag.py
+# ------ vision_apriltag.py ------ #
 
 # Vision node to detect AprilTags and get pose estimation
 # - subscribes to wrist-mounted camera feed and pupil-apriltags
@@ -24,7 +24,7 @@ from geometry_msgs.msg import Pose, PoseStamped, Quaternion
 from sensor_msgs.msg import Image
 from tf2_ros import Buffer, TransformListener
 from tf2_geometry_msgs import do_transform_pose
-from std_msgs.msg import Int32MultiArray
+from std_msgs.msg import Int32MultiArray, Bool
 from cv_bridge import CvBridge
 from pupil_apriltags import Detector
 
@@ -70,7 +70,6 @@ class VisionAprilTagNode(Node):
         )
         
         # service to get tag pose by tag ID
-        # wait to find tag until timeout
         self.srv = self.create_service(
             GetTagPose,
             'get_tag_pose',
@@ -92,39 +91,47 @@ class VisionAprilTagNode(Node):
         self.camera_frame = "camera_color_frame"
         self.base_frame = "base_link"
         
+        # pause input
+        self.create_subscription(Bool, '/scene_lock', self._on_scene_lock, 10)
+        self.create_subscription(Bool, '/vision_enable', self._on_vision_enable, 10)
+        
         self.get_logger().info('Vision AprilTag Node Started')
         self.get_logger().info(f"Subscribing to camera topic: {CAMERA_TOPIC}")
         self.get_logger().info(f"Tag size: {TAG_SIZE}m | Timeout: {DETECTION_TIMEOUT}s")
 
+    def _on_scene_lock(self, msg: Bool):
+        self._scene_locked = msg.data
+        
+    def _on_vision_enable(self, msg: Bool):
+        self._vision_enabled = msg.data
+        
+    
     # --- CAMERA CALLBACK --- #
     # process incoming camera frames, update detected pose cache
-    
-    def image_callback(self, msg):        
-        try:
-            # get grayscale for QR code detection
-            cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='mono8')    
-        except Exception as e:
-            self.get_logger().error(f"Failed to convert image with cv_bridge: {e}")
-            return 
+    def image_callback(self, msg):
+        if not self._vision_enabled:
+            return
         
-        # run AprilTag detection w/ defined macros at runtime
-        detections = self.detector.detect(
-            cv_image,
-            estimate_tag_pose=True,
-            camera_params=CAMERA_PARAMS,
-            tag_size=TAG_SIZE
-        )
+        try:
+            cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='mono8')
+        except Exception as e:
+            self.get_logger().error(f"Failed to convert image: {e}")
+            return
     
-        # when a tag is detected, convert to Pose and cache by ID, also update timestamp
+        detections = self.detector.detect(
+            cv_image, 
+            estimate_tag_pose=True, 
+            camera_params=CAMERA_PARAMS, 
+            tag_size=TAG_SIZE)
+        
         for det in detections:
             tag_id = det.tag_id
-            if tag_id not in OBJECTS or tag_id not in LOCATIONS:
-                self.get_logger().debug(f"Detected unknown tag ID {tag_id}, ignoring.")
+            if tag_id not in OBJECTS and tag_id not in LOCATIONS:
+                self.get_logger().warn(f"Detected unknown tag ID {tag_id}, ignoring.")
                 continue
             pose = self.detection_to_pose(det)
             self.detected_poses[tag_id] = pose
             self.detection_timestamps[tag_id] = self.get_clock().now()
-            self.get_logger().debug(f"Tag ID {tag_id} detected and cached.")
 
     # --- POSE CONVERSION --- #
     # convert AprilTag detection to ROS Pose message, using tag pose estimation from pupil-apriltags
@@ -148,8 +155,8 @@ class VisionAprilTagNode(Node):
             transform = self.tf_buffer.lookup_transform(
                 self.base_frame,
                 self.camera_frame,
-                rclpy.time.Time()   # latest available
-                timeout = rclpy.duration.Duration(seconds=1.0)
+                rclpy.time.Time(),   # latest available
+                # timeout = rclpy.duration.Duration(seconds=1.0)
             )
             pose_base = do_transform_pose(pose_camera, transform)
             return pose_base.pose # correct base_link frame
@@ -198,9 +205,10 @@ class VisionAprilTagNode(Node):
     # publish list of detected tag IDs at 10 Hz for use by other nodes
 
     def publish_detected_tags(self):
+        if self._scene_locked:
+            return
         # publish current detected tags/poses as a snapshot, purge old
         now = self.get_clock().now()
-        
         # remove tags that haven't been detected recently
         stale = [
             tag_id for tag_id, timestamp in self.detection_timestamps.items()
@@ -211,7 +219,6 @@ class VisionAprilTagNode(Node):
             self.detection_timestamps.pop(tag_id, None)
             self.get_logger().info(f"Removed stale tag ID {tag_id} from detected tags")
         
-        # save objects and locations separately for easier access
         known_ids = list(self.detected_poses.keys())
         msg = Int32MultiArray()
         msg.data = known_ids
@@ -224,9 +231,9 @@ class VisionAprilTagNode(Node):
         tag_id = request.tag_id
 
         # validate existence of ID
-        if tag_id not in OBJECTS and tag_id not in LOCATIONS:
+        if tag_id not in OBJECTS:
             response.success = False
-            response.message = f"Tag ID {tag_id} not recognized in objects or locations."
+            response.message = f"Tag ID {tag_id} not recognized in objects."
             self.get_logger().warn(response.message)
             return response
         

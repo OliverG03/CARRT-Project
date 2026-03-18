@@ -44,7 +44,6 @@ setup(
             'give_medication = adl_tasks.give_medication:main',
             # layer 4: UI
             'adl_ui = adl_tasks.adl_ui:main',
-            'spawn_sim_objs = adl_tasks.spawn_sim_objs:main',
         ],
     },
 )
