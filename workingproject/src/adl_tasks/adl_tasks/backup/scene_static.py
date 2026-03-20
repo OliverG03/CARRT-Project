@@ -1,4 +1,5 @@
-# ------ scene_static.py ------ #
+# scene_static.py
+
 # Layer 1: Scene Planning, Static
 # - Adds table / default objects for tasks
 # - Acts as a static scene, representing the obstacles that are hardwired into the environment and do not change 
@@ -20,8 +21,8 @@ from std_msgs.msg import Header
 ### GET ALL MACROS FROM CONFIG
 from adl_tasks.adl_config import (
     WHEELCHAIR_BASE_HEIGHT, WC_TOTAL_HEIGHT, real_z,
-    TABLE_X, TABLE_Y, TABLE_HEIGHT,
-    TABLE_SURFACE_Z, TABLE_POS_X, TABLE_POS_Y,
+    TABLE_X, TABLE_Y, TABLE_HEIGHT, TABLE_THICKNESS,
+    TABLE_SURFACE_Z, TABLE_CENTER_Z, TABLE_POS_X, TABLE_POS_Y,
     SHELF_TOTAL_WIDTH, SHELF_DEPTH, SHELF_THICKNESS, SHELF_HEIGHT,
     SHELF_POS_X, SHELF_POS_Y, SHELF_FLOOR_Z,
     WCWALL_X, WCWALL_Y, WCWALL_Z, WCWALL_POS_X, WCWALL_POS_Y, WCWALL_POS_Z,
@@ -53,37 +54,26 @@ def make_box(frame_id, object_id, x_size, y_size, z_size,
     obj.operation = CollisionObject.ADD
     return obj
 
-# Helper - get CollisionObject for removing an object from the scene
-def make_remove(frame_id, object_id) -> CollisionObject:
-    obj = CollisionObject()
-    obj.header = Header()
-    obj.header.frame_id = frame_id
-    obj.id = object_id
-    obj.operation = CollisionObject.REMOVE
-    return obj
-
 class StaticSceneNode(Node):
     def __init__(self):
         super().__init__('static_scene_node')
-        ### Logging
         self.get_logger().info('Static Scene Node started.')
         self.get_logger().info(
             f'WHEELCHAIR_BASE_HEIGHT = {WHEELCHAIR_BASE_HEIGHT}m  |  '
             f'Table surface at z = {TABLE_SURFACE_Z:.3f}m | '
             f'Table center at x = {TABLE_POS_X:.3f}m'
         )        
-        ###
         # create service client for applying planning scene
         self.scene_client = self.create_client(
             ApplyPlanningScene, 
             '/apply_planning_scene'
         )
-        # wait for MoveIt to be ready, log if not
+        # wait for MoveIt to be ready
+        self.get_logger().info('Waiting for MoveIt planning scene service...')
         while not self.scene_client.wait_for_service(timeout_sec=2.0):
             self.get_logger().warn('Planning scene service not available, waiting...')
-        ### Logging
+        
         self.get_logger().info('Planning scene service available. Building static scene...')
-        ###
         self.build_scene()
     
     # helper: build and send static scene to MoveIt
@@ -91,12 +81,24 @@ class StaticSceneNode(Node):
         frame = 'base_link'
         objects = [
             
-            # TABLE BLOCK
+            # TABLE
             make_box(
                 frame, 'table', 
-                TABLE_X, TABLE_Y, TABLE_HEIGHT,
-                TABLE_POS_X, TABLE_POS_Y, real_z(TABLE_HEIGHT/2.0)
+                TABLE_X, TABLE_Y, TABLE_THICKNESS,
+                TABLE_POS_X, TABLE_POS_Y, TABLE_CENTER_Z
             ),
+            ### ADD FRONT TABLE LEGS HERE BEFORE REAL WORLD TEST
+            make_box(
+                frame, 'table_leg_1', 
+                TABLE_X, TABLE_Y, TABLE_THICKNESS,
+                TABLE_POS_X, TABLE_POS_Y, TABLE_CENTER_Z
+            ),
+            make_box(
+                frame, 'table_leg_2', 
+                TABLE_X, TABLE_Y, TABLE_THICKNESS,
+                TABLE_POS_X, TABLE_POS_Y, TABLE_CENTER_Z
+            ),
+
             # SHELF
             # - floor board
             make_box(

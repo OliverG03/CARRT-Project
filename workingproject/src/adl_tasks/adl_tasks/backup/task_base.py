@@ -7,12 +7,6 @@ from builtin_interfaces.msg import Time
 from std_msgs.msg import Bool
 from adl_interfaces.msg import AdlTaskStatus
 
-STATUS_RUNNING = "RUNNING"
-STATUS_CANCELLED = "CANCELLED"
-STATUS_FAILED = "FAILED"
-STATUS_SUCCEEDED = "SUCCEEDED"
-STATUS_IDLE = "IDLE"
-
 class TaskBase:
     def __init__(self, node_name: str, node):
         self.node = node
@@ -33,13 +27,10 @@ class TaskBase:
         if msg.data:
             self._cancelled = True
             self._cancel_reason = "Emergency stop activated."
-            self.publish_status(STATUS_CANCELLED, self._cancel_reason)
+            self.publish_status("CANCELLED", self._cancel_reason)
             
     def is_cancelled(self) -> bool:
         return self._cancelled
-    
-    def update_detail(self, detail: str):
-        self.publish_status(STATUS_RUNNING, detail)
     
     def reset_cancel(self):
         self._cancelled = False
@@ -64,17 +55,17 @@ class TaskBase:
     def _run_task(self, task_fn):
         try:
             self.reset_cancel()
-            self.publish_status(STATUS_RUNNING, "ADL Task started.")
+            self.publish_status("RUNNING", "ADL Task started.")
             task_fn()
             if self.is_cancelled():
                 # already marked as cancelled in task_fn, just log
                 return
-            self.publish_status(STATUS_SUCCEEDED, "ADL Task completed successfully.")
+            self.publish_status("SUCCEEDED", "ADL Task completed successfully.")
         except Exception as e:
             self.node.get_logger().error(f"{self.node_name}: task execution: {e}")
             import traceback
             self.node.get_logger().error(traceback.format_exc())
-            self.publish_status(STATUS_FAILED, f"Exception: {e}")
+            self.publish_status("FAILED", f"Task failed with exception: {e}")
         finally:
             self.executing = False
-            self.publish_status(STATUS_IDLE, "Ready for next ADL task.")
+            # self.publish_status("IDLE", "System is idle, ready for next ADL task.")

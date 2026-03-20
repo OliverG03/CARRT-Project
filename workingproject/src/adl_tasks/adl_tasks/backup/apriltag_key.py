@@ -156,33 +156,22 @@ class AprilTagObject:
     
         # orientation from approach vector
         if self.approach_type == "side":
-            # [FLAG:side-level] keep side-grasp approach axis horizontal so wrist does not point straight up/down.
-            # Use tag face normal projected to table plane; fallback to "object -> robot" direction.
-            face_xy = np.array([tag_z[0], tag_z[1], 0.0], dtype=float)
-            to_robot_xy = np.array([-tag_pose.position.x, -tag_pose.position.y, 0.0], dtype=float)
-            # [FLAG:side-face-robot] enforce outward normal toward robot so side-push isn't inverted by a flipped tag normal.
-            if np.linalg.norm(face_xy) > 1e-6 and np.linalg.norm(to_robot_xy) > 1e-6:
-                if float(np.dot(face_xy, to_robot_xy)) < 0.0:
-                    face_xy = -face_xy
-            if np.linalg.norm(face_xy) < 1e-6:
-                face_xy = np.array([-grasp.position.x, -grasp.position.y, 0.0], dtype=float)
-            if np.linalg.norm(face_xy) < 1e-6:
-                face_xy = np.array([-1.0, 0.0, 0.0], dtype=float)
-            gripper_z = -face_xy / (np.linalg.norm(face_xy) + 1e-9)
-
-            world_up = np.array([0.0, 0.0, 1.0], dtype=float)
-            gripper_x = np.cross(world_up, gripper_z)
-            if np.linalg.norm(gripper_x) < 1e-6:
-                # [FLAG:side-level] rare degeneracy fallback
-                gripper_x = np.array([0.0, 1.0, 0.0], dtype=float)
-            gripper_x = gripper_x / (np.linalg.norm(gripper_x) + 1e-9)
-            gripper_y = np.cross(gripper_z, gripper_x)
-            gripper_y = gripper_y / (np.linalg.norm(gripper_y) + 1e-9)
-            gripper_matrix = np.column_stack([gripper_x, gripper_y, gripper_z])
-            u, _, vt = np.linalg.svd(gripper_matrix)
+            grasp.orientation = side_approach_orientation()
+            return grasp
+            '''
+            # tag is on vertical surface, facing robot.
+            # tag z toward robot, along gripper approach
+            gripper_matrix = np.column_stack([tag_x, tag_y, tag_z]) 
+            
+            #  u: orthogonal matrix of left singular vectors
+            #  _: singular values (not used)
+            # vt: orthogonal matrix of right singular vectors
+            u, _, vt = np.linalg.svd(gripper_matrix) # ensure valid by using nearest orthogonal matrix
             gripper_matrix = u @ vt
-            if np.linalg.det(gripper_matrix) < 0:
+            if np.linalg.det(gripper_matrix) < 0: # ensure right-handed coordinate system
                 gripper_matrix[:, -1] *= -1
+            
+            # convert gripper_matrix back to quaternion for grasp orientation
             gripper_rot = Rotation.from_matrix(gripper_matrix)
             q = gripper_rot.as_quat()
             grasp.orientation.x = float(q[0])
@@ -190,6 +179,7 @@ class AprilTagObject:
             grasp.orientation.z = float(q[2])
             grasp.orientation.w = float(q[3])
             return grasp
+            '''
         # TOP approach:
         # top down, yaw along tag to be pinched properly
         world_down = np.array([0.0, 0.0, -1.0])
@@ -243,6 +233,9 @@ class AprilTagObject:
         grasp.orientation.w = float(q[3])
         return grasp
         
+        
+            
+    
     def compute_approach_pose(self, tag_pose: Pose, standoff: float = 0.15) -> Pose:
         """Compute the approach pose based on the tag pose and the stored approach vector."""
         # - standoff moves away from the object along the approach direction
@@ -258,21 +251,10 @@ class AprilTagObject:
         approach.orientation = grasp.orientation
         
         if self.approach_type == "side":
-            # [FLAG:side-level-approach] keep side pre-grasp motion horizontal.
-            # Use grasp local +Z projected to table plane to avoid noisy tag pitch driving up/down sweeps.
-            gq = grasp.orientation
-            g_rot = Rotation.from_quat([gq.x, gq.y, gq.z, gq.w])
-            g_axes = g_rot.as_matrix()
-            g_z = g_axes[:, 2]
-            push_xy = np.array([g_z[0], g_z[1], 0.0], dtype=float)
-            if np.linalg.norm(push_xy) < 1e-6:
-                push_xy = np.array([tag_z[0], tag_z[1], 0.0], dtype=float)
-            if np.linalg.norm(push_xy) < 1e-6:
-                push_xy = np.array([1.0, 0.0, 0.0], dtype=float)
-            push_xy = push_xy / (np.linalg.norm(push_xy) + 1e-9)
-            approach.position.x = grasp.position.x - standoff * push_xy[0]
-            approach.position.y = grasp.position.y - standoff * push_xy[1]
-            approach.position.z = grasp.position.z
+            # side approach(world -X {### or -Y depending on tag orientation??? }) - tag Z axis is approach direction
+            approach.position.x = grasp.position.x - standoff # * tag_z[0]
+            approach.position.y = grasp.position.y # - standoff * tag_z[1] 
+            approach.position.z = grasp.position.z # - standoff * tag_z[2]
         elif self.approach_type == "top": 
             # top-down approach -tag Z axis
             approach.position.x = grasp.position.x
@@ -350,7 +332,7 @@ OBJECTS = {
         object_type=    "medication",
         adl_used=       "give_medication",
         approach_type=  "side",
-        grasp_offset=   [0, 0, -MEDICATION_RADIUS], # should pull from config for medication height and QR placement
+        grasp_offset=   [0, 0, MEDICATION_GRASP_Z], # should pull from config for medication height and QR placement
         
         gripper_width=  _meters_to_rads(MEDICATION_DIAMETER), # rads calc
         gripper_force=  10,
@@ -367,7 +349,7 @@ OBJECTS = {
         object_type=    "Household Object",
         adl_used=       "clear_table",
         approach_type=  "side",
-        grasp_offset=   [0, 0, -CUP_RADIUS], # should pull from config for cup height and QR placement
+        grasp_offset=   [0, 0, CUP_GRASP_Z], # should pull from config for cup height and QR placement
         
         gripper_width=  _meters_to_rads(CUP_DIAMETER), # rads calc
         gripper_force=  10,

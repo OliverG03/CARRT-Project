@@ -78,7 +78,6 @@ STUB_POSES = {
     #    TABLE_SURFACE_Z + MEDICATION_HEIGHT / 2.0, 
     #    side_orientation
     #),
-    
     # cup on table, upright, tag to robot
     2: make_pose(
         (TABLE_POS_X - 0.10) + CUP_RADIUS, (TABLE_POS_Y - 0.20), 
@@ -92,13 +91,12 @@ STUB_POSES = {
         TABLE_SURFACE_Z + REMOTE_THICKNESS, 
         flat_orientation
     ),
-    
     # Cube: on table, flat, tag facing up
-    # 4: make_pose(
-    #     TABLE_POS_X - 0.18, TABLE_POS_Y - 0.15, 
-    #     TABLE_SURFACE_Z + CUBE_SIZE, 
-    #     flat_orientation
-    # ),
+    4: make_pose(
+        TABLE_POS_X - 0.18, TABLE_POS_Y - 0.15, 
+        TABLE_SURFACE_Z + CUBE_SIZE, 
+        flat_orientation
+    ),
 }
 
 OBJECT_IDS = set(STUB_POSES.keys())

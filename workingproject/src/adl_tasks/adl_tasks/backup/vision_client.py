@@ -27,7 +27,6 @@ class VisionClient:
             10,
         )
         
-    # For testing without vision, can hardcode visible tag IDs and their poses here
     def set_enabled(self, enabled: bool):
         self._enable_pub.publish(Bool(data=enabled))
         self.node.get_logger().info(f"Vision {'ENABLED' if enabled else 'DISABLED'}.")
