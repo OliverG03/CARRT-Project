@@ -74,9 +74,9 @@ PLACED_XY_OVERRIDE = {
 SIDE_EE_TO_OBJECT_OFFSET = {
     0: FINGER_REACH_X, # water bottle
     1: FINGER_REACH_X, # medication bottle
-    2: 0.0, # [FLAG:placed-center] cup scene object should stay centered at EE drop XY
-    3: 0.0, # [FLAG:placed-center] remote scene object should stay centered at EE drop XY
-    4: 0.0, # [FLAG:placed-center] cube scene object should stay centered at EE drop XY
+    2: FINGER_REACH_X, # [FLAG:placed-center] cup scene object should stay centered at EE drop XY
+    3: FINGER_REACH_X, # [FLAG:placed-center] remote scene object should stay centered at EE drop XY
+    4: FINGER_REACH_X, # [FLAG:placed-center] cube scene object should stay centered at EE drop XY
 }
 
 # use to override a Z value 
@@ -218,8 +218,9 @@ class SceneFromVisionNode(Node):
             placed_pose.position.z = dest.position.z - FINGER_REACH
         else:                   # side / default
             placed_pose.position.z = dest.position.z
-        # [FLAG:placed-upright] keep cylindrical side-placed objects upright in scene visualization.
-        if shape["shape"] == "cylinder" and place_mode == "side":
+        # Keep side-placed cylindrical household objects upright in scene.
+        # A cylinder primitive's long axis is local +Z; using side-grasp EE orientation makes it appear sideways.
+        if shape["shape"] == "cylinder" and tag_id in (1, 2):
             placed_pose.orientation.x = 0.0
             placed_pose.orientation.y = 0.0
             placed_pose.orientation.z = 0.0

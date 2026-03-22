@@ -98,6 +98,7 @@ SIDE_GRASP_ORI_TOL = 0.20
 LIFT_CLEAR_Z = 0.15 # m - lift height to clear table before moving above destination
 
 SIDE_APPROACH_Z_OFFSET = 0.00 # m  [FLAG:side-qr-face] keep final side-approach level with QR-tag grasp plane
+SIDE_APPROACH_STANDOFF = 0.08  # [FLAG:side-push-tune] side-object pre-approach distance from grasp center
 DEST_STANDOFF_Z = 0.25
 SIDE_PREAPPROACH_Z = 0.10 # m
 FORCE_DROP_ORIENTATION = False
@@ -120,7 +121,7 @@ SIDE_VERTICAL_ORI_XY_TOL = 0.45  # [FLAG:side-qr-face] orientation hold before v
 SIDE_VERTICAL_ORI_Z_TOL = 0.90
 SIDE_VERTICAL_RETRY_ORI_XY_TOL = 0.65
 SIDE_VERTICAL_RETRY_ORI_Z_TOL = 1.20
-SIDE_GRASP_MIN_Z = TABLE_SURFACE_Z + 0.06  # [FLAG:side-safety] prevent side Cartesian descend from driving too low into table
+SIDE_GRASP_MIN_Z = TABLE_SURFACE_Z + 0.045  # [FLAG:side-safety] lower floor so cup grasp stays near QR height
 SIDE_CYLINDER_ORI_XY_TOL = 0.30  # [FLAG:side-cylinder] tighter side-grasp leveling for cup/medication
 SIDE_CYLINDER_ORI_Z_TOL = 0.80
 SIDE_CYLINDER_RETRY_ORI_XY_TOL = 0.45
@@ -129,13 +130,13 @@ SIDE_PUSH_ORI_XY_TOL = 0.22  # [FLAG:side-push] tighter side orientation hold to
 SIDE_PUSH_ORI_Z_TOL = 0.35
 SIDE_PUSH_RETRY_ORI_XY_TOL = 0.32
 SIDE_PUSH_RETRY_ORI_Z_TOL = 0.55
-SIDE_PUSH_PRE_Z_OFFSET = 0.10  # [FLAG:side-push] pre-push staging height above side-approach line
-SIDE_PUSH_PRE_X_BACKOFF = 0.06  # [FLAG:side-push] stand-off distance along QR outward normal before side push
-SIDE_PUSH_FRONT_GAP = 0.03  # [FLAG:side-push] stop just in front of object before vertical settle
+SIDE_PUSH_PRE_Z_OFFSET = 0.08  # [FLAG:side-push-tune] pre-push staging height above side-approach line
+SIDE_PUSH_PRE_X_BACKOFF = 0.02  # [FLAG:side-push-tune] stand-off distance along QR outward normal before side push
+SIDE_PUSH_FRONT_GAP = 0.01  # [FLAG:side-push-tune] tiny final insert distance to avoid shoving cup
 SIDE_PUSH_ALIGN_MIN_FRACTION = 0.95
 SIDE_PUSH_DESCEND_MIN_FRACTION = 0.95
 SIDE_PUSH_FINAL_MIN_FRACTION = 0.90
-SIDE_PUSH_STAGE1_ALLOW_POSITION_FALLBACK = False # [FLAG:side-push] if pose-constrained pre-stage fails, allow position-only fallback.
+SIDE_PUSH_STAGE1_ALLOW_POSITION_FALLBACK = False  # [FLAG:side-push] disable orientation-free fallback; it can admit bad wrist headings.
 SIDE_PUSH_STAGE1_MAX_ORI_ERR_RAD = 0.45  # [FLAG:side-push] reject fallback staging when live wrist heading is too far from QR-facing target.
 
 TOP_STAGE1_ORI_XY_TOL = 0.45  # [FLAG:top-orient] relaxed plan tolerance; guarded by live orientation check
@@ -783,7 +784,11 @@ class clearTableNode(Node):
             return False
         
         grasp_pose = obj.compute_grasp_pose(tag_pose)       # final grasp
-        approach_pose = obj.compute_approach_pose(tag_pose) # standoff
+        if obj.approach_type == "side":
+            # [FLAG:side-push-tune] side standoff is independent from top-grasp standoff.
+            approach_pose = obj.compute_approach_pose(tag_pose, standoff=SIDE_APPROACH_STANDOFF)
+        else:
+            approach_pose = obj.compute_approach_pose(tag_pose) # standoff
         dest_pose = obj.destination
 
         if obj.approach_type == "side" and grasp_pose.position.z < SIDE_GRASP_MIN_Z:
@@ -1167,6 +1172,7 @@ class clearTableNode(Node):
                         f'Failed move to grasp pose for object {obj.name} (ID {tag_id}). '
                         f'Retreating to approach and aborting.'
             )
+            # [FLAG:side-push-recover] avoid non-Cartesian orientation-retreat arcs after side-grasp failure.
             recovered = False
             if obj.approach_type == "side":
                 recovered = self.arm.go_cartesian(
