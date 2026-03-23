@@ -59,13 +59,17 @@ class MoveItHelper:
         "joint_6": 0.96,    # ~55° wrist-3 (roughly downward-facing EEF)
         "joint_7": 1.57, 
     }   
+    # movement allowances for to-home movements
+    # keep conservative to avoid controller churn
+    # tune this profile to attempt runtime bottleneck fixes
+    # SCALING ORIGINALLY: 0.15 for v and a
     HOME_PROFILE = MotionProfile(
         planning_time=12.0,
-        velocity_scaling=0.15,
-        accel_scaling=0.15,
+        velocity_scaling=0.25,
+        accel_scaling=0.2,
     )
     
-    # --- RETRACT --- safe intermediate pose from floor-level grab/pick
+    # --- RETRACT --- final posing after tasks and during idle state
     RETRACT_JOINTS = {
         "joint_1": 0.0,
         "joint_2": -0.35,
@@ -81,16 +85,11 @@ class MoveItHelper:
         "joint_1", "joint_2", "joint_3", 
         "joint_4", "joint_5", "joint_6", "joint_7"
     ]
-    # [FLAG:start-state-sanitize] Keep arm joints a small margin inside +/-pi when the
-    # driver reports an equivalent wrapped branch that MoveIt rejects numerically.
+    # To keep arm joints in a margin of pi
     MOVEIT_BOUND_MARGIN_RAD = 0.01
     JOINT_STATE_NORMALIZE_EPS_RAD = 0.002
-    # [FLAG:start-state-fix] Canonicalize wrapped controller angles in request.start_state.
-    # After go_home, the arm can report an equivalent branch like joint_7=-4.710 instead of
-    # +1.57; leaving that raw has been causing repeated MoveIt -26 failures on the next plan.
+    # check joint state freshness and completeness before planning, to avoid MoveIt Error -26
     START_STATE_CANONICALIZE_WRAPPED_JOINTS = True
-    # [FLAG:prefer-sanitized-joint-state] The joint_state_sanitizer relay marks corrected
-    # JointState samples with this frame_id so task code can prefer the sanitized copy.
     SANITIZED_JOINT_STATE_FRAME_ID = "adl_joint_state_sanitized"
     SANITIZED_JOINT_STATE_GRACE_S = 0.10
     
@@ -106,10 +105,9 @@ class MoveItHelper:
     }
     LOOK_AT_GROUND_PROFILE = MotionProfile(
         planning_time=12.0,
-        velocity_scaling=0.20,
+        velocity_scaling=0.25,
         accel_scaling=0.20,
     )
-    
     
     # Gripper Control
     GRIPPER_JOINT_NAMES = ["robotiq_85_left_knuckle_joint"]
@@ -133,7 +131,7 @@ class MoveItHelper:
         self._gripper_client = ActionClient(node, GripperCommand, self.GRIPPER_ACTION)
         self._validity_client = node.create_client(GetStateValidity, '/check_state_validity')
         self._cartesian_client = node.create_client(GetCartesianPath, '/compute_cartesian_path')
-        self._fk_client = node.create_client(GetPositionFK, '/compute_fk')  # [FLAG:drop-presets]
+        self._fk_client = node.create_client(GetPositionFK, '/compute_fk') 
         
         self._js_lock = Lock()
         self._latest_joint_state: JointState | None = None
@@ -172,8 +170,7 @@ class MoveItHelper:
         return future.done()    
     
     # check if joint state is recent and complete
-    # [FLAG joint-state-age] 0.2 s was too aggressive on this stack and was aborting
-    # otherwise usable plans at ~0.203 s, which then cascaded into noisy retry/reseed loops.
+    ### 0.2 s was too aggressive on this stack and was aborting usable plans at ~0.203 s
     def _is_joint_state_fresh(self, max_age: float = 0.35) -> bool:
         # check for joint state
         with self._js_lock:
@@ -198,7 +195,7 @@ class MoveItHelper:
         if missing:
             self.node.get_logger().warn(f"_is_joint_state_fresh: joint state missing arm joints: {missing}")
             return False
-        # [FLAG:start-state-sanitize] fail fast if arm positions are non-finite.
+        # fail fast if arm positions are non-finite
         name_to_pos = {n: p for n, p in zip(msg.name, msg.position)}
         bad = [j for j in self.ARM_JOINT_NAMES if (j not in name_to_pos) or (not math.isfinite(float(name_to_pos[j])))]
         if bad:
@@ -207,6 +204,7 @@ class MoveItHelper:
 
         return True
     
+    # subscription callback to track latest joint state for start state freshness checks and potential live bounds waiting before planning
     def _on_joint_state(self, msg: JointState) -> None:
         is_sanitized = (msg.header.frame_id == self.SANITIZED_JOINT_STATE_FRAME_ID)
         now_mono = _time.monotonic()
@@ -217,20 +215,17 @@ class MoveItHelper:
                 and self._latest_joint_state.header.frame_id == self.SANITIZED_JOINT_STATE_FRAME_ID
                 and (now_mono - self._latest_joint_state_time) < float(self.SANITIZED_JOINT_STATE_GRACE_S)
             ):
-                # [FLAG:prefer-sanitized-joint-state] The sanitizer republishes a corrected copy
-                # moments after the raw driver sample. Keep that corrected sample briefly so the
-                # helper does not bounce back to the raw wrapped representation.
+                # prefer sanitized joints if possible
                 return
             self._latest_joint_state = msg
             self._latest_joint_state_time = now_mono 
 
+    # canonical wrap to [-pi, pi] for start_state robustness ### called below
     def _canonicalize_joint_angle(self, angle_rad: float) -> float:
-        # [FLAG:start-state-sanitize] canonical wrap to [-pi, pi] for start_state robustness.
         return float(math.atan2(math.sin(angle_rad), math.cos(angle_rad)))
 
+    # normalize a joint angle for MoveIt if it's outside the margin near the +/-pi boundary  ### called below
     def _normalize_joint_angle_for_moveit(self, angle_rad: float) -> float:
-        # [FLAG:start-state-sanitize] Canonicalize wrapped values and keep them slightly inside
-        # the +/-pi boundary so CheckStartStateBounds sees a numerically in-bounds start state.
         canonical = self._canonicalize_joint_angle(float(angle_rad))
         max_mag = math.pi - float(self.MOVEIT_BOUND_MARGIN_RAD)
         if canonical > max_mag:
@@ -239,16 +234,16 @@ class MoveItHelper:
             canonical = -max_mag
         return canonical
 
+    # check if a joint angle needs normalization and return the normalized value for MoveIt, tie to above
     def _joint_needs_moveit_normalization(self, angle_rad: float) -> tuple[bool, float]:
         normalized = self._normalize_joint_angle_for_moveit(float(angle_rad))
         needs_normalization = (
             abs(normalized - float(angle_rad)) > float(self.JOINT_STATE_NORMALIZE_EPS_RAD)
         )
         return needs_normalization, normalized
-
+    
+    # check if the current joint state requires normalization for MoveIt and log a warning with the normalized values if so
     def _sanitize_start_state_positions(self, name_to_pos: dict, context: str) -> list[float] | None:
-        # [FLAG:start-state-diagnostics] Keep start_state publication and diagnostics consistent
-        # across normal planning and recovery paths.
         sanitized = []
         normalized_joints = []
         for joint_name in self.ARM_JOINT_NAMES:
@@ -265,7 +260,7 @@ class MoveItHelper:
                 if self.START_STATE_CANONICALIZE_WRAPPED_JOINTS:
                     pos_f = normalized_val
             sanitized.append(pos_f)
-
+        # log if normalization was needed
         if normalized_joints:
             normalized_desc = ", ".join(
                 [f"{jn}:{old:+.3f}->{new:+.3f}" for jn, old, new in normalized_joints]
@@ -282,6 +277,7 @@ class MoveItHelper:
             )
         return sanitized
             
+    # recovery: cancel goals, wait for settle, and if -26 error then do extra resync steps to recover from desynced or out-of-bounds joint state
     def _recover_after_failure(self, context: str = "") -> None:
         self.node.get_logger().warn(f"_recover_after_failure(): {context}")
 
@@ -325,6 +321,7 @@ class MoveItHelper:
         else:
             _time.sleep(1.0)
         self.wait_for_settle(timeout=5.0)
+    
     # build a motion plan request with standard planning parameters
     def _base_request(self, group: str, profile=DEFAULT_PROFILE) -> MotionPlanRequest:
         req = MotionPlanRequest()
@@ -370,7 +367,7 @@ class MoveItHelper:
                     [f"{jn}:{float(raw_joints[jn]):+.3f}->{target:+.3f}" for jn, target in wrapped_live_targets.items()]
                 )
                 self.node.get_logger().warn(
-                    "[FLAG live-bounds-wait] Latest /joint_states still require MoveIt-safe "
+                    "[live-bounds-wait] Latest /joint_states still require MoveIt-safe "
                     "normalization. Waiting for the joint_state_sanitizer relay before planning: "
                     f"{wrapped_desc}"
                 )
@@ -533,9 +530,8 @@ class MoveItHelper:
             return None
         return {name: pos for name, pos in zip(js.name, js.position)}
 
+    # prevent calibrated / recovery joint targets from injecting wrapped angles into goals
     def _canonicalize_joint_targets(self, joint_targets: dict, context: str) -> dict:
-        # [FLAG joint-target-canonical] Prevent calibrated or recovery joint targets from
-        # injecting wrapped angles back into MoveIt goals.
         normalized = {}
         normalized_joints = []
         for joint_name, pos in joint_targets.items():
@@ -567,9 +563,8 @@ class MoveItHelper:
                 wrapped[joint_name] = normalized
         return wrapped
 
+    # wait for /joint_states to show the arm joints within MoveIt-safe bounds
     def _wait_for_bounded_joint_state(self, timeout: float, context: str) -> bool:
-        # [FLAG:joint-state-sanitizer-sync] Wait briefly for the sanitizer relay to republish a
-        # MoveIt-safe state instead of physically unwinding the robot just to change angle labels.
         start = _time.monotonic()
         last_desc = ""
         while _time.monotonic() - start < timeout:
@@ -621,7 +616,7 @@ class MoveItHelper:
         frame_id: str = "base_link",
         timeout: float = 2.0,
     ) -> Pose | None:
-        # [FLAG:drop-presets] use FK to start Cartesian drop from true live EE pose
+        # use FK to start Cartesian drop from true live EE pose
         if not self._fk_client.wait_for_service(timeout_sec=2.0):
             self.node.get_logger().warn("get_current_end_effector_pose: FK service not available.")
             return None
@@ -669,8 +664,9 @@ class MoveItHelper:
         q.z = cr * cp * sy - sr * sp * cy
         return q
     
+    # --- LOOK AT FUNCTIONS --- #
+    
     def look_at_table(self) -> bool:
-        ### to use from home position
         # rotate wrist so camera on top can see the table clearly
         pose = Pose()
         pose.position.x = 0.215
@@ -722,12 +718,13 @@ class MoveItHelper:
         )
         
     def look_at_ground(self) -> bool:
-        # [FLAG:look-ground-call] Use deterministic joint preset to avoid IK branch flips.
         self.node.get_logger().info("look_at_ground: planning to LOOK_AT_GROUND_JOINTS...")
         return self._go_to_joint_config(
             self.LOOK_AT_GROUND_JOINTS,
             profile=self.LOOK_AT_GROUND_PROFILE,
         )
+    
+    # ---------- MOVEMENT FUNCTIONS ---------- #
     
     def go_cartesian(self, waypoints: list,
                      max_step: float = 0.01, 
@@ -753,9 +750,8 @@ class MoveItHelper:
         req.max_step = float(max_step)
         req.jump_threshold = float(jump_thresh)
         req.avoid_collisions = bool(avoid_collisions)
-        # [FLAG cartesian-scaling] MoveIt warns and silently defaults to 1.0 when
-        # Cartesian scaling factors are left at 0.0. Set explicit valid values so
-        # the log reflects the motion request we actually intended to send.
+
+        # override defaults from profile for Cartesian execution
         if hasattr(req, "max_velocity_scaling_factor"):
             req.max_velocity_scaling_factor = max(0.001, float(DEFAULT_PROFILE.velocity_scaling))
         if hasattr(req, "max_acceleration_scaling_factor"):
@@ -763,6 +759,7 @@ class MoveItHelper:
         req.start_state.is_diff = True
         self._apply_real_start_state(req, timeout=1.0)
         
+        # call Cartesian path service and check results
         future = self._cartesian_client.call_async(req)
         if not self._wait_for_future(future, timeout=30.0):
             self.node.get_logger().error("GetCartesianPath call timed out.")
@@ -776,6 +773,7 @@ class MoveItHelper:
             f"Cartesian path computed with {fraction*100:.1f}% success."
         )
         
+        # if failure, log last waypoint and optionally fallback to go_to_pose for last waypoint
         if fraction < min_fraction:
             last = waypoints[-1] ## allow back up to last position
             self.node.get_logger().error(
@@ -789,6 +787,7 @@ class MoveItHelper:
                 return self.go_to_pose(last)
             return False
         
+        # if joint locks specified, verify that the planned trajectory respects them before execution
         if joint_locks:
             traj = resp.solution.joint_trajectory
             name_to_idx = {n: i for i, n in enumerate(traj.joint_names)}
@@ -872,8 +871,7 @@ class MoveItHelper:
     
     # force MoveIt to use the real current joint state as the start state, instead of relying on its internal state which may be stale or incorrect.
     def _apply_real_start_state(self, req: MotionPlanRequest, timeout: float = 1.0) -> bool:
-        # [FLAG:start-state-sanitize] publish arm-only, finite start_state and wrap large-angle joints.
-        # This avoids NaN gripper effort/velocity contamination and mitigates -26 invalid-start loops.
+        # publish arm-only, finite start_state and wrap large-angle joints, this avoids NaN gripper effort/velocity contamination
         with self._js_lock:
             msg = self._latest_joint_state
         if msg is None or not msg.name:
@@ -926,7 +924,7 @@ class MoveItHelper:
         self.stop_motion()
         self.wait_for_joint_state_ready(timeout=2.0)
         self.wait_for_settle(timeout=3.0) # ensure arm is still before trying to go home
-        _time.sleep(1.0) ### increase and compare 
+        _time.sleep(1.0)
         for attempt in range(retries):
             result = self._go_to_joint_config(self.HOME_JOINTS, profile=self.HOME_PROFILE)
             if result:
@@ -940,9 +938,8 @@ class MoveItHelper:
         self.node.get_logger().error("go_home: all tries failed. Trying collision-disabled path.")
         return self._go_home_recovery() # try one more time with collision disabled
     
+    # last resort recovery: may disable before real-world sim to protect environment and hardware
     def _go_home_recovery(self) -> bool:  
-        # last resort recovery: may disable before real-world sim to protect environment and hardware
-        
         current_joints = {}
         recieved = threading.Event()        
         
@@ -959,8 +956,6 @@ class MoveItHelper:
                 JointState, "/joint_states", _js_cb, 10
             )
         except Exception as exc:
-            # [FLAG home-recovery-shutdown-guard] The node can be mid-shutdown when task cleanup
-            # tries to park the arm. Do not create fresh ROS entities in that state.
             self.node.get_logger().warn(
                 f"go_home_recovery: could not create temporary joint-state subscription during shutdown: {exc}"
             )
@@ -971,7 +966,6 @@ class MoveItHelper:
             try:
                 self.node.destroy_subscription(sub)
             except Exception:
-                # [FLAG home-recovery-shutdown-guard] Subscription teardown can also race node shutdown.
                 pass
         
         if len(current_joints) < len(self.HOME_JOINTS):
@@ -1057,6 +1051,35 @@ class MoveItHelper:
         self.node.get_logger().info("go_retract: planning to RETRACT_JOINTS...")
         return self._go_to_joint_config(self.RETRACT_JOINTS, profile=self.HOME_PROFILE)
 
+    # Compare live joints against the configured retract posture with wrapped-angle-safe deltas.
+    def is_near_retract(self, max_err_rad: float = 0.10) -> bool:
+        joints = self.get_arm_joint_positions(timeout=1.0)
+        if joints is None:
+            self.node.get_logger().warn("is_near_retract: no current arm joint state available.")
+            return False
+
+        worst_joint = None
+        worst_err = 0.0
+        for joint_name, target in self.RETRACT_JOINTS.items():
+            cur = joints.get(joint_name, None)
+            if cur is None:
+                self.node.get_logger().warn(f"is_near_retract: missing joint {joint_name} in current state.")
+                return False
+            err = abs(self._canonicalize_joint_angle(float(cur) - float(target)))
+            if err > worst_err:
+                worst_err = err
+                worst_joint = joint_name
+
+        if worst_err <= float(max_err_rad):
+            return True
+
+        if worst_joint is not None:
+            self.node.get_logger().info(
+                f"is_near_retract: current arm is not at retract "
+                f"(worst={worst_joint}:{worst_err:.3f} rad > {float(max_err_rad):.3f})."
+            )
+        return False
+
     # wait for settle: wait till arm has stopped moving
     # compare max_joint_delta across arms with a timeout
     def wait_for_settle(
@@ -1120,11 +1143,12 @@ class MoveItHelper:
 
     # move arm end effector to a specific oriented pose in the frame
        
-    def go_to_pose(self, pose: Pose, 
-                   frame_id="base_link", 
+    def go_to_pose(self, pose: Pose,
+                   frame_id="base_link",
                    tol: PoseTolerance | None = None,
-                   orientation_required: bool = True, 
-                   joint_locks: dict | None = None) -> bool:
+                   orientation_required: bool = True,
+                   joint_locks: dict | None = None,
+                   profile: MotionProfile | None = None) -> bool:
         tol = tol or PoseTolerance()
         
         self.node.get_logger().info(
@@ -1132,7 +1156,7 @@ class MoveItHelper:
             f"{pose.position.y:.3f}, {pose.position.z:.3f}"
         )
         
-        req = self._base_request(self.ARM_GROUP)
+        req = self._base_request(self.ARM_GROUP, profile=profile or DEFAULT_PROFILE)
         req.start_state.is_diff = True
         
         pos_constraint = PositionConstraint()
@@ -1175,13 +1199,14 @@ class MoveItHelper:
         return self._send_goal(req)
     
     # move arm end effector to a specific target pose in the frame  
-    def go_to_position(self, pose: Pose, frame_id="base_link", 
-                       tolerance: float = 0.05) -> bool:
+    def go_to_position(self, pose: Pose, frame_id="base_link",
+                       tolerance: float = 0.05,
+                       profile: MotionProfile | None = None) -> bool:
         self.node.get_logger().info(
             f"go_to_position: ({pose.position.x:.3f},"
             f"{pose.position.y:.3f}, {pose.position.z:.3f}) - orientation free"
         )
-        req = self._base_request(self.ARM_GROUP)
+        req = self._base_request(self.ARM_GROUP, profile=profile or DEFAULT_PROFILE)
         req.start_state.is_diff = True
         
         pos_constraint = PositionConstraint()
@@ -1309,72 +1334,21 @@ class MoveItHelper:
     
     # halt any current movement and return home
     def emergency_stop(self):
-        """Emergency stop function to immediately halt all robot movements."""
         self.node.get_logger().warn("Emergency stop activated! Halting all movements.")
         
         # cancel any active goals to stop current motion
         if self._last_goal_handle is not None:
             cancel_future = self._last_goal_handle.cancel_goal_async()
-            ###rclpy.spin_until_future_complete(self.node, cancel_future, timeout_sec=3.0)
+
             self._wait_for_future(cancel_future, timeout=3.0)
             self._last_goal_handle = None
         
         # best effort recovery - go_home() also calls _send_goal
         return self.go_home()    
     
-    
-    # --- SCENE ATTACHMENT --- # moved to scene_utils.py
-    '''
-    def attach_object(self, object_id: str, links: list = None):
-        # attach collision object to EEF for grasping and moving
-        if not hasattr(self, "_scene_pub"):
-            self._scene_pub = self.node.create_publisher(
-                PlanningScene, '/planning_scene', 10
-            )
-        aco = AttachedCollisionObject()
-        aco.link_name = self.END_EFFECTOR
-        aco.object.header.frame_id = 'base_link' # world frame
-        aco.object.id = str(object_id)
-        aco.object.operation = aco.object.ADD # constant value
-        
-        # links can touch the fingers
-        aco.touch_links = links or [
-        "robotiq_85_left_finger_tip_link",
-        "robotiq_85_right_finger_tip_link",
-        "robotiq_85_left_inner_knuckle_link",
-        "robotiq_85_right_inner_knuckle_link",
-        ] 
-        
-        scene = PlanningScene()
-        scene.is_diff = True
-        scene.robot_state.attached_collision_objects = [aco]
-        scene.robot_state.is_diff = True
-        self._scene_pub.publish(scene)
-        self.node.get_logger().info(f"attach_object: published attachment of {object_id} to {self.END_EFFECTOR}.")
-        
-    def detach_object(self, object_id: str):
-        if not hasattr(self, "_scene_pub"):
-            self._scene_pub = self.node.create_publisher(
-                PlanningScene, '/planning_scene', 10
-            )
-        aco = AttachedCollisionObject()
-        aco.link_name = self.END_EFFECTOR
-        aco.object.header.frame_id = 'base_link' # world frame
-        aco.object.id = str(object_id)
-        aco.object.operation = aco.object.REMOVE # constant value
-    
-        scene = PlanningScene()
-        scene.is_diff = True
-        scene.robot_state.attached_collision_objects = [aco]
-        scene.robot_state.is_diff = True
-        self._scene_pub.publish(scene)
-        self.node.get_logger().info(f"detach_object: published detachment of {object_id} from {self.END_EFFECTOR}.")
-    '''
-    
-
-    
     # --- DEV FUNCTIONS --- #
     
+    # check if current state is valid in MoveIt, and log any collisions if not (not just joint bounds check)
     def check_start_state(self):
         if not self._validity_client.wait_for_service(timeout_sec=2.0):
             self.node.get_logger().info("GetStateValidity service not available.")

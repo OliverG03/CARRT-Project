@@ -171,15 +171,44 @@ class SceneFromVisionNode(Node):
             self._picked_ids.add(tag_id)
             self.get_logger().info(f'Marked tag ID {tag_id} as picked.')
     
+    # - remove live placed objects
+    def _remove_scene_ids_for_tag(self, tag_id: int):
+        # [FLAG placed-cleanup-only] Keep /placed_ids bookkeeping, but do not synthesize a new
+        # destination collision object. Instead, remove any lingering live/placed scene objects.
+        scene = PlanningScene()
+        scene.is_diff = True
+
+        remove_live = CollisionObject()
+        remove_live.header = Header()
+        remove_live.header.frame_id = 'base_link'
+        remove_live.id = f"obj_{tag_id}"
+        remove_live.operation = CollisionObject.REMOVE
+
+        remove_placed = CollisionObject()
+        remove_placed.header = Header()
+        remove_placed.header.frame_id = 'base_link'
+        remove_placed.id = f"placed_{tag_id}"
+        remove_placed.operation = CollisionObject.REMOVE
+
+        scene.world.collision_objects = [remove_live, remove_placed]
+        self.scene_pub.publish(scene)
+
+        self.objects_in_scene.discard(tag_id)
+        self._pose_cache.pop(tag_id, None)
+        self._last_published.pop(tag_id, None)
+        self._pending.discard(tag_id)
+    
     # - publish placed object at destination pose after successful place, log in placed IDs
     def _on_placed_ids(self, msg: Int32MultiArray):
         for tag_id in msg.data:
             already = tag_id in self._placed_ids
             self._placed_ids.add(tag_id)
             self.get_logger().info(
-                f'Marked tag ID {tag_id} as placed at destination. Publishing{" (refresh)" if already else ""}.'
+                f'Marked tag ID {tag_id} as placed at destination. '
+                f'Removing synthetic placed-scene objects instead of publishing{" (refresh)" if already else ""}.'
             )
-            self._publish_placed_object(tag_id)
+            self._remove_scene_ids_for_tag(tag_id)
+            #self._publish_placed_object(tag_id)
             
     # - publish collision object at the objects apriltag_key destination pose after successful place
     def _publish_placed_object(self, tag_id: int):

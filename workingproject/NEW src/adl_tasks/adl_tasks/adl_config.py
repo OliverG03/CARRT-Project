@@ -35,7 +35,7 @@ SHELF_DEPTH       = 0.14
 SHELF_THICKNESS   = 0.0045
 SHELF_HEIGHT      = 0.05
 
-SHELF_POS_X       = TABLE_POS_X + TABLE_X/2.0 - SHELF_DEPTH/2.0 - 0.05 # against back wall, right edge with 5cm margin  
+SHELF_POS_X       = TABLE_POS_X + TABLE_X/2.0 - SHELF_DEPTH/2.0 - 0.02 # against back wall, right edge with 5cm margin  
 SHELF_POS_Y       = TABLE_POS_Y + TABLE_Y / 2.0 - SHELF_TOTAL_WIDTH / 2  
 SHELF_FLOOR_Z     = TABLE_SURFACE_Z + SHELF_THICKNESS / 2.0
 
@@ -99,18 +99,35 @@ REMOTE_LENGTH_AXIS = "y"     # assume tag +Y points along remote length
 CUBE_SIZE = 0.065 # m
 
 # --- Grasp Values --- pull from dimensions
-FINGER_REACH = 0.150 # m
-FINGER_REACH_X = 0.068  
-GRASP_CLEARANCE = 0.005
-GRIPPER_BODY_CLEARANCE = 0.06  # m, clearance for gripper body above table ### needed?
-_DROP_MARGIN = 0.05 # m, extra clearance for drop-off
+
+TOP_EE_TO_PINCH_CENTER_M = 0.15         # m, EE origin to finger pinch-center along top-approach axis
+SIDE_EE_TO_PINCH_CENTER_M = 0.14       # m, EE origin to finger pinch-center along side-approach axis
+FINGER_REACH = TOP_EE_TO_PINCH_CENTER_M # m, legaxy alias for scene/drop code
+FINGER_REACH_X = 0.068                  # m, along X axis for grasp poses, based on gripper geometry and testing
+GRASP_CLEARANCE = 0.003                 # m, extra clearance for grasping to ensure not colliding with object
+GRIPPER_BODY_CLEARANCE = 0.06           # m, clearance for gripper body above table ### needed?
+_DROP_MARGIN = 0.05                     # m, extra clearance for drop-off
 
 MEDICATION_GRASP_Z = 0.0
 CUP_GRASP_Z = 0
 
-BOTTLE_GRASP_Z = FINGER_REACH + GRASP_CLEARANCE
-CUBE_GRASP_Z = FINGER_REACH + GRASP_CLEARANCE #+ CUBE_SIZE # m, above top face, grasp at center of cube
-REMOTE_GRASP_Z = FINGER_REACH + GRASP_CLEARANCE #+ REMOTE_THICKNESS + 0.01 # m, above top face, extra clearance for gripper body
+# -- Top Surface Grasp -- #
+def top_surface_to_ee_grasp_z(grasp_axis_size_m: float,
+                              ee_to_pinch_center_m: float = TOP_EE_TO_PINCH_CENTER_M,
+                              grasp_clearance_m: float = GRASP_CLEARANCE) -> float:
+    # put grippers at about mid-object width/length for top-down grasp
+    return float(ee_to_pinch_center_m - (0.5 * float(grasp_axis_size_m)) + grasp_clearance_m)
+
+def side_face_to_ee_grasp_standoff(grasp_axis_size_m: float,
+                                   ee_to_pinch_center_m: float = SIDE_EE_TO_PINCH_CENTER_M,
+                                   grasp_clearance_m: float = GRASP_CLEARANCE) -> float:
+    # [FLAG grasp-axis-side-model] Match the top-grasp depth logic in side view:
+    # EE stand-off from the tagged face = EE->pinch-center - half object thickness + small clearance.
+    return float(ee_to_pinch_center_m - (0.5 * float(grasp_axis_size_m)) + grasp_clearance_m)
+
+BOTTLE_GRASP_Z = top_surface_to_ee_grasp_z(BOTTLE_DIAMETER)
+CUBE_GRASP_Z = top_surface_to_ee_grasp_z(CUBE_SIZE)
+REMOTE_GRASP_Z = top_surface_to_ee_grasp_z(REMOTE_THICKNESS)
 
 # --- Drop-off locations --- #
 

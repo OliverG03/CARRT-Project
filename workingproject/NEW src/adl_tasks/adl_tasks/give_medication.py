@@ -170,6 +170,8 @@ class GiveMedication(Node):
                 attach_object(
                     self, f"obj_{MED_ID}", self.arm.END_EFFECTOR,
                     GRIPPER_TOUCH_LINKS,
+                    tag_id=MED_ID,
+                    tag_pose=med_pose,
                 )
             finally:
                 self.scene.lock(False)

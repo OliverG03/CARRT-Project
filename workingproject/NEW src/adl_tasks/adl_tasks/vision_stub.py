@@ -80,11 +80,11 @@ STUB_POSES = {
     #),
     
     # cup on table, upright, tag to robot
-    2: make_pose(
-        (TABLE_POS_X - 0.10) + CUP_RADIUS, (TABLE_POS_Y - 0.20), 
-        TABLE_SURFACE_Z + CUP_HEIGHT / 2.0, 
-        side_orientation
-    ),
+    #2: make_pose(
+    #    (TABLE_POS_X - 0.10) + CUP_RADIUS, (TABLE_POS_Y - 0.20), 
+    #    TABLE_SURFACE_Z + CUP_HEIGHT / 2.0, 
+    #    side_orientation
+    #),
     # TV remote on table, flat, tag facing up
     ### correct to make QR code be at bottom end of remote later
     3: make_pose(
@@ -94,11 +94,11 @@ STUB_POSES = {
     ),
     
     # Cube: on table, flat, tag facing up
-    4: make_pose(
-        TABLE_POS_X - 0.18, TABLE_POS_Y - 0.15, 
-        TABLE_SURFACE_Z + CUBE_SIZE, 
-        flat_orientation
-    ),
+    #4: make_pose(
+    #    TABLE_POS_X - 0.18, TABLE_POS_Y - 0.15, 
+    #    TABLE_SURFACE_Z + CUBE_SIZE, 
+    #    flat_orientation
+    #),
 }
 
 OBJECT_IDS = set(STUB_POSES.keys())

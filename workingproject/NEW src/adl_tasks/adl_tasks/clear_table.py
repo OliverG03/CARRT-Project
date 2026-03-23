@@ -41,6 +41,7 @@ Execution Flow / Action Cycle
 '''
 
 import copy
+import math
 import time
 import rclpy
 from rclpy.node import Node
@@ -52,7 +53,7 @@ from adl_tasks.apriltag_key import OBJECTS
 from adl_tasks.scene_lock import SceneLock
 from adl_tasks.vision_client import VisionClient
 from adl_tasks.task_base import TaskBase, STATUS_SUCCEEDED, STATUS_FAILED, STATUS_RUNNING, STATUS_CANCELLED
-from adl_tasks.motion_profiles import PoseTolerance
+from adl_tasks.motion_profiles import DEFAULT_PROFILE, MotionProfile, PoseTolerance
 from adl_tasks.scene_utils import remove_collision_object, attach_object, detach_object
 from adl_tasks.adl_logging import log_pose, log_arm_snapshot
 from adl_tasks.grasp_and_place import (
@@ -80,12 +81,13 @@ class clearTableNode(Node):
         super().__init__('clear_table_node')
         self.get_logger().info("Clear Table Node Started")
         
+        # call helpers and clients, set up publishers/subscribers
         self.arm = MoveItHelper(self)
         self.vision = VisionClient(self)
         self.scene = SceneLock(self)
         self.base = TaskBase("clear_table", self)
-        # [FLAG object-clear-accounting] Track whether an object was physically released at the
-        # destination even if the later post-place transition fails.
+
+        # tracking for object accounting and transition failures to inform task flow decisions
         self._last_object_drop_completed = False
         self._last_object_transition_failed_after_drop = False
         
@@ -97,6 +99,7 @@ class clearTableNode(Node):
             10
         )
         
+        # Begin the task node as ready state (IDLE)
         self.base._ready = True
         self.get_logger().info("Clear Table Node ready. Waiting for command.")
         self.get_logger().info("Startup motion disabled at node load; motion begins only after clear_table command.")
@@ -118,7 +121,7 @@ class clearTableNode(Node):
         to_clear = [ id for id in self.vision.visible_ids if id in CLEAR_TABLE_CONFIG["ids"] ]
         if not to_clear:
             self.get_logger().warn("No target objects detected on the table. Clear Table task will end.")
-            self._park_retract(context="no targets")
+            self._park_retract(context="no targets", allow_home_fallback=False)
             self.base.publish_status(STATUS_SUCCEEDED, "No target objects detected. Task complete.")
             return
         
@@ -135,7 +138,7 @@ class clearTableNode(Node):
             self.scene.lock(True)
             if self.base.is_cancelled():
                 self.get_logger().warn("Task cancelled. Ending Clear Table task.")
-                self._park_retract(context="task cancelled")
+                self._park_retract(context="task cancelled", allow_home_fallback=False)
                 self.base.publish_status(STATUS_CANCELLED, "Task cancelled by user.")
                 return
             tag_id = remaining[idx]
@@ -163,8 +166,7 @@ class clearTableNode(Node):
                 self.get_logger().info(f"Successfully cleared object {obj.name} (ID {tag_id}).")
                 self.base.update_detail(f"Completed {obj.name} (ID {tag_id}). Reordering remaining targets.")
                 if self._last_object_transition_failed_after_drop:
-                    # [FLAG object-clear-accounting] Do not erase a real drop just because the
-                    # post-place transition failed. Count the object as cleared, then stop early.
+                    # Count the object as cleared, then stop early.
                     self.get_logger().error(
                         f"{obj.name} was placed successfully, but the post-place transition failed. "
                         "Counting it as cleared and ending the task early for safety."
@@ -192,8 +194,7 @@ class clearTableNode(Node):
                     f'{[(i, OBJECTS[i].name) for i in remaining]}'
                 )
                 if remaining and FLOW_CONFIG.get("post_object_table_reseed", False):
-                    # [FLAG inter-object-table-reseed] Match the known-good startup seed before
-                    # starting the next object instead of launching directly from home.
+                    # reseed and re-lock before the next object.
                     self.get_logger().info(
                         "Reseeding at look_at_table before next object."
                     )
@@ -207,8 +208,7 @@ class clearTableNode(Node):
                             )
                             reseed_ok = self.arm.go_home()
                         if not reseed_ok:
-                            # [FLAG inter-object-table-reseed-hard-stop] Do not continue into the
-                            # next object from a planner state that already failed the reseed.
+                            # stop on reseed failure after a successful object, to avoid proceeding with a known-bad transition state
                             self._last_object_transition_failed_after_drop = True
                             self.get_logger().error(
                                 "Inter-object reseed failed after a successful object. Ending early for safety."
@@ -225,8 +225,7 @@ class clearTableNode(Node):
                 self.base.update_detail(f"Failed {obj.name} (ID {tag_id}). Running recovery and continuing.")
                 skipped.add(tag_id)
                 idx += 1
-                # [FLAG:transition-recovery] Never proceed to the next object from a known-bad
-                # transition state. Reseed to bridge/retract/home first.
+                # if failure was during pick/place and the object was not successfully dropped, attempt recovery before continuing to next object
                 if not self._recover_inter_object_transition(context=f"{obj.name} failed"):
                     self.get_logger().error(
                         "Transition recovery failed after object failure; ending task early for safety."
@@ -243,7 +242,7 @@ class clearTableNode(Node):
         
         # Step 4. final log and return home
         self.scene.lock(True)
-        if not self._park_retract(context="task complete"):
+        if not self._park_retract(context="task complete", allow_home_fallback=False):
             self.get_logger().error("Final retract park failed. No bridge fallback will be attempted at task completion.")
         self.scene.lock(False)
         
@@ -267,20 +266,22 @@ class clearTableNode(Node):
     def command_callback(self, msg):
         cmd = str(msg.data).strip()
         if cmd == "turn_off":
-            # [FLAG turn-off-command] stop current work and park safely in retract pose.
+            # stop current work and park safely in retract pose on turn off command
             self.get_logger().warn("Received turn_off command. Cancelling task and parking to retract.")
             self.base._cancelled = True
             self.base._cancel_reason = "Turn off command received."
             self.base.publish_status(STATUS_CANCELLED, "Turn off requested. Parking to retract pose.")
-            self._park_retract(context="turn_off")
+            self._park_retract(context="turn_off", allow_home_fallback=False)
             return
 
+        # begin task execution on clear_table command
         if cmd == 'clear_table' and not self.base.executing and self.base._ready:
             self.get_logger().info("Received clear_table command. Starting task execution.")
             self.base.start_task_thread(self.execute_task)
 
-    def _park_retract(self, context: str) -> bool:
-        # [FLAG retract-park] unified safe park helper used for task completion + turn_off.
+    # move to retract pose with tucked gripper, used for safe parking at the end of the task and on turn_off command
+    def _park_retract(self, context: str, allow_home_fallback: bool = True) -> bool:
+        # unified safe park helper used for task completion + turn_off
         self.get_logger().info(f"Parking arm to retract pose ({context}).")
         try:
             if hasattr(self.arm, "stop_motion"):
@@ -289,8 +290,7 @@ class clearTableNode(Node):
             self.get_logger().warn("Failed to stop motion before retract park.")
         self.arm.wait_for_settle(timeout=2.0)
         try:
-            # [FLAG retract-travel-gripper] Keep the end effector compact before
-            # final/recovery retract moves so parking does not start from a fully open hand.
+            # tuck gripper for safe travel
             travel_width = float(FLOW_CONFIG.get("travel_gripper_width_rad", 0.120))
             travel_force = float(FLOW_CONFIG.get("travel_gripper_force_n", 10.0))
             self.get_logger().info(
@@ -300,15 +300,16 @@ class clearTableNode(Node):
         except Exception:
             self.get_logger().warn("Failed to tuck gripper before retract park.")
         parked = self.arm.go_retract()
-        if not parked:
+        if (not parked) and allow_home_fallback:
             self.get_logger().warn("go_retract failed; falling back to go_home.")
             parked = self.arm.go_home()
+        elif not parked:
+            self.get_logger().warn("go_retract failed; leaving final/idle park at retract-only as requested.")
         return parked
 
+    # deterministic recovery for failed transition between pick-place attempts
+    # - stops motion, waits for settle, then parks the arm in a known pose
     def _recover_inter_object_transition(self, context: str) -> bool:
-        # [FLAG:inter-object-reseed] Deterministic transition recovery:
-        # prefer joint-space reseeds first. Bridge is now last-resort only because
-        # it was leaving the arm in branchy states that blocked the next object.
         try:
             self.arm.stop_motion()
         except Exception:
@@ -326,6 +327,7 @@ class clearTableNode(Node):
             self.arm.wait_for_settle(timeout=2.0)
             return True
 
+        # last resort, caused branching failures
         if FLOW_CONFIG.get("inter_object_bridge_after_place", False):
             self.get_logger().warn(
                 f"[{context}] retract/home reseed failed; trying bridge as last resort."
@@ -396,7 +398,6 @@ class clearTableNode(Node):
         except Exception:
             self.get_logger().warn("_recover_motion: Failed to wait for settle during recovery.")
         try:
-            # [FLAG recovery-park] Failures were cascading into noisy bridge retries.
             # Collapse recovery to retract/home parking only.
             if not self._park_retract(context=f"recovery: {context}"):
                 self.get_logger().warn("_recover_motion: deterministic retract/home park failed.")
@@ -426,11 +427,9 @@ class clearTableNode(Node):
 
         grasp_pose = obj.compute_grasp_pose(tag_pose)  # Final grasp pose from detected tag.
         pregrasp_above_z, est_height_m, height_source = compute_side_pregrasp_above_z_m(obj)
-
-        # [FLAG side-grasp-floor] Allow a per-object side-grasp floor so one object can
-        # keep extra table clearance without globally lifting every side grasp.
-        # [FLAG side-grasp-floor] Guard the optional per-object override against None.
-        # AprilTagObject now always has side_grasp_min_z_m, but most objects leave it unset.
+        
+        # allow per-object override for side grasp floor, so one object keeps extra clearance without effecting every grasp
+        # guard optional per-object override against None, present in AprilTagObject
         side_grasp_min_z_override = getattr(obj, "side_grasp_min_z_m", None)
         side_grasp_min_z = float(
             side_grasp_min_z_override
@@ -450,24 +449,22 @@ class clearTableNode(Node):
             grasp_pose.position.z = float(side_grasp_min_z)
 
         if is_side_grasp:
-            # [FLAG side-face-standoff] Side grasp flow now reads in the same frame as the
-            # top-down code: start from the tag-derived grasp pose, then offset along the
-            # grasp axis. For side grasps that axis is the QR face outward normal in table XY.
+            # start from the tag-derived grasp pose, then offset along the grasp axis
+            # for side grasps: the QR face outward normal in table XY
             center_clearance, est_width_m, center_source = compute_side_front_clearance_m(obj)
             face_standoff, _, face_source = compute_side_qr_face_standoff_m(obj)
             qr_face_min = float(SIDE_APPROACH_CONFIG["qr_face_min_distance_m"])
-            # [FLAG side-pregrasp-debug] object-driven pregrasp Z (future side objects get this automatically).
             self.get_logger().info(
                 f"[{obj.name}] Side pregrasp model: est_height={est_height_m:.3f}m "
                 f"(source={height_source}) -> above_z={pregrasp_above_z:.3f}m."
             )
-            # [FLAG side-clearance-debug] Show both the legacy center-based quantity and the
-            # preferred QR-face stand-off so tuning maps directly to the visible QR face.
+
+            # calculate center-based clearance model for backward compatibility
             model_wrist = float(SIDE_APPROACH_CONFIG["wrist_to_pinch_center_m"])
             model_gain = float(SIDE_APPROACH_CONFIG["wrist_front_clearance_width_gain"])
             model_tweak = float(SIDE_APPROACH_CONFIG["wrist_front_clearance_tweak_m"])
             model_raw = model_wrist + (model_gain * est_width_m) + model_tweak
-            # [FLAG side-clearance-debug] minimum center clearance implied by desired wrist stand-off from QR face.
+            # minimum center clearance implied by desired wrist stand-off from QR face
             model_min_front = float(SIDE_APPROACH_CONFIG.get("wrist_front_min_from_qr_m", 0.0))
             model_min_clearance = (0.5 * est_width_m) + model_min_front
             self.get_logger().info(
@@ -488,7 +485,7 @@ class clearTableNode(Node):
                 f"face_standoff={face_standoff:.3f}m (source={face_source}), "
                 f"qr_face_min={qr_face_min:.3f}m."
             )
-            # [FLAG side-face-standoff] Enforce final distance from the QR face directly.
+            # enforce final distance from the QR face directly
             qr_dist_before = side_qr_face_distance_xy(tag_pose, grasp_pose)
             qr_dist_before = float(qr_dist_before) if qr_dist_before is not None else 0.0
             target_qr_dist = max(float(face_standoff), float(qr_face_min))
@@ -548,8 +545,7 @@ class clearTableNode(Node):
         # side-stage recovery target (front-of-object pre-grasp pose).
         stage2_recover_pose = copy.deepcopy(approach_pose)
 
-        # [FLAG top-live-verify] Resolve per-object top-grasp validation policy once so the
-        # top-approach code can stay explicit about when it trusts a nominal MoveIt success.
+        # per-object overrides and config-based adjustments for top grasp tolerances and soft fail allowance
         def _top_obj_bool(attr_name: str, cfg_key: str) -> bool:
             override = getattr(obj, attr_name, None)
             return bool(override) if override is not None else bool(TOP_APPROACH_CONFIG[cfg_key])
@@ -598,6 +594,28 @@ class clearTableNode(Node):
             "top_stage2_prealign_max_err_rad",
             "stage2_prealign_max_err_rad",
         )
+        top_primary_position_fallback = bool(
+            TOP_APPROACH_CONFIG.get("stage1_position_fallback_enable", False)
+        )
+        top_retry_position_fallback = bool(
+            TOP_APPROACH_CONFIG.get("stage1_retry_position_fallback_enable", False)
+        )
+        top_staging_position_fallback = bool(
+            TOP_APPROACH_CONFIG.get("stage1_staging_position_fallback_enable", False)
+        )
+        top_retry_allow_table_reseed = bool(
+            TOP_APPROACH_CONFIG.get("stage1_retry_allow_table_reseed_fallback", False)
+        )
+        top_stage1_profile = MotionProfile(
+            planning_time=float(TOP_APPROACH_CONFIG["stage1_planning_time_s"]),
+            velocity_scaling=DEFAULT_PROFILE.velocity_scaling,
+            accel_scaling=DEFAULT_PROFILE.accel_scaling,
+        )
+        top_stage1_retry_profile = MotionProfile(
+            planning_time=float(TOP_APPROACH_CONFIG["stage1_retry_planning_time_s"]),
+            velocity_scaling=DEFAULT_PROFILE.velocity_scaling,
+            accel_scaling=DEFAULT_PROFILE.accel_scaling,
+        )
         if is_top_grasp:
             self.get_logger().info(
                 f"[{obj.name}] [FLAG top-policy] stage1_ori_xy={top_stage1_ori_xy_tol:.3f}, "
@@ -606,7 +624,12 @@ class clearTableNode(Node):
                 f"retry_ori_z={top_stage1_retry_ori_z_tol:.3f}, "
                 f"stage1_live_ori={top_stage1_live_ori_tol:.3f}, "
                 f"stage2_prealign={top_stage2_prealign_err_tol:.3f}, "
-                f"soft_fail={top_allow_soft_fail}."
+                f"soft_fail={top_allow_soft_fail}, "
+                f"primary_pos_fallback={top_primary_position_fallback}, "
+                f"retry_pos_fallback={top_retry_position_fallback}, "
+                f"staged_pos_fallback={top_staging_position_fallback}, "
+                f"retry_table_reseed={top_retry_allow_table_reseed}, "
+                f"plan_s=({top_stage1_profile.planning_time:.1f}/{top_stage1_retry_profile.planning_time:.1f})."
             )
 
         # Side approach helper: orient above the object first, then descend vertically to approach height.
@@ -728,13 +751,19 @@ class clearTableNode(Node):
             staged = copy.deepcopy(approach_pose)
             staged.position.z += lift_z
             self._log_pose(f"[{obj.name}] Stage 1 top staged fallback target", staged)
-            if not self.arm.go_to_position(staged, tolerance=pos_tol):
-                return False
+            if top_staging_position_fallback:
+                if not self.arm.go_to_position(
+                    staged,
+                    tolerance=pos_tol,
+                    profile=top_stage1_retry_profile if retry else top_stage1_profile,
+                ):
+                    return False
 
             align_ok = self.arm.go_to_pose(
                 staged,
                 tol=PoseTolerance(pos=pos_tol, ori_xy=ori_xy, ori_z=ori_z),
                 orientation_required=True,
+                profile=top_stage1_retry_profile if retry else top_stage1_profile,
             )
             if not align_ok:
                 if top_allow_soft_fail:
@@ -879,12 +908,14 @@ class clearTableNode(Node):
                             ori_z=top_stage1_ori_z_tol,
                         ),
                         orientation_required=True,
+                        profile=top_stage1_profile,
                     )
-                if not ok:
+                if (not ok) and top_primary_position_fallback:
                     # Fallback: reach XYZ first, then refine orientation.
                     ok = self.arm.go_to_position(
                         approach_pose,
                         tolerance=float(TOP_APPROACH_CONFIG["stage1_position_fallback_tol"]),
+                        profile=top_stage1_profile,
                     )
                 if ok:
                     self.arm.wait_for_settle(timeout=1.0)
@@ -896,6 +927,7 @@ class clearTableNode(Node):
                             ori_z=top_stage1_ori_z_tol,
                         ),
                         orientation_required=True,
+                        profile=top_stage1_profile,
                     )
                     if (not ori_ok and top_allow_soft_fail):
                         ok = top_orientation_soft_ok(
@@ -966,13 +998,12 @@ class clearTableNode(Node):
                     stage2_recover_pose = copy.deepcopy(approach_pose)
             else:
                 if is_top_grasp and bool(TOP_APPROACH_CONFIG.get("stage1_reseed_before_retry", False)):
-                    # [FLAG top-reseed-retry] For locked-scene top retries, go_home is a more
-                    # deterministic reseed than look_at_table and avoids an extra vision sweep.
+                    # For locked-scene top retries, go_home is a more deterministic reseed than look_at_table and avoids an extra vision sweep.
                     self.get_logger().info(
                         f"[{obj.name}] Stage 1 retry: reseeding with go_home before top approach."
                     )
                     reseeded = self.arm.go_home()
-                    if not reseeded:
+                    if (not reseeded) and top_retry_allow_table_reseed:
                         self.get_logger().warn(
                             f"[{obj.name}] Stage 1 retry: go_home reseed failed; trying look_at_table fallback."
                         )
@@ -993,11 +1024,13 @@ class clearTableNode(Node):
                             ori_z=top_stage1_retry_ori_z_tol,
                         ),
                         orientation_required=True,
+                        profile=top_stage1_retry_profile,
                     )
-                    if not ok:
+                    if (not ok) and top_retry_position_fallback:
                         ok = self.arm.go_to_position(
                             approach_pose,
                             tolerance=float(TOP_APPROACH_CONFIG["stage1_retry_position_fallback_tol"]),
+                            profile=top_stage1_retry_profile,
                         )
                     if ok:
                         self.arm.wait_for_settle(timeout=1.0)
@@ -1009,6 +1042,7 @@ class clearTableNode(Node):
                                 ori_z=top_stage1_retry_ori_z_tol,
                             ),
                             orientation_required=True,
+                            profile=top_stage1_retry_profile,
                         )
                         if (not ori_ok and top_allow_soft_fail):
                             ok = top_orientation_soft_ok(
@@ -1104,8 +1138,7 @@ class clearTableNode(Node):
                 self.base.update_detail(f"[{obj.name}] Stage 1 failed: could not reach approach pose.")
                 return False
 
-        # [FLAG:side-xy-lock] Guarantee side-grasp descend is purely vertical from approach XY.
-        # This prevents a hidden XY "push" if grasp XY drifts from approach XY due prior math edits.
+        # Guarantee side-grasp descend is purely vertical from approach XY
         if is_side_grasp:
             grasp_pose.position.x = float(approach_pose.position.x)
             grasp_pose.position.y = float(approach_pose.position.y)
@@ -1134,7 +1167,7 @@ class clearTableNode(Node):
                 f"[{obj.name}] Side descend vector (approach->grasp): dx={push_dx:+.3f}, dy={push_dy:+.3f}, dz={push_dz:+.3f}, |xy|={push_xy:.3f}."
             )
         elif is_top_grasp and bool(TOP_APPROACH_CONFIG.get("stage2_prealign_enable", False)):
-            # [FLAG top-stage2-prealign] keep top-grasp descend orientation stable to prevent spin at grasp.
+            # keep top-grasp descend orientation stable to prevent spin at grasp.
             prealign_err_lim = float(top_stage2_prealign_err_tol)
             live_top = self.arm.get_current_end_effector_pose(timeout=1.0)
             if live_top is not None:
@@ -1268,22 +1301,93 @@ class clearTableNode(Node):
             obj_id, 
             self.arm.END_EFFECTOR,
             GRIPPER_TOUCH_LINKS,
+            tag_id=tag_id,
+            tag_pose=tag_pose,
         )
         time.sleep(float(FLOW_CONFIG["gripper_attach_sync_s"])) 
         self.scene.mark_picked(tag_id)
+
+        live_post_grasp = self.arm.get_current_end_effector_pose(timeout=1.0)
+        # [FLAG stage4-live-base] Build the immediate post-grasp lift from the live closed-gripper
+        # pose, not the nominal planned grasp pose. This keeps Stage 4 as a true retract/lift instead
+        # of mixing in XY correction, which especially helps thin top-grasp objects like the remote.
+        lift_base_pose = copy.deepcopy(live_post_grasp) if live_post_grasp is not None else copy.deepcopy(grasp_pose)
+        if live_post_grasp is not None:
+            self._log_pose(f"[{obj.name}] Stage 3 settled (live/current)", live_post_grasp)
+        else:
+            self.get_logger().warn(
+                f"[{obj.name}] Stage 4 using nominal grasp pose as lift base because no live post-grasp pose was available."
+            )
+
+        initial_lift_clear_z = float(FLOW_CONFIG["lift_clear_z"])
+        grasp_axis_size_m = getattr(obj, "grasp_axis_size_m", None)
+        if is_top_grasp and grasp_axis_size_m is not None and float(grasp_axis_size_m) <= 0.03:
+            # [FLAG thin-top-lift] Thin top-grasped objects do not need the full transit lift as the
+            # first Cartesian retract. A shorter straight-up move avoids the last-step IK failure seen on the remote.
+            initial_lift_clear_z = min(initial_lift_clear_z, 0.08)
+            self.get_logger().info(
+                f"[{obj.name}] Stage 4 using reduced initial lift_clear_z={initial_lift_clear_z:.3f} "
+                f"for thin top-grasp object (grasp_axis_size_m={float(grasp_axis_size_m):.3f})."
+            )
+
+        lift_clear_p = copy.deepcopy(lift_base_pose)
+        lift_clear_p.position.z = float(lift_base_pose.position.z + initial_lift_clear_z)
+        lift_stage4b_pose = copy.deepcopy(lift_base_pose)
+        lift_stage4b_pose.position.z = float(lift_base_pose.position.z + DROP_CONFIG["standoff_z"])
+
+        def _run_stepwise_lift(target_pose: Pose) -> bool:
+            # [FLAG remote-lift-fallback] Some thin-object lifts fail as a single vertical Cartesian request
+            # even after a good close/attach. Walk the lift upward in short steps from the live EE pose.
+            live_pose = self.arm.get_current_end_effector_pose(timeout=1.0)
+            if live_pose is None:
+                return False
+            step_dz = max(1e-3, float(FLOW_CONFIG["lift_clear_step_dz"]))
+            min_fraction = float(FLOW_CONFIG["lift_clear_step_min_fraction"])
+            total_dz = float(target_pose.position.z) - float(live_pose.position.z)
+            if total_dz <= 1e-6:
+                return True
+            steps = max(1, int(math.ceil(total_dz / step_dz)))
+            start_x = float(live_pose.position.x)
+            start_y = float(live_pose.position.y)
+            start_z = float(live_pose.position.z)
+            end_x = float(target_pose.position.x)
+            end_y = float(target_pose.position.y)
+            end_z = float(target_pose.position.z)
+            for step_idx in range(1, steps + 1):
+                alpha = float(step_idx) / float(steps)
+                waypoint = copy.deepcopy(target_pose)
+                waypoint.position.x = start_x + (end_x - start_x) * alpha
+                waypoint.position.y = start_y + (end_y - start_y) * alpha
+                waypoint.position.z = start_z + (end_z - start_z) * alpha
+                if not self.arm.go_cartesian(
+                    [waypoint],
+                    avoid_collisions=False,
+                    min_fraction=min_fraction,
+                    fallback_to_pose=False,
+                ):
+                    self.get_logger().warn(
+                        f"[{obj.name}] Stage 4 segmented lift failed at step {step_idx}/{steps} "
+                        f"toward z={target_pose.position.z:.3f}."
+                    )
+                    return False
+            return True
         
         # 4. lift straight up in z to avoid collisions
         # - a) clear surface (collisions off)
-        lift_clear_p = copy.deepcopy(grasp_pose)
-        lift_clear_p.position.z += FLOW_CONFIG["lift_clear_z"]
         self.get_logger().info(
-            f'[{obj.name}] Stage 4: lift up to z={lift_pose.position.z:.3f})'
+            f'[{obj.name}] Stage 4: lift up to z={lift_stage4b_pose.position.z:.3f}'
         )
         self.base.update_detail(f"[{obj.name}] Stage 4/9: lifting object clear of table.")
-        if not self.arm.go_cartesian(
+        lift_ok = self.arm.go_cartesian(
             [lift_clear_p],
             avoid_collisions=False,
-        ):
+        )
+        if (not lift_ok) and is_top_grasp:
+            self.get_logger().warn(
+                f"[{obj.name}] Stage 4 direct lift failed; retrying with segmented vertical lift."
+            )
+            lift_ok = _run_stepwise_lift(lift_clear_p)
+        if not lift_ok:
             self.get_logger().error(f'Failed to lift object [{obj.name}]. Dropping.')
             self.arm.open_gripper() 
             detach_object(self, obj_id, self.arm.END_EFFECTOR)
@@ -1293,13 +1397,13 @@ class clearTableNode(Node):
             return False
         
         self.get_logger().info(
-            f"4b) lift to final height at z={lift_pose.position.z:.3f} (collisions on)"
+            f"4b) lift to final height at z={lift_stage4b_pose.position.z:.3f} (collisions on)"
         )
         if not self.arm.go_cartesian(
-            [lift_pose], 
+            [lift_stage4b_pose], 
             avoid_collisions=True,
         ):
-            if not self.arm.go_to_pose(lift_pose, tol=PoseTolerance(pos=0.04, ori_xy=0.6, ori_z=3.14)):
+            if not self.arm.go_to_pose(lift_stage4b_pose, tol=PoseTolerance(pos=0.04, ori_xy=0.6, ori_z=3.14)):
                 self.get_logger().warn(
                     f'Failed to lift object [{obj.name}] to final height even with fallback.'
                 )
@@ -1316,6 +1420,27 @@ class clearTableNode(Node):
     
         # 5. move to destination location (non-cartesian)
         place_slot = resolve_place_slot(tag_id)
+        stage5_allow_reseed = is_top_grasp and FLOW_CONFIG.get("stage5_reseed_look_at_table", False)
+        if place_slot == "BIN" and not FLOW_CONFIG.get("stage5_bin_reseed_look_at_table", False):
+            # [FLAG stage5-bin-no-reseed] Remote/bin runs are more stable when they stay on the carried-object branch
+            # instead of sweeping through look_at_table right before the tub transit.
+            stage5_allow_reseed = False
+            self.get_logger().info(
+                f"[{obj.name}] Stage 5 reseed skipped for BIN slot to preserve the current carry branch."
+            )
+        if stage5_allow_reseed:
+            # Bias shelf/bin transit to the known around-table
+            # branch before Stage 5 so descent posture is less likely to dip into the table.
+            self.get_logger().info(
+                f"[{obj.name}] Stage 5 reseed: moving through look_at_table before placement transit."
+            )
+            reseed_ok = self.arm.look_at_table()
+            self.get_logger().info(
+                f"[{obj.name}] Stage 5 reseed result: {'OK' if reseed_ok else 'FAILED'}."
+            )
+            if reseed_ok:
+                self.arm.wait_for_settle(timeout=1.5)
+        
         self.get_logger().info(
             f"[{obj.name}] Stage 5: transit to above destination"
             f" ({dest_pull_up.position.x:.3f}, {dest_pull_up.position.y:.3f}, {dest_pull_up.position.z:.3f})"
@@ -1358,13 +1483,25 @@ class clearTableNode(Node):
                 orientation_required=True,
             )
             if not used_hard_preset:
-                self.get_logger().warn(
-                    f"[{obj.name}] Stage 5 pose preset strict move failed for '{place_slot}'. Retrying position-only."
+                stage5_allow_position_only = not (
+                    place_slot == "BIN"
+                    and not DROP_CONFIG.get("stage5_bin_allow_position_only_fallback", False)
                 )
-                used_hard_preset = self.arm.go_to_position(
-                    preset_pose,
-                    tolerance=DROP_CONFIG["stage5_preset_fallback_pos_tol"],
-                )
+                if stage5_allow_position_only:
+                    self.get_logger().warn(
+                        f"[{obj.name}] Stage 5 pose preset strict move failed for '{place_slot}'. Retrying position-only."
+                    )
+                    used_hard_preset = self.arm.go_to_position(
+                        preset_pose,
+                        tolerance=DROP_CONFIG["stage5_preset_fallback_pos_tol"],
+                    )
+                else:
+                    # [FLAG stage5-bin-no-pos-fallback] Above the BIN we need to keep the wrist orientation
+                    # coherent for Stage 6; a position-only recovery tends to arrive on the wrong branch.
+                    self.get_logger().warn(
+                        f"[{obj.name}] Stage 5 pose preset strict move failed for '{place_slot}'. "
+                        "Skipping position-only fallback to preserve orientation continuity."
+                    )
             self.get_logger().info(
                 f"[{obj.name}] Stage 5 pose preset move result: {'OK' if used_hard_preset else 'FAILED'}."
             )
@@ -1467,15 +1604,6 @@ class clearTableNode(Node):
                         current_drop_start = refreshed
                         self._log_pose(f"[{obj.name}] Stage 6 start (post-orientation-refine)", current_drop_start)
 
-        # enforce pure vertical descent from current/preset XY
-        dest_pose_for_drop = copy.deepcopy(current_drop_start)
-        if preset_pose is not None:
-            dest_pose_for_drop.position.x = float(preset_pose.position.x)
-            dest_pose_for_drop.position.y = float(preset_pose.position.y)
-            dest_pose_for_drop.orientation = copy.deepcopy(preset_pose.orientation)
-        dest_pose_for_drop.position.z = float(dest_pose.position.z)
-        self._log_pose(f'[{obj.name}] Stage 6 drop target (vertical from live start)', dest_pose_for_drop)
-
         if place_slot:
             self._log_preset_capture_hint(place_slot)
 
@@ -1499,32 +1627,207 @@ class clearTableNode(Node):
             self.get_logger().info(
                 f"[{obj.name}] Stage 6 pre-alignment skipped. Proceeding directly to cartesian drop from current orientation."
             )
-        drop_joint_locks = None
-        joints = self.arm.get_arm_joint_positions(timeout=1.0)
-        if DROP_CONFIG["use_joint7_lock"] and joints and "joint_7" in joints:
-            drop_joint_locks = {"joint_7": (joints["joint_7"], DROP_CONFIG["lock_joint_7_tol"])}
-            self.get_logger().info(
-                f'[{obj.name}] Stage 6 joint lock strict: joint_7 = {joints["joint_7"]:+.3f} tol {DROP_CONFIG["lock_joint_7_tol"]:.3f}.'
-            )
-        elif not DROP_CONFIG["use_joint7_lock"]:
-            self.get_logger().info(
-                f'[{obj.name}] Stage 6 joint lock disabled by configuration.'
-            )
-        else:
-            self.get_logger().warn(
-                f'[{obj.name}] Stage 6 could not get joint_7 position for locking during drop.'
-            )
-            
-        ok = cartesian_descend_stepwise(
-            node=self,
-            arm=self.arm,
-            obj_name=obj.name,
-            start_pose=current_drop_start,
-            dest_pose=dest_pose_for_drop,
-            joint_locks=drop_joint_locks,
-            log_pose_cb=self._log_pose,
-        )
 
+        # [FLAG stage6-hazard-reorient]: bin drops are the path most likely to drift into
+        # a table-contacting branch near the end. Rescue there instead of simply continuing unlocked.
+        stage6_reorient_enabled = bool(
+            is_top_grasp
+            and place_slot == "BIN"
+            and DROP_CONFIG.get("stage6_joint_lock_enable", False)
+        )
+        stage6_posture_hazard_gap = (
+            float(DROP_CONFIG.get("stage6_bin_reorient_trigger_gap", DROP_CONFIG.get("stage6_reorient_trigger_gap", 0.0)))
+            if stage6_reorient_enabled
+            else float(DROP_CONFIG.get("stage6_reorient_trigger_gap", 0.0))
+        )
+        stage6_early_release_gap = (
+            float(DROP_CONFIG.get("stage6_bin_early_release_max_z_gap", DROP_CONFIG.get("early_release_max_z_gap", 0.0)))
+            if stage6_reorient_enabled
+            else float(DROP_CONFIG.get("early_release_max_z_gap", 0.0))
+        )
+        stage6_reorient_retries_left = (
+            int(DROP_CONFIG.get("stage6_reorient_max_retries", 1))
+            if stage6_reorient_enabled else 0
+        )
+        stage6_safe_joints = None
+        if stage6_reorient_enabled:
+            safe_joint_snapshot = self.arm.get_arm_joint_positions(timeout=1.0)
+            if safe_joint_snapshot:
+                # [FLAG stage6-bin-live-safe-joints] The BIN pose preset fixes only the wrist pose.
+                # Capture the actual live whole-arm branch above the bin so rescue can return to the
+                # same away-from-table joint posture instead of solving a fresh pose goal on a new branch.
+                stage6_safe_joints = {
+                    joint_name: float(safe_joint_snapshot[joint_name])
+                    for joint_name in self.arm.ARM_JOINT_NAMES
+                    if joint_name in safe_joint_snapshot
+                }
+                ordered = ", ".join(
+                    f"{joint_name}={stage6_safe_joints[joint_name]:+.3f}"
+                    for joint_name in self.arm.ARM_JOINT_NAMES
+                    if joint_name in stage6_safe_joints
+                )
+                self.get_logger().info(
+                    f"[{obj.name}] Stage 6 BIN safe-joint snapshot: {ordered}."
+                )
+        stage6_released_early = False
+        drop_result = {"ok": False, "reason": "not_run"}
+
+        while True:
+            # enforce pure vertical descent from the active attempt pose
+            dest_pose_for_drop = copy.deepcopy(current_drop_start)
+            if preset_pose is not None:
+                dest_pose_for_drop.position.x = float(preset_pose.position.x)
+                dest_pose_for_drop.position.y = float(preset_pose.position.y)
+                dest_pose_for_drop.orientation = copy.deepcopy(preset_pose.orientation)
+            dest_pose_for_drop.position.z = float(dest_pose.position.z)
+            self._log_pose(f'[{obj.name}] Stage 6 drop target (vertical from live start)', dest_pose_for_drop)
+
+            drop_joint_locks = None
+            joints = self.arm.get_arm_joint_positions(timeout=1.0)
+            if is_top_grasp and bool(DROP_CONFIG.get("stage6_joint_lock_enable", False)) and joints:
+                # Keep major arm posture joints close to the pre-drop values to reduce table-dipping branch changes during descent.
+                lock_map = dict(DROP_CONFIG.get("stage6_joint_lock_map", {}))
+                lock_desc = []
+                drop_joint_locks = {}
+                for joint_name, tol in lock_map.items():
+                    if stage6_reorient_enabled and preset_joints and joint_name in preset_joints:
+                        # [FLAG stage6-bin-lock-source] BIN uses the calibrated joint preset as the safe branch reference,
+                        # so posture drift is measured against the known away-from-table posture rather than the latest drifted pose.
+                        lock_center = float(preset_joints[joint_name])
+                    elif stage6_reorient_enabled and stage6_safe_joints and joint_name in stage6_safe_joints:
+                        # [FLAG stage6-bin-lock-source] If no static BIN joint preset is configured, anchor the
+                        # drop to the live safe-joint snapshot captured above the bin for this specific run.
+                        lock_center = float(stage6_safe_joints[joint_name])
+                    elif joint_name in joints:
+                        lock_center = float(joints[joint_name])
+                    else:
+                        continue
+                    drop_joint_locks[joint_name] = (lock_center, float(tol))
+                    lock_desc.append(f"{joint_name}={lock_center:+.3f}+/-{float(tol):.3f}")
+                if drop_joint_locks:
+                    self.get_logger().info(
+                        f"[{obj.name}] Stage 6 posture locks enabled: {', '.join(lock_desc)}."
+                    )
+            elif DROP_CONFIG["use_joint7_lock"] and joints and "joint_7" in joints:
+                drop_joint_locks = {"joint_7": (joints["joint_7"], DROP_CONFIG["lock_joint_7_tol"])}
+                self.get_logger().info(
+                    f'[{obj.name}] Stage 6 joint lock strict: joint_7 = {joints["joint_7"]:+.3f} tol {DROP_CONFIG["lock_joint_7_tol"]:.3f}.'
+                )
+            else:
+                self.get_logger().info(
+                    f'[{obj.name}] Stage 6 joint lock disabled by configuration.'
+                )
+
+            drop_result = cartesian_descend_stepwise(
+                node=self,
+                arm=self.arm,
+                obj_name=obj.name,
+                start_pose=current_drop_start,
+                dest_pose=dest_pose_for_drop,
+                joint_locks=drop_joint_locks,
+                log_pose_cb=self._log_pose,
+                avoid_collisions=bool(DROP_CONFIG.get("stage6_avoid_collisions", False)),
+                retry_without_collisions=bool(DROP_CONFIG.get("stage6_retry_without_collisions", False)),
+                posture_hazard_gap=(
+                    stage6_posture_hazard_gap
+                    if stage6_reorient_enabled and stage6_reorient_retries_left > 0 else None
+                ),
+                posture_hazard_warn_ratio=(
+                    float(DROP_CONFIG.get("stage6_reorient_lock_warn_ratio", 0.0))
+                    if stage6_reorient_enabled and stage6_reorient_retries_left > 0 else None
+                ),
+                early_release_max_gap=stage6_early_release_gap,
+                posture_hazard_on_lock_failure=bool(
+                    stage6_reorient_enabled
+                    and stage6_reorient_retries_left > 0
+                    and DROP_CONFIG.get("stage6_bin_posture_hazard_on_lock_failure", False)
+                ),
+            )
+            stage6_released_early = bool(drop_result.get("released_early", False))
+            if drop_result.get("ok", False):
+                break
+            if drop_result.get("reason") != "posture_hazard" or stage6_reorient_retries_left <= 0:
+                break
+
+            stage6_reorient_retries_left -= 1
+            self.get_logger().warn(
+                f"[{obj.name}] Stage 6 posture hazard detected ({drop_result.get('detail', 'lock_drift')}). "
+                "Pulling up and reorienting before continuing the drop."
+            )
+            rescue_start = self.arm.get_current_end_effector_pose(timeout=2.0)
+            if rescue_start is None:
+                self.get_logger().warn(
+                    f"[{obj.name}] Stage 6 rescue: current EE pose unavailable. Cannot perform pull-up/reorientation."
+                )
+                break
+            self._log_pose(f"[{obj.name}] Stage 6 rescue start (live/current)", rescue_start)
+
+            rescue_up = copy.deepcopy(rescue_start)
+            rescue_up.position.z = min(
+                float(dest_pull_up.position.z),
+                float(rescue_start.position.z) + float(DROP_CONFIG.get("stage6_reorient_pull_up_z", 0.03)),
+            )
+            self._log_pose(f"[{obj.name}] Stage 6 rescue pull-up target", rescue_up)
+            rescue_up_ok = self.arm.go_cartesian(
+                [rescue_up],
+                avoid_collisions=bool(DROP_CONFIG.get("stage6_avoid_collisions", False)),
+                max_step=DROP_CONFIG["descent_max_step"],
+                min_fraction=max(0.90, float(DROP_CONFIG["descent_step_min_fraction"])),
+                fallback_to_pose=False,
+            )
+            self.get_logger().info(
+                f"[{obj.name}] Stage 6 rescue pull-up result: {'OK' if rescue_up_ok else 'FAILED'}."
+            )
+            if not rescue_up_ok:
+                break
+
+            rescue_align_ok = False
+            rescue_align = copy.deepcopy(rescue_up)
+            rescue_joint_target = preset_joints if preset_joints else stage6_safe_joints
+            if stage6_reorient_enabled and rescue_joint_target:
+                # [FLAG stage6-bin-joint-rescue] When BIN drift appears, prefer the calibrated joint preset to
+                # actively turn the arm back onto the safer away-from-table branch before continuing the drop.
+                self.get_logger().info(
+                    f"[{obj.name}] Stage 6 rescue: restoring BIN safe joint branch before re-entering the drop."
+                )
+                rescue_align_ok = self.arm.go_to_joint_positions(rescue_joint_target)
+                self.get_logger().info(
+                    f"[{obj.name}] Stage 6 rescue joint-preset result: {'OK' if rescue_align_ok else 'FAILED'}."
+                )
+                refreshed = self.arm.get_current_end_effector_pose(timeout=2.0)
+                if rescue_align_ok and refreshed is not None:
+                    rescue_align = refreshed
+            if not rescue_align_ok:
+                rescue_align = copy.deepcopy(rescue_up)
+                if preset_pose is not None:
+                    rescue_align.position.x = float(preset_pose.position.x)
+                    rescue_align.position.y = float(preset_pose.position.y)
+                    rescue_align.orientation = copy.deepcopy(preset_pose.orientation)
+                self._log_pose(f"[{obj.name}] Stage 6 rescue reorientation target", rescue_align)
+                rescue_align_ok = self.arm.go_to_pose(
+                    rescue_align,
+                    tol=PoseTolerance(
+                        pos=DROP_CONFIG["preset_ori_align_pos_tol"],
+                        ori_xy=DROP_CONFIG["preset_ori_align_xy_tol"],
+                        ori_z=DROP_CONFIG["preset_ori_align_z_tol"],
+                    ),
+                    orientation_required=True,
+                )
+                self.get_logger().info(
+                    f"[{obj.name}] Stage 6 rescue reorientation result: {'OK' if rescue_align_ok else 'FAILED'}."
+                )
+            if not rescue_align_ok:
+                break
+
+            refreshed = self.arm.get_current_end_effector_pose(timeout=2.0)
+            if refreshed is not None:
+                current_drop_start = refreshed
+                self._log_pose(f"[{obj.name}] Stage 6 restart (post-rescue)", current_drop_start)
+            else:
+                current_drop_start = rescue_align
+                self._log_pose(f"[{obj.name}] Stage 6 restart (rescue target fallback)", current_drop_start)
+
+        ok = bool(drop_result.get("ok", False))
         if not ok:
             self.get_logger().error(
                 f"[{obj.name}] Stage 6 cartesian drop failed during stepwise descent. Aborting."
@@ -1538,7 +1841,10 @@ class clearTableNode(Node):
             time.sleep(float(FLOW_CONFIG["drop_fail_release_wait_s"]))  # let arm settle after drop
             self.arm.wait_for_settle(timeout=3.0)
             return False
-
+        if stage6_released_early:
+            self.get_logger().warn(
+                f"[{obj.name}] Stage 6 completed via early release rather than full final-depth descent."
+            )
         # 7. open gripper to release object
         self.get_logger().info(
             f'[{obj.name}] Stage 7: open gripper to release at destination'
@@ -1561,8 +1867,7 @@ class clearTableNode(Node):
             self.arm.open_gripper()
         detach_object(self, obj_id, self.arm.END_EFFECTOR)
         self.arm.wait_for_settle(timeout=2.0)
-        # [FLAG object-clear-accounting] After detach, the object is physically released at the
-        # destination. Later transition failures should not erase that completed drop.
+        # After detach, the object is physically released at the destination.
         self._last_object_drop_completed = True
         
         # 8. retreat upward
@@ -1585,7 +1890,15 @@ class clearTableNode(Node):
         if place_slot in ("SHELF_LEFT", "SHELF_RIGHT") and FLOW_CONFIG["post_place_always_escape"]:
             retreat_target.position.x -= DESTINATION_ACCESS_CONFIG["post_release_escape_x"] 
             self._log_pose(f"[{obj.name}] Stage 8 retreat target with escape offset", retreat_target)
-        retreat_ok = self.arm.go_to_position(retreat_target)        
+        retreat_ok = self.arm.go_to_pose(
+            retreat_target,
+            tol=PoseTolerance(
+                pos=DROP_CONFIG["stage5_preset_fallback_pos_tol"],
+                ori_xy=DROP_CONFIG["stage5_preset_ori_xy_tol"],
+                ori_z=DROP_CONFIG["stage5_preset_ori_z_tol"],
+            ),
+            orientation_required=True,
+        )       
         
         if not retreat_ok and (not FLOW_CONFIG["post_place_always_escape"] or not escape_ok):
             self.get_logger().warn(
@@ -1651,8 +1964,7 @@ class clearTableNode(Node):
             if hasattr(self.arm, "stop_motion"):
                 self.arm.stop_motion()
 
-            # [FLAG transition-home-retry] keep the successful-place path deterministic.
-            # Do not continue from a bridge pose after a go_home failure.
+            # keep the successful-place path deterministic
             if hasattr(self.arm, "go_retract"):
                 retract_ok = self.arm.go_retract()
                 self.get_logger().info(
@@ -1715,3 +2027,4 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
+

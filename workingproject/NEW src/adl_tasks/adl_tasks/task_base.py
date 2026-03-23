@@ -70,10 +70,51 @@ class TaskBase:
         self.executing = True
         t = threading.Thread(target=self._run_task, args=(task_fn,))
         t.start()
+        
+    def _ensure_idle_retract_ready(self) -> bool:
+        arm = getattr(self.node, "arm", None)
+        if arm is None:
+            return True
+
+        is_near_retract = getattr(arm, "is_near_retract", None)
+        go_retract = getattr(arm, "go_retract", None)
+        if is_near_retract is None or go_retract is None:
+            return True
+
+        try:
+            if is_near_retract():
+                self.node.get_logger().info(
+                    f"{self.node_name}: pre-task idle pose already near retract."
+                )
+                return True
+        except Exception as exc:
+            self.node.get_logger().warn(
+                f"{self.node_name}: failed retract-state check before task start: {exc}"
+            )
+            return True
+
+        self.node.get_logger().info(
+            f"{self.node_name}: refreshing retract pose before task start."
+        )
+        self.publish_status(STATUS_RUNNING, "Refreshing retract pose before starting task.")
+        try:
+            ok = bool(go_retract())
+        except Exception as exc:
+            self.node.get_logger().error(
+                f"{self.node_name}: retract refresh raised before task start: {exc}"
+            )
+            ok = False
+
+        if not ok:
+            self.publish_status(STATUS_FAILED, "Could not refresh retract pose before task start.")
+            return False
+        return True
     
     def _run_task(self, task_fn):
         try:
             self.reset_cancel()
+            if not self._ensure_idle_retract_ready():
+                return
             self.publish_status(STATUS_RUNNING, "ADL Task started.")
             task_fn()
             if self.is_cancelled():

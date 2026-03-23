@@ -11,7 +11,13 @@ from typing import Any
 from geometry_msgs.msg import Pose
 from scipy.spatial.transform import Rotation
 
-from adl_tasks.adl_config import TABLE_SURFACE_Z
+from adl_tasks.adl_config import (
+    TABLE_SURFACE_Z,
+    GRASP_CLEARANCE,
+    TOP_EE_TO_PINCH_CENTER_M,
+    SIDE_EE_TO_PINCH_CENTER_M,
+    side_face_to_ee_grasp_standoff,
+)
 from adl_tasks.motion_profiles import PoseTolerance
 
 # Helper: create Pose from xyz and quaternion components
@@ -40,6 +46,15 @@ DROP_CONFIG = {
     "ori_z_tol": 0.35,
     "lock_joint_7_tol": 0.05,
     "use_joint7_lock": False,
+    "stage6_avoid_collisions": True,
+    "stage6_retry_without_collisions": False,
+    "stage6_joint_lock_enable": True,
+    "stage6_joint_lock_map": {
+        "joint_2": 0.35,
+        "joint_4": 0.35,
+        "joint_6": 0.35,
+        "joint_7": 0.10,
+    },
     "prealign_pos_tol": 0.03,
     "prealign_ori_xy_tol": 0.20,
     "enable_stage6_prealign": False,
@@ -58,9 +73,19 @@ DROP_CONFIG = {
     "stage5_preset_ori_xy_tol": 0.25,
     "stage5_preset_ori_z_tol": 0.50,
     "stage5_preset_fallback_pos_tol": 0.02,
+    "stage5_bin_allow_position_only_fallback": False, # [FLAG stage5-bin-no-pos-fallback] BIN transit needs orientation continuity; position-only fallback has been corrupting the remote branch.
     "stage5_fallback_above_pos_tol": 0.06,
     "stage5_fallback_align_xy_tol": 0.40,
     "stage6_recenter_xy_tol": 0.015,
+    "stage6_bin_early_release_max_z_gap": 0.04, # [FLAG stage6-bin-early-release] The remote holder can tolerate a small final settle, but 7cm was too loose and 2cm proved too strict. Use a middle ground.
+    # [FLAG stage6-hazard-reorient]: near the table, prefer a short pull-up and reorientation
+    # over abandoning posture locks and continuing deeper on a riskier arm branch.
+    "stage6_reorient_trigger_gap": 0.09,
+    "stage6_bin_reorient_trigger_gap": 0.20, # [FLAG stage6-bin-hazard-range] Remote/bin posture drift starts well above the final few centimeters, so rescue must trigger earlier than shelf drops.
+    "stage6_reorient_lock_warn_ratio": 0.80,
+    "stage6_reorient_pull_up_z": 0.03,
+    "stage6_reorient_max_retries": 1,
+    "stage6_bin_posture_hazard_on_lock_failure": True, # [FLAG stage6-bin-first-lock] For BIN, the first lock violation is treated as a branch hazard instead of a cue to continue unlocked toward the table.
 }
 
 SIDE_APPROACH_CONFIG = {
@@ -80,20 +105,16 @@ SIDE_APPROACH_CONFIG = {
     # [FLAG side-clearance-model]: side wrist clearance model terms
     # clearance ~= wrist_to_pinch_center + width_gain*object_width + tweak
     # NOTE: tuned lower than raw FINGER_REACH_X to match actual wrist->pinch geometry in sim.
-    "wrist_to_pinch_center_m": 0.035,
-    "wrist_front_clearance_tweak_m": 0.005,
-    "wrist_front_clearance_width_gain": 0.10,
-    # [FLAG side-face-standof] minimum wrist stand-off in front of QR face center.
-    # Helps prevent wrist/back-shell clipping during vertical descend.
-    "wrist_front_min_from_qr_m": 0.020,
-    "wrist_front_clearance_min_m": 0.030,
-    "wrist_front_clearance_max_m": 0.090,
-    # [FLAG side-qr-min-stop]: minimum XY stand-off from AprilTag face center.
-    # Set to 0.0 to disable hard clamp and tune with wrist_front_clearance_tweak_m only.
-    "qr_face_min_distance_m": 0.0,
-    "wrist_front_clearance_default_width_m": 0.060,
-    "grasp_min_z": TABLE_SURFACE_Z + 0.045,
-    "stage1_pos_tol": 0.06,
+    "wrist_to_pinch_center_m": 0.035,           # m, clearance from wrist to pinch center (clearance ~= wrist_to_pinch_center + width_gain*object_width + tweak)
+    "wrist_front_clearance_tweak_m": 0.005,     # m, extra tweak clearance in front of wrist
+    "wrist_front_clearance_width_gain": 0.10,   # m, extra clearance in front of wrist proportional to object width
+    "wrist_front_min_from_qr_m": 0.020,         # m, minimum wrist standoff from QR faced-side of the object
+    "wrist_front_clearance_min_m": 0.030,       # m, minimum front clearance from wrist to grasp point for narrow objects
+    "wrist_front_clearance_max_m": 0.090,       # m, maximum front clearance from wrist to grasp point for wide objects
+    "qr_face_min_distance_m": 0.0,              # m, optional hard clamp on final QR face XY standoff after the side-clearance is applied
+    "wrist_front_clearance_default_width_m": 0.060,     # m, default object width for wrist clearance when object width is unavailable
+    "grasp_min_z": TABLE_SURFACE_Z + 0.045,             # m, minimum z position for grasp, above table
+    "stage1_pos_tol": 0.06,                             # m, XY tolerance for stage 1 approach success when orientation is within tol
     "stage1_retry_pos_tol": 0.08,
     "stage1_fallback_extra_pos_tol": 0.02,
     "stage1_ori_err_max": 0.60,
@@ -112,119 +133,127 @@ SIDE_APPROACH_CONFIG = {
 }
 
 TOP_APPROACH_CONFIG = {
-    "allow_stage1_orientation_soft_fail": True,
-    "stage1_pos_tol": 0.05,
-    "stage1_refine_pos_tol": 0.04,
-    "stage1_position_fallback_tol": 0.05,
-    "stage1_retry_pos_tol": 0.06,
-    "stage1_retry_refine_pos_tol": 0.05,
-    "stage1_retry_position_fallback_tol": 0.08,
-    "stage1_ori_xy_tol": 0.45,
-    "stage1_ori_z_tol": 3.14,
-    "stage1_retry_ori_xy_tol": 0.65,
-    "stage1_retry_ori_z_tol": 3.14,
-    "stage1_soft_continue_max_err_rad": 0.60,
-    "stage1_retry_soft_continue_max_err_rad": 0.80,
-    # [FLAG top-live-verify] A MoveIt pose goal can report success even when the live wrist
-    # settles outside the intended top-approach line. Validate the real EE pose before descend.
-    "stage1_live_pose_pos_tol_m": 0.035,
-    "stage1_live_pose_ori_err_rad": 0.45,
-    "stage2_live_pose_pos_tol_m": 0.025,
-    "stage2_live_pose_ori_err_rad": 0.35,
-    # [FLAG top-reseed-retry] reseed to a known posture before retry to reduce -26 loops.
-    "stage1_reseed_before_retry": True,
-    # [FLAG top-stage-fallback] staged top approach fallback (higher-Z align then vertical descend).
-    "stage1_staging_fallback_enable": True,
-    "stage1_staging_lift_z": 0.10,
-    "stage1_staging_retry_extra_lift_z": 0.03,
-    "stage1_staging_pos_tol": 0.07,
-    "stage1_staging_descend_min_fraction": 0.95,
-    "stage1_staging_retry_descend_min_fraction": 0.90,
-    # [FLAG top-stage2-prealign] prevent wrist spin during descend by aligning orientation at approach Z.
-    "stage2_prealign_enable": True,
-    "stage2_prealign_max_err_rad": 0.70,
-    # [FLAG top-stage2-stepwise] fallback segmented descend when single cartesian push fails.
-    "stage2_step_dz": 0.015,
-    "stage2_step_min_fraction": 0.85,
-    "stage2_step_retry_min_fraction": 0.75,
-    "stage2_cart_min_fraction": 0.99,
+    "allow_stage1_orientation_soft_fail": True,     # Bool, allow orientation errors within a threshold
+    
+    "stage1_position_fallback_enable": False,       # Bool, allow position-only fallback during primary top approach
+    "stage1_retry_position_fallback_enable": False, # Bool, allow positon-only fallback during retry top approach 
+    "stage1_staging_position_fallback_enable": False,   # Bool, allow staged top fallback to reach high Z above-grasp position first before alignment
+    "stage1_reseed_before_retry": True,             # Bool, reseed to a known posture before the top-approach retry
+    "stage1_retry_allow_table_reseed_fallback": False, # Bool, after failed go_home reseed on top retries, optionally allow a wider look_at_table sweep
+    "stage1_staging_fallback_enable": True,         # Bool, enable staged top fallback when stage 1 fails
+    
+    "stage1_pos_tol": 0.05,                 # m, XY tolerance for stage 1 approach success when orientation is within tol
+    "stage1_planning_time_s": 12.0,         # s, planning time for stage 1 approach in clear_table (TOP APPROACH)
+    
+    "stage1_refine_pos_tol": 0.04,          # m, XY tolerance for refining the approach pose after a stage 1 success
+    "stage1_position_fallback_tol": 0.05,   # m, XY tolerance for stage 1 position-only fallback success when orientation is outside of tol
+    "stage1_live_pose_pos_tol_m": 0.035,    # m, XY tol for the live EE pose vs the intended approach pose
+    "stage1_live_pose_ori_err_rad": 0.45,   # RAD, orientation error tol for live EE pose vs intended approach pose
+    "stage1_ori_xy_tol": 0.45,              # RAD, orientation error tolerance in XY for stage 1 approach success
+    "stage1_ori_z_tol": 3.14,               # RAD, orientation error tolerance in Z for stage 1 approach success
+    
+    "stage1_retry_pos_tol": 0.06,           # m, XY tolerance for stage 1 retry success when orientation is within tol
+    "stage1_retry_refine_pos_tol": 0.05,    # m, XY tolerance for refining the approach pose after a stage 1 retry success
+    "stage1_retry_position_fallback_tol": 0.08, # m, XY tolerance for stage 1 retry position-only fallback success when orientation is outside of tol
+    "stage1_retry_planning_time_s": 14.0,   # s, planning time for stage 1 top-approach retry in clear_table
+    "stage1_retry_ori_xy_tol": 0.65,        # RAD, orientation error tolerance in XY for stage 1 retry success
+    "stage1_retry_ori_z_tol": 3.14,         # RAD, orientation error tolerance in Z for stage 1 retry success
+    
+    "stage1_soft_continue_max_err_rad": 0.60,       # RAD, max orientation error to continue to stage 2 when allowing soft fail
+    "stage1_retry_soft_continue_max_err_rad": 0.80, # RAD, max orientation error to continue to stage 2
+    
+    "stage1_staging_lift_z": 0.10,                  # m, Z lift for fallback approach when stage 1 approach fails
+    "stage1_staging_retry_extra_lift_z": 0.03,      # m, extra Z lift for retry fallback approach when stage 1 retry fails
+    "stage1_staging_pos_tol": 0.07,                 # m, XY tolerance for stage 1 staging approach success when orientation is within tol
+    "stage1_staging_descend_min_fraction": 0.95,    # %, min fraction of stage 1 approach height to descend for stage 1 staging fallback approach when it fails 
+    "stage1_staging_retry_descend_min_fraction": 0.90,  # %, min fraction of stage 1 approach height to descend for retry of stage 1 staging fallback approach when it fails
+    
+    "stage2_prealign_enable": True,         # Bool, enable pre-alignment at stage 2 approach Z before descending, when orientation error is above a threshold
+    "stage2_live_pose_ori_err_rad": 0.35,   # RAD, orientation error tol for live EE pose vs intended pose before vertical descend
+    "stage2_prealign_max_err_rad": 0.70,    # RAD, max orientation error to allow before pre-aligning at stage 2 approach Z
+    "stage2_live_pose_pos_tol_m": 0.025,    # m, XY tol for the live EE pose vs the intended pose before vertical descend
+    "stage2_step_dz": 0.015,                # m, Z step size for stage 2 stepwise descend fallback
+    "stage2_step_min_fraction": 0.85,       # %, minimum fraction of stage 2 approach height to descend for stage 2 stepwise descend
+    "stage2_step_retry_min_fraction": 0.75, # %, minimum fraction of stage 2 approach height to descend for retry of stage 2 stepwise descend
+    "stage2_cart_min_fraction": 0.99,       # %, minimum fraction of the stage 2 approach height to descend for a successful single step cartesian move
 }
 
 FLOW_CONFIG = {
-    "dest_standoff_z": 0.25,
-    "lift_clear_z": 0.15,
-    "post_object_extra_home": False,
-    # [FLAG table-reseed] Disable automatic look_at_table reseeds between successful objects.
-    # The newer logs show this pose repeatedly failing with START_STATE_INVALID and then
-    # launching the next object from a bad seed, especially before the TV remote attempt.
-    "post_object_table_reseed": False,
-    "post_place_always_escape": True,
-    "post_place_scene_wait_s": 0.40,
-    "post_place_controller_cooldown_s": 0.25,
-    # [FLAG travel-gripper] Keep the end effector compact for travel/home/retract moves
-    # instead of reopening fully after a place.
-    "travel_gripper_width_rad": 0.120,
-    "travel_gripper_force_n": 10.0,
-    # [FLAG transition-home] Force a deterministic joint-space reseed after each successful place.
-    # Cup-first runs succeed, but cube->cup transitions are failing before cup grasp begins.
-    "return_home_after_place": True,
-    # [FLAG inter-object-bridge] Disable bridge-first reseeds by default.
-    # The bridge pose was reaching the same workspace area through unstable joint branches.
-    "inter_object_bridge_after_place": False,
-    "post_object_pause_s": 0.50,
-    "post_object_home_pause_s": 0.50,
-    "failure_bridge_pause_s": 0.60,
-    "stage1_retry_pause_s": 0.50,
-    "scene_remove_sync_s": 0.40,
-    "drop_fail_release_wait_s": 1.00,
-    "gripper_attach_sync_s": 0.30,
+    "post_object_extra_home": False,    # Bool, optional extra go_home after place
+    "post_object_table_reseed": False,  # Bool, look_at_table reseed after each successful place
+    "inter_object_bridge_after_place": False, # Bool, optional bridge pose after place
+    "post_place_always_escape": True,   # Bool, always escape after placing an object to avoid collisions
+    "return_home_after_place": True,    # Bool, deterministic joint-space reseed after a place
+    
+    "dest_standoff_z": 0.25,            # m, Z standoff from destination for pre-place pose (above destination)
+    "lift_clear_z": 0.15,               # m, Z clearance for lifting object off source surface before travel
+    "lift_clear_step_dz": 0.025,        # m, fallback segmented lift step when a single vertical Cartesian move cannot complete
+    "lift_clear_step_min_fraction": 0.90, # min Cartesian fraction for each segmented lift step
+    "travel_gripper_width_rad": 0.120,  # m, gripper width to use during non-grasp travel to reduce collision risk
+    "travel_gripper_force_n": 10.0,     # N, gripper force to use during non-grasp travel when gripper state is relevant
+    
+    "stage5_reseed_look_at_table": True,        # Bool, look_at_table reseed before stage 5 descend when enabled
+    "stage5_bin_reseed_look_at_table": False,   # [FLAG stage5-bin-no-reseed] Keep BIN transit on the carried-object branch; look_at_table reseed has been causing remote/bin start-state churn.
+    "post_place_scene_wait_s": 0.40,    # s, time between place and publishing scene changes for the placed object, SIM ONLY ### check accuracy
+    "post_place_controller_cooldown_s": 0.25,   # s, cooldown after place before next pick
+    "post_object_pause_s": 0.50,        # s, pause after placing an object
+    "post_object_home_pause_s": 0.50,   # s, pause after returning home
+    "failure_bridge_pause_s": 0.60,     # s, pause before moving to bridge after a failure
+    "stage1_retry_pause_s": 0.50,       # s, pause before retrying stage 1 approach after a failure
+    "scene_remove_sync_s": 0.40,        # s, time before scene sync after removing an object for better sim stability
+    "drop_fail_release_wait_s": 1.00,   # s, wait time after a failed drop release before next action
+    "gripper_attach_sync_s": 0.30,      # s, time to wait after gripper attach command before next action
 }
 
+# Pose: pre-place standoff pose above table destinations
 BRIDGE_CONFIG = {
     "x": 0.45,
     "y": 0.00,
     "z": 0.58,
     "tol": 0.09,
-    # [FLAG:bridge-pose-goal] Prefer an oriented bridge pose to reduce branchy IK outcomes
-    # that later produce -26 when transitioning to the next object.
-    "use_oriented_pose_goal": True,
-    "pose_ori_xy_tol": 0.45,
-    "pose_ori_z_tol": 3.14,
+    
+    "use_oriented_pose_goal": True, # Bool, prefer oriented bridge pose goal when enabled
+    "pose_ori_xy_tol": 0.45,        # RAD, orientation tolerance in XY for bridge pose goal when using oriented pose goal
+    "pose_ori_z_tol": 3.14,         # RAD, orientation tolerance in Z for bridge pose goal when using oriented pose goal
 }
 
+# Configuration for accessing destination poses
 DESTINATION_ACCESS_CONFIG = {
-    "shelf_release_width_ratio": 0.55,
-    "shelf_release_min_open_rad": 0.03,
-    "post_release_escape_z": 0.10,
-    "post_release_escape_x": 0.04,
+    "shelf_release_width_ratio": 0.55,      # m, ratio of grasp width to use for shelf release clearance, to avoid collisions with shelf
+    "shelf_release_min_open_rad": 0.03,     # m, minimum gripper open radius to use for shelf release clearance
+    "post_release_escape_z": 0.10,          # m, Z retreat upwards after releasing object at destination to avoid collisions
+    "post_release_escape_x": 0.04,          # m, X retreat away from shelf after releasing object at destination to avoid collisions
 }
 
+# Configuration for hard-coded place pose presets for each object.
+# clear_table: checks the preset during stage 5/6 placement
 PLACE_PRESET_CONFIG = {
-    "use_hardcoded_place_presets": True,
-    "use_hardcoded_place_pose_presets": True,
-    "slot_by_tag_id": {
+    "use_hardcoded_place_presets": True,        # Bool, legacy --- for older calls, matches below
+    "use_hardcoded_place_pose_presets": True,   # Bool, active flag in clear_table for hard-coded presets
+    "slot_by_tag_id": {                         # mapping from object tag ID to named place slot 
         4: "SHELF_LEFT",
         2: "SHELF_RIGHT",
         3: "BIN",
         0: "HANDOVER",
         1: "HANDOVER",
     },
-    "joint_presets": {
+    "joint_presets": {                          # mapping from named place slot to joint preset for stage 5 approach, optional
         "SHELF_LEFT": None,
         "SHELF_RIGHT": None,
         "BIN": None,
         "HANDOVER": None,
     },
-    "pose_presets": {
+    "pose_presets": {                           # mapping from named place slot to hard-coded place pose preset
+        # [FLAG bin-preset-revert] Restore the original BIN preset. The placement target itself is
+        # not the issue being changed here; the synthetic placed-scene object after release is.
         "BIN": _pose_xyz_q(0.726, 0.002, 0.479, 0.500, 0.500, 0.501, 0.499),
         "SHELF_RIGHT": _pose_xyz_q(0.729, 0.114, 0.503, 0.508, 0.491, 0.510, 0.491),
-        # [FLAG cube-drop-slot] Primary cube placement XY/orientation knob when the hard-coded
-        # place pose preset path is active. Tune this if the cube is dropping over the wrong spot.
         "SHELF_LEFT": _pose_xyz_q(0.729, 0.212, 0.501, 0.508, 0.491, 0.510, 0.491),
         "HANDOVER": _pose_xyz_q(0.373, -0.211, 0.433, 0.503, 0.496, 0.497, 0.503),
     },
 }
 
+# Grasp Groups: mapping from object tag ID to grasp group/mode for determining approach strategy and tolerances
 GRASP_GROUPS = {
     "mode_by_tag_id": {
         1: "side",  # Medication bottle
@@ -234,6 +263,8 @@ GRASP_GROUPS = {
     }
 }
 
+# Configuration for scene sync behavior for vision updates after placing objects, to help with sim stability and timing of scene updates.
+# only publish coll objs when vision stub is used
 SCENE_SYNC_CONFIG = {
     "use_real_vision": False,
     # Policy: "stub_only" | "always" | "never" | "real_only"
@@ -313,11 +344,12 @@ def gripper_rad_to_object_width_m(gripper_width_rad: float) -> float:
 
 def estimate_object_width_m(obj: Any) -> tuple[float, str]:
     """
-    Estimate object width/diameter in meters for side-clearance math.
-    Prefer explicit object fields; fallback to the project's gripper-width encoding.
+    Estimate object's size along the grasp axis in meters.
+    For side grasps: diameter/width behind a side tag.
+    For top grasps: thickness below a top tag.
     """
-    # [FLAG:side-width-source] Explicit per-object geometry fields are preferred when available.
-    for attr in ("side_clearance_width_m", "object_width_m", "diameter_m", "width_m"):
+    # get objects geometry from explicit fields
+    for attr in ("grasp_axis_size_m", "side_clearance_width_m", "object_width_m", "diameter_m", "width_m"):
         val = getattr(obj, attr, None)
         if val is not None:
             try:
@@ -335,6 +367,26 @@ def estimate_object_width_m(obj: Any) -> tuple[float, str]:
             pass
 
     return (float(SIDE_APPROACH_CONFIG["wrist_front_clearance_default_width_m"]), "default")
+
+
+def grasp_axis_ee_to_pinch_center_m(obj: Any) -> tuple[float | None, str]:
+    """
+    Measured EE-origin to pinch-center distance along the current grasp axis.
+    This lets side grasps use the same kind of axis-based geometry model as top grasps.
+    """
+    override = getattr(obj, "ee_to_pinch_center_m", None)
+    if override is not None:
+        try:
+            return float(override), "obj.ee_to_pinch_center_m"
+        except (TypeError, ValueError):
+            pass
+
+    approach = getattr(obj, "approach_type", None)
+    if approach == "top":
+        return float(TOP_EE_TO_PINCH_CENTER_M), "TOP_EE_TO_PINCH_CENTER_M"
+    if approach == "side":
+        return float(SIDE_EE_TO_PINCH_CENTER_M), "SIDE_EE_TO_PINCH_CENTER_M"
+    return None, "unavailable"
 
 def estimate_object_height_m(obj: Any) -> tuple[float, str]:
     """
@@ -438,6 +490,20 @@ def compute_side_qr_face_standoff_m(obj: Any) -> tuple[float, float, str]:
             return max(min_front, face_standoff_m), float(width_m), "obj.side_qr_face_standoff_m"
         except (TypeError, ValueError):
             pass
+
+    grasp_axis = getattr(obj, "grasp_axis_size_m", None)
+    ee_to_pinch_center_m, ee_source = grasp_axis_ee_to_pinch_center_m(obj)
+    if grasp_axis is not None and ee_to_pinch_center_m is not None:
+        # [FLAG side-grasp-axis-model] Mirror the top-grasp depth logic for side grasps.
+        # The readable quantity is "EE stand-off from the tagged face", derived from
+        # the measured EE->pinch-center distance and half the object's thickness on that axis.
+        face_standoff_m = side_face_to_ee_grasp_standoff(
+            grasp_axis_size_m=float(grasp_axis),
+            ee_to_pinch_center_m=float(ee_to_pinch_center_m),
+            grasp_clearance_m=float(GRASP_CLEARANCE),
+        )
+        face_standoff_m = max(min_front, float(face_standoff_m))
+        return float(face_standoff_m), float(width_m), f"{ee_source} -> side_face_to_ee_grasp_standoff"
 
     center_clearance_m, width_m, center_source = compute_side_front_clearance_m(obj)
     face_standoff_m = max(0.0, float(center_clearance_m) - (0.5 * float(width_m)))
@@ -594,14 +660,54 @@ def cartesian_descend_stepwise(
     *,
     log_pose_cb,
     joint_locks: dict | None = None,
-) -> bool:
+    avoid_collisions: bool = False,
+    retry_without_collisions: bool = False,
+    posture_hazard_gap: float | None = None,
+    posture_hazard_warn_ratio: float | None = None,
+    early_release_max_gap: float | None = None,
+    posture_hazard_on_lock_failure: bool = False,
+) -> dict[str, Any]:
+    # [FLAG stage6-result]: structured result lets the caller distinguish
+    # success, early release, and posture-hazard rescue conditions.
+    def _result(ok: bool, reason: str, *, released_early: bool = False, remaining_gap: float | None = None,
+                step_idx: int = 0, z_cur_out: float | None = None, detail: str = "") -> dict[str, Any]:
+        return {
+            "ok": bool(ok),
+            "reason": str(reason),
+            "released_early": bool(released_early),
+            "remaining_gap": float(remaining_gap) if remaining_gap is not None else None,
+            "step_idx": int(step_idx),
+            "z_cur": float(z_cur_out if z_cur_out is not None else z_cur),
+            "detail": str(detail),
+        }
+
+    def _lock_risk_detail() -> tuple[str, float, float] | None:
+        if not joint_locks or posture_hazard_warn_ratio is None:
+            return None
+        joints = arm.get_arm_joint_positions(timeout=1.0)
+        if not joints:
+            return None
+        worst: tuple[str, float, float] | None = None
+        for joint_name, (lock_center, tol) in joint_locks.items():
+            if joint_name not in joints:
+                continue
+            tol = float(tol)
+            if tol <= 0.0:
+                continue
+            err = abs(float(joints[joint_name]) - float(lock_center))
+            ratio = err / tol
+            if ratio >= float(posture_hazard_warn_ratio):
+                if worst is None or ratio > worst[2]:
+                    worst = (joint_name, err, ratio)
+        return worst
+
     z_cur = float(start_pose.position.z)
     z_goal = float(dest_pose.position.z)
     if z_goal >= z_cur - 1e-4:
         node.get_logger().error(
             f"[{obj_name}] Stage 6 invalid descent setup: start_z={z_cur:.3f}, goal_z={z_goal:.3f}."
         )
-        return False
+        return _result(False, "invalid_setup")
 
     step_idx = 0
     while z_cur - z_goal > 1e-4:
@@ -619,15 +725,16 @@ def cartesian_descend_stepwise(
             )
             ok = arm.go_cartesian(
                 [wp],
-                avoid_collisions=False,
+                avoid_collisions=bool(avoid_collisions),
                 max_step=DROP_CONFIG["descent_max_step"],
                 min_fraction=DROP_CONFIG["descent_step_min_fraction"],
                 fallback_to_pose=False,
                 joint_locks=joint_locks,
             )
-            if not ok and joint_locks:
+            if (not ok) and bool(avoid_collisions) and bool(retry_without_collisions):
                 node.get_logger().warn(
-                    f"[{obj_name}] Stage 6 step {step_idx}: lock failed, retrying unlocked."
+                    f"[{obj_name}] Stage 6 step {step_idx}: collision-aware pass failed; "
+                    "retrying this step with collisions disabled."
                 )
                 ok = arm.go_cartesian(
                     [wp],
@@ -635,10 +742,69 @@ def cartesian_descend_stepwise(
                     max_step=DROP_CONFIG["descent_max_step"],
                     min_fraction=DROP_CONFIG["descent_step_min_fraction"],
                     fallback_to_pose=False,
+                    joint_locks=joint_locks,
+                )
+            if not ok and joint_locks:
+                remaining_gap = z_cur - z_goal
+                if posture_hazard_on_lock_failure:
+                    node.get_logger().warn(
+                        f"[{obj_name}] Stage 6 step {step_idx}: locked descent failed with "
+                        f"{remaining_gap:.3f}m remaining. Requesting pull-up/reorientation instead of "
+                        "continuing unlocked on a drifting branch."
+                    )
+                    return _result(
+                        False,
+                        "posture_hazard",
+                        remaining_gap=remaining_gap,
+                        step_idx=step_idx,
+                        detail="lock_violation",
+                    )
+                if posture_hazard_gap is not None and remaining_gap <= float(posture_hazard_gap):
+                    node.get_logger().warn(
+                        f"[{obj_name}] Stage 6 step {step_idx}: locked descent failed within "
+                        f"{remaining_gap:.3f}m of the goal. Requesting pull-up/reorientation instead of "
+                        "continuing unlocked near the table."
+                    )
+                    return _result(
+                        False,
+                        "posture_hazard",
+                        remaining_gap=remaining_gap,
+                        step_idx=step_idx,
+                        detail="late_lock_failure",
+                    )
+                node.get_logger().warn(
+                    f"[{obj_name}] Stage 6 step {step_idx}: lock failed, retrying unlocked."
+                )
+                ok = arm.go_cartesian(
+                    [wp],
+                    avoid_collisions=bool(avoid_collisions) and (not bool(retry_without_collisions)),
+                    max_step=DROP_CONFIG["descent_max_step"],
+                    min_fraction=DROP_CONFIG["descent_step_min_fraction"],
+                    fallback_to_pose=False,
                     joint_locks=None,
                 )
             if ok:
                 z_cur = z_next
+                remaining_gap = z_cur - z_goal
+                risk = _lock_risk_detail()
+                if (
+                    risk is not None
+                    and posture_hazard_gap is not None
+                    and remaining_gap <= float(posture_hazard_gap)
+                ):
+                    joint_name, err, ratio = risk
+                    node.get_logger().warn(
+                        f"[{obj_name}] Stage 6 step {step_idx}: {joint_name} is using "
+                        f"{ratio * 100.0:.0f}% of its lock window ({err:.3f} rad) with only "
+                        f"{remaining_gap:.3f}m remaining. Requesting earlier pull-up/reorientation."
+                    )
+                    return _result(
+                        False,
+                        "posture_hazard",
+                        remaining_gap=remaining_gap,
+                        step_idx=step_idx,
+                        detail=f"{joint_name}_ratio={ratio:.3f}",
+                    )
                 success = True
                 break
             step_dz *= 0.5
@@ -646,17 +812,27 @@ def cartesian_descend_stepwise(
                 break
         if not success:
             remaining_gap = z_cur - z_goal
-            if remaining_gap <= DROP_CONFIG["early_release_max_z_gap"]:
+            effective_early_release_gap = float(
+                DROP_CONFIG["early_release_max_z_gap"]
+                if early_release_max_gap is None else early_release_max_gap
+            )
+            if remaining_gap <= effective_early_release_gap:
                 node.get_logger().warn(
                     f"[{obj_name}] Stage 6 blocked near final depth (z={z_cur:.3f}, gap={remaining_gap:.3f}). "
                     f"Proceeding with early release."
                 )
-                return True
+                return _result(
+                    True,
+                    "early_release",
+                    released_early=True,
+                    remaining_gap=remaining_gap,
+                    step_idx=step_idx,
+                )
             node.get_logger().error(
                 f"[{obj_name}] Stage 6 failed at z={z_cur:.3f}; cannot find valid next descent step."
             )
-            return False
-    return True
+            return _result(False, "failed", remaining_gap=remaining_gap, step_idx=step_idx)
+    return _result(True, "success", remaining_gap=0.0, step_idx=step_idx, z_cur_out=z_goal)
 
 
 def post_place_escape(node, arm, obj_name: str, *, log_pose_cb) -> bool:

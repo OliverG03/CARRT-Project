@@ -29,6 +29,7 @@ from adl_tasks.adl_config import (
     SHELF_DROP_X, BIN_DROP_X,
     # Grasp Z Values
     BOTTLE_GRASP_Z, MEDICATION_GRASP_Z, CUP_GRASP_Z, REMOTE_GRASP_Z, CUBE_GRASP_Z, 
+    SIDE_EE_TO_PINCH_CENTER_M,
     # Drop Z Values
     BOTTLE_DROP_Z, MEDICATION_DROP_Z, CUP_DROP_Z, REMOTE_DROP_Z, CUBE_DROP_Z,  
 )
@@ -91,9 +92,13 @@ class AprilTagObject:
                  dest_approach_type: str = "side",
                  object_width_m: float | None = None,
                  object_height_m: float | None = None,
+                 grasp_axis_size_m: float | None = None,
+                 ee_to_pinch_center_m: float | None = None,
+                 carry_center_offset_m: float | None = None,
                  side_qr_face_standoff_m: float | None = None,
                  side_front_clearance_m: float | None = None,
                  side_grasp_min_z_m: float | None = None,
+                 side_gripper_x_tag_axis: str | None = None,
                  top_allow_orientation_soft_fail: bool | None = None,
                  top_stage1_live_pose_pos_tol_m: float | None = None,
                  top_stage1_live_pose_ori_err_rad: float | None = None,
@@ -106,43 +111,36 @@ class AprilTagObject:
                  top_stage2_prealign_max_err_rad: float | None = None):
         self.name = name
         self.ID = ID
-        self.object_type = object_type  ### consider if necessary
-        self.adl_used = adl_used        ### consider if necessary
+        self.object_type = object_type  
+        self.adl_used = adl_used        
         self.approach_type = approach_type           # how the object is PICKED
         self.dest_approach_type = dest_approach_type # how the object is PLACED
-        self.grasp_offset = grasp_offset            # [x,y,z] -> offset from tag pose to grasp point
+        self.grasp_offset = grasp_offset            # [x,y,z] -> offset from tag CENTER to EE origin
         self.gripper_width = gripper_width          # max: 0.085 = fully open
         self.gripper_force = gripper_force          # Newtons
         self.gripper_speed = gripper_speed          # m/s (max: 0.101)
         self.destination = destination              # hardcoded dropoff location
-        # [FLAG side-geometry-meta] Generic size metadata for shared grasp planners.
+        # Generic size metadata for shared grasp planners.
         # Used by side-grasp helpers to derive clearance/pregrasp offsets from object size.
         self.object_width_m = object_width_m
         self.object_height_m = object_height_m
-        # [FLAG side-clearance-override] Optional per-object side wrist-front stand-off.
-        # Use this when one object needs a known-good clearance without globally retuning
-        # the shared side-grasp model for every other cylindrical object.
-        # Legacy meaning: center-based EE clearance. Prefer side_qr_face_standoff_m below.
+        self.grasp_axis_size_m = grasp_axis_size_m  # object thickness along gripper approach axis
+        self.ee_to_pinch_center_m = ee_to_pinch_center_m  # measured EE->pinch-center distance along grasp axis
+        self.carry_center_offset_m = carry_center_offset_m  # attached-object center distance from EE along grasp axis
+        # Optional per-object side wrist-front stand-off.
         self.side_front_clearance_m = side_front_clearance_m
-        # [FLAG side-face-standoff-override] Preferred per-object side grasp stand-off,
-        # measured directly from the QR face along its outward normal in table XY.
-        # This is easier to reason about than the older center-based clearance helper.
+        # Preferred per-object side grasp stand-off.
         self.side_qr_face_standoff_m = side_qr_face_standoff_m
-        # [FLAG side-grasp-floor] Optional per-object minimum grasp Z for side grasps.
-        # Use this when a slightly tilted wrist/forearm can clip the table even though
-        # the nominal grasp point is still mathematically above the surface.
+        # Optional per-object minimum grasp Z for side grasps.
         self.side_grasp_min_z_m = side_grasp_min_z_m
-        # [FLAG top-live-verify-override] Optional per-object top-grasp verification policy.
-        # Use these when a long/thin object needs stricter validation of the *actual live*
-        # wrist pose before continuing to the Cartesian descend.
+        self.side_gripper_x_tag_axis = side_gripper_x_tag_axis # for side grasps get approach axis
+        # Optional per-object top-grasp verification policy.
         self.top_allow_orientation_soft_fail = top_allow_orientation_soft_fail
         self.top_stage1_live_pose_pos_tol_m = top_stage1_live_pose_pos_tol_m
         self.top_stage1_live_pose_ori_err_rad = top_stage1_live_pose_ori_err_rad
         self.top_stage2_live_pose_pos_tol_m = top_stage2_live_pose_pos_tol_m
         self.top_stage2_live_pose_ori_err_rad = top_stage2_live_pose_ori_err_rad
-        # [FLAG top-ori-override] Optional per-object top-grasp orientation tolerances.
-        # Use these when yaw matters for one object much more than the generic top-grasp
-        # policy, such as the TV remote where the fingers must stay aligned to its width.
+        # Optional per-object top-grasp orientation tolerances.
         self.top_stage1_ori_xy_tol_rad = top_stage1_ori_xy_tol_rad
         self.top_stage1_ori_z_tol_rad = top_stage1_ori_z_tol_rad
         self.top_stage1_retry_ori_xy_tol_rad = top_stage1_retry_ori_xy_tol_rad
@@ -168,6 +166,8 @@ class AprilTagObject:
     def compute_grasp_pose(self, tag_pose: Pose, standoff = 0.12):
         """
         Compute the grasp pose based on the tag pose.
+        The raw, no-offset target is the AprilTag center itself. `grasp_offset` then moves
+        from that tag center to the intended EE origin in the tag frame.
         Tag Frame: (AprilTag / ROS2):
         - X axis: right along tag
         - Y axis: up along tag (vertical for side, toward robot for top-down)
@@ -194,7 +194,7 @@ class AprilTagObject:
         tag_y = tag_axes[:,1] # tag Y axis
         tag_z = tag_axes[:,2] # tag Z axis        
         
-        # Grasp Offset in TAG FRAME
+        # Grasp Offset in TAG FRAME. If dx=dy=dz=0, the EE target is exactly the TAG CENTER.
         dx, dy, dz = self.grasp_offset
         world_offset = tag_x * dx + tag_y * dy + tag_z * dz
     
@@ -219,9 +219,27 @@ class AprilTagObject:
             gripper_z = -face_xy / (np.linalg.norm(face_xy) + 1e-9)
 
             world_up = np.array([0.0, 0.0, 1.0], dtype=float)
-            gripper_x = np.cross(world_up, gripper_z)
+            gripper_x = None
+            side_axis_hint = getattr(self, "side_gripper_x_tag_axis", None)
+            if side_axis_hint is not None:
+                axis_map = {
+                    "tag_x": tag_x,
+                    "-tag_x": -tag_x,
+                    "tag_y": tag_y,
+                    "-tag_y": -tag_y,
+                    "world_up": world_up,
+                    "-world_up": -world_up,
+                }
+                hinted_axis = axis_map.get(str(side_axis_hint))
+                if hinted_axis is not None:
+                    hinted_axis = hinted_axis - gripper_z * np.dot(hinted_axis, gripper_z)
+                    hinted_norm = np.linalg.norm(hinted_axis)
+                    if hinted_norm > 1e-6:
+                        gripper_x = hinted_axis / hinted_norm
+            if gripper_x is None:
+                gripper_x = np.cross(world_up, gripper_z)
             if np.linalg.norm(gripper_x) < 1e-6:
-                # [FLAG:side-level] rare degeneracy fallback
+                # rare degeneracy fallback
                 gripper_x = np.array([0.0, 1.0, 0.0], dtype=float)
             gripper_x = gripper_x / (np.linalg.norm(gripper_x) + 1e-9)
             gripper_y = np.cross(gripper_z, gripper_x)
@@ -390,6 +408,7 @@ OBJECTS = {
         destination=    LOCATIONS["Near User (Bottle)"], # hand off near user
         object_width_m= BOTTLE_DIAMETER,
         object_height_m= BOTTLE_HEIGHT,
+        grasp_axis_size_m= BOTTLE_DIAMETER,
     ),
     # medication bottle (ADL task 2: give medication to user)
     # tag on side of bottle (>=2x) -> facing robot horizontally
@@ -409,6 +428,7 @@ OBJECTS = {
         destination=    LOCATIONS["Near User (Medication)"], # hand off near user
         object_width_m= MEDICATION_DIAMETER,
         object_height_m= MEDICATION_HEIGHT,
+        grasp_axis_size_m= MEDICATION_DIAMETER,
     ),
     # household objects (ADL task 3: clear household objects)
     # upright facing robot
@@ -428,14 +448,11 @@ OBJECTS = {
         destination=    LOCATIONS["Shelf 2 (Right)"], # Shelf 2
         object_width_m= CUP_DIAMETER,
         object_height_m= CUP_HEIGHT,
-        # [FLAG cup-side-face-standoff] Express the cup tuning directly from the QR face.
-        # 0.052 m still centers the cup too deep in the hand in the newest run; push the
-        # EE farther outward so the cup body sits closer to the outer finger line instead
-        # of the inner palm/body line during the vertical descend.
-        side_qr_face_standoff_m= 0.065,
-        # [FLAG cup-side-grasp-floor] Raise the cup side-grasp floor slightly above the
-        # current center-height target. This protects the first arm link when the wrist
-        # reaches the cup with a small downward tilt.
+        grasp_axis_size_m= CUP_DIAMETER,
+        # [FLAG cup-grasp-axis] Use the same measured grasp-axis model as top grasps.
+        # Cup side stand-off is derived from EE->pinch-center and cup diameter instead of a stale face-only override.
+        ee_to_pinch_center_m= SIDE_EE_TO_PINCH_CENTER_M,
+        carry_center_offset_m= SIDE_EE_TO_PINCH_CENTER_M + GRASP_CLEARANCE,
         side_grasp_min_z_m= TABLE_SURFACE_Z + 0.060,
     ),
     # tag on top of remote, facing up
@@ -455,23 +472,18 @@ OBJECTS = {
         destination=    LOCATIONS["Bin"], # Bin
         object_width_m= REMOTE_WIDTH,
         object_height_m= REMOTE_THICKNESS,
-        # [FLAG remote-top-policy] Keep the remote as a top grasp with the QR facing up
-        # and fingers closing across its width, but require the live wrist pose to be
-        # genuinely aligned before descend. The general top-grasp soft-continue path is
-        # too permissive for this long, thin object.
+        grasp_axis_size_m= REMOTE_THICKNESS, 
+
         top_allow_orientation_soft_fail=False,
-        # [FLAG remote-top-yaw] The remote is not yaw-symmetric like the cube. Tighten the
-        # top-grasp orientation constraint so MoveIt cannot report success while arriving
-        # with the gripper rotated away from the remote width axis.
         top_stage1_ori_xy_tol_rad=0.30,
         top_stage1_ori_z_tol_rad=0.22,
         top_stage1_retry_ori_xy_tol_rad=0.40,
         top_stage1_retry_ori_z_tol_rad=0.30,
-        top_stage1_live_pose_pos_tol_m=0.025,
-        top_stage1_live_pose_ori_err_rad=0.35,
-        top_stage2_live_pose_pos_tol_m=0.020,
-        top_stage2_live_pose_ori_err_rad=0.30,
-        top_stage2_prealign_max_err_rad=0.35,
+        top_stage1_live_pose_pos_tol_m=0.040,
+        top_stage1_live_pose_ori_err_rad=0.45, # [FLAG remote-stage1-live-window] Small remote approach misses were forcing full retries even when the wrist was already close enough to continue safely.
+        top_stage2_live_pose_pos_tol_m=0.040,  # [FLAG remote-stage2-live-window] Let Stage 2 accept the modest XY drift we keep seeing instead of aborting into a large recovery move.
+        top_stage2_live_pose_ori_err_rad=0.40, # [FLAG remote-stage2-live-window] Keep the remote strict, but not so strict that a few degrees of residual error trigger full reseeds.
+        top_stage2_prealign_max_err_rad=0.45,  # [FLAG remote-stage2-prealign-window] Allow prealign to engage on the common near-threshold remote cases seen in the latest fail logs.
     ),
     # tag on top of cube, facing up
     # approach from SIDE, grab at midpoint, where QR is placed
@@ -490,5 +502,6 @@ OBJECTS = {
         destination=    LOCATIONS["Shelf 1 (Left)"], # Shelf 1
         object_width_m= CUBE_SIZE,
         object_height_m= CUBE_SIZE,
+        grasp_axis_size_m= CUBE_SIZE,
     ),
 }

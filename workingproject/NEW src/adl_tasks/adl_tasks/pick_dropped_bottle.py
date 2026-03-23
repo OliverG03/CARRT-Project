@@ -160,6 +160,8 @@ class PickDroppedBottle(Node):
                     f"obj_{BOTTLE_ID}",
                     self.arm.END_EFFECTOR,
                     GRIPPER_TOUCH_LINKS,
+                    tag_id=BOTTLE_ID,
+                    tag_pose=bottle_pose,
                 )
                 self.get_logger().info("Grasped bottle.")
                 
