@@ -155,7 +155,7 @@ class VisionAprilTagNode(Node):
             transform = self.tf_buffer.lookup_transform(
                 self.base_frame,
                 self.camera_frame,
-                rclpy.time.Time(),   # latest available
+                rclpy.time.Time(),  # latest available
                 # timeout = rclpy.duration.Duration(seconds=1.0)
             )
             pose_base = do_transform_pose(pose_camera, transform)
