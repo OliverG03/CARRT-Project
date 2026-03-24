@@ -27,11 +27,11 @@ from scipy.spatial.transform import Rotation
 from adl_interfaces.srv import GetTagPose
 from adl_tasks.apriltag_key import OBJECTS
 from adl_tasks.adl_config import (
-    BOTTLE_RADIUS,      BOTTLE_HEIGHT, BOTTLE_LENGTH_AXIS,
+    BOTTLE_RADIUS,      BOTTLE_HEIGHT,    BOTTLE_LENGTH_AXIS,
     MEDICATION_RADIUS,  MEDICATION_HEIGHT,
     CUP_RADIUS,         CUP_HEIGHT,
     REMOTE_WIDTH,       REMOTE_LENGTH,    REMOTE_THICKNESS,
-    CUBE_SIZE,          FINGER_REACH, 
+    CUBE_SIZE,          FINGER_REACH,     FINGER_REACH_X,    GRASP_CLEARANCE,
 )
 
 # minimum pose change before republishing an object, prevent constant updates
@@ -60,6 +60,27 @@ OBJECT_SHAPES = {
     4: {"shape": "box",
         "sx": CUBE_SIZE, "sy": CUBE_SIZE, "sz": CUBE_SIZE,
         "r": 0.4, "g": 0.8, "b": 0.4}, # green
+}
+
+# clear_table uses hard-coded above-drop presets; use matching XY for placed-scene objects
+# so scene object aligns with where clear_table actually releases.
+PLACED_XY_OVERRIDE = {
+    4: (0.729, 0.212),  # Cube -> shelf left
+    2: (0.729, 0.114),  # Cup -> shelf right
+    3: (0.726, 0.002),  # Remote -> bin
+}
+
+# for side placement: shift collision obj from EEF center to object center
+SIDE_EE_TO_OBJECT_OFFSET = {
+    0: FINGER_REACH_X, # water bottle
+    1: FINGER_REACH_X, # medication bottle
+    2: 0.0, # [FLAG:placed-center] cup scene object should stay centered at EE drop XY
+    3: 0.0, # [FLAG:placed-center] remote scene object should stay centered at EE drop XY
+    4: 0.0, # [FLAG:placed-center] cube scene object should stay centered at EE drop XY
+}
+
+# use to override a Z value 
+PLACED_Z_OVERRIDE = {
 }
 
 class SceneFromVisionNode(Node):
@@ -153,10 +174,11 @@ class SceneFromVisionNode(Node):
     # - publish placed object at destination pose after successful place, log in placed IDs
     def _on_placed_ids(self, msg: Int32MultiArray):
         for tag_id in msg.data:
-            if tag_id in self._placed_ids:
-                continue
+            already = tag_id in self._placed_ids
             self._placed_ids.add(tag_id)
-            self.get_logger().info(f'Marked tag ID {tag_id} as placed at destination. Publishing.')
+            self.get_logger().info(
+                f'Marked tag ID {tag_id} as placed at destination. Publishing{" (refresh)" if already else ""}.'
+            )
             self._publish_placed_object(tag_id)
             
     # - publish collision object at the objects apriltag_key destination pose after successful place
@@ -167,6 +189,7 @@ class SceneFromVisionNode(Node):
         
         obj = OBJECTS[tag_id]
         dest = obj.destination              # pull from apriltag_key
+        place_mode = getattr(obj, "dest_approach_type", obj.approach_type)  # use placement mode, not pick mode
         shape = OBJECT_SHAPES[tag_id]
         
         # - build the object
@@ -178,18 +201,31 @@ class SceneFromVisionNode(Node):
             prim.type = SolidPrimitive.BOX
             prim.dimensions = [shape["sx"], shape["sy"], shape["sz"]]
             
-        # - get object's center pose from EEF frame
-        # top down: FINGER_REACH below the EEF
-        # side grasp: at object center height (no Z offset)
+        # - placed pose in scene should reflect the intended destination for placement.
+        # NOTE: using obj.approach_type here is incorrect for objects
+        # picked top-down but placed from side (e.g., cube, remote).
         
         placed_pose = Pose()
-        placed_pose.position.x = dest.position.x
-        placed_pose.position.y = dest.position.y
-        if obj.approach_type == "top":
+        ee_xy = PLACED_XY_OVERRIDE.get(tag_id, (dest.position.x, dest.position.y))
+        placed_pose.position.x = float(ee_xy[0])
+        placed_pose.position.y = float(ee_xy[1])
+        if place_mode == "side":
+            x_shift = float(SIDE_EE_TO_OBJECT_OFFSET.get(tag_id, FINGER_REACH_X))
+            placed_pose.position.x += x_shift
+        if tag_id in PLACED_Z_OVERRIDE:
+            placed_pose.position.z = float(PLACED_Z_OVERRIDE[tag_id])
+        elif place_mode == "top":
             placed_pose.position.z = dest.position.z - FINGER_REACH
-        else:                   # side
+        else:                   # side / default
             placed_pose.position.z = dest.position.z
-        placed_pose.orientation.w = 1.0 # no rotation, upright
+        # [FLAG:placed-upright] keep cylindrical side-placed objects upright in scene visualization.
+        if shape["shape"] == "cylinder" and place_mode == "side":
+            placed_pose.orientation.x = 0.0
+            placed_pose.orientation.y = 0.0
+            placed_pose.orientation.z = 0.0
+            placed_pose.orientation.w = 1.0
+        else:
+            placed_pose.orientation = dest.orientation
     
         # - publish the object in the scene
         co = CollisionObject()
@@ -204,15 +240,29 @@ class SceneFromVisionNode(Node):
         
         scene = PlanningScene()
         scene.is_diff = True
-        scene.world.collision_objects = [co]
+        
+        # remove any existing object for this tag ID before adding the new one
+        remove_live = CollisionObject()
+        remove_live.header = Header()
+        remove_live.header.frame_id = 'base_link'
+        remove_live.id = f"obj_{tag_id}"
+        remove_live.operation = CollisionObject.REMOVE
+        scene.world.collision_objects = [remove_live, co]
+        
         scene.object_colors = [color]
         self.scene_pub.publish(scene)
+        # update internal tracking to reflect placed object in scene and remove live object
+        self.objects_in_scene.discard(tag_id)
+        self._pose_cache.pop(tag_id, None)
+        self._last_published.pop(tag_id, None)
         
         self.get_logger().info(
             f'Published placed object for tag ID {tag_id} at destination pose: '
             f'{placed_pose.position.x:.3f}, '
             f'{placed_pose.position.y:.3f}, '
-            f'{placed_pose.position.z:.3f}'
+            f'{placed_pose.position.z:.3f} '
+            f'(place_mode={place_mode}, pick_mode={obj.approach_type}), '
+            f'ee_xy=({ee_xy[0]:.3f}, {ee_xy[1]:.3f})'
         )
         
     # --- Pose Request Cycle
@@ -225,6 +275,8 @@ class SceneFromVisionNode(Node):
         visible_set = set(
             tid for tid in self.visible_ids
             if tid in OBJECT_SHAPES
+            and tid not in self._picked_ids # don't request pose if already picked
+            and tid not in self._placed_ids # don't request pose if already placed
         )
         if not self.tag_client.service_is_ready():
             return
@@ -269,6 +321,7 @@ class SceneFromVisionNode(Node):
             tid for tid in self.visible_ids
             if tid in OBJECT_SHAPES
             and tid not in self._picked_ids
+            and tid not in self._placed_ids
         )
         
         scene = PlanningScene()

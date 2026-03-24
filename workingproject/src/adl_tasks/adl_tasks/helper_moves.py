@@ -18,9 +18,10 @@ import time as _time
 import copy as _copy
 import threading
 from threading import Lock
+import math
 
 from control_msgs.action import GripperCommand
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, Quaternion
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from moveit_msgs.action import MoveGroup, ExecuteTrajectory
 from moveit_msgs.msg import (
@@ -34,14 +35,14 @@ from moveit_msgs.msg import (
     AttachedCollisionObject,
     PlanningScene,
 )
-from moveit_msgs.srv import GetStateValidity, GetCartesianPath
+from moveit_msgs.srv import GetStateValidity, GetCartesianPath, GetPositionFK
 from sensor_msgs.msg import JointState
 from shape_msgs.msg import SolidPrimitive
 from rclpy.action import ActionClient
 from std_msgs.msg import Header
 import rclpy
 
-from adl_tasks.motion_profiles import DEFAULT_PROFILE, PoseTolerance
+from adl_tasks.motion_profiles import DEFAULT_PROFILE, MotionProfile, PoseTolerance
 
 # Helper class to complete basic MoveIt2 functions for the various ADLS
 # can also hold emergency stop or other safety functions
@@ -58,6 +59,11 @@ class MoveItHelper:
         "joint_6": 0.96,    # ~55° wrist-3 (roughly downward-facing EEF)
         "joint_7": 1.57, 
     }   
+    HOME_PROFILE = MotionProfile(
+        planning_time=12.0,
+        velocity_scaling=0.15,
+        accel_scaling=0.15,
+    )
     
     # --- RETRACT --- safe intermediate pose from floor-level grab/pick
     RETRACT_JOINTS = {
@@ -98,6 +104,7 @@ class MoveItHelper:
         self._gripper_client = ActionClient(node, GripperCommand, self.GRIPPER_ACTION)
         self._validity_client = node.create_client(GetStateValidity, '/check_state_validity')
         self._cartesian_client = node.create_client(GetCartesianPath, '/compute_cartesian_path')
+        self._fk_client = node.create_client(GetPositionFK, '/compute_fk')  # [FLAG:drop-presets]
         
         self._js_lock = Lock()
         self._latest_joint_state: JointState | None = None
@@ -135,6 +142,34 @@ class MoveItHelper:
             _time.sleep(0.05)
         return future.done()    
     
+    # check if joint state is recent and complete
+    def _is_joint_state_fresh(self, max_age: float = 0.2) -> bool:
+        # check for joint state
+        with self._js_lock:
+            msg = self._latest_joint_state
+        if msg is None:
+            self.node.get_logger().warn("_is_joint_state_fresh: no joint state received yet.")
+            return False
+        # check timestamp and age
+        stamp = msg.header.stamp
+        if stamp.sec == 0 and stamp.nanosec == 0:
+            self.node.get_logger().warn("_is_joint_state_fresh: joint state has zero timestamp.")
+            return False
+        msg_time = rclpy.time.Time.from_msg(stamp)
+        now = self.node.get_clock().now()
+        age = (now - msg_time).nanoseconds / 1e9
+        if age > max_age:
+            self.node.get_logger().warn(f"_is_joint_state_fresh: joint state is stale (age {age:.3f}>{max_age}s).")
+            return False
+        # check for arm joints
+        name_set = set(msg.name)
+        missing = [j for j in self.ARM_JOINT_NAMES if j not in name_set]
+        if missing:
+            self.node.get_logger().warn(f"_is_joint_state_fresh: joint state missing arm joints: {missing}")
+            return False
+
+        return True
+    
     def _on_joint_state(self, msg: JointState) -> None:
         with self._js_lock:
             self._latest_joint_state = msg
@@ -168,9 +203,21 @@ class MoveItHelper:
             pass
 
         # 4) Small cooldown so controllers don’t reject the next goal immediately
-        _time.sleep(1.0)
+        if "-26" in context:
+            self.node.get_logger().warn(
+                "_recover_after_failure: handling MoveIt Error -26 (invalid start state) with extra state resync."
+            )
+            self.stop_motion(timeout=2.0)
+            self.wait_for_joint_state_ready(timeout=2.0)
+            self.wait_for_settle(timeout=2.0)
+            try:
+                self.get_current_end_effector_pose(timeout=2.0)
+            except Exception:
+                pass
+            _time.sleep(1.5)
+        else:
+            _time.sleep(1.0)
         self.wait_for_settle(timeout=5.0)
-        
     # build a motion plan request with standard planning parameters
     def _base_request(self, group: str, profile=DEFAULT_PROFILE) -> MotionPlanRequest:
         req = MotionPlanRequest()
@@ -190,7 +237,24 @@ class MoveItHelper:
         return req
  
     # send request via MoveGroup action. return true on success
-    def _send_goal(self, request: MotionPlanRequest, timeout: float = 30.0) -> bool:
+    def _send_goal(
+        self, 
+        request: MotionPlanRequest, 
+        timeout: float = 30.0,
+        *,
+        verbose_return: bool = True,
+        auto_clear_faults: bool = False, # if true, will attempt to clear faults on failure before returning false
+    ) -> bool:
+        if auto_clear_faults:
+            self.stop_motion()
+            
+        if not self._is_joint_state_fresh():
+            self.node.get_logger().error(
+                "Refusing to plan: joint state is stale or incomplete."
+                " This commonly causes MoveIt Error -26."
+            )
+            return False
+        
         self.check_start_state() # check for collisions before planning, get errors for each
         self._apply_real_start_state(request, timeout=1.0)
         
@@ -333,19 +397,111 @@ class MoveItHelper:
             constraints.joint_constraints.append(jc)
         req.goal_constraints = [constraints]
         return self._send_goal(req, timeout=60.0)
+
+    def get_current_end_effector_pose(
+        self,
+        frame_id: str = "base_link",
+        timeout: float = 2.0,
+    ) -> Pose | None:
+        # [FLAG:drop-presets] use FK to start Cartesian drop from true live EE pose
+        if not self._fk_client.wait_for_service(timeout_sec=2.0):
+            self.node.get_logger().warn("get_current_end_effector_pose: FK service not available.")
+            return None
+
+        js = self._get_arm_joint_snapshot(timeout=timeout)
+        if js is None:
+            self.node.get_logger().warn("get_current_end_effector_pose: no joint snapshot.")
+            return None
+
+        req = GetPositionFK.Request()
+        req.header.frame_id = frame_id
+        req.fk_link_names = [self.END_EFFECTOR]
+        req.robot_state.joint_state = js
+        req.robot_state.is_diff = False
+
+        future = self._fk_client.call_async(req)
+        if not self._wait_for_future(future, timeout=5.0):
+            self.node.get_logger().warn("get_current_end_effector_pose: FK request timed out.")
+            return None
+        resp = future.result()
+        if resp is None:
+            self.node.get_logger().warn("get_current_end_effector_pose: FK response is None.")
+            return None
+        if resp.error_code.val != 1 or not resp.pose_stamped:
+            self.node.get_logger().warn(
+                f"get_current_end_effector_pose: FK failed with error_code={resp.error_code.val}."
+            )
+            return None
+        return resp.pose_stamped[0].pose
+    
+    def _rpy_deg_to_quat(self, roll: float, pitch: float, yaw: float) -> Quaternion:
+        r = math.radians(roll)
+        p = math.radians(pitch)
+        y = math.radians(yaw)
+        cr = math.cos(r * 0.5)
+        sr = math.sin(r * 0.5)
+        cp = math.cos(p * 0.5)
+        sp = math.sin(p * 0.5)
+        cy = math.cos(y * 0.5)
+        sy = math.sin(y * 0.5)
+        q = Quaternion()
+        q.w = cr * cp * cy + sr * sp * sy
+        q.x = sr * cp * cy - cr * sp * sy
+        q.y = cr * sp * cy + sr * cp * sy
+        q.z = cr * cp * sy - sr * sp * cy
+        return q
     
     def look_at_table(self) -> bool:
         ### to use from home position
         # rotate wrist so camera on top can see the table clearly
-        joints = self.get_arm_joint_positions(timeout=1.0)
-        if joints is None:
-            self.node.get_logger().error("look_at_table: no joints snapshot.")
-            return False
-        # rotate by 180 degrees to stop EEF from blocking table view
-        joints["joint_7"] += 3.14159
-        ok = self.go_to_joint_positions(joints)
-        _time.sleep(0.5)
-        return ok
+        pose = Pose()
+        pose.position.x = 0.215
+        pose.position.y = 0.0
+        pose.position.z = 0.77
+        pose.orientation = self._rpy_deg_to_quat(138.0, 4.3, 90.0)
+        
+        profile = MotionProfile(
+            planning_time=10.0,
+            velocity_scaling=0.3,
+            accel_scaling=0.3,
+        )
+        
+        req = self._base_request(self.ARM_GROUP, profile=profile)
+        
+        # build constraints
+        pos_constraint = PositionConstraint()
+        pos_constraint.header.frame_id = "base_link"
+        pos_constraint.link_name = self.END_EFFECTOR
+        bv = BoundingVolume()
+        prim = SolidPrimitive()
+        prim.type = SolidPrimitive.SPHERE
+        prim.dimensions = [0.02] # 2cm radius sphere around target point
+        bv.primitives = [prim]
+        bv.primitive_poses = [pose]
+        pos_constraint.constraint_region = bv
+        pos_constraint.weight = 1.0
+        
+        ori_constraint = OrientationConstraint()
+        ori_constraint.header.frame_id = "base_link"
+        ori_constraint.link_name = self.END_EFFECTOR
+        ori_constraint.orientation = pose.orientation
+        ori_constraint.absolute_x_axis_tolerance = 0.35
+        ori_constraint.absolute_y_axis_tolerance = 0.35
+        ori_constraint.absolute_z_axis_tolerance = 0.60
+        ori_constraint.weight = 1.0
+        
+        constraints = Constraints()
+        constraints.position_constraints.append(pos_constraint)
+        constraints.orientation_constraints.append(ori_constraint)
+        
+        req.goal_constraints = [constraints]
+        
+        return self._send_goal(
+            req, 
+            timeout=30.0,
+            verbose_return=False,
+            auto_clear_faults=True,
+        )
     
     def go_cartesian(self, waypoints: list,
                      max_step: float = 0.01, 
@@ -372,6 +528,7 @@ class MoveItHelper:
         req.jump_threshold = float(jump_thresh)
         req.avoid_collisions = bool(avoid_collisions)
         req.start_state.is_diff = True
+        self._apply_real_start_state(req, timeout=1.0)
         
         future = self._cartesian_client.call_async(req)
         if not self._wait_for_future(future, timeout=30.0):
@@ -463,8 +620,8 @@ class MoveItHelper:
         return True
     
     # plan and execute to a dict of joint values
-    def _go_to_joint_config(self, joint_config: dict) -> bool:
-        req = self._base_request(self.ARM_GROUP)
+    def _go_to_joint_config(self, joint_config: dict, profile: MotionProfile | None = None) -> bool:
+        req = self._base_request(self.ARM_GROUP, profile=profile or DEFAULT_PROFILE)
         constraints = Constraints()
         
         for joint_name, pos in joint_config.items():
@@ -480,8 +637,40 @@ class MoveItHelper:
         req.goal_constraints = [constraints]
         return self._send_goal(req, timeout=60.0)
     
-    
+    # force MoveIt to use the real current joint state as the start state, instead of relying on its internal state which may be stale or incorrect.
     def _apply_real_start_state(self, req: MotionPlanRequest, timeout: float = 1.0) -> bool:
+        # [FLAG:start-state-revert] publish the real joint values exactly as reported by /joint_states.
+        # Wrapping/clamping here can desync MoveIt start_state from the controller state and trigger -26 loops.
+        with self._js_lock:
+            msg = self._latest_joint_state
+        if msg is None or not msg.name:
+            req.start_state.is_diff = True
+            return False
+
+        name_set = set(msg.name)
+        missing = [j for j in self.ARM_JOINT_NAMES if j not in name_set]
+        if missing:
+            self.node.get_logger().warn(
+                f"_apply_real_start_state: missing arm joints in /joint_states: {missing}"
+            )
+            req.start_state.is_diff = True
+            return False
+
+        js = JointState()
+        js.header = msg.header
+        js.name = list(msg.name)
+        js.position = [float(p) for p in msg.position]
+        if msg.velocity:
+            js.velocity = [float(v) for v in msg.velocity]
+        if msg.effort:
+            js.effort = [float(e) for e in msg.effort]
+
+        req.start_state.joint_state = js
+        req.start_state.is_diff = False
+        return True
+        
+        ''' previous version that called _get_arm_joint_snapshot, but it was redundant with the new _is_joint_state_fresh check.
+            kept here for reference.
         js = self._get_arm_joint_snapshot(timeout=timeout)
         if js is None or not js.name or len(js.name) != len(self.ARM_JOINT_NAMES):
             # Fallback: let move_group use its internal "current state"
@@ -491,14 +680,17 @@ class MoveItHelper:
         req.start_state.joint_state = js
         req.start_state.is_diff = False
         return True
+        '''
         
     # move to Kinova's predefined home position (srdf file)
     def go_home(self, retries: int = 2) -> bool:
         self.node.get_logger().info("go_home: planning to HOME_JOINTS...")
+        self.stop_motion()
+        self.wait_for_joint_state_ready(timeout=2.0)
         self.wait_for_settle(timeout=3.0) # ensure arm is still before trying to go home
         _time.sleep(1.0) ### increase and compare 
         for attempt in range(retries):
-            result = self._go_to_joint_config(self.HOME_JOINTS)
+            result = self._go_to_joint_config(self.HOME_JOINTS, profile=self.HOME_PROFILE)
             if result:
                 self.node.get_logger().info("go_home: success.")
                 return True
@@ -600,8 +792,8 @@ class MoveItHelper:
     # move to retract pose, for intermediate and floor picks
     def go_retract(self):
         self.node.get_logger().info("go_retract: planning to RETRACT_JOINTS...")
-        return self._go_to_joint_config(self.RETRACT_JOINTS)
-    
+        return self._go_to_joint_config(self.RETRACT_JOINTS, profile=self.HOME_PROFILE)
+
     # wait for settle: wait till arm has stopped moving
     # compare max_joint_delta across arms with a timeout
     def wait_for_settle(
@@ -868,8 +1060,8 @@ class MoveItHelper:
         return self.go_home()    
     
     
-    # --- SCENE ATTACHMENT --- #
-    
+    # --- SCENE ATTACHMENT --- # moved to scene_utils.py
+    '''
     def attach_object(self, object_id: str, links: list = None):
         # attach collision object to EEF for grasping and moving
         if not hasattr(self, "_scene_pub"):
@@ -914,7 +1106,7 @@ class MoveItHelper:
         scene.robot_state.is_diff = True
         self._scene_pub.publish(scene)
         self.node.get_logger().info(f"detach_object: published detachment of {object_id} from {self.END_EFFECTOR}.")
-    
+    '''
     
 
     
@@ -939,6 +1131,8 @@ class MoveItHelper:
             self.node.get_logger().error(f'Start state: INVALID — {len(resp.contacts)} contact(s):')
             for c in resp.contacts:
                 depth = getattr(c, 'depth', 0.0)
+                body_1 = getattr(c, 'contact_body_1', '?') or '?'
+                body_2 = getattr(c, 'contact_body_2', '?') or '?'
                 self.node.get_logger().error(
-                    f'  COLLISION: [0] <-> [1], depth={depth:.4f}m'
+                    f'  COLLISION: {body_1} <-> {body_2}, depth={depth:.4f}m'
                 )

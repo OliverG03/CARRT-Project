@@ -100,7 +100,7 @@ FINGER_REACH = 0.150 # m
 FINGER_REACH_X = 0.068  
 GRASP_CLEARANCE = 0.005
 GRIPPER_BODY_CLEARANCE = 0.06  # m, clearance for gripper body above table ### needed?
-_DROP_MARGIN = 0.06 # m, extra clearance for drop-off
+_DROP_MARGIN = 0.05 # m, extra clearance for drop-off
 
 MEDICATION_GRASP_Z = 0.0
 CUP_GRASP_Z = 0
@@ -112,8 +112,9 @@ REMOTE_GRASP_Z = FINGER_REACH + GRASP_CLEARANCE #+ REMOTE_THICKNESS + 0.01 # m, 
 # --- Drop-off locations --- #
 
 # Front Right Edge of table, for handover location
-HANDOVER_POS_X = TABLE_POS_X - TABLE_X / 2.0 + 0.06  # ~0.43 m — front edge with 5cm margin
-HANDOVER_POS_Y = TABLE_POS_Y - TABLE_Y / 2.0 + 0.06  # RIGHT edge of table, 5cm margin (LARGER?)
+# [FLAG:handover-align] aligned to RViz-validated handover approach XY
+HANDOVER_POS_X = 0.373  # previous: TABLE_POS_X - TABLE_X / 2.0 + 0.06
+HANDOVER_POS_Y = -0.211 # previous: TABLE_POS_Y - TABLE_Y / 2.0 + 0.06
 HANDOVER_Z      = TABLE_SURFACE_Z + GRASP_CLEARANCE   # near user, table height
 
 # --- Drop-off heights (base_link frame) ---
@@ -138,5 +139,3 @@ MEDICATION_DROP_Z = TABLE_SURFACE_Z + SHELF_HEIGHT + MEDICATION_HEIGHT / 2.0 + G
 
 SHELF_DROP_X = SHELF_POS_X + SHELF_DEPTH/2.0 - FINGER_REACH - GRASP_CLEARANCE
 BIN_DROP_X = BIN_POS_X + BIN_DEPTH/2.0 - FINGER_REACH - GRASP_CLEARANCE ### maybe _DROP_MARGIN instead
-
-

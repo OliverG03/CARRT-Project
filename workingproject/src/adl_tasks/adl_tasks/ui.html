@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Kinova Gen 3 — Control</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ── Reset & Variables ─────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #090C12;
+    --bg-panel:  #0F1219;
+    --bg-card:   #141820;
+    --bg-card2:  #181D28;
+    --border:    #1E2535;
+    --border-hi: #2A3348;
+    --cyan:      #00D4FF;
+    --gold:      #FFB800;
+    --green:     #00E59A;
+    --red:       #FF4455;
+    --text:      #D8DCE8;
+    --dim:       #4A5268;
+    --dim2:      #2E3448;
+    --font-mono: 'Share Tech Mono', monospace;
+    --font-ui:   'Rajdhani', sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ui);
+    font-size: 16px;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+  }
+
+  /* ── Scanline overlay ───────────────────────────────────────────────────── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 999; pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.06) 2px,
+      rgba(0,0,0,0.06) 4px
+    );
+  }
+
+  /* ── Header ─────────────────────────────────────────────────────────────── */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px;
+    height: 60px;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+
+  .logo {
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .logo-main {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    color: var(--cyan);
+    letter-spacing: 3px;
+  }
+  .logo-sub {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 1px;
+  }
+
+  .header-right {
+    display: flex; align-items: center; gap: 16px;
+  }
+
+  .conn-badge {
+    display: flex; align-items: center; gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--dim);
+  }
+  .conn-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green);
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.35; }
+  }
+
+  /* ── Main layout ────────────────────────────────────────────────────────── */
+  main {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+    padding: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+    min-height: calc(100vh - 60px - 40px);
+  }
+
+  @media (max-width: 780px) {
+    main { grid-template-columns: 1fr; }
+  }
+
+  /* ── Section label ──────────────────────────────────────────────────────── */
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--dim);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+
+  /* ── Command grid ───────────────────────────────────────────────────────── */
+  .cmd-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  @media (max-width: 500px) {
+    .cmd-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Command card ───────────────────────────────────────────────────────── */
+  .cmd-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 20px 18px;
+    cursor: pointer;
+    transition: border-color 0.18s, transform 0.12s, background 0.18s;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cmd-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    border-radius: 10px 0 0 10px;
+    transition: width 0.18s;
+  }
+
+  .cmd-card:hover {
+    border-color: var(--accent);
+    background: var(--bg-card2);
+    transform: translateY(-2px);
+  }
+  .cmd-card:hover::before { width: 4px; }
+
+  .cmd-card:active {
+    transform: scale(0.97);
+  }
+
+  .cmd-card.firing {
+    animation: fire-flash 0.4s ease;
+  }
+  @keyframes fire-flash {
+    0%   { background: var(--bg-card); }
+    30%  { background: color-mix(in srgb, var(--accent) 15%, var(--bg-card)); }
+    100% { background: var(--bg-card); }
+  }
+
+  .cmd-icon {
+    font-size: 26px;
+    margin-bottom: 12px;
+    display: block;
+    filter: drop-shadow(0 0 8px var(--accent));
+  }
+
+  .cmd-title {
+    font-family: var(--font-ui);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+  }
+
+  .cmd-desc {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+
+  .cmd-execute {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 16px;
+    padding: 7px 14px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: 5px;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    pointer-events: none; /* card handles the click */
+  }
+
+  .cmd-card:hover .cmd-execute {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  /* ── Right panel ────────────────────────────────────────────────────────── */
+  .right-panel {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+
+  /* ── Status card ────────────────────────────────────────────────────────── */
+  .status-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+
+  .status-row {
+    display: flex; flex-direction: column; gap: 4px;
+    margin-bottom: 16px;
+  }
+  .status-row:last-child { margin-bottom: 0; }
+
+  .status-key {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--dim);
+  }
+  .status-val {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--cyan);
+  }
+  .status-val.ok    { color: var(--green); }
+  .status-val.warn  { color: var(--gold); }
+  .status-val.error { color: var(--red); }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 14px 0;
+  }
+
+  /* ── Log ────────────────────────────────────────────────────────────────── */
+  .log-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    flex: 1;
+    display: flex; flex-direction: column;
+    min-height: 220px;
+  }
+
+  #log-list {
+    flex: 1;
+    overflow-y: auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.8;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .log-entry {
+    display: flex; gap: 12px;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--dim2);
+    animation: fade-in 0.3s ease;
+  }
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateX(-6px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .log-time { color: var(--dim); min-width: 58px; }
+  .log-cmd  { color: var(--green); }
+  .log-cmd.error { color: var(--red); }
+
+  /* ── Toast ──────────────────────────────────────────────────────────────── */
+  #toast {
+    position: fixed;
+    bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--bg-card2);
+    border: 1px solid var(--border-hi);
+    border-radius: 8px;
+    padding: 12px 22px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text);
+    opacity: 0;
+    transition: opacity 0.25s, transform 0.25s;
+    pointer-events: none;
+    z-index: 500;
+    white-space: nowrap;
+  }
+  #toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  #toast .t-accent { color: var(--cyan); }
+
+  /* ── Footer ─────────────────────────────────────────────────────────────── */
+  footer {
+    text-align: center;
+    padding: 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--dim);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────────────────── -->
+<header>
+  <div class="logo">
+    <span class="logo-main">KINOVA</span>
+    <span class="logo-sub">GEN 3 / CONTROL PANEL</span>
+  </div>
+  <div class="header-right">
+    <div class="conn-badge">
+      <div class="conn-dot" id="conn-dot"></div>
+      <span id="conn-label">CONNECTED</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── Main ────────────────────────────────────────────────────────────────── -->
+<main>
+
+  <!-- Left: commands -->
+  <div>
+    <div class="section-label">// Commands</div>
+    <div class="cmd-grid">
+
+      <div class="cmd-card" style="--accent: #00D4FF" onclick="sendCommand('clear_table', 'Clear Table')">
+        <span class="cmd-icon">⬜</span>
+        <div class="cmd-title">Clear Table</div>
+        <div class="cmd-desc">Remove all items<br>from workspace</div>
+        <div class="cmd-execute">▶ EXECUTE</div>
+      </div>
+
+      <div class="cmd-card" style="--accent: #FFB800" onclick="sendCommand('pick_up_item', 'Pick Up Item')">
+        <span class="cmd-icon">✋</span>
+        <div class="cmd-title">Pick Up Item</div>
+        <div class="cmd-desc">Grasp target from<br>designated zone</div>
+        <div class="cmd-execute">▶ EXECUTE</div>
+      </div>
+
+      <div class="cmd-card" style="--accent: #00E59A" onclick="sendCommand('give_medication', 'Give Medication')">
+        <span class="cmd-icon">💊</span>
+        <div class="cmd-title">Give Medication</div>
+        <div class="cmd-desc">Dispense to patient<br>hand position</div>
+        <div class="cmd-execute">▶ EXECUTE</div>
+      </div>
+
+      <div class="cmd-card" style="--accent: #8899BB" onclick="sendCommand('return_home', 'Return to Home')">
+        <span class="cmd-icon">🏠</span>
+        <div class="cmd-title">Return to Home</div>
+        <div class="cmd-desc">Move arm to neutral<br>resting pose</div>
+        <div class="cmd-execute">▶ EXECUTE</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Right: status + log -->
+  <div class="right-panel">
+
+    <div class="status-card">
+      <div class="section-label">// Status</div>
+
+      <div class="status-row">
+        <span class="status-key">SYSTEM</span>
+        <span class="status-val ok" id="sys-status">Ready</span>
+      </div>
+      <hr class="divider">
+      <div class="status-row">
+        <span class="status-key">LAST COMMAND</span>
+        <span class="status-val" id="last-cmd">—</span>
+      </div>
+      <div class="status-row">
+        <span class="status-key">TIMESTAMP</span>
+        <span class="status-val" id="last-time" style="color:var(--dim)">—</span>
+      </div>
+    </div>
+
+    <div class="log-card">
+      <div class="section-label">// Event Log</div>
+      <div id="log-list"></div>
+    </div>
+
+  </div>
+</main>
+
+<footer>Kinova Gen 3 &nbsp;·&nbsp; 7-DOF &nbsp;·&nbsp; v1.0.0</footer>
+
+<!-- ── Toast ────────────────────────────────────────────────────────────────── -->
+<div id="toast"></div>
+
+<!-- ── JS ───────────────────────────────────────────────────────────────────── -->
+<script>
+  let busy = false;
+
+  async function sendCommand(cmdId, cmdLabel) {
+    if (busy) return;
+    busy = true;
+
+    // Flash the card
+    const cards = document.querySelectorAll('.cmd-card');
+    cards.forEach(c => {
+      if (c.getAttribute('onclick').includes(cmdId)) {
+        c.classList.add('firing');
+        setTimeout(() => c.classList.remove('firing'), 400);
+      }
+    });
+
+    // Update status
+    setStatus(`Executing: ${cmdLabel}…`, 'warn');
+    document.getElementById('last-cmd').textContent  = cmdLabel;
+    document.getElementById('last-time').textContent = now();
+
+    try {
+      const res  = await fetch(`/command/${cmdId}`, { method: 'POST' });
+      const data = await res.json();
+
+      if (data.ok) {
+        setStatus('Ready', 'ok');
+        appendLog(cmdLabel, 'ok');
+        showToast(`<span class="t-accent">✓</span> ${cmdLabel} sent`);
+      } else {
+        setStatus('Error', 'error');
+        appendLog(cmdLabel, 'error');
+        showToast(`✗ Error: ${data.error}`);
+      }
+    } catch (e) {
+      setStatus('Disconnected', 'error');
+      appendLog(cmdLabel, 'error');
+      showToast('✗ Cannot reach server');
+    }
+
+    setTimeout(() => { busy = false; }, 800);
+  }
+
+  function setStatus(msg, cls) {
+    const el = document.getElementById('sys-status');
+    el.textContent = msg;
+    el.className = `status-val ${cls}`;
+  }
+
+  function appendLog(cmd, status) {
+    const list = document.getElementById('log-list');
+    const row  = document.createElement('div');
+    row.className = 'log-entry';
+    row.innerHTML = `<span class="log-time">${now()}</span>
+                     <span class="log-cmd ${status === 'error' ? 'error' : ''}">${cmd}</span>`;
+    list.appendChild(row);
+    list.scrollTop = list.scrollHeight;
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.innerHTML = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function now() {
+    return new Date().toLocaleTimeString('en-US', { hour12: false });
+  }
+
+  // Poll server status every 5s
+  async function checkStatus() {
+    try {
+      const res  = await fetch('/status');
+      const data = await res.json();
+      const dot  = document.getElementById('conn-dot');
+      const lbl  = document.getElementById('conn-label');
+      dot.style.background  = data.connected ? 'var(--green)' : 'var(--red)';
+      lbl.textContent       = data.connected ? 'CONNECTED' : 'OFFLINE';
+    } catch {
+      document.getElementById('conn-dot').style.background = 'var(--red)';
+      document.getElementById('conn-label').textContent    = 'OFFLINE';
+    }
+  }
+
+  checkStatus();
+  setInterval(checkStatus, 5000);
+</script>
+
+</body>
+</html>
