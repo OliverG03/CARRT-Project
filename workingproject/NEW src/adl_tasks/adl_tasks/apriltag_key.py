@@ -18,6 +18,7 @@ from adl_tasks.adl_config import (
     SHELF_POS_X, SHELF1_POS_Y, SHELF2_POS_Y,        # shelf
     BIN_POS_X, BIN_POS_Y, REMOTE_DROP_Z,            # bin
     HANDOVER_POS_X, HANDOVER_POS_Y,                 # handover
+    BOTTLE_PLACE_POS_X, BOTTLE_PLACE_POS_Y,         # bottle place
     # Object Dimensions
     BOTTLE_DIAMETER, BOTTLE_RADIUS, BOTTLE_HEIGHT, 
     MEDICATION_DIAMETER, MEDICATION_RADIUS, MEDICATION_HEIGHT, 
