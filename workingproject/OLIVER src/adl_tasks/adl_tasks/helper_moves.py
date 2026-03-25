@@ -88,10 +88,12 @@ class MoveItHelper:
     # To keep arm joints in a margin of pi
     MOVEIT_BOUND_MARGIN_RAD = 0.01
     JOINT_STATE_NORMALIZE_EPS_RAD = 0.002
+    
     # check joint state freshness and completeness before planning, to avoid MoveIt Error -26
-    START_STATE_CANONICALIZE_WRAPPED_JOINTS = True
+    RAW_JOINT_STATES_TOPIC = "/joint_states"
+    MOVEIT_JOINT_STATES_TOPIC = "/joint_states_sanitized"
     SANITIZED_JOINT_STATE_FRAME_ID = "adl_joint_state_sanitized"
-    SANITIZED_JOINT_STATE_GRACE_S = 0.10
+    START_STATE_CANONICALIZE_WRAPPED_JOINTS = True
     
     # --- LOOK AT GROUND --- 
     LOOK_AT_GROUND_JOINTS = {
@@ -136,10 +138,11 @@ class MoveItHelper:
         self._js_lock = Lock()
         self._latest_joint_state: JointState | None = None
         self._latest_joint_state_time = 0.0
+        self._last_cartesian_lock_violation = None
 
         self._js_sub = node.create_subscription(
             JointState,
-            "/joint_states",
+            self.MOVEIT_JOINT_STATES_TOPIC,
             self._on_joint_state,
             50,
         )
@@ -168,6 +171,15 @@ class MoveItHelper:
                 return False
             _time.sleep(0.05)
         return future.done()    
+    
+    
+    def _set_last_cartesian_lock_violation(self, info: dict | None) -> None:
+        self._last_cartesian_lock_violation = copy.deepcopy(info) if info is not None else None
+
+    def consume_last_cartesian_lock_violation(self) -> dict | None:
+        info = copy.deepcopy(self._last_cartesian_lock_violation)
+        self._last_cartesian_lock_violation = None
+        return info
     
     # check if joint state is recent and complete
     ### 0.2 s was too aggressive on this stack and was aborting usable plans at ~0.203 s
@@ -206,19 +218,10 @@ class MoveItHelper:
     
     # subscription callback to track latest joint state for start state freshness checks and potential live bounds waiting before planning
     def _on_joint_state(self, msg: JointState) -> None:
-        is_sanitized = (msg.header.frame_id == self.SANITIZED_JOINT_STATE_FRAME_ID)
         now_mono = _time.monotonic()
         with self._js_lock:
-            if (
-                not is_sanitized
-                and self._latest_joint_state is not None
-                and self._latest_joint_state.header.frame_id == self.SANITIZED_JOINT_STATE_FRAME_ID
-                and (now_mono - self._latest_joint_state_time) < float(self.SANITIZED_JOINT_STATE_GRACE_S)
-            ):
-                # prefer sanitized joints if possible
-                return
             self._latest_joint_state = msg
-            self._latest_joint_state_time = now_mono 
+            self._latest_joint_state_time = now_mono
 
     # canonical wrap to [-pi, pi] for start_state robustness ### called below
     def _canonicalize_joint_angle(self, angle_rad: float) -> float:
@@ -359,6 +362,13 @@ class MoveItHelper:
             )
             return False
 
+        if not self.ensure_moveit_safe_current_state(timeout=0.75, context="_send_goal pre-plan"):
+            self.node.get_logger().error(
+                "Refusing to plan: no fresh sanitized joint state is available."
+            )
+            return False
+
+        '''
         raw_joints = self.get_arm_joint_positions(timeout=0.5)
         if raw_joints:
             wrapped_live_targets = self._wrapped_live_joint_targets(raw_joints)
@@ -387,6 +397,8 @@ class MoveItHelper:
                         "is stale or incomplete."
                     )
                     return False
+        '''
+        
         
         self.check_start_state() # check for collisions before planning, get errors for each
         self._apply_real_start_state(request, timeout=1.0)
@@ -521,7 +533,9 @@ class MoveItHelper:
                     return js
             _time.sleep(0.02)
 
-        self.node.get_logger().warn("Timed out waiting for complete arm joint state from /joint_states.")
+        self.node.get_logger().warn(
+            f"Timed out waiting for complete arm joint state from {self.MOVEIT_JOINT_STATES_TOPIC}."
+        )
         return None
     
     def get_arm_joint_positions(self, timeout: float = 1.0):
@@ -594,33 +608,27 @@ class MoveItHelper:
         return False
     
     def ensure_moveit_safe_current_state(self, timeout: float = 1.5, context: str = "") -> bool:
-        joints = self.get_arm_joint_positions(timeout=0.5)
-        if not joints:
-            self.node.get_logger().error(
-                f"{context}: no current arm joint state available for MoveIt-safe bounds check."
-            )
-            return False
+        deadline = _time.monotonic() + float(timeout)
+        while _time.monotonic() < deadline:
+            with self._js_lock:
+                msg = self._latest_joint_state
 
-        wrapped_live_targets = self._wrapped_live_joint_targets(joints)
-        if not wrapped_live_targets:
-            return True
+            if msg is not None:
+                if msg.header.frame_id != self.SANITIZED_JOINT_STATE_FRAME_ID:
+                    self.node.get_logger().warn(
+                        f"{context}: received joint state on MoveIt topic without sanitized frame_id "
+                        f"({msg.header.frame_id!r})."
+                    )
+                if self._is_joint_state_fresh(max_age=max(0.5, float(timeout))):
+                    return True
 
-        wrapped_desc = ", ".join(
-            [f"{jn}:{float(joints[jn]):+.3f}->{target:+.3f}" for jn, target in wrapped_live_targets.items()]
+            _time.sleep(0.05)
+
+        self.node.get_logger().error(
+            f"{context}: timed out waiting for fresh sanitized joint states on "
+            f"{self.MOVEIT_JOINT_STATES_TOPIC}."
         )
-        self.node.get_logger().warn(
-            f"{context}: live /joint_states still require MoveIt-safe normalization before planning: "
-            f"{wrapped_desc}"
-        )
-        if not self._wait_for_bounded_joint_state(timeout=timeout, context=context):
-            return False
-        if not self._is_joint_state_fresh(max_age=max(0.5, float(timeout))):
-            self.node.get_logger().error(
-                f"{context}: /joint_states became stale or incomplete while waiting for a "
-                "MoveIt-safe bounded state."
-            )
-            return False
-        return True
+        return False
     
     def go_to_joint_positions(self, joint_targets: dict) -> bool:
         joint_targets = self._canonicalize_joint_targets(
@@ -762,6 +770,7 @@ class MoveItHelper:
                      min_fraction: float = 0.995,
                      fallback_to_pose: bool = False,
                      joint_locks: dict | None = None) -> bool:
+        self._set_last_cartesian_lock_violation(None)
         if not self._cartesian_client.wait_for_service(timeout_sec=5.0):
             self.node.get_logger().error(
                 "GetCartesianPath service not available."
@@ -825,15 +834,33 @@ class MoveItHelper:
                 self.node.get_logger().error(
                     f"Joint locks specified for {missing} but they are not in the trajectory joint names."
                 )
+                self._set_last_cartesian_lock_violation({
+                    "kind": "missing_joint",
+                    "missing": list(missing),
+                })
                 return False
-            for point in traj.points:
+
+            for point_idx, point in enumerate(traj.points):
                 for joint, (pos, tol) in joint_locks.items():
                     idx = name_to_idx[joint]
-                    if abs(point.positions[idx] - pos) > tol:
+                    actual = float(point.positions[idx])
+                    center = float(pos)
+                    tol = float(tol)
+                    err = abs(actual - center)
+                    if err > tol:
                         self.node.get_logger().error(
                             f"Cartesian path point violates joint lock for {joint}: "
-                            f"{point.positions[idx]:.3f} vs lock at {pos:.3f} with tol {tol:.3f}."
+                            f"{actual:.3f} vs lock at {center:.3f} with tol {tol:.3f}."
                         )
+                        self._set_last_cartesian_lock_violation({
+                            "kind": "lock_violation",
+                            "joint": joint,
+                            "actual": actual,
+                            "center": center,
+                            "tol": tol,
+                            "err": err,
+                            "point_idx": int(point_idx),
+                        })
                         return False
         
         # execute the planned Cartesian path
@@ -982,7 +1009,7 @@ class MoveItHelper:
         sub = None
         try:
             sub = self.node.create_subscription(
-                JointState, "/joint_states", _js_cb, 10
+                JointState, self.MOVEIT_JOINT_STATES_TOPIC, _js_cb, 10
             )
         except Exception as exc:
             self.node.get_logger().warn(

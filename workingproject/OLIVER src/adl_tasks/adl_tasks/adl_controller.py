@@ -28,6 +28,7 @@ class ADLController(Node):
         self.arm = MoveItHelper(self)
 
         self._status_pub = self.create_publisher(AdlTaskStatus, "/adl_task_status", 10)
+        self._task_cmd_pub = self.create_publisher(String, "/adl_command", 10)
         self._task_status_sub = self.create_subscription(
             AdlTaskStatus, "/adl_task_status", self._on_task_status, 10
         )
@@ -90,6 +91,11 @@ class ADLController(Node):
         msg = Bool()
         msg.data = True
         self._emergency_pub.publish(msg)
+        
+    def _publish_task_stop(self):
+        msg = String()
+        msg.data = "stop_task"
+        self._task_cmd_pub.publish(msg)
 
     def _on_system_command(self, msg: String):
         cmd = str(msg.data).strip()
@@ -149,6 +155,8 @@ class ADLController(Node):
             except Exception as exc:
                 self.get_logger().warn(f"Emergency stop hold failed to cancel motion cleanly: {exc}")
             self._publish_emergency_stop()
+            if active_task is not None:
+                self._publish_task_stop()
             return
 
         if cmd == "emergency_stop_retract":
@@ -165,6 +173,8 @@ class ADLController(Node):
             except Exception as exc:
                 self.get_logger().warn(f"Emergency stop retract failed to cancel motion cleanly: {exc}")
             self._publish_emergency_stop()
+            if active_task is not None:
+                self._publish_task_stop()
             if active_task is None:
                 self._park_retract(
                     context="emergency stop retract",
@@ -221,6 +231,7 @@ class ADLController(Node):
                 idle_detail=park_detail,
                 tuck_gripper=False,
             )
+            
 
 
 def main(args=None):

@@ -1738,75 +1738,113 @@ class clearTableNode(Node):
             int(DROP_CONFIG.get("stage6_reorient_max_retries", 1))
             if stage6_reorient_enabled else 0
         )
-        stage6_safe_joints = None
-        if stage6_reorient_enabled:
-            safe_joint_snapshot = self.arm.get_arm_joint_positions(timeout=1.0)
-            if safe_joint_snapshot:
-                # [FLAG stage6-live-safe-joints] A slot pose preset fixes the wrist pose only.
-                # Capture the actual live whole-arm branch above the slot so the shared rescue can
-                # return to the same safe posture instead of solving a fresh pose goal on a new branch.
-                stage6_safe_joints = {
-                    joint_name: float(safe_joint_snapshot[joint_name])
-                    for joint_name in self.arm.ARM_JOINT_NAMES
-                    if joint_name in safe_joint_snapshot
-                }
-                ordered = ", ".join(
-                    f"{joint_name}={stage6_safe_joints[joint_name]:+.3f}"
-                    for joint_name in self.arm.ARM_JOINT_NAMES
-                    if joint_name in stage6_safe_joints
+        stage6_branch_settle_enabled = bool(
+            DROP_CONFIG.get("stage6_branch_settle_enable", False)
+            and (preset_pose is not None or preset_joints is not None)
+        )
+
+        if stage6_branch_settle_enabled:
+            settle_ok = False
+
+            if preset_joints:
+                self.get_logger().info(
+                    f"[{obj.name}] Stage 6 branch-settle: restoring slot joint preset before descent."
+                )
+                settle_ok = self.arm.go_to_joint_positions(preset_joints)
+                self.get_logger().info(
+                    f"[{obj.name}] Stage 6 branch-settle joint restore result: {'OK' if settle_ok else 'FAILED'}."
+                )
+
+            if (not settle_ok) and preset_pose is not None:
+                settle_pose = copy.deepcopy(dest_pull_up)
+                settle_pose.position.x = float(preset_pose.position.x)
+                settle_pose.position.y = float(preset_pose.position.y)
+                settle_pose.orientation = copy.deepcopy(preset_pose.orientation)
+
+                self._log_pose(f"[{obj.name}] Stage 6 branch-settle pose target", settle_pose)
+                settle_ok = self.arm.go_to_pose(
+                    settle_pose,
+                    tol=PoseTolerance(
+                        pos=DROP_CONFIG["preset_ori_align_pos_tol"],
+                        ori_xy=DROP_CONFIG["preset_ori_align_xy_tol"],
+                        ori_z=DROP_CONFIG["preset_ori_align_z_tol"],
+                    ),
+                    orientation_required=True,
                 )
                 self.get_logger().info(
-                    f"[{obj.name}] Stage 6 safe-joint snapshot: {ordered}."
+                    f"[{obj.name}] Stage 6 branch-settle pose result: {'OK' if settle_ok else 'FAILED'}."
                 )
-        rescue_branch_slots = {
+
+            if settle_ok:
+                self.arm.wait_for_settle(timeout=float(DROP_CONFIG.get("stage6_branch_settle_wait_s", 0.5)))
+                refreshed = self.arm.get_current_end_effector_pose(timeout=2.0)
+                if refreshed is not None:
+                    current_drop_start = refreshed
+                    self._log_pose(f"[{obj.name}] Stage 6 start (post-branch-settle)", current_drop_start)
+        
+        safe_joint_snapshot = self.arm.get_arm_joint_positions(timeout=1.0)
+
+        drop_joint_locks = None
+        if DROP_CONFIG.get("use_drop_joint_locks", False) and safe_joint_snapshot:
+            drop_joint_locks = {}
+
+            if DROP_CONFIG.get("use_joint2_lock", False) and "joint_2" in safe_joint_snapshot:
+                drop_joint_locks["joint_2"] = (
+                    float(safe_joint_snapshot["joint_2"]),
+                    float(DROP_CONFIG["lock_joint_2_tol"]),
+                )
+
+            if DROP_CONFIG.get("use_joint4_lock", False) and "joint_4" in safe_joint_snapshot:
+                drop_joint_locks["joint_4"] = (
+                    float(safe_joint_snapshot["joint_4"]),
+                    float(DROP_CONFIG["lock_joint_4_tol"]),
+                )
+
+            if DROP_CONFIG.get("use_joint6_lock", False) and "joint_6" in safe_joint_snapshot:
+                drop_joint_locks["joint_6"] = (
+                    float(safe_joint_snapshot["joint_6"]),
+                    float(DROP_CONFIG["lock_joint_6_tol"]),
+                )
+
+            if DROP_CONFIG.get("use_joint7_lock", False) and "joint_7" in safe_joint_snapshot:
+                drop_joint_locks["joint_7"] = (
+                    float(safe_joint_snapshot["joint_7"]),
+                    float(DROP_CONFIG["lock_joint_7_tol"]),
+                )
+
+            if not drop_joint_locks:
+                drop_joint_locks = None
+
+        stage6_safe_joints = None
+        if stage6_reorient_enabled and safe_joint_snapshot:
+            stage6_safe_joints = {
+                joint_name: float(safe_joint_snapshot[joint_name])
+                for joint_name in self.arm.ARM_JOINT_NAMES
+                if joint_name in safe_joint_snapshot
+            }
+            ordered = ", ".join(
+                f"{joint_name}={stage6_safe_joints[joint_name]:+.3f}"
+                for joint_name in self.arm.ARM_JOINT_NAMES
+                if joint_name in stage6_safe_joints
+            )
+            self.get_logger().info(
+                f"[{obj.name}] Stage 6 safe-joint snapshot: {ordered}."
+            )
+                
+                
+        rescue_joint_target = None
+        restore_slots = {
             str(slot_name)
             for slot_name in DROP_CONFIG.get("stage6_joint_branch_restore_slots", [])
         }
         allow_stage6_joint_branch_restore = bool(
             stage6_reorient_enabled
-            and place_slot in rescue_branch_slots
+            and place_slot in restore_slots
+            and stage6_safe_joints
         )
-        stage6_released_early = False
-        joints = self.arm.get_arm_joint_positions(timeout=1.0)
-        drop_joint_locks = None
-        if is_top_grasp and bool(DROP_CONFIG.get("stage6_joint_lock_enable", False)) and joints:
-            # Keep major arm posture joints close to the safe above-slot branch to reduce table-dipping branch changes during descent.
-            lock_map = dict(DROP_CONFIG.get("stage6_joint_lock_map", {}))
-            lock_desc = []
-            drop_joint_locks = {}
-            for joint_name, tol in lock_map.items():
-                if stage6_safe_joints and joint_name in stage6_safe_joints:
-                    # [FLAG stage6-lock-source] Prefer the live safe-joint snapshot captured above the
-                    # slot for this specific run. Static presets remain fallback metadata, not the first lock center.
-                    lock_center = float(stage6_safe_joints[joint_name])
-                elif preset_joints and joint_name in preset_joints:
-                    lock_center = float(preset_joints[joint_name])
-                elif joint_name in joints:
-                    lock_center = float(joints[joint_name])
-                else:
-                    continue
-                drop_joint_locks[joint_name] = (lock_center, float(tol))
-                lock_desc.append(f"{joint_name}={lock_center:+.3f}+/-{float(tol):.3f}")
-            if drop_joint_locks:
-                self.get_logger().info(
-                    f"[{obj.name}] Stage 6 posture locks enabled: {', '.join(lock_desc)}."
-                )
-        elif DROP_CONFIG["use_joint7_lock"] and joints and "joint_7" in joints:
-            drop_joint_locks = {"joint_7": (joints["joint_7"], DROP_CONFIG["lock_joint_7_tol"])}
-            self.get_logger().info(
-                f'[{obj.name}] Stage 6 joint lock strict: joint_7 = {joints["joint_7"]:+.3f} tol {DROP_CONFIG["lock_joint_7_tol"]:.3f}.'
-            )
-        else:
-            self.get_logger().info(
-                f'[{obj.name}] Stage 6 joint lock disabled by configuration.'
-            )
 
-        rescue_joint_target = None
         if allow_stage6_joint_branch_restore:
-            # [FLAG stage6-branch-restore-scope] Only slots with a known good branch policy
-            # should try to restore saved joints. The latest cube run showed that shelf rescue
-            # got worse when a saved joint branch moved the wrist away from the slot before retry.
-            rescue_joint_target = stage6_safe_joints if stage6_safe_joints else preset_joints
+            rescue_joint_target = copy.deepcopy(stage6_safe_joints)
         drop_result = cartesian_descend_with_reorientation_rescue(
             node=self,
             arm=self.arm,
@@ -1895,7 +1933,8 @@ class clearTableNode(Node):
         # 8. retreat upward
         self.get_logger().info(f'[{obj.name}] Stage 8: retreat up after placing')
         self.base.update_detail(f"[{obj.name}] Stage 8/9: retreating from placement area.")
-        # always attempt a short Cartesian up/back escape before normal planning.
+
+        # Always attempt a short Cartesian up/back escape first.
         escape_ok = True
         if FLOW_CONFIG["post_place_always_escape"]:
             escape_ok = post_place_escape(
@@ -1908,19 +1947,81 @@ class clearTableNode(Node):
                 f"[{obj.name}] Stage 8a deterministic escape: {'OK' if escape_ok else 'FAILED'}."
             )
 
+        retreat_ok = False
         retreat_target = copy.deepcopy(dest_pull_up)
+
+        # Shelf placements: keep the shelf-specific x offset if you still want a small cleanup move.
         if place_slot in ("SHELF_LEFT", "SHELF_RIGHT") and FLOW_CONFIG["post_place_always_escape"]:
-            retreat_target.position.x -= DESTINATION_ACCESS_CONFIG["post_release_escape_x"] 
+            retreat_target.position.x -= DESTINATION_ACCESS_CONFIG["post_release_escape_x"]
             self._log_pose(f"[{obj.name}] Stage 8 retreat target with escape offset", retreat_target)
-        retreat_ok = self.arm.go_to_pose(
-            retreat_target,
-            tol=PoseTolerance(
-                pos=DROP_CONFIG["stage5_preset_fallback_pos_tol"],
-                ori_xy=DROP_CONFIG["stage5_preset_ori_xy_tol"],
-                ori_z=DROP_CONFIG["stage5_preset_ori_z_tol"],
-            ),
-            orientation_required=True,
-        )       
+
+        if escape_ok:
+            # After a successful deterministic escape, do NOT ask MoveIt for a full pose-constrained
+            # retreat. That is where the hesitation/catch is happening.
+            if place_slot == "BIN":
+                self.get_logger().info(
+                    f"[{obj.name}] Stage 8: deterministic escape already cleared the BIN. "
+                    "Skipping pose-based retreat."
+                )
+                retreat_ok = True
+            elif place_slot in ("SHELF_LEFT", "SHELF_RIGHT"):
+                self.get_logger().info(
+                    f"[{obj.name}] Stage 8: deterministic escape succeeded. "
+                    "Using position-only cleanup retreat instead of full pose planning."
+                )
+                retreat_ok = self.arm.go_to_position(
+                    retreat_target,
+                    tolerance=DROP_CONFIG["stage5_preset_fallback_pos_tol"],
+                )
+                self.get_logger().info(
+                    f"[{obj.name}] Stage 8 position-only cleanup retreat: "
+                    f"{'OK' if retreat_ok else 'FAILED'}."
+                )
+            else:
+                # Default safe behavior for any other slot type.
+                self.get_logger().info(
+                    f"[{obj.name}] Stage 8: deterministic escape succeeded. "
+                    "Skipping additional pose-based retreat."
+                )
+                retreat_ok = True
+        else:
+            # Escape failed; fall back to the original planned retreat behavior.
+            retreat_ok = self.arm.go_to_pose(
+                retreat_target,
+                tol=PoseTolerance(
+                    pos=DROP_CONFIG["stage5_preset_fallback_pos_tol"],
+                    ori_xy=DROP_CONFIG["stage5_preset_ori_xy_tol"],
+                    ori_z=DROP_CONFIG["stage5_preset_ori_z_tol"],
+                ),
+                orientation_required=True,
+            )
+
+        if not retreat_ok and not escape_ok:
+            self.get_logger().warn(
+                f"[{obj.name}] Stage 8 retreat planning failed. Attempting Cartesian escape before retry."
+            )
+            escape_ok = post_place_escape(
+                node=self,
+                arm=self.arm,
+                obj_name=obj.name,
+                log_pose_cb=self._log_pose,
+            )
+            if escape_ok:
+                retreat_ok = self.arm.go_to_position(
+                    retreat_target,
+                    tolerance=DROP_CONFIG["stage5_preset_fallback_pos_tol"],
+                )
+                self.get_logger().info(
+                    f"[{obj.name}] Stage 8 retreat retry after escape: "
+                    f"{'OK' if retreat_ok else 'FAILED'}."
+                )
+
+        if not retreat_ok:
+            self.get_logger().warn(
+                f'Failed to retreat after placing object {obj.name}. Going home.'
+            )
+            self.arm.go_home()
+            return True     
         
         if not retreat_ok and (not FLOW_CONFIG["post_place_always_escape"] or not escape_ok):
             self.get_logger().warn(

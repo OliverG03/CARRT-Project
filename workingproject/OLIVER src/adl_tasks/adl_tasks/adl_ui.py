@@ -48,6 +48,14 @@ HTML = """
             } catch (_err) {
                 // [FLAG ui-status-poll] Ignore transient polling errors; the next poll will refresh.
             }
+            const turnOffBtn = document.getElementById("turn-off-btn");
+                if (turnOffBtn) {
+                    const statusText = (data.status || "").toUpperCase();
+                    const idle = statusText.startsWith("IDLE");
+                    turnOffBtn.disabled = !idle;
+                    turnOffBtn.style.opacity = idle ? "1.0" : "0.5";
+                    turnOffBtn.title = idle ? "" : "Turn Off is only available while IDLE.";
+                }
         }
         window.addEventListener("load", () => {
             refreshStatus();
@@ -61,7 +69,18 @@ HTML = """
         <button class="btn btn-bottle" name="cmd" value="pick_dropped_bottle">Pick Up Water Bottle</button>
         <button class="btn btn-table"  name="cmd" value="clear_table">Clear Table</button>
         <button class="btn btn-med"    name="cmd" value="give_medication">Medication Hand-Off</button>
-        <button class="btn btn-off"    name="cmd" value="turn_off">Turn Off (Retract/Park)</button>
+
+        <button class="btn" style="background:#ea580c;" name="cmd" value="stop_task">
+            Stop Current Task
+        </button>
+
+        <button class="btn" style="background:#dc2626;" name="cmd" value="emergency_stop_retract">
+            Emergency Stop + Retract/Park
+        </button>
+
+        <button id="turn-off-btn" class="btn btn-off" name="cmd" value="turn_off">
+            Turn Off (Idle Only)
+        </button>
     </form>
     <div id="status-box" class="status">Status: {{ status }}</div>
 </body>
@@ -72,7 +91,11 @@ HTML = """
 class ADLUINode(Node):
     def __init__(self):
         super().__init__("adl_ui_node")
-        self.publisher = self.create_publisher(String, "/adl_command", 10)
+        self.task_publisher = self.create_publisher(String, "/adl_command", 10)
+        self.system_publisher = self.create_publisher(String, "/adl_system_command", 10)
+
+        self._startup_ping_sent = False
+        self.create_timer(0.5, self._send_startup_idle_park_once)
         self.create_subscription(AdlTaskStatus, "/adl_task_status", self.on_status, 10)
         self._status_lock = threading.Lock()
         self.status = "Idle – Ready"
@@ -81,8 +104,12 @@ class ADLUINode(Node):
     def send_command(self, cmd: str) -> None:
         msg = String()
         msg.data = cmd
-        self.publisher.publish(msg)
-        # keep explicit status text for operator feedback.
+
+        if cmd in SYSTEM_COMMANDS:
+            self.system_publisher.publish(msg)
+        else:
+            self.task_publisher.publish(msg)
+
         with self._status_lock:
             self.status = f"SENT - {cmd}"
         self.get_logger().info(f"UI command published: {cmd}")
@@ -95,10 +122,38 @@ class ADLUINode(Node):
         formatted = f"{status} - {detail}" if detail else status
         with self._status_lock:
             self.status = formatted
+            
+    def _send_startup_idle_park_once(self) -> None:
+        if self._startup_ping_sent:
+            return
+        msg = String()
+        msg.data = "ui_loaded_idle_park"
+        self.system_publisher.publish(msg)
+        self._startup_ping_sent = True
+        self.get_logger().info("UI startup idle-park command sent to controller.")
+
+    def is_idle(self) -> bool:
+        with self._status_lock:
+            return self.status.strip().upper().startswith("IDLE")
 
 
 _ui_node: ADLUINode | None = None
 app = Flask(__name__)
+
+TASK_COMMANDS = {
+    "pick_dropped_bottle",
+    "clear_table",
+    "give_medication",
+    "stop_task",
+}
+
+SYSTEM_COMMANDS = {
+    "ui_loaded_idle_park",
+    "turn_off",
+    "emergency_stop_retract",
+}
+
+ALLOWED_COMMANDS = TASK_COMMANDS | SYSTEM_COMMANDS
 
 ALLOWED_COMMANDS = {
     "pick_dropped_bottle",

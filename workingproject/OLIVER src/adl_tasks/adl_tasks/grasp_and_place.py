@@ -95,6 +95,11 @@ DROP_CONFIG = {
     "stage6_posture_hazard_on_lock_failure": False, # [FLAG stage6-generic-lock-failure] Shelf drops default to warning-based rescue, while BIN keeps the stricter first-lock-failure rescue below.
     "stage6_joint_branch_restore_slots": ["BIN"], # [FLAG stage6-branch-restore-scope] Restoring a saved joint branch is only safe where we have a known good branch policy. Shelf slots should use pose-only rescue, not a branch restore that can move the wrist off the slot.
     "stage6_bin_posture_hazard_on_lock_failure": True, # [FLAG stage6-bin-first-lock] For BIN, the first lock violation is treated as a branch hazard instead of a cue to continue unlocked toward the table.
+    "stage6_branch_settle_enable": True,
+    "stage6_branch_settle_wait_s": 0.5,
+    "stage6_early_joint_hazard_steps": 3,
+    "stage6_early_joint_hazard_repeat_count": 2,
+    "stage6_joint_branch_restore_slots": ["BIN", "SHELF_LEFT", "SHELF_RIGHT"],
 }
 
 SIDE_APPROACH_CONFIG = {
@@ -739,6 +744,7 @@ def cartesian_descend_stepwise(
         return _result(False, "invalid_setup")
 
     step_idx = 0
+    early_lock_hits: dict[str, int] = {}
     while z_cur - z_goal > 1e-4:
         step_idx += 1
         step_dz = min(DROP_CONFIG["descent_step_dz"], z_cur - z_goal)
@@ -780,6 +786,35 @@ def cartesian_descend_stepwise(
                 )
             if not ok and joint_locks:
                 remaining_gap = z_cur - z_goal
+                lock_violation = None
+                if hasattr(arm, "consume_last_cartesian_lock_violation"):
+                    lock_violation = arm.consume_last_cartesian_lock_violation()
+
+                if (
+                    lock_violation
+                    and lock_violation.get("kind") == "lock_violation"
+                    and step_idx <= int(DROP_CONFIG.get("stage6_early_joint_hazard_steps", 0))
+                ):
+                    joint_name = str(lock_violation.get("joint"))
+                    early_lock_hits[joint_name] = early_lock_hits.get(joint_name, 0) + 1
+                    hit_count = early_lock_hits[joint_name]
+                    node.get_logger().warn(
+                        f"[{obj_name}] Stage 6 step {step_idx}: early lock violation on {joint_name} "
+                        f"({hit_count}/{int(DROP_CONFIG.get('stage6_early_joint_hazard_repeat_count', 2))}) "
+                        "while entering the drop."
+                    )
+                    if hit_count >= int(DROP_CONFIG.get("stage6_early_joint_hazard_repeat_count", 2)):
+                        node.get_logger().warn(
+                            f"[{obj_name}] Stage 6 step {step_idx}: repeated early lock violations on {joint_name}. "
+                            "Triggering rescue instead of continuing unlocked."
+                        )
+                        return _result(
+                            False,
+                            "posture_hazard",
+                            remaining_gap=remaining_gap,
+                            step_idx=step_idx,
+                            detail=f"early_repeat_lock:{joint_name}",
+                        )
                 if posture_hazard_on_lock_failure:
                     node.get_logger().warn(
                         f"[{obj_name}] Stage 6 step {step_idx}: locked descent failed with "
@@ -1064,6 +1099,11 @@ def cartesian_descend_with_reorientation_rescue(
                     )
                     for joint_name, (lock_center, tol) in active_joint_locks.items()
                 }
+                if safe_joint_target:
+                    safe_joint_target = {
+                        joint_name: float(latest_joints[joint_name])
+                        for joint_name in latest_joints
+                    }
 
     return drop_result
 
