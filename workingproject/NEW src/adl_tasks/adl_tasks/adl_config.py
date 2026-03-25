@@ -44,9 +44,9 @@ SHELF1_POS_Y = SHELF_POS_Y - SHELF_TOTAL_WIDTH / 4.0 # center of left half of sh
 SHELF2_POS_Y = SHELF_POS_Y + SHELF_TOTAL_WIDTH / 4.0 # center of right half of shelf
 
 # - BIN - TV REMOTE HOLDER
-BIN_WIDTH  = 0.12
-BIN_DEPTH  = 0.12
-BIN_HEIGHT = SHELF_HEIGHT * 1.5 ### cup to hold remote upright
+BIN_WIDTH  = 0.1792
+BIN_DEPTH  = 0.2200
+BIN_HEIGHT = SHELF_HEIGHT * 1.5 ### cup to hold remote upright ## for bin is 0.1201
 BIN_POS_X  = SHELF_POS_X ### TABLE_POS_X + TABLE_X/2.0 - BIN_DEPTH 
 BIN_POS_Y  = TABLE_POS_Y ###+ TABLE_Y/2.0 - BIN_WIDTH/2.0 
 ### dropoff: shelf and bin on left side of table, closer to robot for top-down placement
@@ -88,9 +88,9 @@ CUP_DIAMETER = 0.075 # m
 CUP_HEIGHT = 0.10 # m
 CUP_RADIUS = CUP_DIAMETER / 2.0
 
-REMOTE_WIDTH = 0.0505 # m
-REMOTE_LENGTH = 0.20 # m
-REMOTE_THICKNESS = 0.025 # m
+REMOTE_WIDTH = 0.1340 # m
+REMOTE_LENGTH = 0.1725 # m
+REMOTE_THICKNESS = 0.0219 # m
 REMOTE_TAG_FROM_END = 0.02   # 2 cm from bottom end to tag center
 
 BOTTLE_LENGTH_AXIS = "y"     # assume bottle length along +Y, tag on side
