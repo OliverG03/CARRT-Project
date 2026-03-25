@@ -32,31 +32,55 @@ HTML = """
             margin-top: 18px; font-size: 1em; padding: 12px;
             background: #111827; border-radius: 10px;
         }
+        .name-form {
+            width: 88%; margin: 20px auto 0 auto; padding: 16px;
+            background: #111827; border-radius: 10px;
+        }
+        .name-row {
+            display: flex; gap: 10px; justify-content: center; align-items: center;
+            flex-wrap: wrap;
+        }
+        .name-input {
+            flex: 1 1 260px; min-width: 220px; padding: 14px;
+            border-radius: 10px; border: 1px solid #374151; font-size: 1em;
+        }
+        .btn-name {
+            background: #2563eb; width: auto; min-width: 220px; margin: 0;
+        }
+        .hint {
+            margin-top: 10px; font-size: 0.95em; color: #cbd5e1;
+        }
     </style>
     <script>
         async function refreshStatus() {
+            let data = null;
+
             try {
                 const response = await fetch("/status_json", { cache: "no-store" });
                 if (!response.ok) {
                     return;
                 }
-                const data = await response.json();
+
+                data = await response.json();
+
                 const statusBox = document.getElementById("status-box");
                 if (statusBox && typeof data.status === "string") {
                     statusBox.textContent = `Status: ${data.status}`;
                 }
             } catch (_err) {
-                // [FLAG ui-status-poll] Ignore transient polling errors; the next poll will refresh.
+                return;
             }
+
             const turnOffBtn = document.getElementById("turn-off-btn");
-                if (turnOffBtn) {
-                    const statusText = (data.status || "").toUpperCase();
-                    const idle = statusText.startsWith("IDLE");
-                    turnOffBtn.disabled = !idle;
-                    turnOffBtn.style.opacity = idle ? "1.0" : "0.5";
-                    turnOffBtn.title = idle ? "" : "Turn Off is only available while IDLE.";
-                }
+            if (turnOffBtn) {
+                const statusText = (data?.status || "").toUpperCase();
+                const idle = statusText.startsWith("IDLE");
+                turnOffBtn.disabled = !idle;
+                turnOffBtn.style.opacity = idle ? "1.0" : "0.5";
+                turnOffBtn.title = idle ? "" : "Turn Off is only available while IDLE.";
+            }
         }
+
         window.addEventListener("load", () => {
             refreshStatus();
             window.setInterval(refreshStatus, 750);
@@ -70,10 +94,6 @@ HTML = """
         <button class="btn btn-table"  name="cmd" value="clear_table">Clear Table</button>
         <button class="btn btn-med"    name="cmd" value="give_medication">Medication Hand-Off</button>
 
-        <button class="btn" style="background:#ea580c;" name="cmd" value="stop_task">
-            Stop Current Task
-        </button>
-
         <button class="btn" style="background:#dc2626;" name="cmd" value="emergency_stop_retract">
             Emergency Stop + Retract/Park
         </button>
@@ -81,6 +101,13 @@ HTML = """
         <button id="turn-off-btn" class="btn btn-off" name="cmd" value="turn_off">
             Turn Off (Idle Only)
         </button>
+    </form>
+    <form class="name-form" method="POST" action="/patient_name">
+        <div class="name-row">
+            <input class="name-input" type="text" name="patient_name" placeholder="Enter patient name for medication verification" value="{{ patient_name }}">
+            <button class="btn btn-name" type="submit">Submit Patient Name</button>
+        </div>
+        <div class="hint">Used by Medication Hand-Off after the bottle QR/label side has been read.</div>
     </form>
     <div id="status-box" class="status">Status: {{ status }}</div>
 </body>
@@ -93,11 +120,13 @@ class ADLUINode(Node):
         super().__init__("adl_ui_node")
         self.task_publisher = self.create_publisher(String, "/adl_command", 10)
         self.system_publisher = self.create_publisher(String, "/adl_system_command", 10)
+        self.patient_name_publisher = self.create_publisher(String, "/patient_name_entered", 10)
 
         self._startup_ping_sent = False
         self.create_timer(0.5, self._send_startup_idle_park_once)
         self.create_subscription(AdlTaskStatus, "/adl_task_status", self.on_status, 10)
         self._status_lock = threading.Lock()
+        self.patient_name = ""
         self.status = "Idle – Ready"
         self.get_logger().info("ADL UI Node started.")
 
@@ -113,6 +142,19 @@ class ADLUINode(Node):
         with self._status_lock:
             self.status = f"SENT - {cmd}"
         self.get_logger().info(f"UI command published: {cmd}")
+
+    def send_patient_name(self, patient_name: str) -> None:
+        cleaned = " ".join(patient_name.strip().split())
+        if not cleaned:
+            return
+
+        msg = String()
+        msg.data = cleaned
+        self.patient_name_publisher.publish(msg)
+
+        with self._status_lock:
+            self.patient_name = cleaned
+        self.get_logger().info(f"UI patient name published: {cleaned}")
         
     def on_status(self, msg: AdlTaskStatus) -> None:
         # Render the status feed as "STATUS - detail" so the
@@ -155,18 +197,12 @@ SYSTEM_COMMANDS = {
 
 ALLOWED_COMMANDS = TASK_COMMANDS | SYSTEM_COMMANDS
 
-ALLOWED_COMMANDS = {
-    "pick_dropped_bottle",
-    "clear_table",
-    "give_medication",
-    "turn_off",
-}
-
 
 @app.route("/", methods=["GET"])
 def index():
     status = _ui_node.status if _ui_node else "Node not ready"
-    return render_template_string(HTML, status=status)
+    patient_name = _ui_node.patient_name if _ui_node else ""
+    return render_template_string(HTML, status=status, patient_name=patient_name)
 
 
 @app.route("/command", methods=["POST"])
@@ -175,7 +211,20 @@ def command():
     if _ui_node and cmd in ALLOWED_COMMANDS:
         _ui_node.send_command(cmd)
     status = _ui_node.status if _ui_node else "Node not ready"
-    return render_template_string(HTML, status=status)
+    patient_name = _ui_node.patient_name if _ui_node else ""
+    return render_template_string(HTML, status=status, patient_name=patient_name)
+
+
+@app.route("/patient_name", methods=["POST"])
+def patient_name():
+    value = request.form.get("patient_name", "").strip()
+    if _ui_node and value:
+        # [FLAG ui-patient-name] give_medication waits on /patient_name_entered, so the UI must
+        # publish the operator-entered patient name explicitly instead of relying on out-of-band input.
+        _ui_node.send_patient_name(value)
+    status = _ui_node.status if _ui_node else "Node not ready"
+    patient_name_value = _ui_node.patient_name if _ui_node else ""
+    return render_template_string(HTML, status=status, patient_name=patient_name_value)
 
 @app.route("/status_json", methods=["GET"])
 def status_json():

@@ -22,6 +22,7 @@ class TaskBase:
         
         self._cancelled = False
         self._cancel_reason = ""
+        self._terminal_status: str | None = None
         
         # status publisher
         self._status_pub = node.create_publisher(AdlTaskStatus, f'/adl_task_status', 10)
@@ -44,6 +45,7 @@ class TaskBase:
     def reset_cancel(self):
         self._cancelled = False
         self._cancel_reason = ""
+        self._terminal_status = None
 
     def request_cancel(self, reason: str, detail: str | None = None):
         # [FLAG shared-cancel-request] Normal task-stop requests should mark only the active task as
@@ -54,6 +56,9 @@ class TaskBase:
             self.publish_status(STATUS_CANCELLED, detail or reason)
         
     def publish_status(self, status: str, detail: str = ""):
+        if status in {STATUS_CANCELLED, STATUS_FAILED, STATUS_SUCCEEDED}:
+            self._terminal_status = status
+        
         msg = AdlTaskStatus()
         msg.task_name = self.node_name
         msg.status = status
@@ -89,6 +94,10 @@ class TaskBase:
             task_fn()
             if self.is_cancelled():
                 # already marked as cancelled in task_fn, just log
+                return
+            if self._terminal_status in {STATUS_CANCELLED, STATUS_FAILED, STATUS_SUCCEEDED}:
+                # [FLAG task-terminal-respect] Task-specific code already decided the final outcome.
+                # Do not replace it with a generic success just because the worker function returned.
                 return
             self.publish_status(STATUS_SUCCEEDED, "ADL Task completed successfully.")
         except Exception as e:

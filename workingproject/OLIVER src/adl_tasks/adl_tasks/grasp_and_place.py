@@ -17,6 +17,8 @@ from adl_tasks.adl_config import (
     TOP_EE_TO_PINCH_CENTER_M,
     SIDE_EE_TO_PINCH_CENTER_M,
     side_face_to_ee_grasp_standoff,
+    HANDOVER_POS_X,
+    HANDOVER_POS_Y,
 )
 from adl_tasks.motion_profiles import PoseTolerance
 
@@ -274,7 +276,10 @@ PLACE_PRESET_CONFIG = {
         "BIN": _pose_xyz_q(0.726, 0.002, 0.479, 0.500, 0.500, 0.501, 0.499),
         "SHELF_RIGHT": _pose_xyz_q(0.729, 0.114, 0.503, 0.508, 0.491, 0.510, 0.491),
         "SHELF_LEFT": _pose_xyz_q(0.729, 0.212, 0.501, 0.508, 0.491, 0.510, 0.491),
-        "HANDOVER": _pose_xyz_q(0.373, -0.211, 0.433, 0.503, 0.496, 0.497, 0.503),
+        # [FLAG handover-preset-sync] Keep the shared HANDOVER preset on the same front-right
+        # corner inset as adl_config so medication and dropped-bottle tasks cannot drift back to
+        # the old off-edge hardcoded XY if a preset-based path uses this slot later.
+        "HANDOVER": _pose_xyz_q(HANDOVER_POS_X, HANDOVER_POS_Y, 0.433, 0.503, 0.496, 0.497, 0.503),
     },
 }
 
@@ -299,7 +304,39 @@ SCENE_SYNC_CONFIG = {
 # Shared task-level knobs used by non-clear_table ADL nodes.
 GIVE_MEDICATION_CONFIG = {
     "pose_timeout_s": 10.0,
-    "name_match_timeout_s": 30.0,
+    "qr_name_timeout_s": 12.0,
+    "user_name_timeout_s": 30.0,
+    "normalize_names_casefold": True,
+    "qr_read_face_extra_standoff_m": 0.070, # [FLAG medication-qr-read] Keep the QR read face-on, but back off farther from cylindrical objects so the gripper fingers clear the label side instead of crowding it.
+    "qr_read_vertical_lift_m": 0.000, # [FLAG medication-qr-read-straight] Keep the read centered on the QR side instead of drifting off-axis upward.
+    "qr_read_pitch_up_deg": 0.0, # [FLAG medication-qr-read-straight] QR-name reading should stay straight-on to the side face; do not tilt the wrist for this stage.
+    "qr_read_pre_z_offset_m": 0.100,
+    "qr_read_backoff_x_m": 0.050,
+    "qr_read_pos_tol_m": 0.060,
+    "qr_read_ori_xy_tol_rad": 0.40,
+    "qr_read_ori_z_tol_rad": 1.10,
+    "pick_approach_pos_tol_m": 0.060,
+    "pick_approach_ori_xy_tol_rad": 0.40,
+    "pick_approach_ori_z_tol_rad": 1.10,
+    "pick_approach_vertical_pre_z_offset_m": 0.060, # [FLAG medication-pick-vertical] Reach a pose directly above the bottle approach, then descend cartesian to the in-front approach like clear_table side grasps.
+    "pick_approach_cart_min_fraction": 0.92,
+    "pick_approach_retry_pre_z_offset_m": 0.080, # [FLAG medication-pick-approach-retry] If the direct in-front approach fails, reseed from a backed-off side pre-approach before retrying the oriented pose.
+    "pick_approach_retry_backoff_x_m": 0.030,
+    "pick_setup_pre_z_offset_m": 0.120, # [FLAG medication-pick-setup] Leave the QR-read pose before opening the gripper so the fingers are not already intersecting the table or bottle when the pick starts.
+    "pick_setup_backoff_x_m": 0.060,
+    "pick_cart_min_fraction": 0.92,
+    "handover_standoff_z_m": 0.18,
+    "handover_above_pos_tol_m": 0.06,
+    "handover_align_xy_tol_rad": 0.35,
+    "handover_align_z_tol_rad": 3.14,
+    "handover_cart_min_fraction": 0.92,
+    "handover_retry_standoff_z_m": 0.24, # [FLAG medication-handover-retry] Medication handoff should retry from a slightly higher, looser above-destination pose before giving up.
+    "handover_retry_above_pos_tol_m": 0.09,
+    "handover_retry_align_xy_tol_rad": 0.60,
+    "handover_retry_align_z_tol_rad": 3.14,
+    "handover_lower_pose_pos_tol_m": 0.070,
+    "handover_lower_pose_ori_xy_tol_rad": 0.60,
+    "handover_lower_pose_ori_z_tol_rad": 3.14,
 }
 
 PICK_DROPPED_BOTTLE_CONFIG = {
@@ -691,6 +728,7 @@ def cartesian_descend_stepwise(
     posture_hazard_warn_ratio: float | None = None,
     early_release_max_gap: float | None = None,
     posture_hazard_on_lock_failure: bool = False,
+    cancel_cb=None,
 ) -> dict[str, Any]:
     # [FLAG stage6-result]: structured result lets the caller distinguish
     # success, early release, and posture-hazard rescue conditions.
@@ -746,6 +784,14 @@ def cartesian_descend_stepwise(
     step_idx = 0
     early_lock_hits: dict[str, int] = {}
     while z_cur - z_goal > 1e-4:
+        if cancel_cb and cancel_cb():
+            # [FLAG stage6-cancel-step] Check cancellation between each descent step so emergency stop
+            # can halt a long Stage 6 drop without waiting for the full drop helper to finish.
+            try:
+                arm.stop_motion()
+            except Exception:
+                pass
+            return _result(False, "cancelled", step_idx=step_idx, remaining_gap=z_cur - z_goal)
         step_idx += 1
         step_dz = min(DROP_CONFIG["descent_step_dz"], z_cur - z_goal)
         success = False
@@ -943,6 +989,7 @@ def cartesian_descend_with_reorientation_rescue(
     posture_hazard_on_lock_failure: bool = False,
     rescue_on_failed_descent: bool = False,
     rescue_max_retries: int = 0,
+    cancel_cb=None,
 ) -> dict[str, Any]:
     # [FLAG stage6-shared-rescue] Shared Stage 6 wrapper that can pull up, restore the
     # current safe branch, and retry a dead-end descent. Keeping this in grasp_and_place.py
@@ -953,6 +1000,9 @@ def cartesian_descend_with_reorientation_rescue(
     active_joint_locks = copy.deepcopy(joint_locks) if joint_locks else None
 
     while True:
+        if cancel_cb and cancel_cb():
+            return {"ok": False, "reason": "cancelled", "released_early": False,
+                    "remaining_gap": None, "step_idx": 0, "z_cur": float(start_pose.position.z), "detail": ""}
         dest_pose_for_drop = copy.deepcopy(current_drop_start)
         if preset_pose is not None:
             dest_pose_for_drop.position.x = float(preset_pose.position.x)
@@ -975,7 +1025,10 @@ def cartesian_descend_with_reorientation_rescue(
             posture_hazard_warn_ratio=posture_hazard_warn_ratio,
             early_release_max_gap=early_release_max_gap,
             posture_hazard_on_lock_failure=bool(posture_hazard_on_lock_failure),
+            cancel_cb=cancel_cb,
         )
+        if drop_result.get("reason") == "cancelled":
+            return drop_result
         if drop_result.get("ok", False):
             return drop_result
 

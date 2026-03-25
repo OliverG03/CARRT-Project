@@ -43,10 +43,10 @@ SHELF_FLOOR_Z     = TABLE_SURFACE_Z + SHELF_THICKNESS / 2.0
 SHELF1_POS_Y = SHELF_POS_Y - SHELF_TOTAL_WIDTH / 4.0 # center of left half of shelf
 SHELF2_POS_Y = SHELF_POS_Y + SHELF_TOTAL_WIDTH / 4.0 # center of right half of shelf
 
-# - BIN - TV REMOTE HOLDER 12cmx12cmx8cm box
-BIN_WIDTH  = 0.12 # m
-BIN_DEPTH  = 0.12 # m, 12
-BIN_HEIGHT = 0.08 ### cup to hold remote upright ## for bin is 0.1201
+# - BIN - TV REMOTE HOLDER
+BIN_WIDTH  = 0.12
+BIN_DEPTH  = 0.12
+BIN_HEIGHT = SHELF_HEIGHT * 1.5 ### cup to hold remote upright
 BIN_POS_X  = SHELF_POS_X ### TABLE_POS_X + TABLE_X/2.0 - BIN_DEPTH 
 BIN_POS_Y  = TABLE_POS_Y ###+ TABLE_Y/2.0 - BIN_WIDTH/2.0 
 ### dropoff: shelf and bin on left side of table, closer to robot for top-down placement
@@ -76,27 +76,27 @@ FLOOR_POS_Z = real_z(0.0) - FLOOR_Z / 2.0
 
 # --- Object Dimensions --- For gripper width and grasp offsets in apriltag_key.py
 
-BOTTLE_HEIGHT = 0.200 # m
-BOTTLE_DIAMETER = 0.060 # m
+BOTTLE_HEIGHT = 0.220 # m
+BOTTLE_DIAMETER = 0.067 # m
 BOTTLE_RADIUS = BOTTLE_DIAMETER / 2.0
 
-MEDICATION_DIAMETER = 0.06 # m - 6cm
-MEDICATION_HEIGHT = 0.090 # m - 9cm, includes cap 
+MEDICATION_DIAMETER = 0.06 # m
+MEDICATION_HEIGHT = 0.080
 MEDICATION_RADIUS = MEDICATION_DIAMETER / 2.0
 
 CUP_DIAMETER = 0.075 # m
 CUP_HEIGHT = 0.10 # m
 CUP_RADIUS = CUP_DIAMETER / 2.0
 
-REMOTE_WIDTH = 0.1340 # m
-REMOTE_LENGTH = 0.1725 # m
-REMOTE_THICKNESS = 0.0219 # m
-REMOTE_TAG_FROM_END = 0.03   # 3 cm from bottom edge to tag CENTER
+REMOTE_WIDTH = 0.0505 # m
+REMOTE_LENGTH = 0.20 # m
+REMOTE_THICKNESS = 0.025 # m
+REMOTE_TAG_FROM_END = 0.02   # 2 cm from bottom end to tag center
 
 BOTTLE_LENGTH_AXIS = "y"     # assume bottle length along +Y, tag on side
 REMOTE_LENGTH_AXIS = "y"     # assume tag +Y points along remote length
 
-CUBE_SIZE = 0.057 # m
+CUBE_SIZE = 0.065 # m
 
 # --- Grasp Values --- pull from dimensions
 
@@ -133,11 +133,8 @@ REMOTE_GRASP_Z = top_surface_to_ee_grasp_z(REMOTE_THICKNESS)
 
 # Front Right Edge of table, for handover location
 # [FLAG:handover-align] aligned to RViz-validated handover approach XY
-
-_HANDOVER_FRONT_INSET = 0.070
-_HANDOVER_RIGHT_INSET = 0.070
-HANDOVER_POS_X = TABLE_POS_X - TABLE_X / 2.0 + _HANDOVER_FRONT_INSET
-HANDOVER_POS_Y = TABLE_POS_Y - TABLE_Y / 2.0 + _HANDOVER_RIGHT_INSET
+HANDOVER_POS_X = 0.373  # previous: TABLE_POS_X - TABLE_X / 2.0 + 0.06
+HANDOVER_POS_Y = -0.211 # previous: TABLE_POS_Y - TABLE_Y / 2.0 + 0.06
 HANDOVER_Z      = TABLE_SURFACE_Z + GRASP_CLEARANCE   # near user, table height
 
 # --- Drop-off heights (base_link frame) ---
@@ -157,8 +154,8 @@ REMOTE_DROP_Z = _BIN_SURFACE_Z + REMOTE_THICKNESS / 2.0 + _DROP_MARGIN   # place
 CUP_DROP_Z = _SHELF_SURFACE_Z + CUP_HEIGHT / 2.0 + _DROP_MARGIN             # place cup upright on shelf
 
 # Each handover drop height
-BOTTLE_DROP_Z = TABLE_SURFACE_Z + BOTTLE_HEIGHT / 2.0 + GRASP_CLEARANCE
-MEDICATION_DROP_Z = TABLE_SURFACE_Z + MEDICATION_HEIGHT / 2.0 + GRASP_CLEARANCE
+BOTTLE_DROP_Z = TABLE_SURFACE_Z + BOTTLE_HEIGHT / 2.0 + GRASP_CLEARANCE    # place bottle upright on shelf
+MEDICATION_DROP_Z = TABLE_SURFACE_Z + SHELF_HEIGHT + MEDICATION_HEIGHT / 2.0 + GRASP_CLEARANCE # place medication upright on shelf
 
 SHELF_DROP_X = SHELF_POS_X + SHELF_DEPTH/2.0 - FINGER_REACH - GRASP_CLEARANCE
 BIN_DROP_X = BIN_POS_X + BIN_DEPTH/2.0 - FINGER_REACH - GRASP_CLEARANCE ### maybe _DROP_MARGIN instead

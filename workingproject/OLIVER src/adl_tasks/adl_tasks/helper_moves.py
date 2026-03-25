@@ -139,6 +139,8 @@ class MoveItHelper:
         self._latest_joint_state: JointState | None = None
         self._latest_joint_state_time = 0.0
         self._last_cartesian_lock_violation = None
+        self._cancel_cb = None
+        self._last_wait_cancelled = False
 
         self._js_sub = node.create_subscription(
             JointState,
@@ -163,10 +165,60 @@ class MoveItHelper:
     # --- INTERNAL NODE --- #
     # build a motion plan request and send as a goal
 
+    def set_cancel_callback(self, cancel_cb) -> None:
+        # [FLAG helper-cancel-callback] Tasks can register a single cancel predicate here so the
+        # arm-motion helpers abort quickly on emergency stop without pushing cancel_cb through every
+        # callsite. Gripper helpers intentionally stay independent because cleanup on cancel often
+        # still needs an explicit open/detach action even after the task is marked cancelled.
+        self._cancel_cb = cancel_cb
+
+    def _resolve_cancel_cb(self, cancel_cb=None, *, use_registered_cancel: bool = True):
+        if cancel_cb is not None:
+            return cancel_cb
+        if use_registered_cancel:
+            return self._cancel_cb
+        return None
+
+    def _cancel_requested(self, cancel_cb=None, *, use_registered_cancel: bool = True) -> bool:
+        resolved_cb = self._resolve_cancel_cb(
+            cancel_cb,
+            use_registered_cancel=use_registered_cancel,
+        )
+        if resolved_cb is None:
+            return False
+        try:
+            return bool(resolved_cb())
+        except Exception as exc:
+            self.node.get_logger().warn(
+                f"_cancel_requested: cancel callback raised {exc}; ignoring callback."
+            )
+            return False
+
     # wait for a future without reentering a spin loop. true if done
-    def _wait_for_future(self, future, timeout: float) -> bool:
+    def _wait_for_future(
+        self,
+        future,
+        timeout: float,
+        *,
+        cancel_cb=None,
+        use_registered_cancel: bool = True,
+        context: str = "",
+    ) -> bool | None:
         start = _time.monotonic()
+        self._last_wait_cancelled = False
         while rclpy.ok() and not future.done():
+            if self._cancel_requested(
+                cancel_cb,
+                use_registered_cancel=use_registered_cancel,
+            ):
+                # [FLAG helper-cancel-wait] Distinguish cancellation from timeout so callers can
+                # unwind cleanly instead of running normal motion-failure recovery after a stop.
+                self._last_wait_cancelled = True
+                if context:
+                    self.node.get_logger().warn(
+                        f"{context}: cancel requested while waiting on a ROS future."
+                    )
+                return None
             if _time.monotonic() - start > timeout:
                 return False
             _time.sleep(0.05)
@@ -288,7 +340,11 @@ class MoveItHelper:
         try:
             if self._last_goal_handle is not None:
                 cancel_future = self._last_goal_handle.cancel_goal_async()
-                self._wait_for_future(cancel_future, timeout=2.0)
+                self._wait_for_future(
+                    cancel_future,
+                    timeout=2.0,
+                    use_registered_cancel=False,
+                )
                 self._last_goal_handle = None
         except Exception as e:
             self.node.get_logger().warn(f"_recover_after_failure: cancel MoveGroup failed: {e}")
@@ -297,7 +353,11 @@ class MoveItHelper:
         try:
             if getattr(self, "_last_exec_goal_handle", None) is not None:
                 cancel_future = self._last_exec_goal_handle.cancel_goal_async()
-                self._wait_for_future(cancel_future, timeout=2.0)
+                self._wait_for_future(
+                    cancel_future,
+                    timeout=2.0,
+                    use_registered_cancel=False,
+                )
                 self._last_exec_goal_handle = None
         except Exception as e:
             self.node.get_logger().warn(f"_recover_after_failure: cancel ExecuteTrajectory failed: {e}")
@@ -351,7 +411,15 @@ class MoveItHelper:
         *,
         verbose_return: bool = True,
         auto_clear_faults: bool = False, # if true, will attempt to clear faults on failure before returning false
+        cancel_cb=None,
     ) -> bool:
+        if self._cancel_requested(cancel_cb):
+            # [FLAG move-cancel-precheck] Skip dispatching a new MoveGroup goal when the task has
+            # already been cancelled. This keeps emergency-stop hold from being overwritten by a
+            # fresh planner request that would immediately need to be cancelled again.
+            self.node.get_logger().warn("_send_goal: cancel requested before planning; skipping motion goal.")
+            return False
+
         if auto_clear_faults:
             self.stop_motion()
             
@@ -418,7 +486,18 @@ class MoveItHelper:
 
         # send goal and spin until complete or timeout
         future = self.move_client.send_goal_async(goal)
-        if not self._wait_for_future(future, timeout):
+        wait_ok = self._wait_for_future(
+            future,
+            timeout,
+            cancel_cb=cancel_cb,
+            context="_send_goal send_goal_async",
+        )
+        if wait_ok is None:
+            self.node.get_logger().warn(
+                "_send_goal: cancel requested while waiting for MoveGroup goal acceptance."
+            )
+            return False
+        if not wait_ok:
             self.node.get_logger().error("MoveGroup goal send timed out.")
             self._recover_after_failure("send_goal_async timed out")
             return False
@@ -432,7 +511,19 @@ class MoveItHelper:
         # store handle for emergency stop
         self._last_goal_handle = goal_handle
         result_future = goal_handle.get_result_async()
-        if not self._wait_for_future(result_future, timeout):
+        wait_ok = self._wait_for_future(
+            result_future,
+            timeout,
+            cancel_cb=cancel_cb,
+            context="_send_goal get_result_async",
+        )
+        if wait_ok is None:
+            self.node.get_logger().warn(
+                "_send_goal: cancel requested while waiting for MoveGroup execution result."
+            )
+            self.stop_motion(timeout=1.0)
+            return False
+        if not wait_ok:
             self.node.get_logger().error("MoveGroup result timed out.")
             self._recover_after_failure("get_result_async timed out")
             return False
@@ -490,7 +581,11 @@ class MoveItHelper:
         goal.command.max_effort = float(max_effort)
     
         future = self._gripper_client.send_goal_async(goal)
-        if not self._wait_for_future(future, timeout=10.0):
+        if not self._wait_for_future(
+            future,
+            timeout=10.0,
+            use_registered_cancel=False,
+        ):
             self.node.get_logger().error("GripperCommand goal send timed out.")
             return False
         
@@ -500,7 +595,11 @@ class MoveItHelper:
             return False
         
         result_future = goal_handle.get_result_async()
-        if not self._wait_for_future(result_future, timeout=10.0):
+        if not self._wait_for_future(
+            result_future,
+            timeout=10.0,
+            use_registered_cancel=False,
+        ):
             self.node.get_logger().error("GripperCommand result timed out.")
             return False
         
@@ -630,7 +729,7 @@ class MoveItHelper:
         )
         return False
     
-    def go_to_joint_positions(self, joint_targets: dict) -> bool:
+    def go_to_joint_positions(self, joint_targets: dict, cancel_cb=None) -> bool:
         joint_targets = self._canonicalize_joint_targets(
             joint_targets,
             context="go_to_joint_positions",
@@ -646,7 +745,7 @@ class MoveItHelper:
             jc.weight = 1.0
             constraints.joint_constraints.append(jc)
         req.goal_constraints = [constraints]
-        return self._send_goal(req, timeout=60.0)
+        return self._send_goal(req, timeout=60.0, cancel_cb=cancel_cb)
 
     def get_current_end_effector_pose(
         self,
@@ -670,7 +769,11 @@ class MoveItHelper:
         req.robot_state.is_diff = False
 
         future = self._fk_client.call_async(req)
-        if not self._wait_for_future(future, timeout=5.0):
+        if not self._wait_for_future(
+            future,
+            timeout=5.0,
+            use_registered_cancel=False,
+        ):
             self.node.get_logger().warn("get_current_end_effector_pose: FK request timed out.")
             return None
         resp = future.result()
@@ -703,7 +806,10 @@ class MoveItHelper:
     
     # --- LOOK AT FUNCTIONS --- #
     
-    def look_at_table(self) -> bool:
+    def look_at_table(self, cancel_cb=None) -> bool:
+        if self._cancel_requested(cancel_cb):
+            self.node.get_logger().warn("look_at_table: cancel requested before motion; skipping.")
+            return False
         # rotate wrist so camera on top can see the table clearly
         pose = Pose()
         pose.position.x = 0.215
@@ -752,13 +858,15 @@ class MoveItHelper:
             timeout=30.0,
             verbose_return=False,
             auto_clear_faults=True,
+            cancel_cb=cancel_cb,
         )
         
-    def look_at_ground(self) -> bool:
+    def look_at_ground(self, cancel_cb=None) -> bool:
         self.node.get_logger().info("look_at_ground: planning to LOOK_AT_GROUND_JOINTS...")
         return self._go_to_joint_config(
             self.LOOK_AT_GROUND_JOINTS,
             profile=self.LOOK_AT_GROUND_PROFILE,
+            cancel_cb=cancel_cb,
         )
     
     # ---------- MOVEMENT FUNCTIONS ---------- #
@@ -769,8 +877,12 @@ class MoveItHelper:
                      avoid_collisions: bool = True,
                      min_fraction: float = 0.995,
                      fallback_to_pose: bool = False,
-                     joint_locks: dict | None = None) -> bool:
+                     joint_locks: dict | None = None,
+                     cancel_cb=None) -> bool:
         self._set_last_cartesian_lock_violation(None)
+        if self._cancel_requested(cancel_cb):
+            self.node.get_logger().warn("go_cartesian: cancel requested before Cartesian planning; skipping.")
+            return False
         if not self._cartesian_client.wait_for_service(timeout_sec=5.0):
             self.node.get_logger().error(
                 "GetCartesianPath service not available."
@@ -799,7 +911,18 @@ class MoveItHelper:
         
         # call Cartesian path service and check results
         future = self._cartesian_client.call_async(req)
-        if not self._wait_for_future(future, timeout=30.0):
+        wait_ok = self._wait_for_future(
+            future,
+            timeout=30.0,
+            cancel_cb=cancel_cb,
+            context="go_cartesian compute_cartesian_path",
+        )
+        if wait_ok is None:
+            self.node.get_logger().warn(
+                "go_cartesian: cancel requested while waiting for Cartesian path computation."
+            )
+            return False
+        if not wait_ok:
             self.node.get_logger().error("GetCartesianPath call timed out.")
             return False
         resp = future.result()
@@ -822,7 +945,7 @@ class MoveItHelper:
                 self.node.get_logger().warn(
                     "Attempting fallback to go_to_pose for final waypoint."
                 )
-                return self.go_to_pose(last)
+                return self.go_to_pose(last, cancel_cb=cancel_cb)
             return False
         
         # if joint locks specified, verify that the planned trajectory respects them before execution
@@ -878,7 +1001,18 @@ class MoveItHelper:
         goal.trajectory = resp.solution
         
         future2 = self._exec_client.send_goal_async(goal)
-        if not self._wait_for_future(future2, 30.0):
+        wait_ok = self._wait_for_future(
+            future2,
+            30.0,
+            cancel_cb=cancel_cb,
+            context="go_cartesian send execute_trajectory",
+        )
+        if wait_ok is None:
+            self.node.get_logger().warn(
+                "go_cartesian: cancel requested while waiting for ExecuteTrajectory goal acceptance."
+            )
+            return False
+        if not wait_ok:
             self.node.get_logger().error("ExecuteTrajectory goal send timed out.")
             return False
         
@@ -890,7 +1024,19 @@ class MoveItHelper:
         self._last_exec_goal_handle = gh
         
         result_future = gh.get_result_async()
-        if not self._wait_for_future(result_future, 30.0):
+        wait_ok = self._wait_for_future(
+            result_future,
+            30.0,
+            cancel_cb=cancel_cb,
+            context="go_cartesian wait for execute_trajectory result",
+        )
+        if wait_ok is None:
+            self.node.get_logger().warn(
+                "go_cartesian: cancel requested while waiting for Cartesian execution result."
+            )
+            self.stop_motion(timeout=1.0)
+            return False
+        if not wait_ok:
             self.node.get_logger().error("ExecuteTrajectory result timed out.")
             return False
         
@@ -908,7 +1054,12 @@ class MoveItHelper:
         return True
     
     # plan and execute to a dict of joint values
-    def _go_to_joint_config(self, joint_config: dict, profile: MotionProfile | None = None) -> bool:
+    def _go_to_joint_config(
+        self,
+        joint_config: dict,
+        profile: MotionProfile | None = None,
+        cancel_cb=None,
+    ) -> bool:
         req = self._base_request(self.ARM_GROUP, profile=profile or DEFAULT_PROFILE)
         constraints = Constraints()
         
@@ -923,7 +1074,7 @@ class MoveItHelper:
             constraints.joint_constraints.append(jc)
         
         req.goal_constraints = [constraints]
-        return self._send_goal(req, timeout=60.0)
+        return self._send_goal(req, timeout=60.0, cancel_cb=cancel_cb)
     
     # force MoveIt to use the real current joint state as the start state, instead of relying on its internal state which may be stale or incorrect.
     def _apply_real_start_state(self, req: MotionPlanRequest, timeout: float = 1.0) -> bool:
@@ -975,14 +1126,24 @@ class MoveItHelper:
         '''
         
     # move to Kinova's predefined home position (srdf file)
-    def go_home(self, retries: int = 2) -> bool:
+    def go_home(self, retries: int = 2, cancel_cb=None) -> bool:
+        if self._cancel_requested(cancel_cb):
+            self.node.get_logger().warn("go_home: cancel requested before motion; skipping.")
+            return False
         self.node.get_logger().info("go_home: planning to HOME_JOINTS...")
         self.stop_motion()
         self.wait_for_joint_state_ready(timeout=2.0)
         self.wait_for_settle(timeout=3.0) # ensure arm is still before trying to go home
         _time.sleep(1.0)
         for attempt in range(retries):
-            result = self._go_to_joint_config(self.HOME_JOINTS, profile=self.HOME_PROFILE)
+            if self._cancel_requested(cancel_cb):
+                self.node.get_logger().warn("go_home: cancel requested during retry loop; aborting.")
+                return False
+            result = self._go_to_joint_config(
+                self.HOME_JOINTS,
+                profile=self.HOME_PROFILE,
+                cancel_cb=cancel_cb,
+            )
             if result:
                 self.node.get_logger().info("go_home: success.")
                 return True
@@ -992,10 +1153,13 @@ class MoveItHelper:
                 )
                 _time.sleep(2.0)
         self.node.get_logger().error("go_home: all tries failed. Trying collision-disabled path.")
-        return self._go_home_recovery() # try one more time with collision disabled
+        return self._go_home_recovery(cancel_cb=cancel_cb) # try one more time with collision disabled
     
     # last resort recovery: may disable before real-world sim to protect environment and hardware
-    def _go_home_recovery(self) -> bool:  
+    def _go_home_recovery(self, cancel_cb=None) -> bool:  
+        if self._cancel_requested(cancel_cb):
+            self.node.get_logger().warn("go_home_recovery: cancel requested before recovery motion; skipping.")
+            return False
         current_joints = {}
         recieved = threading.Event()        
         
@@ -1073,7 +1237,18 @@ class MoveItHelper:
         goal.planning_options.replan_attempts = 0    # no replanning attempts
         
         future = self.move_client.send_goal_async(goal)
-        if not self._wait_for_future(future, 30.0):
+        wait_ok = self._wait_for_future(
+            future,
+            30.0,
+            cancel_cb=cancel_cb,
+            context="go_home_recovery send_goal_async",
+        )
+        if wait_ok is None:
+            self.node.get_logger().warn(
+                "go_home_recovery: cancel requested while waiting for recovery goal acceptance."
+            )
+            return False
+        if not wait_ok:
             self.node.get_logger().error("MoveGroup goal send timed out.")
             return False
         
@@ -1083,7 +1258,19 @@ class MoveItHelper:
             return False
         
         result_future = goal_handle.get_result_async()
-        if not self._wait_for_future(result_future, 60.0):
+        wait_ok = self._wait_for_future(
+            result_future,
+            60.0,
+            cancel_cb=cancel_cb,
+            context="go_home_recovery get_result_async",
+        )
+        if wait_ok is None:
+            self.node.get_logger().warn(
+                "go_home_recovery: cancel requested while waiting for recovery execution result."
+            )
+            self.stop_motion(timeout=1.0)
+            return False
+        if not wait_ok:
             self.node.get_logger().error("MoveGroup result timed out.")
             return False
         
@@ -1103,9 +1290,13 @@ class MoveItHelper:
         return success
     
     # move to retract pose, for intermediate and floor picks
-    def go_retract(self):
+    def go_retract(self, cancel_cb=None):
         self.node.get_logger().info("go_retract: planning to RETRACT_JOINTS...")
-        return self._go_to_joint_config(self.RETRACT_JOINTS, profile=self.HOME_PROFILE)
+        return self._go_to_joint_config(
+            self.RETRACT_JOINTS,
+            profile=self.HOME_PROFILE,
+            cancel_cb=cancel_cb,
+        )
 
     # Compare live joints against the configured retract posture with wrapped-angle-safe deltas.
     def is_near_retract(self, max_err_rad: float = 0.10) -> bool:
@@ -1180,7 +1371,11 @@ class MoveItHelper:
         try:
             if self._last_goal_handle is not None:
                 cancel_future = self._last_goal_handle.cancel_goal_async()
-                self._wait_for_future(cancel_future, timeout=timeout)
+                self._wait_for_future(
+                    cancel_future,
+                    timeout=timeout,
+                    use_registered_cancel=False,
+                )
                 self._last_goal_handle = None
         except Exception as e:
             self.node.get_logger().warn(f"stop_motion: failed to cancel MoveGroup goal: {e}")
@@ -1189,7 +1384,11 @@ class MoveItHelper:
         try:
             if hasattr(self, "_last_exec_goal_handle") and self._last_exec_goal_handle is not None:
                 cancel_future = self._last_exec_goal_handle.cancel_goal_async()
-                self._wait_for_future(cancel_future, timeout=timeout)
+                self._wait_for_future(
+                    cancel_future,
+                    timeout=timeout,
+                    use_registered_cancel=False,
+                )
                 self._last_exec_goal_handle = None
         except Exception as e:
             self.node.get_logger().warn(f"stop_motion: failed to cancel ExecuteTrajectory goal: {e}")
@@ -1204,8 +1403,12 @@ class MoveItHelper:
                    tol: PoseTolerance | None = None,
                    orientation_required: bool = True,
                    joint_locks: dict | None = None,
-                   profile: MotionProfile | None = None) -> bool:
+                   profile: MotionProfile | None = None,
+                   cancel_cb=None) -> bool:
         tol = tol or PoseTolerance()
+        if self._cancel_requested(cancel_cb):
+            self.node.get_logger().warn("go_to_pose: cancel requested before motion; skipping.")
+            return False
         
         self.node.get_logger().info(
             f"go_to_pose: planning to pose at {pose.position.x:.3f},"
@@ -1252,12 +1455,16 @@ class MoveItHelper:
                 constraints.joint_constraints.append(jc)
         
         req.goal_constraints = [constraints]
-        return self._send_goal(req)
+        return self._send_goal(req, cancel_cb=cancel_cb)
     
     # move arm end effector to a specific target pose in the frame  
     def go_to_position(self, pose: Pose, frame_id="base_link",
                        tolerance: float = 0.05,
-                       profile: MotionProfile | None = None) -> bool:
+                       profile: MotionProfile | None = None,
+                       cancel_cb=None) -> bool:
+        if self._cancel_requested(cancel_cb):
+            self.node.get_logger().warn("go_to_position: cancel requested before motion; skipping.")
+            return False
         self.node.get_logger().info(
             f"go_to_position: ({pose.position.x:.3f},"
             f"{pose.position.y:.3f}, {pose.position.z:.3f}) - orientation free"
@@ -1281,7 +1488,7 @@ class MoveItHelper:
         constraints.position_constraints.append(pos_constraint)
         req.goal_constraints = [constraints]
         
-        return self._send_goal(req)
+        return self._send_goal(req, cancel_cb=cancel_cb)
 
     def move_above_and_align_drop(
         self,
@@ -1291,6 +1498,7 @@ class MoveItHelper:
         align_xy_tol: float = 0.35,
         align_z_tol: float = 3.14,
         require_orientation: bool = False,
+        cancel_cb=None,
     ) -> tuple[bool, Pose]:
         """
         Move above destination and align wrist to destination orientation.
@@ -1300,9 +1508,13 @@ class MoveItHelper:
         above.position.z += float(standoff_z)
 
         # 1. Reach for above position (no orientation)
-        if not self.go_to_position(above, tolerance= above_pos_tol):
+        if not self.go_to_position(above, tolerance= above_pos_tol, cancel_cb=cancel_cb):
             above.position.z += 0.1  # try 1 further attempt
-            if not self.go_to_position(above, tolerance= above_pos_tol + 0.02):
+            if not self.go_to_position(
+                above,
+                tolerance= above_pos_tol + 0.02,
+                cancel_cb=cancel_cb,
+            ):
                 return False, above
         # 2. Align orientation while above
         if require_orientation:
@@ -1316,6 +1528,7 @@ class MoveItHelper:
                     ori_z=align_z_tol,
                 ),
                 orientation_required=True,
+                cancel_cb=cancel_cb,
             )
             if not ok:
                 return False, align_pose
@@ -1331,21 +1544,23 @@ class MoveItHelper:
         xy_rot_tolerance: float = 0.6,
         z_rot_tolerance: float = 3.14,
         backoff_x: float = 0.05,
+        cancel_cb=None,
     ) -> bool:
         pre = _copy.deepcopy(approach_pose)
         pre.position.z += float(pre_z_offset)
         pre.position.x += float(backoff_x)
-        if not self.go_to_position(pre, tolerance=pos_tol):
+        if not self.go_to_position(pre, tolerance=pos_tol, cancel_cb=cancel_cb):
             pre2 = _copy.deepcopy(pre)
             pre2.position.z += float(pre_z_offset)  # back off more in z if first try fails
             pre2.position.x -= float(backoff_x)  # back off more if first try fails
-            if not self.go_to_position(pre2, tolerance=pos_tol):
+            if not self.go_to_position(pre2, tolerance=pos_tol, cancel_cb=cancel_cb):
                 #self.node.get_logger().error("go_to_side_approach: failed to reach pre-approach position.")
                 return False
         return self.go_to_pose(
             approach_pose,
             tol = PoseTolerance(pos=0.03, ori_xy=xy_rot_tolerance, ori_z=z_rot_tolerance),
             orientation_required=True,
+            cancel_cb=cancel_cb,
         )
     
     # --- GRIPPER MOTION --- #
@@ -1396,7 +1611,11 @@ class MoveItHelper:
         if self._last_goal_handle is not None:
             cancel_future = self._last_goal_handle.cancel_goal_async()
 
-            self._wait_for_future(cancel_future, timeout=3.0)
+            self._wait_for_future(
+                cancel_future,
+                timeout=3.0,
+                use_registered_cancel=False,
+            )
             self._last_goal_handle = None
         
         # best effort recovery - go_home() also calls _send_goal
@@ -1413,7 +1632,7 @@ class MoveItHelper:
         req.group_name = self.ARM_GROUP
         # empty, use current
         future = self._validity_client.call_async(req)
-        self._wait_for_future(future, 5.0)
+        self._wait_for_future(future, 5.0, use_registered_cancel=False)
         
         resp = future.result()
         if resp is None:

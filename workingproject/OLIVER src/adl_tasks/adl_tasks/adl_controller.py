@@ -5,6 +5,7 @@
 # - owns turn_off and emergency-stop policy so task nodes do not race each other
 
 import threading
+import time
 
 import rclpy
 from rclpy.node import Node
@@ -53,6 +54,21 @@ class ADLController(Node):
         msg.detail = detail
         msg.stamp = self.get_clock().now().to_msg()
         self._status_pub.publish(msg)
+        
+    def _wait_until_near_retract(self, timeout_s: float = 10.0, poll_s: float = 0.25) -> bool:
+        # [FLAG controller-retract-poll] If MoveIt times out while sending or reporting the retract
+        # goal, the arm can still finish parking a few seconds later. Poll the live joint state for
+        # a short window before declaring the retract park failed.
+        deadline = time.monotonic() + float(timeout_s)
+        while time.monotonic() < deadline:
+            try:
+                if hasattr(self.arm, "is_near_retract") and self.arm.is_near_retract():
+                    return True
+            except Exception as exc:
+                self.get_logger().warn(f"Controller retract polling failed: {exc}")
+                break
+            time.sleep(float(poll_s))
+        return False
 
     def _park_retract(self, context: str, idle_detail: str, tuck_gripper: bool = False) -> bool:
         self.publish_status(STATUS_RUNNING, f"Parking to retract ({context}).")
@@ -72,7 +88,6 @@ class ADLController(Node):
                 )
             except Exception as exc:
                 self.get_logger().warn(f"Controller could not tuck gripper before retract park: {exc}")
-
         try:
             if hasattr(self.arm, "is_near_retract") and self.arm.is_near_retract():
                 self.publish_status(STATUS_IDLE, idle_detail)
@@ -81,11 +96,31 @@ class ADLController(Node):
             self.get_logger().warn(f"Controller retract-state check failed: {exc}")
 
         ok = bool(self.arm.go_retract())
-        if ok:
+        # [FLAG controller-retract-verify] A MoveIt go_retract() result can report failure even if
+        # the physical arm settles near retract shortly afterward. Verify the final live posture
+        # before publishing a FAILED controller status to the UI.
+        self.arm.wait_for_settle(timeout=2.0)
+        reached_retract = False
+        try:
+            if hasattr(self.arm, "is_near_retract"):
+                reached_retract = bool(self.arm.is_near_retract())
+        except Exception as exc:
+            self.get_logger().warn(f"Controller post-retract verification failed: {exc}")
+
+        if (not reached_retract) and (not ok):
+            reached_retract = self._wait_until_near_retract(timeout_s=10.0, poll_s=0.25)
+
+        if ok or reached_retract:
             self.publish_status(STATUS_IDLE, idle_detail)
+            if (not ok) and reached_retract:
+                self.get_logger().warn(
+                    "go_retract() reported failure, but the arm settled near retract. "
+                    "Treating the park as successful."
+                )
+            return True
         else:
             self.publish_status(STATUS_FAILED, f"Failed to reach retract during {context}.")
-        return ok
+        return False
 
     def _publish_emergency_stop(self):
         msg = Bool()
@@ -155,8 +190,6 @@ class ADLController(Node):
             except Exception as exc:
                 self.get_logger().warn(f"Emergency stop hold failed to cancel motion cleanly: {exc}")
             self._publish_emergency_stop()
-            if active_task is not None:
-                self._publish_task_stop()
             return
 
         if cmd == "emergency_stop_retract":
@@ -173,8 +206,6 @@ class ADLController(Node):
             except Exception as exc:
                 self.get_logger().warn(f"Emergency stop retract failed to cancel motion cleanly: {exc}")
             self._publish_emergency_stop()
-            if active_task is not None:
-                self._publish_task_stop()
             if active_task is None:
                 self._park_retract(
                     context="emergency stop retract",

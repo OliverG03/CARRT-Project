@@ -402,7 +402,7 @@ OBJECTS = {
         grasp_offset=   [0.0, 0, BOTTLE_GRASP_Z], # tag on top, grasp at center, offset for bottle width and QR placement
         
         gripper_width=  _meters_to_rads(BOTTLE_DIAMETER), # rads calc
-        gripper_force=  15.0,
+        gripper_force=  10.0,
         gripper_speed=  0.03, # slow, avoid rolling
         
         destination=    LOCATIONS["Near User (Bottle)"], # hand off near user
@@ -422,7 +422,7 @@ OBJECTS = {
         grasp_offset=   [0, 0, -MEDICATION_RADIUS], # should pull from config for medication height and QR placement
         
         gripper_width=  _meters_to_rads(MEDICATION_DIAMETER), # rads calc
-        gripper_force=  10,
+        gripper_force=  7.0,
         gripper_speed=  0.03,
         
         destination=    LOCATIONS["Near User (Medication)"], # hand off near user
@@ -442,7 +442,7 @@ OBJECTS = {
         grasp_offset=   [0, 0, -CUP_RADIUS], # should pull from config for cup height and QR placement
         
         gripper_width=  _meters_to_rads(CUP_DIAMETER), # rads calc
-        gripper_force=  10,
+        gripper_force=  7.0,
         gripper_speed=  0.03,
         
         destination=    LOCATIONS["Shelf 2 (Right)"], # Shelf 2
@@ -466,7 +466,7 @@ OBJECTS = {
         grasp_offset=   [0, 0, REMOTE_GRASP_Z], # should pull from config for remote thickness
         
         gripper_width=  _meters_to_rads(REMOTE_WIDTH), # rads calc
-        gripper_force=  10,
+        gripper_force=  7.0,
         gripper_speed=  0.03,
         
         destination=    LOCATIONS["Bin"], # Bin
@@ -496,7 +496,7 @@ OBJECTS = {
         grasp_offset=   [0, 0, CUBE_GRASP_Z], ### should pull from config for cube width
         
         gripper_width=  _meters_to_rads(CUBE_SIZE), # rads calculation
-        gripper_force=  10,
+        gripper_force=  10.0,
         gripper_speed=  0.03,
 
         destination=    LOCATIONS["Shelf 1 (Left)"], # Shelf 1

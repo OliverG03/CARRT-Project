@@ -13,7 +13,7 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Pose, Quaternion
-from std_msgs.msg import Int32MultiArray, Bool, String  
+from std_msgs.msg import Int32MultiArray, Bool        # for tag detection results (tag_id, x, y, z)
 
 from adl_interfaces.srv import GetTagPose 
 from adl_tasks.apriltag_key import OBJECTS
@@ -103,7 +103,6 @@ STUB_POSES = {
 }
 
 OBJECT_IDS = set(STUB_POSES.keys())
-STUB_MEDICATION_NAME = "Oliver"
 
 # --- STUB VISION NODE --- #
 
@@ -116,8 +115,6 @@ class VisionStubNode(Node):
         # track if locked (executing)
         self._scene_locked: bool = False
         self._vision_enabled: bool = True
-        self._medication_qr_read_active: bool = False
-        self._medication_name_published_for_window: bool = False
         
         # --- GetTagPose service 
         # same name and interface as vision_apriltag
@@ -134,20 +131,13 @@ class VisionStubNode(Node):
             'detected_tag_ids', 
             10
         )
-        self._camera_name_publisher = self.create_publisher(
-            String,
-            '/patient_name_camera',
-            10
-        )
         
         # --- Subscriptions
         self.create_subscription(Int32MultiArray,   '/picked_ids', self._on_picked_ids, 10)
         self.create_subscription(Bool,              '/scene_lock', self._on_scene_lock, 10)
         self.create_subscription(Bool,              '/vision_enable', self._on_vision_enable, 10)
-        self.create_subscription(Bool,              '/medication_qr_read_active', self._on_medication_qr_read_active, 10)
         
         self.create_timer(0.1, self._publish_ids)
-        self.create_timer(0.25, self._publish_medication_name)
         
         self.get_logger().info('Vision Stub Node started.')
         self.get_logger().info(
@@ -178,15 +168,6 @@ class VisionStubNode(Node):
             "Stub: Vision " +
             ("ENABLED" if msg.data else "DISABLED") + "."
         )
-
-    def _on_medication_qr_read_active(self, msg: Bool):
-        self._medication_qr_read_active = bool(msg.data)
-        if not self._medication_qr_read_active:
-            self._medication_name_published_for_window = False
-        self.get_logger().info(
-            "Stub: Medication QR-read " +
-            ("ACTIVE" if self._medication_qr_read_active else "INACTIVE") + "."
-        )
         
     # --- ID Publisher
     
@@ -198,24 +179,6 @@ class VisionStubNode(Node):
         msg = Int32MultiArray()
         msg.data = sorted(OBJECT_IDS - self._picked_ids)
         self._id_publisher.publish(msg)
-
-    def _publish_medication_name(self):
-        if not self._medication_qr_read_active:
-            return
-        if self._scene_locked or not self._vision_enabled:
-            return
-        if 1 in self._picked_ids or 1 not in STUB_POSES:
-            return
-        if self._medication_name_published_for_window:
-            return
-
-        msg = String()
-        msg.data = STUB_MEDICATION_NAME
-        self._camera_name_publisher.publish(msg)
-        self._medication_name_published_for_window = True
-        self.get_logger().info(
-            f"Stub: published medication QR-side name '{STUB_MEDICATION_NAME}' for bottle ID 1."
-        )
         
     # --- Service Handler: mirrors vision_apriltag's interface
     def handle_get_tag_pose(self, request, response):

@@ -87,11 +87,13 @@ class clearTableNode(Node):
         self.vision = VisionClient(self)
         self.scene = SceneLock(self)
         self.base = TaskBase("clear_table", self)
+        self.arm.set_cancel_callback(self.base.is_cancelled)
 
         # tracking for object accounting and transition failures to inform task flow decisions
         self._last_object_drop_completed = False
         self._last_object_transition_failed_after_drop = False
         self._last_object_pick_completed = False
+        self._last_object_cancelled = False
         
         # UI Command Topic
         self.create_subscription(
@@ -116,6 +118,10 @@ class clearTableNode(Node):
         
         # Step 0: move to look at table position and perform initial scan
         self._startup_move() 
+        self._startup_move()
+        if self._cancel_guard("After startup move"):
+            self.base.publish_status(STATUS_CANCELLED, "Task cancelled by user.")
+            return
         self.vision.set_enabled(True)
         self.base.update_detail("Initial scan complete. Reading visible tags.")
         
@@ -173,6 +179,21 @@ class clearTableNode(Node):
             # 2d. attempt to remove object
             self.base.update_detail(f"Executing pick/place pipeline for {obj.name} (ID {tag_id}).")
             remove_ok = self._remove_object(tag_id)
+            
+            if self.base.is_cancelled():
+                # [FLAG cancel-stop-outer-loop] Cancellation should terminate the task immediately
+                # instead of falling through the normal failure retry/skip logic.
+                self.get_logger().warn(
+                    f"Cancellation detected after {obj.name} pipeline. Ending Clear Table task without retrying other objects."
+                )
+                if remove_ok:
+                    cleared.add(tag_id)
+                self.base.publish_status(
+                    STATUS_CANCELLED,
+                    self.base._cancel_reason or "Task cancelled by user.",
+                )
+                return
+            
             if remove_ok:
                 cleared.add(tag_id)
                 self.get_logger().info(f"Successfully cleared object {obj.name} (ID {tag_id}).")
@@ -295,6 +316,27 @@ class clearTableNode(Node):
             
     # --- Command Entry --- # 
     
+    def _cancel_guard(self, where: str) -> bool:
+        if not self.base.is_cancelled():
+            return False
+
+        self.get_logger().warn(f"{where}: cancellation/emergency stop detected. Halting current task flow.")
+        self.base.update_detail(f"{where}: cancellation/emergency stop detected.")
+
+        try:
+            if hasattr(self.arm, "stop_motion"):
+                self.arm.stop_motion()
+        except Exception:
+            self.get_logger().warn(f"{where}: stop_motion failed during cancellation handling.")
+
+        try:
+            self.arm.wait_for_settle(timeout=0.5)
+        except Exception:
+            pass
+
+        return True
+    
+    
     # listens for UI command to start task, checks if task is already executing or not ready, then starts task thread
     def command_callback(self, msg):
         cmd = str(msg.data).strip()
@@ -414,8 +456,10 @@ class clearTableNode(Node):
             self._last_object_drop_completed = False
             self._last_object_transition_failed_after_drop = False
             self._last_object_pick_completed = False
+            self._last_object_cancelled = False
             ok = self._pick_and_place(tag_id)
-            if not ok and not self._last_object_drop_completed:
+            self._last_object_cancelled = bool(self.base.is_cancelled())
+            if not ok and not self._last_object_drop_completed and not self._last_object_cancelled:
                 self._recover_motion(context=f"pick and place failure for {OBJECTS[tag_id].name}")
             return bool(ok or self._last_object_drop_completed)
         finally:
@@ -923,6 +967,10 @@ class clearTableNode(Node):
         
         # -- Pick Sequence -- #
         
+        # Cancel point: arm is at approach pose with no object held — safe to abort here.
+        if self._cancel_guard(f"[{obj.name}] After Stage 1 approach"):
+            return False
+        
         # 1. move to APPROACH pose
         if is_side_grasp:
             approach_pose = copy.deepcopy(approach_pose)
@@ -1205,6 +1253,10 @@ class clearTableNode(Node):
                 f"approach_xy=({approach_pose.position.x:.3f}, {approach_pose.position.y:.3f}), "
                 f"grasp_xy=({grasp_pose.position.x:.3f}, {grasp_pose.position.y:.3f})."
             )
+
+        # Cancel point: arm is at approach pose with no object held — safe to abort here.
+        if self._cancel_guard(f"[{obj.name}] After Stage 1 approach"):
+            return False
 
         # 2. Cartesian move to grasp pose
         # remove collision object before so fingers dont collide
@@ -1884,8 +1936,21 @@ class clearTableNode(Node):
                 and DROP_CONFIG.get("stage6_rescue_on_failed_descent", False)
             ),
             rescue_max_retries=stage6_reorient_retries_left,
+            cancel_cb=lambda: self.base.is_cancelled(),
         )
         stage6_released_early = bool(drop_result.get("released_early", False))
+ 
+        if drop_result.get("reason") == "cancelled" or self.base.is_cancelled():
+            self.get_logger().warn(
+                f"[{obj.name}] Stage 6 cancelled mid-descent. Releasing object and aborting."
+            )
+            if hasattr(self.arm, "stop_motion"):
+                self.arm.stop_motion()
+            self.arm.wait_for_settle(timeout=2.0)
+            self.arm.open_gripper()
+            detach_object(self, obj_id, self.arm.END_EFFECTOR)
+            self.arm.wait_for_settle(timeout=2.0)
+            return False
 
         ok = bool(drop_result.get("ok", False))
         if not ok:
@@ -1901,6 +1966,7 @@ class clearTableNode(Node):
             time.sleep(float(FLOW_CONFIG["drop_fail_release_wait_s"]))  # let arm settle after drop
             self.arm.wait_for_settle(timeout=3.0)
             return False
+        
         if stage6_released_early:
             self.get_logger().warn(
                 f"[{obj.name}] Stage 6 completed via early release rather than full final-depth descent."
@@ -2063,6 +2129,9 @@ class clearTableNode(Node):
         self.arm.wait_for_settle(timeout=2.0)
         time.sleep(FLOW_CONFIG["post_place_controller_cooldown_s"])
         self._log_arm_snapshot(f"[{obj.name}] Post-place transition")
+        
+        if self._cancel_guard(f"[{obj.name}] After Stage 8 escape"):
+            return True
         
         # 9. transition after place
         if not FLOW_CONFIG["return_home_after_place"]:
