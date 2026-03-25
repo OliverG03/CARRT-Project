@@ -33,9 +33,13 @@ from adl_tasks.grasp_and_place import (
     compute_task_pick_poses,
 )
 
+# Bottle tag/object index used throughout this task
 BOTTLE_ID = 0
 
 # Local bottle-task tuning
+# These values control how strict the planner is when approaching,
+# grasping, lifting, and dropping the bottle.
+
 APPROACH_POS_TOL = 0.06
 APPROACH_RETRY_POS_TOL = 0.09
 
@@ -50,19 +54,23 @@ SIDE_ORI_Z_TOL = 0.90
 SIDE_RETRY_ORI_XY_TOL = 0.50
 SIDE_RETRY_ORI_Z_TOL = 1.10
 
+# Cartesian settings for the final move into the grasp
 GRASP_CART_MAX_STEP = 0.01
 GRASP_CART_MIN_FRACTION = 0.92
 GRASP_CART_RETRY_MIN_FRACTION = 0.85
 
+# Stepwise descent settings for placing the bottle down
 DROP_DESCENT_STEP_DZ = 0.01
 DROP_DESCENT_MIN_STEP_DZ = 0.002
 DROP_DESCENT_MAX_STEP = 0.005
 DROP_DESCENT_MIN_FRACTION = 0.90
 DROP_EARLY_RELEASE_MAX_Z_GAP = 0.06
 
+# Retreat motion after opening gripper at destination
 POST_RELEASE_ESCAPE_Z = 0.10
 POST_RELEASE_ESCAPE_X = 0.04
 
+# Safe bridge waypoint used as a fallback recovery position
 INTER_OBJECT_BRIDGE_X = 0.45
 INTER_OBJECT_BRIDGE_Y = 0.00
 INTER_OBJECT_BRIDGE_Z = 0.58
@@ -74,17 +82,22 @@ class PickDroppedBottle(Node):
         super().__init__("pick_dropped_bottle_node")
         self.get_logger().info("PickDroppedBottle starting...")
 
+        # Main helpers for motion, scene management, vision, and task control
         self.arm = MoveItHelper(self)
         self.scene = SceneLock(self)
         self.vision = VisionClient(self)
         self.base = TaskBase("pick_dropped_bottle", self)
 
+        # Listen for incoming task commands
         self.create_subscription(String, "/adl_command", self.command_callback, 10)
 
         self.get_logger().info("PickDroppedBottle ready. Waiting for command.")
+
+        # Start a background initialization move so the arm begins from a safe posture
         threading.Thread(target=self._startup_move, daemon=True).start()
 
     def _startup_move(self):
+        """Move to a safe startup posture before accepting commands."""
         if hasattr(self.arm, "wait_for_joint_state_ready"):
             self.arm.wait_for_joint_state_ready(timeout=3.0)
 
@@ -101,8 +114,10 @@ class PickDroppedBottle(Node):
         self.get_logger().info("Startup complete. Node is ready for commands.")
 
     def command_callback(self, msg: String):
+        """Handle incoming commands from /adl_command."""
         cmd = str(msg.data).strip()
 
+        # Emergency stop / park request
         if cmd == "turn_off":
             self.get_logger().warn("Received turn_off command. Cancelling task and parking.")
             self.base._cancelled = True
@@ -114,6 +129,7 @@ class PickDroppedBottle(Node):
             self._park_retract(context="turn_off")
             return
 
+        # Start task only if this node is ready and not already executing
         if (
             cmd in {"pick_dropped_bottle", "pick_bottle"}
             and not self.base.executing
@@ -123,15 +139,18 @@ class PickDroppedBottle(Node):
             self.base.start_task_thread(self.execute_task)
 
     def _check_cancel(self) -> bool:
+        """Return True if task has been cancelled."""
         if self.base.is_cancelled():
             self.get_logger().warn("Task cancelled by emergency stop.")
             return True
         return False
 
     def _get_pose(self, tag_id: int):
+        """Query the vision system for an object's current pose."""
         return self.vision.get_tag_pose(tag_id)
 
     def _wait_for_pose(self, tag_id: int, timeout: float):
+        """Wait until the requested tag pose is detected or timeout is reached."""
         start = time.time()
         while time.time() - start < timeout:
             if self._check_cancel():
@@ -146,6 +165,7 @@ class PickDroppedBottle(Node):
         return None
 
     def _quat_angle_rad(self, q1, q2) -> float:
+        """Compute angle difference between two quaternions in radians."""
         dot = (
             float(q1.x) * float(q2.x)
             + float(q1.y) * float(q2.y)
@@ -156,6 +176,10 @@ class PickDroppedBottle(Node):
         return 2.0 * math.acos(dot)
 
     def _top_orientation_soft_ok(self, target_pose: Pose, where: str) -> bool:
+        """
+        For top grasps, allow a small orientation mismatch if the wrist is
+        already close enough to the desired pose.
+        """
         live = self.arm.get_current_end_effector_pose(timeout=1.0)
         if live is None:
             self.get_logger().warn(f"{where}: no live EE pose; cannot validate soft continue.")
@@ -169,6 +193,7 @@ class PickDroppedBottle(Node):
         return err <= TOP_SOFT_CONTINUE_MAX_ERR_RAD
 
     def _park_retract(self, context: str) -> bool:
+        """Stop motion if possible, then park the arm in retract/home pose."""
         self.get_logger().info(f"Parking arm to retract pose ({context}).")
         try:
             if hasattr(self.arm, "stop_motion"):
@@ -188,6 +213,10 @@ class PickDroppedBottle(Node):
         return parked
 
     def _go_inter_object_bridge(self, context: str = "") -> bool:
+        """
+        Move to a known safe bridge position between pick/place regions.
+        Used mainly during recovery.
+        """
         bridge = Pose()
         bridge.position.x = float(INTER_OBJECT_BRIDGE_X)
         bridge.position.y = float(INTER_OBJECT_BRIDGE_Y)
@@ -203,6 +232,10 @@ class PickDroppedBottle(Node):
         return ok
 
     def _recover_motion(self, context: str = "") -> None:
+        """
+        Recovery routine for failed motions:
+        stop motion, wait for settle, and try to return to a safe posture.
+        """
         self.get_logger().warn(f"Recovering motion state. {context}")
         try:
             if hasattr(self.arm, "stop_motion"):
@@ -223,6 +256,10 @@ class PickDroppedBottle(Node):
             self.get_logger().warn("Recovery: go_home raised exception.")
 
     def _move_to_scan_pose(self) -> bool:
+        """
+        Move the arm into a pose appropriate for scanning the floor/scene
+        for the dropped bottle.
+        """
         self.scene.lock(True)
         try:
             if not self.arm.go_home():
@@ -239,6 +276,11 @@ class PickDroppedBottle(Node):
             self.scene.lock(False)
 
     def _move_to_approach(self, approach: Pose, grasp_mode: str) -> bool:
+        """
+        Stage 1:
+        Move to the pre-grasp approach pose.
+        Uses different tolerances for side grasps vs top grasps.
+        """
         if grasp_mode == "side":
             ok = self.arm.go_to_pose(
                 approach,
@@ -281,6 +323,7 @@ class PickDroppedBottle(Node):
             self.arm.wait_for_settle(timeout=1.0)
             return True
 
+        # Fallback for top grasp: first get position right, then refine orientation
         self.get_logger().warn("Stage 1 top approach failed. Trying position-first fallback.")
         ok = self.arm.go_to_position(approach, tolerance=APPROACH_POS_TOL)
         if ok:
@@ -306,6 +349,10 @@ class PickDroppedBottle(Node):
         return False
 
     def _cartesian_to_grasp(self, grasp: Pose) -> bool:
+        """
+        Stage 2:
+        Perform Cartesian motion into the final grasp pose.
+        """
         log_pose(self, "[Bottle] Stage 2 grasp target", grasp)
 
         ok = self.arm.go_cartesian(
@@ -328,6 +375,11 @@ class PickDroppedBottle(Node):
         )
 
     def _lift_after_grasp(self, grasp: Pose) -> bool:
+        """
+        Stage 4:
+        Lift the grasped bottle clear of the floor.
+        Try one-shot lift first, then segmented lift if needed.
+        """
         lift_clear = copy.deepcopy(grasp)
         lift_clear.position.z += float(FLOW_CONFIG["lift_clear_z"])
         log_pose(self, "[Bottle] Stage 4 lift target", lift_clear)
@@ -364,6 +416,11 @@ class PickDroppedBottle(Node):
         return True
 
     def _descend_to_drop_stepwise(self, start_pose: Pose, dest_pose: Pose) -> bool:
+        """
+        Stage 6:
+        Lower the bottle to its destination in small steps.
+        If blocked very near final depth, allow early release.
+        """
         z_cur = float(start_pose.position.z)
         z_goal = float(dest_pose.position.z)
 
@@ -397,6 +454,7 @@ class PickDroppedBottle(Node):
                     success = True
                     break
 
+                # If a step is too aggressive, reduce it and try again
                 step_dz *= 0.5
 
             if not success:
@@ -415,6 +473,10 @@ class PickDroppedBottle(Node):
         return True
 
     def _post_place_escape(self) -> bool:
+        """
+        Stage 8:
+        After releasing the bottle, move up and slightly back to avoid collision.
+        """
         start = self.arm.get_current_end_effector_pose(timeout=1.0)
         if start is None:
             self.get_logger().warn("Post-place escape skipped: current EE pose unavailable.")
@@ -442,9 +504,21 @@ class PickDroppedBottle(Node):
         return True
 
     def _pick_and_place_bottle(self, bottle_pose: Pose) -> bool:
+        """
+        Main pick-and-place sequence:
+        1. Open and approach
+        2. Move into grasp
+        3. Close and attach object
+        4. Lift
+        5. Move above destination
+        6. Lower
+        7. Release
+        8. Retreat
+        """
         obj = OBJECTS[BOTTLE_ID]
         dest = obj.destination
 
+        # Compute grasp and approach poses based on the detected bottle pose
         grasp, approach, grasp_mode = compute_task_pick_poses(
             tag_id=BOTTLE_ID,
             obj=obj,
@@ -524,15 +598,36 @@ class PickDroppedBottle(Node):
             above_pos_tol=0.06,
             align_xy_tol=0.35,
             align_z_tol=3.14,
-            require_orientation=False,
+            require_orientation=True,
         )
+        if not ok_align:
+            self.get_logger().warn(
+                "[Bottle] Stage 5 orientation align failed above destination; retrying position-only."
+            )
+            ok_align, above_dest = self.arm.move_above_and_align_drop(
+                dest_pose=dest,
+                standoff_z=float(FLOW_CONFIG["dest_standoff_z"]),
+                above_pos_tol=0.06,
+                align_xy_tol=0.35,
+                align_z_tol=3.14,
+                require_orientation=False,
+            )
         if not ok_align:
             self.get_logger().error("Failed to move above bottle destination.")
             return False
 
         # Stage 6: lower to destination
         self.get_logger().info("[Bottle] Stage 6: lowering to destination.")
-        if not self._descend_to_drop_stepwise(above_dest, dest):
+        current_drop_start = self.arm.get_current_end_effector_pose(timeout=1.0)
+        if current_drop_start is None:
+            self.get_logger().warn(
+                "[Bottle] Stage 6 could not read live EE pose after alignment; using planned above pose."
+            )
+            current_drop_start = above_dest
+        else:
+            log_pose(self, "[Bottle] Stage 6 start (live/current)", current_drop_start)
+
+        if not self._descend_to_drop_stepwise(current_drop_start, dest):
             self.get_logger().error("Failed to lower bottle to destination.")
             return False
 
@@ -549,6 +644,7 @@ class PickDroppedBottle(Node):
         return True
 
     def execute_task(self):
+        """Top-level task execution routine."""
         parked = False
         try:
             if self._check_cancel():
@@ -561,12 +657,14 @@ class PickDroppedBottle(Node):
             self.base.update_detail("Scanning for dropped bottle pose.")
             log_arm_snapshot(self, self.arm, "[Bottle] Pre-task snapshot")
 
+            # Move to scan pose first so the camera can detect the bottle
             if not self._move_to_scan_pose():
                 self.base.publish_status(STATUS_FAILED, "Failed to move to scan pose.")
                 self._park_retract(context="scan pose failure")
                 parked = True
                 return
 
+            # Enable vision and wait for bottle detection
             self.vision.set_enabled(True)
             bottle_pose = self._wait_for_pose(
                 BOTTLE_ID,
@@ -578,6 +676,7 @@ class PickDroppedBottle(Node):
                 parked = True
                 return
 
+            # Lock the scene while performing the actual pick/place
             self.scene.lock(True)
             try:
                 ok = self._pick_and_place_bottle(bottle_pose)
@@ -591,6 +690,7 @@ class PickDroppedBottle(Node):
             finally:
                 self.scene.lock(False)
 
+            # Return arm to parked position after success
             self._park_retract(context="task complete")
             parked = True
             log_arm_snapshot(self, self.arm, "[Bottle] Final snapshot")
@@ -601,10 +701,12 @@ class PickDroppedBottle(Node):
             self.get_logger().info("Bottle task completed successfully.")
 
         finally:
+            # Make sure the arm is parked even if something unexpected happens
             if not parked:
                 self._park_retract(context="task exit")
 
     def destroy_node(self):
+        """Disable vision cleanly when shutting down."""
         try:
             self.vision.set_enabled(False)
         except Exception:
@@ -616,6 +718,7 @@ def main(args=None):
     rclpy.init(args=args)
     node = PickDroppedBottle()
 
+    # Use multithreaded executor because this node has background/task threads
     executor = rclpy.executors.MultiThreadedExecutor()
     executor.add_node(node)
 
