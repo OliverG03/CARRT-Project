@@ -1,7 +1,7 @@
 # ------ adl_controller.py ------ #
 # Shared ADL system controller:
 # - parks to retract once when the UI is first opened
-# - parks to retract when an executing task reaches IDLE
+# - parks to retract after task terminal states without overwriting the task result
 # - owns turn_off and emergency-stop policy so task nodes do not race each other
 
 import threading
@@ -42,7 +42,6 @@ class ADLController(Node):
         self._task_last_status: dict[str, str] = {}
         self._active_task_name: str | None = None
         self._startup_idle_park_done = False
-        self._suppress_next_idle_park = False
         self._emergency_retract_pending = False
 
         self.get_logger().info("ADL controller ready. Waiting for UI/system commands.")
@@ -54,6 +53,19 @@ class ADLController(Node):
         msg.detail = detail
         msg.stamp = self.get_clock().now().to_msg()
         self._status_pub.publish(msg)
+
+    def _is_acceptable_idle_park(self) -> bool:
+        # [FLAG controller-home-park-ok] Some task/recovery paths can legitimately finish in HOME
+        # even if the controller asked for RETRACT. Treat either settled safe posture as an acceptable
+        # idle park so the UI does not see a false FAILED status after the arm is clearly parked.
+        try:
+            if hasattr(self.arm, "is_near_retract") and self.arm.is_near_retract():
+                return True
+            if hasattr(self.arm, "is_near_home") and self.arm.is_near_home():
+                return True
+        except Exception as exc:
+            self.get_logger().warn(f"Controller park-state check failed: {exc}")
+        return False
         
     def _wait_until_near_retract(self, timeout_s: float = 10.0, poll_s: float = 0.25) -> bool:
         # [FLAG controller-retract-poll] If MoveIt times out while sending or reporting the retract
@@ -61,17 +73,22 @@ class ADLController(Node):
         # a short window before declaring the retract park failed.
         deadline = time.monotonic() + float(timeout_s)
         while time.monotonic() < deadline:
-            try:
-                if hasattr(self.arm, "is_near_retract") and self.arm.is_near_retract():
-                    return True
-            except Exception as exc:
-                self.get_logger().warn(f"Controller retract polling failed: {exc}")
-                break
+            if self._is_acceptable_idle_park():
+                return True
             time.sleep(float(poll_s))
         return False
 
-    def _park_retract(self, context: str, idle_detail: str, tuck_gripper: bool = False) -> bool:
-        self.publish_status(STATUS_RUNNING, f"Parking to retract ({context}).")
+    def _park_retract(
+        self,
+        context: str,
+        idle_detail: str,
+        tuck_gripper: bool = False,
+        *,
+        publish_status_updates: bool = True,
+        final_status: str = STATUS_IDLE,
+    ) -> bool:
+        if publish_status_updates:
+            self.publish_status(STATUS_RUNNING, f"Parking to retract ({context}).")
         try:
             self.arm.stop_motion()
         except Exception as exc:
@@ -88,30 +105,33 @@ class ADLController(Node):
                 )
             except Exception as exc:
                 self.get_logger().warn(f"Controller could not tuck gripper before retract park: {exc}")
-        try:
-            if hasattr(self.arm, "is_near_retract") and self.arm.is_near_retract():
-                self.publish_status(STATUS_IDLE, idle_detail)
-                return True
-        except Exception as exc:
-            self.get_logger().warn(f"Controller retract-state check failed: {exc}")
+        if self._is_acceptable_idle_park():
+            if publish_status_updates:
+                self.publish_status(final_status, idle_detail)
+            return True
 
         ok = bool(self.arm.go_retract())
         # [FLAG controller-retract-verify] A MoveIt go_retract() result can report failure even if
         # the physical arm settles near retract shortly afterward. Verify the final live posture
         # before publishing a FAILED controller status to the UI.
         self.arm.wait_for_settle(timeout=2.0)
-        reached_retract = False
-        try:
-            if hasattr(self.arm, "is_near_retract"):
-                reached_retract = bool(self.arm.is_near_retract())
-        except Exception as exc:
-            self.get_logger().warn(f"Controller post-retract verification failed: {exc}")
+        reached_retract = self._is_acceptable_idle_park()
+
+        if (not reached_retract) and (not ok):
+            # [FLAG controller-retract-home-fallback] If retract planning/dispatch fails, try the
+            # deterministic HOME posture before declaring the park failed. The user-visible issue is
+            # "arm is safely parked but UI says FAILED", so HOME should count as a valid fallback.
+            self.get_logger().warn("Retract park did not complete cleanly; trying go_home fallback.")
+            ok = bool(self.arm.go_home())
+            self.arm.wait_for_settle(timeout=2.0)
+            reached_retract = self._is_acceptable_idle_park()
 
         if (not reached_retract) and (not ok):
             reached_retract = self._wait_until_near_retract(timeout_s=10.0, poll_s=0.25)
 
         if ok or reached_retract:
-            self.publish_status(STATUS_IDLE, idle_detail)
+            if publish_status_updates:
+                self.publish_status(final_status, idle_detail)
             if (not ok) and reached_retract:
                 self.get_logger().warn(
                     "go_retract() reported failure, but the arm settled near retract. "
@@ -155,6 +175,8 @@ class ADLController(Node):
                 context="ui startup",
                 idle_detail="UI loaded. Arm parked at retract and ready.",
                 tuck_gripper=False,
+                publish_status_updates=True,
+                final_status=STATUS_IDLE,
             )
             return
 
@@ -173,33 +195,18 @@ class ADLController(Node):
                 context="turn_off",
                 idle_detail="Turn off requested. Arm parked at retract. Safe to stop the launch.",
                 tuck_gripper=True,
+                publish_status_updates=True,
+                final_status=STATUS_IDLE,
             )
-            return
-
-        if cmd == "emergency_stop_hold":
-            with self._state_lock:
-                active_task = self._active_task_name
-                self._suppress_next_idle_park = bool(active_task)
-                self._emergency_retract_pending = False
-            self.publish_status(
-                STATUS_CANCELLED,
-                "Emergency stop activated. Halting arm in place and holding current pose.",
-            )
-            try:
-                self.arm.stop_motion()
-            except Exception as exc:
-                self.get_logger().warn(f"Emergency stop hold failed to cancel motion cleanly: {exc}")
-            self._publish_emergency_stop()
             return
 
         if cmd == "emergency_stop_retract":
             with self._state_lock:
-                self._suppress_next_idle_park = False
                 self._emergency_retract_pending = True
                 active_task = self._active_task_name
             self.publish_status(
                 STATUS_CANCELLED,
-                "Emergency stop activated. Halting arm now; retract will run when the task reaches IDLE.",
+                "Emergency stop activated. Halting arm now; retract will run when the task stops.",
             )
             try:
                 self.arm.stop_motion()
@@ -211,6 +218,8 @@ class ADLController(Node):
                     context="emergency stop retract",
                     idle_detail="Emergency stop retract complete. Arm parked at retract.",
                     tuck_gripper=False,
+                    publish_status_updates=True,
+                    final_status=STATUS_CANCELLED,
                 )
                 with self._state_lock:
                     self._emergency_retract_pending = False
@@ -233,34 +242,29 @@ class ADLController(Node):
                 self._active_task_name = task_name
                 return
 
-            if status == STATUS_IDLE:
+            if status in {STATUS_SUCCEEDED, STATUS_FAILED, STATUS_CANCELLED}:
                 if self._active_task_name == task_name:
                     self._active_task_name = None
 
-                # [FLAG controller-idle-park] Only treat IDLE as a parking trigger when that task was
-                # previously active. This avoids parking spuriously on unrelated status noise.
-                if prev_status in {STATUS_RUNNING, STATUS_SUCCEEDED, STATUS_FAILED, STATUS_CANCELLED}:
+                # [FLAG controller-terminal-park] Tasks now keep their terminal status visible instead
+                # of auto-publishing IDLE. Trigger the retract park from terminal task outcomes without
+                # replacing the task's SUCCEEDED/FAILED/CANCELLED state in the UI.
+                if prev_status == STATUS_RUNNING or self._emergency_retract_pending:
+                    should_park = True
                     if self._emergency_retract_pending:
-                        should_park = True
                         park_detail = (
-                            f"{task_name} reached IDLE after emergency stop. Arm parked at retract."
+                            f"{task_name} stopped after emergency stop. Arm parked at retract."
                         )
                         self._emergency_retract_pending = False
-                    elif self._suppress_next_idle_park:
-                        self.publish_status(
-                            STATUS_IDLE,
-                            f"{task_name} reached IDLE after emergency stop. Holding current pose as requested.",
-                        )
-                        self._suppress_next_idle_park = False
                     else:
-                        should_park = True
-                        park_detail = f"{task_name} reached IDLE. Arm parked at retract."
+                        park_detail = f"{task_name} finished. Arm parked at retract."
 
         if should_park:
             self._park_retract(
-                context=f"{task_name} idle transition",
+                context=f"{task_name} terminal transition",
                 idle_detail=park_detail,
                 tuck_gripper=False,
+                publish_status_updates=False,
             )
             
 

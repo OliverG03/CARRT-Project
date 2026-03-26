@@ -74,10 +74,10 @@ HTML = """
             const turnOffBtn = document.getElementById("turn-off-btn");
             if (turnOffBtn) {
                 const statusText = (data?.status || "").toUpperCase();
-                const idle = statusText.startsWith("IDLE");
-                turnOffBtn.disabled = !idle;
-                turnOffBtn.style.opacity = idle ? "1.0" : "0.5";
-                turnOffBtn.title = idle ? "" : "Turn Off is only available while IDLE.";
+                const taskBusy = statusText.startsWith("RUNNING") || statusText.startsWith("SENT -");
+                turnOffBtn.disabled = taskBusy;
+                turnOffBtn.style.opacity = taskBusy ? "0.5" : "1.0";
+                turnOffBtn.title = taskBusy ? "Turn Off is only available while no task is running." : "";
             }
         }
 
@@ -95,7 +95,7 @@ HTML = """
         <button class="btn btn-med"    name="cmd" value="give_medication">Medication Hand-Off</button>
 
         <button class="btn" style="background:#dc2626;" name="cmd" value="emergency_stop_retract">
-            Emergency Stop + Retract/Park
+            Emergency Stop
         </button>
 
         <button id="turn-off-btn" class="btn btn-off" name="cmd" value="turn_off">
@@ -186,7 +186,6 @@ TASK_COMMANDS = {
     "pick_dropped_bottle",
     "clear_table",
     "give_medication",
-    "stop_task",
 }
 
 SYSTEM_COMMANDS = {

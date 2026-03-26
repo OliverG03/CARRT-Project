@@ -135,7 +135,7 @@ REMOTE_GRASP_Z = top_surface_to_ee_grasp_z(REMOTE_THICKNESS)
 # [FLAG:handover-align] aligned to RViz-validated handover approach XY
 
 _HANDOVER_FRONT_INSET = 0.070
-_HANDOVER_RIGHT_INSET = 0.070
+_HANDOVER_RIGHT_INSET = 0.20 ### check
 HANDOVER_POS_X = TABLE_POS_X - TABLE_X / 2.0 + _HANDOVER_FRONT_INSET
 HANDOVER_POS_Y = TABLE_POS_Y - TABLE_Y / 2.0 + _HANDOVER_RIGHT_INSET
 HANDOVER_Z      = TABLE_SURFACE_Z + GRASP_CLEARANCE   # near user, table height

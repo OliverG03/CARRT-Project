@@ -65,6 +65,14 @@ DROP_DESCENT_MIN_STEP_DZ = 0.002
 DROP_DESCENT_MAX_STEP = 0.005
 DROP_DESCENT_MIN_FRACTION = 0.90
 DROP_EARLY_RELEASE_MAX_Z_GAP = 0.06
+DROP_DIRECT_POSE_POS_TOL = 0.04
+DROP_DIRECT_POSE_ORI_XY_TOL = 0.35
+DROP_DIRECT_POSE_ORI_Z_TOL = 0.80
+DROP_RETRY_HIGHER_STANDOFF_Z = 0.35
+DROP_RETRY_ABOVE_POS_TOL = 0.08
+DROP_RETRY_ALIGN_XY_TOL = 0.45
+DROP_RETRY_ALIGN_Z_TOL = 3.14
+DROP_MIDPOINT_MIN_Z_GAP = 0.04
 
 # Retreat motion after opening gripper at destination
 POST_RELEASE_ESCAPE_Z = 0.10
@@ -87,6 +95,9 @@ class PickDroppedBottle(Node):
         self.scene = SceneLock(self)
         self.vision = VisionClient(self)
         self.base = TaskBase("pick_dropped_bottle", self)
+        # [FLAG helper-cancel-bind] Share the task cancel predicate with MoveItHelper so bottle-task
+        # motions can stop dispatching/waiting promptly on emergency stop or stop_task.
+        self.arm.set_cancel_callback(self.base.is_cancelled)
 
         # Listen for incoming task commands
         self.create_subscription(String, "/adl_command", self.command_callback, 10)
@@ -97,16 +108,17 @@ class PickDroppedBottle(Node):
         threading.Thread(target=self._startup_move, daemon=True).start()
 
     def _startup_move(self):
-        """Move to a safe startup posture before accepting commands."""
+        """Move to retract on startup before accepting commands."""
         if hasattr(self.arm, "wait_for_joint_state_ready"):
             self.arm.wait_for_joint_state_ready(timeout=3.0)
 
         self.scene.lock(True)
         try:
-            self.get_logger().info("Startup: moving to safe scan posture.")
-            if not self.arm.go_home():
-                self.get_logger().warn("Startup go_home failed; trying retract.")
-                self.arm.go_retract()
+            # [FLAG startup-retract-only] Keep startup posture consistent with the controller: go to
+            # RETRACT at node load instead of HOME. Do not switch to HOME here unless the user asks.
+            self.get_logger().info("Startup: moving to retract posture.")
+            if not self.arm.go_retract():
+                self.get_logger().warn("Startup go_retract failed.")
         finally:
             self.scene.lock(False)
 
@@ -116,6 +128,16 @@ class PickDroppedBottle(Node):
     def command_callback(self, msg: String):
         """Handle incoming commands from /adl_command."""
         cmd = str(msg.data).strip()
+
+        if cmd == "stop_task" and self.base.executing:
+            # [FLAG shared-stop-command] Match the other ADLs: graceful stop marks only the active
+            # task as cancelled and lets the shared controller decide whether to hold or retract.
+            self.get_logger().warn("Received stop_task command. Cancelling pick_dropped_bottle gracefully.")
+            self.base.request_cancel(
+                "Stop command received.",
+                "Stop requested. Finishing cancellation flow before shared controller parking.",
+            )
+            return
 
         # Emergency stop / park request
         if cmd == "turn_off":
@@ -144,6 +166,47 @@ class PickDroppedBottle(Node):
             self.get_logger().warn("Task cancelled by emergency stop.")
             return True
         return False
+
+    def _cancel_guard(self, where: str, *, holding_object: bool = False) -> bool:
+        if not self.base.is_cancelled():
+            return False
+
+        # [FLAG bottle-cancel-guard] Treat cancellation as its own task outcome. Stop motion now,
+        # and if the bottle is already attached, release/detach it so the task does not exit with a
+        # dangling EE payload in the planning scene.
+        self.get_logger().warn(f"[Bottle] {where}: cancellation/emergency stop detected.")
+        try:
+            if hasattr(self.arm, "stop_motion"):
+                self.arm.stop_motion()
+        except Exception:
+            self.get_logger().warn(f"[Bottle] {where}: stop_motion failed during cancellation handling.")
+
+        try:
+            self.arm.wait_for_settle(timeout=0.5)
+        except Exception:
+            pass
+
+        if holding_object:
+            try:
+                self.arm.open_gripper()
+            except Exception:
+                self.get_logger().warn(f"[Bottle] {where}: open_gripper failed during cancellation cleanup.")
+            try:
+                detach_object(self, f"obj_{BOTTLE_ID}", self.arm.END_EFFECTOR)
+            except Exception:
+                self.get_logger().warn(f"[Bottle] {where}: detach_object failed during cancellation cleanup.")
+            try:
+                # [FLAG bottle-cancel-scene-clear] Clear any lingering world object after a cancelled
+                # drop so post-cancel recovery/retract does not start in collision with the just-released bottle.
+                remove_collision_object(self, f"obj_{BOTTLE_ID}")
+            except Exception:
+                self.get_logger().warn(f"[Bottle] {where}: remove_collision_object failed during cancellation cleanup.")
+            try:
+                self.arm.wait_for_settle(timeout=0.5)
+            except Exception:
+                pass
+
+        return True
 
     def _get_pose(self, tag_id: int):
         """Query the vision system for an object's current pose."""
@@ -255,6 +318,54 @@ class PickDroppedBottle(Node):
         except Exception:
             self.get_logger().warn("Recovery: go_home raised exception.")
 
+    def _best_effort_release_held_bottle(self, reason: str, *, retreat_pose: Pose | None = None) -> None:
+        # [FLAG bottle-hard-fail-release] Never end the bottle task with the payload still attached.
+        # On any hard failure after Stage 3, stop motion, optionally retreat upward, then open/detach
+        # and clear the world object from the planning scene before recovery/parking.
+        self.get_logger().warn(f"[Bottle] Best-effort release after failure: {reason}")
+        try:
+            if hasattr(self.arm, "stop_motion"):
+                self.arm.stop_motion()
+        except Exception:
+            self.get_logger().warn("[Bottle] stop_motion failed during best-effort release.")
+        try:
+            self.arm.wait_for_settle(timeout=1.0)
+        except Exception:
+            pass
+
+        if retreat_pose is not None:
+            try:
+                log_pose(self, "[Bottle] Best-effort release retreat pose", retreat_pose)
+                self.arm.go_to_pose(
+                    retreat_pose,
+                    tol=PoseTolerance(
+                        pos=DROP_DIRECT_POSE_POS_TOL,
+                        ori_xy=DROP_DIRECT_POSE_ORI_XY_TOL,
+                        ori_z=DROP_DIRECT_POSE_ORI_Z_TOL,
+                    ),
+                    orientation_required=True,
+                )
+                self.arm.wait_for_settle(timeout=1.0)
+            except Exception:
+                self.get_logger().warn("[Bottle] Retreat move failed during best-effort release.")
+
+        try:
+            self.arm.open_gripper()
+        except Exception:
+            self.get_logger().warn("[Bottle] open_gripper failed during best-effort release.")
+        try:
+            detach_object(self, f"obj_{BOTTLE_ID}", self.arm.END_EFFECTOR)
+        except Exception:
+            self.get_logger().warn("[Bottle] detach_object failed during best-effort release.")
+        try:
+            remove_collision_object(self, f"obj_{BOTTLE_ID}")
+        except Exception:
+            self.get_logger().warn("[Bottle] remove_collision_object failed during best-effort release.")
+        try:
+            self.arm.wait_for_settle(timeout=0.5)
+        except Exception:
+            pass
+
     def _move_to_scan_pose(self) -> bool:
         """
         Move the arm into a pose appropriate for scanning the floor/scene
@@ -262,10 +373,6 @@ class PickDroppedBottle(Node):
         """
         self.scene.lock(True)
         try:
-            if not self.arm.go_home():
-                self.get_logger().warn("Pre-scan go_home failed; trying retract.")
-                self.arm.go_retract()
-
             if hasattr(self.arm, "look_at_ground"):
                 if self.arm.look_at_ground():
                     return True
@@ -432,6 +539,8 @@ class PickDroppedBottle(Node):
 
         step_idx = 0
         while z_cur - z_goal > 1e-4:
+            if self._cancel_guard("Stage 6 descent", holding_object=True):
+                return False
             step_idx += 1
             step_dz = min(DROP_DESCENT_STEP_DZ, z_cur - z_goal)
             success = False
@@ -471,6 +580,107 @@ class PickDroppedBottle(Node):
                 return False
 
         return True
+
+    def _move_above_destination_with_fallbacks(self, dest: Pose):
+        # [FLAG bottle-stage5-fallbacks] Match the more robust placement staging used in the other
+        # ADLs: try strict above-slot alignment, then position-only, then retry from a higher standoff.
+        attempts = [
+            {
+                "label": "primary",
+                "standoff_z": float(FLOW_CONFIG["dest_standoff_z"]),
+                "require_orientation": True,
+                "above_pos_tol": 0.06,
+                "align_xy_tol": 0.35,
+                "align_z_tol": 3.14,
+            },
+            {
+                "label": "position-only",
+                "standoff_z": float(FLOW_CONFIG["dest_standoff_z"]),
+                "require_orientation": False,
+                "above_pos_tol": 0.06,
+                "align_xy_tol": 0.35,
+                "align_z_tol": 3.14,
+            },
+            {
+                "label": "higher-standoff",
+                "standoff_z": float(DROP_RETRY_HIGHER_STANDOFF_Z),
+                "require_orientation": True,
+                "above_pos_tol": float(DROP_RETRY_ABOVE_POS_TOL),
+                "align_xy_tol": float(DROP_RETRY_ALIGN_XY_TOL),
+                "align_z_tol": float(DROP_RETRY_ALIGN_Z_TOL),
+            },
+            {
+                "label": "higher-standoff position-only",
+                "standoff_z": float(DROP_RETRY_HIGHER_STANDOFF_Z),
+                "require_orientation": False,
+                "above_pos_tol": float(DROP_RETRY_ABOVE_POS_TOL),
+                "align_xy_tol": float(DROP_RETRY_ALIGN_XY_TOL),
+                "align_z_tol": float(DROP_RETRY_ALIGN_Z_TOL),
+            },
+        ]
+
+        for idx, cfg in enumerate(attempts, start=1):
+            self.get_logger().info(
+                f"[Bottle] Stage 5 attempt {idx}/{len(attempts)} ({cfg['label']})."
+            )
+            ok_align, above_dest = self.arm.move_above_and_align_drop(
+                dest_pose=dest,
+                standoff_z=float(cfg["standoff_z"]),
+                above_pos_tol=float(cfg["above_pos_tol"]),
+                align_xy_tol=float(cfg["align_xy_tol"]),
+                align_z_tol=float(cfg["align_z_tol"]),
+                require_orientation=bool(cfg["require_orientation"]),
+            )
+            if ok_align:
+                return True, above_dest
+        return False, None
+
+    def _lower_to_destination_with_fallbacks(self, start_pose: Pose, dest_pose: Pose, above_dest: Pose) -> bool:
+        # [FLAG bottle-stage6-fallbacks] If the nominal stepwise lower dead-ends, retry the place with
+        # a direct pose fallback and then a midpoint split descent before giving up.
+        if self._descend_to_drop_stepwise(start_pose, dest_pose):
+            return True
+
+        self.get_logger().warn("[Bottle] Stage 6 stepwise descent failed. Trying direct pose lower fallback.")
+        if self.arm.go_to_pose(
+            dest_pose,
+            tol=PoseTolerance(
+                pos=DROP_DIRECT_POSE_POS_TOL,
+                ori_xy=DROP_DIRECT_POSE_ORI_XY_TOL,
+                ori_z=DROP_DIRECT_POSE_ORI_Z_TOL,
+            ),
+            orientation_required=True,
+        ):
+            return True
+
+        current = self.arm.get_current_end_effector_pose(timeout=1.0) or start_pose
+        midpoint = copy.deepcopy(dest_pose)
+        midpoint.position.z = max(
+            float(dest_pose.position.z) + float(DROP_MIDPOINT_MIN_Z_GAP),
+            0.5 * (float(current.position.z) + float(dest_pose.position.z)),
+        )
+        self.get_logger().warn("[Bottle] Direct lower failed. Trying midpoint split descent fallback.")
+        log_pose(self, "[Bottle] Stage 6 midpoint fallback target", midpoint)
+        if not self.arm.go_to_pose(
+            midpoint,
+            tol=PoseTolerance(
+                pos=DROP_DIRECT_POSE_POS_TOL,
+                ori_xy=DROP_DIRECT_POSE_ORI_XY_TOL,
+                ori_z=DROP_DIRECT_POSE_ORI_Z_TOL,
+            ),
+            orientation_required=True,
+        ):
+            return False
+
+        return self.arm.go_to_pose(
+            dest_pose,
+            tol=PoseTolerance(
+                pos=DROP_DIRECT_POSE_POS_TOL,
+                ori_xy=DROP_DIRECT_POSE_ORI_XY_TOL,
+                ori_z=DROP_DIRECT_POSE_ORI_Z_TOL,
+            ),
+            orientation_required=True,
+        )
 
     def _post_place_escape(self) -> bool:
         """
@@ -517,140 +727,160 @@ class PickDroppedBottle(Node):
         """
         obj = OBJECTS[BOTTLE_ID]
         dest = obj.destination
+        holding_object = False
+        above_dest = None
 
-        # Compute grasp and approach poses based on the detected bottle pose
-        grasp, approach, grasp_mode = compute_task_pick_poses(
-            tag_id=BOTTLE_ID,
-            obj=obj,
-            tag_pose=bottle_pose,
-            min_grasp_z=float(PICK_DROPPED_BOTTLE_CONFIG["min_grasp_floor_z"]),
-            min_approach_above_grasp_z=float(
-                PICK_DROPPED_BOTTLE_CONFIG["min_approach_above_grasp_z"]
-            ),
-        )
+        try:
+            # Compute grasp and approach poses based on the detected bottle pose
+            grasp, approach, grasp_mode = compute_task_pick_poses(
+                tag_id=BOTTLE_ID,
+                obj=obj,
+                tag_pose=bottle_pose,
+                min_grasp_z=float(PICK_DROPPED_BOTTLE_CONFIG["min_grasp_floor_z"]),
+                min_approach_above_grasp_z=float(
+                    PICK_DROPPED_BOTTLE_CONFIG["min_approach_above_grasp_z"]
+                ),
+            )
 
-        log_pose(self, "[Bottle] Grasp pose", grasp)
-        log_pose(self, "[Bottle] Approach pose", approach)
-        log_pose(self, "[Bottle] Destination pose", dest)
+            log_pose(self, "[Bottle] Grasp pose", grasp)
+            log_pose(self, "[Bottle] Approach pose", approach)
+            log_pose(self, "[Bottle] Destination pose", dest)
 
-        if self._check_cancel():
-            return False
+            if self._cancel_guard("before Stage 1 approach"):
+                return False
 
-        # Stage 1: open + approach
-        if not self.arm.open_gripper():
-            self.get_logger().error("Failed to open gripper.")
-            return False
+            # Stage 1: open + approach
+            if not self.arm.open_gripper():
+                self.get_logger().error("Failed to open gripper.")
+                return False
 
-        self.get_logger().info(f"[Bottle] Stage 1: approach ({grasp_mode})")
-        if not self._move_to_approach(approach, grasp_mode):
-            self.get_logger().error("Failed to move to bottle approach pose.")
-            return False
+            self.get_logger().info(f"[Bottle] Stage 1: approach ({grasp_mode})")
+            if not self._move_to_approach(approach, grasp_mode):
+                if self._cancel_guard("during Stage 1 approach"):
+                    return False
+                self.get_logger().error("Failed to move to bottle approach pose.")
+                return False
 
-        if self._check_cancel():
-            return False
+            if self._cancel_guard("after Stage 1 approach"):
+                return False
 
-        # Stage 2: remove collision object and descend/push to grasp
-        remove_collision_object(self, f"obj_{BOTTLE_ID}")
-        time.sleep(float(FLOW_CONFIG["scene_remove_sync_s"]))
+            # Stage 2: remove collision object and descend/push to grasp
+            remove_collision_object(self, f"obj_{BOTTLE_ID}")
+            time.sleep(float(FLOW_CONFIG["scene_remove_sync_s"]))
 
-        if not self._cartesian_to_grasp(grasp):
-            self.get_logger().error("Failed to move to bottle grasp pose.")
-            return False
+            if not self._cartesian_to_grasp(grasp):
+                if self._cancel_guard("during Stage 2 Cartesian grasp"):
+                    return False
+                self.get_logger().error("Failed to move to bottle grasp pose.")
+                return False
 
-        # Stage 3: close gripper + attach
-        self.get_logger().info("[Bottle] Stage 3: closing gripper.")
-        if not self.arm.close_gripper(width=obj.gripper_width, force=obj.gripper_force):
-            self.get_logger().error("Failed to close gripper on bottle.")
-            return False
+            # Stage 3: close gripper + attach
+            self.get_logger().info("[Bottle] Stage 3: closing gripper.")
+            if not self.arm.close_gripper(width=obj.gripper_width, force=obj.gripper_force):
+                if self._cancel_guard("during Stage 3 gripper close"):
+                    return False
+                self.get_logger().error("Failed to close gripper on bottle.")
+                return False
 
-        attach_object(
-            self,
-            f"obj_{BOTTLE_ID}",
-            self.arm.END_EFFECTOR,
-            GRIPPER_TOUCH_LINKS,
-            tag_id=BOTTLE_ID,
-            tag_pose=bottle_pose,
-        )
-        time.sleep(float(FLOW_CONFIG["gripper_attach_sync_s"]))
+            attach_object(
+                self,
+                f"obj_{BOTTLE_ID}",
+                self.arm.END_EFFECTOR,
+                GRIPPER_TOUCH_LINKS,
+                tag_id=BOTTLE_ID,
+                tag_pose=bottle_pose,
+                # [FLAG bottle-carry-horizontal] The dropped bottle is grasped lying on its side.
+                # Tell the shared scene attachment helper to keep the carried bottle horizontal so
+                # the planning-scene model matches the real grasp and does not stand upright in-hand.
+                carry_orientation_mode="top_cylinder_keep_horizontal",
+            )
+            time.sleep(float(FLOW_CONFIG["gripper_attach_sync_s"]))
+            holding_object = True
 
-        if hasattr(self.scene, "mark_picked"):
-            try:
-                self.scene.mark_picked(BOTTLE_ID)
-            except Exception:
-                pass
+            if self._cancel_guard("after Stage 3 attach", holding_object=True):
+                return False
 
-        # Stage 4: lift
-        self.get_logger().info("[Bottle] Stage 4: lifting bottle.")
-        if not self._lift_after_grasp(grasp):
-            self.get_logger().error("Failed to lift bottle clear of floor.")
+            if hasattr(self.scene, "mark_picked"):
+                try:
+                    self.scene.mark_picked(BOTTLE_ID)
+                except Exception:
+                    pass
+
+            # Stage 4: lift
+            self.get_logger().info("[Bottle] Stage 4: lifting bottle.")
+            if not self._lift_after_grasp(grasp):
+                if self._cancel_guard("during Stage 4 lift", holding_object=True):
+                    return False
+                self.get_logger().error("Failed to lift bottle clear of floor.")
+                self._best_effort_release_held_bottle("Stage 4 lift failed.", retreat_pose=approach)
+                return False
+
+            if self._cancel_guard("after Stage 4 lift", holding_object=True):
+                return False
+
+            # Stage 5: move above destination
+            self.get_logger().info("[Bottle] Stage 5: move above destination.")
+            ok_align, above_dest = self._move_above_destination_with_fallbacks(dest)
+            if not ok_align:
+                if self._cancel_guard("during Stage 5 move above destination", holding_object=True):
+                    return False
+                self.get_logger().error("Failed to move above bottle destination.")
+                if holding_object:
+                    self._best_effort_release_held_bottle(
+                        "Stage 5 move above destination failed.",
+                        retreat_pose=above_dest if above_dest is not None else None,
+                    )
+                return False
+
+            # Stage 6: lower to destination
+            self.get_logger().info("[Bottle] Stage 6: lowering to destination.")
+            current_drop_start = self.arm.get_current_end_effector_pose(timeout=1.0)
+            if current_drop_start is None:
+                self.get_logger().warn(
+                    "[Bottle] Stage 6 could not read live EE pose after alignment; using planned above pose."
+                )
+                current_drop_start = above_dest
+            else:
+                log_pose(self, "[Bottle] Stage 6 start (live/current)", current_drop_start)
+
+            if not self._lower_to_destination_with_fallbacks(current_drop_start, dest, above_dest):
+                if self._cancel_guard("during Stage 6 lower to destination", holding_object=True):
+                    return False
+                self.get_logger().error("Failed to lower bottle to destination.")
+                if holding_object:
+                    self._best_effort_release_held_bottle(
+                        "Stage 6 lower to destination failed.",
+                        retreat_pose=above_dest,
+                    )
+                return False
+
+            # Stage 7: release
+            self.get_logger().info("[Bottle] Stage 7: releasing bottle.")
             self.arm.open_gripper()
             detach_object(self, f"obj_{BOTTLE_ID}", self.arm.END_EFFECTOR)
-            return False
+            remove_collision_object(self, f"obj_{BOTTLE_ID}")
+            time.sleep(float(FLOW_CONFIG["drop_fail_release_wait_s"]))
+            holding_object = False
 
-        if self._check_cancel():
-            return False
+            # Stage 8: escape
+            self.get_logger().info("[Bottle] Stage 8: retreating from destination.")
+            self._post_place_escape()
 
-        # Stage 5: move above destination
-        self.get_logger().info("[Bottle] Stage 5: move above destination.")
-        ok_align, above_dest = self.arm.move_above_and_align_drop(
-            dest_pose=dest,
-            standoff_z=float(FLOW_CONFIG["dest_standoff_z"]),
-            above_pos_tol=0.06,
-            align_xy_tol=0.35,
-            align_z_tol=3.14,
-            require_orientation=True,
-        )
-        if not ok_align:
-            self.get_logger().warn(
-                "[Bottle] Stage 5 orientation align failed above destination; retrying position-only."
-            )
-            ok_align, above_dest = self.arm.move_above_and_align_drop(
-                dest_pose=dest,
-                standoff_z=float(FLOW_CONFIG["dest_standoff_z"]),
-                above_pos_tol=0.06,
-                align_xy_tol=0.35,
-                align_z_tol=3.14,
-                require_orientation=False,
-            )
-        if not ok_align:
-            self.get_logger().error("Failed to move above bottle destination.")
-            return False
-
-        # Stage 6: lower to destination
-        self.get_logger().info("[Bottle] Stage 6: lowering to destination.")
-        current_drop_start = self.arm.get_current_end_effector_pose(timeout=1.0)
-        if current_drop_start is None:
-            self.get_logger().warn(
-                "[Bottle] Stage 6 could not read live EE pose after alignment; using planned above pose."
-            )
-            current_drop_start = above_dest
-        else:
-            log_pose(self, "[Bottle] Stage 6 start (live/current)", current_drop_start)
-
-        if not self._descend_to_drop_stepwise(current_drop_start, dest):
-            self.get_logger().error("Failed to lower bottle to destination.")
-            return False
-
-        # Stage 7: release
-        self.get_logger().info("[Bottle] Stage 7: releasing bottle.")
-        self.arm.open_gripper()
-        detach_object(self, f"obj_{BOTTLE_ID}", self.arm.END_EFFECTOR)
-        time.sleep(float(FLOW_CONFIG["drop_fail_release_wait_s"]))
-
-        # Stage 8: escape
-        self.get_logger().info("[Bottle] Stage 8: retreating from destination.")
-        self._post_place_escape()
-
-        return True
+            return True
+        except Exception as exc:
+            if holding_object:
+                self._best_effort_release_held_bottle(
+                    f"Unexpected exception while carrying bottle: {exc}",
+                    retreat_pose=above_dest if above_dest is not None else None,
+                )
+            raise
 
     def execute_task(self):
         """Top-level task execution routine."""
         parked = False
         try:
-            if self._check_cancel():
+            if self.base.is_cancelled():
                 self.get_logger().warn("Task cancelled before start.")
-                self._park_retract(context="cancelled before start")
-                parked = True
                 return
 
             self.base.publish_status(STATUS_RUNNING, "Starting pick_dropped_bottle task.")
@@ -659,6 +889,8 @@ class PickDroppedBottle(Node):
 
             # Move to scan pose first so the camera can detect the bottle
             if not self._move_to_scan_pose():
+                if self.base.is_cancelled():
+                    return
                 self.base.publish_status(STATUS_FAILED, "Failed to move to scan pose.")
                 self._park_retract(context="scan pose failure")
                 parked = True
@@ -671,6 +903,8 @@ class PickDroppedBottle(Node):
                 timeout=float(PICK_DROPPED_BOTTLE_CONFIG["pose_timeout_s"]),
             )
             if bottle_pose is None:
+                if self.base.is_cancelled():
+                    return
                 self.base.publish_status(STATUS_FAILED, "Bottle not detected within timeout.")
                 self._park_retract(context="pose timeout")
                 parked = True
@@ -681,6 +915,8 @@ class PickDroppedBottle(Node):
             try:
                 ok = self._pick_and_place_bottle(bottle_pose)
                 if not ok:
+                    if self.base.is_cancelled():
+                        return
                     self._recover_motion(context="pick_dropped_bottle failed")
                     self.base.publish_status(
                         STATUS_FAILED,
@@ -702,7 +938,7 @@ class PickDroppedBottle(Node):
 
         finally:
             # Make sure the arm is parked even if something unexpected happens
-            if not parked:
+            if (not parked) and (not self.base.is_cancelled()):
                 self._park_retract(context="task exit")
 
     def destroy_node(self):

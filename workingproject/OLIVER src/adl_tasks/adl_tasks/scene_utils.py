@@ -106,7 +106,12 @@ def _attached_center_offset_m(tag_id: int):
     return None
 
 
-def _make_attached_collision_from_ee(object_id: str, tag_id: int, ee_pose: Pose):
+def _make_attached_collision_from_ee(
+    object_id: str,
+    tag_id: int,
+    ee_pose: Pose,
+    carry_orientation_mode: str | None = None,
+):
     prim = _object_primitive_for_tag(tag_id)
     if prim is None:
         return None
@@ -132,6 +137,34 @@ def _make_attached_collision_from_ee(object_id: str, tag_id: int, ee_pose: Pose)
         center.orientation.y = 0.0
         center.orientation.z = 0.0
         center.orientation.w = 1.0
+    elif (
+        carry_orientation_mode == "top_cylinder_keep_horizontal"
+        and shape["shape"] == "cylinder"
+        and getattr(obj, "approach_type", None) == "top"
+    ):
+        # [FLAG attached-bottle-horizontal] Keep a top-grasped fallen bottle horizontal in the
+        # carried planning-scene model. This is opt-in from the task layer so successful ADLs
+        # keep their current attachment behavior unless they explicitly request this bottle mode.
+        cyl_z = np.array(ee_y, dtype=float)
+        cyl_z = cyl_z / (np.linalg.norm(cyl_z) + 1e-9)
+        cyl_x = np.array(ee_x, dtype=float)
+        cyl_x = cyl_x - cyl_z * np.dot(cyl_x, cyl_z)
+        if np.linalg.norm(cyl_x) < 1e-6:
+            cyl_x = np.array(ee_z, dtype=float)
+            cyl_x = cyl_x - cyl_z * np.dot(cyl_x, cyl_z)
+        cyl_x = cyl_x / (np.linalg.norm(cyl_x) + 1e-9)
+        cyl_y = np.cross(cyl_z, cyl_x)
+        cyl_y = cyl_y / (np.linalg.norm(cyl_y) + 1e-9)
+        rot = np.column_stack((cyl_x, cyl_y, cyl_z))
+        u, _, vt = np.linalg.svd(rot)
+        rot = u @ vt
+        if np.linalg.det(rot) < 0:
+            rot[:, -1] *= -1
+        q = Rotation.from_matrix(rot).as_quat()
+        center.orientation.x = float(q[0])
+        center.orientation.y = float(q[1])
+        center.orientation.z = float(q[2])
+        center.orientation.w = float(q[3])
     else:
         center.orientation = ee_pose.orientation
 
@@ -244,6 +277,7 @@ def attach_object(
     touch_links: list,
     tag_id: int = None,
     tag_pose: Pose = None,
+    carry_orientation_mode: str | None = None,
 ):
     pub = _get_scene_pub(node)
 
@@ -268,6 +302,7 @@ def attach_object(
                 object_id=object_id,
                 tag_id=int(resolved_tag_id),
                 ee_pose=ee_pose,
+                carry_orientation_mode=carry_orientation_mode,
             )
         if collision_object is None and tag_pose is not None:
             # Fallback: still allow tag-based reconstruction if FK/live EE is unavailable.

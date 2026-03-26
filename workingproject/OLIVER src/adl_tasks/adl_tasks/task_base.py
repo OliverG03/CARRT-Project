@@ -107,4 +107,6 @@ class TaskBase:
             self.publish_status(STATUS_FAILED, f"Exception: {e}")
         finally:
             self.executing = False
-            self.publish_status(STATUS_IDLE, "Ready for next ADL task.")
+            # [FLAG task-terminal-stickiness] Do not auto-publish IDLE at task end. Keep the task's
+            # terminal result visible so the UI can continue showing SUCCEEDED/FAILED/CANCELLED until
+            # a new task starts, instead of immediately replacing the result with IDLE.

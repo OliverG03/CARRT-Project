@@ -37,8 +37,8 @@ DETECTION_TIMEOUT = 5.0 # seconds
 CAMERA_PARAMS = [554.25, 554.25, 320.0, 240.0] # fx, fy, cx, cy for the wrist-mounted camera (
 CAMERA_TOPIC = "/wrist_mounted_camera/image"
 
-### switch from .05 to .025 for 2.5cm tags, 5cm was too large for our objects
-TAG_SIZE = 0.025 # meters, adjust based on actual tag size used (2.5cm)
+### switch from .05 to .02 for 2.0cm tags, 5cm was too large for our objects
+TAG_SIZE = 0.02 # meters, adjust based on actual tag size used (2.5cm)
 
 class VisionAprilTagNode(Node):
     def __init__(self):

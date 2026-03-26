@@ -1298,19 +1298,18 @@ class MoveItHelper:
             cancel_cb=cancel_cb,
         )
 
-    # Compare live joints against the configured retract posture with wrapped-angle-safe deltas.
-    def is_near_retract(self, max_err_rad: float = 0.10) -> bool:
+    def _is_near_joint_config(self, targets: dict, label: str, max_err_rad: float = 0.10) -> bool:
         joints = self.get_arm_joint_positions(timeout=1.0)
         if joints is None:
-            self.node.get_logger().warn("is_near_retract: no current arm joint state available.")
+            self.node.get_logger().warn(f"{label}: no current arm joint state available.")
             return False
 
         worst_joint = None
         worst_err = 0.0
-        for joint_name, target in self.RETRACT_JOINTS.items():
+        for joint_name, target in targets.items():
             cur = joints.get(joint_name, None)
             if cur is None:
-                self.node.get_logger().warn(f"is_near_retract: missing joint {joint_name} in current state.")
+                self.node.get_logger().warn(f"{label}: missing joint {joint_name} in current state.")
                 return False
             err = abs(self._canonicalize_joint_angle(float(cur) - float(target)))
             if err > worst_err:
@@ -1322,10 +1321,20 @@ class MoveItHelper:
 
         if worst_joint is not None:
             self.node.get_logger().info(
-                f"is_near_retract: current arm is not at retract "
+                f"{label}: current arm is not at target "
                 f"(worst={worst_joint}:{worst_err:.3f} rad > {float(max_err_rad):.3f})."
             )
         return False
+
+    # Compare live joints against the configured retract posture with wrapped-angle-safe deltas.
+    def is_near_retract(self, max_err_rad: float = 0.10) -> bool:
+        return self._is_near_joint_config(self.RETRACT_JOINTS, "is_near_retract", max_err_rad=max_err_rad)
+
+    # [FLAG helper-near-home] Some tasks still end in HOME rather than RETRACT. Expose the same
+    # wrapped-angle-safe check for HOME so the shared controller can treat a settled home park as
+    # successful instead of reporting a false FAILED idle status.
+    def is_near_home(self, max_err_rad: float = 0.10) -> bool:
+        return self._is_near_joint_config(self.HOME_JOINTS, "is_near_home", max_err_rad=max_err_rad)
 
     # wait for settle: wait till arm has stopped moving
     # compare max_joint_delta across arms with a timeout
