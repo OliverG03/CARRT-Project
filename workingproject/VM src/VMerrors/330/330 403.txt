@@ -1,0 +1,809 @@
+iver@oliver-VirtualBox:~$ cd ~/workspace/ros2_kortex_ws
+source /opt/ros/jazzy/setup.bash
+colcon build --symlink-install --packages-select adl_tasks
+source install/setup.bash
+ros2 launch adl_tasks arm_vbox.launch.py robot_ip:=192.168.0.10 use_fake_hardware:=false use_joint_state_sanitizer:=false launch_rviz:=false
+Starting >>> adl_tasks
+Finished <<< adl_tasks [4.06s]          
+
+Summary: 1 package finished [4.93s]
+[INFO] [launch]: All log files can be found below /home/oliver/.ros/log/2026-03-30-16-00-55-018337-oliver-VirtualBox-3096
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [launch.user]: [arm_vbox.launch] MoveIt current state source: raw /joint_states. ADL task helpers expect /joint_states_sanitized when motion tasks are enabled.
+[INFO] [launch.user]: [arm_vbox.launch] Using ADL VBox controller config (share/adl_tasks/config/ros2_controllers_vbox.yaml, update_rate:=250 Hz).
+[INFO] [ros2_control_node-1]: process started with pid [3100]
+[INFO] [robot_state_publisher-2]: process started with pid [3101]
+[INFO] [spawner-3]: process started with pid [3102]
+[INFO] [spawner-4]: process started with pid [3103]
+[INFO] [spawner-5]: process started with pid [3104]
+[INFO] [spawner-6]: process started with pid [3105]
+[INFO] [spawner-7]: process started with pid [3106]
+[INFO] [static_transform_publisher-8]: process started with pid [3107]
+[static_transform_publisher-8] [INFO] [1774900856.741415311] [static_transform_publisher]: Spinning until stopped - publishing transform
+[static_transform_publisher-8] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-8] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-8] from 'world' to 'base_link'
+[robot_state_publisher-2] [INFO] [1774900856.873044865] [robot_state_publisher]: Robot initialized
+[ros2_control_node-1] [INFO] [1774900857.337675300] [controller_manager]: Using Steady (Monotonic) clock for triggering controller manager cycles.
+[ros2_control_node-1] [INFO] [1774900857.570014484] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
+[ros2_control_node-1] [INFO] [1774900857.601904166] [controller_manager]: update rate is 250 Hz
+[ros2_control_node-1] [INFO] [1774900857.601989157] [controller_manager]: Overruns handling is : enabled
+[ros2_control_node-1] [INFO] [1774900857.601996065] [controller_manager]: Spawning controller_manager RT thread with scheduler priority: 50
+[ros2_control_node-1] [WARN] [1774900857.603069781] [controller_manager]: Could not enable FIFO RT scheduling policy: with error number <1>(Operation not permitted). See [https://control.ros.org/master/doc/ros2_control/controller_manager/doc/userdoc.html] for details on how to enable realtime scheduling.
+[ros2_control_node-1] [INFO] [1774900857.603188735] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [INFO] [1774900857.603908604] [controller_manager]: Enforcing command limits is disabled. Command limits from URDF will be ignored.
+[ros2_control_node-1] [INFO] [1774900857.613284014] [controller_manager]: Loading hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [WARN] [1774900857.631343211] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.996027 ms (missed cycles : 2).
+[ros2_control_node-1] [INFO] [1774900857.723177053] [KortexMultiInterfaceHardware]: Setting severity threshold to DEBUG
+[ros2_control_node-1] [INFO] [1774900857.723235417] [controller_manager]: Loaded hardware 'KortexMultiInterfaceHardware' from plugin 'kortex_driver/KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1774900857.723359121] [controller_manager]: Initialize hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1774900857.753233196] [KortexMultiInterfaceHardware]: Configuring Hardware Interface
+[ros2_control_node-1] [INFO] [1774900857.754522719] [KortexMultiInterfaceHardware]: Robot ip is '192.168.0.10'
+[ros2_control_node-1] [INFO] [1774900857.754648614] [KortexMultiInterfaceHardware]: Username is 'admin'
+[ros2_control_node-1] [INFO] [1774900857.754659184] [KortexMultiInterfaceHardware]: Port used '10000'
+[ros2_control_node-1] [INFO] [1774900857.754661609] [KortexMultiInterfaceHardware]: Realtime port used '10001'
+[ros2_control_node-1] [INFO] [1774900857.754664074] [KortexMultiInterfaceHardware]: Session inactivity timeout is '60000'
+[ros2_control_node-1] [INFO] [1774900857.754666587] [KortexMultiInterfaceHardware]: Connection inactivity timeout is '2000'
+[ros2_control_node-1] [INFO] [1774900857.754669224] [KortexMultiInterfaceHardware]: Gripper joint name is 'robotiq_85_left_knuckle_joint'
+[ros2_control_node-1] [INFO] [1774900857.754690778] [KortexMultiInterfaceHardware]: Connecting to robot at 192.168.0.10
+[spawner-4] [INFO] [1774900857.953880686] [spawner_joint_trajectory_controller]: waiting for service /controller_manager/list_controllers to become available...
+[ros2_control_node-1] [INFO] [1774900858.302047980] [KortexMultiInterfaceHardware]: Creating session for communication
+[ros2_control_node-1] [WARN] [1774900858.641680890] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 8.332201 ms (missed cycles : 3).
+[ros2_control_node-1] [INFO] [1774900859.105748937] [KortexMultiInterfaceHardware]: Session created
+[ros2_control_node-1] [WARN] [1774900859.892611336] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 39.262957 ms (missed cycles : 10).
+[ros2_control_node-1] [WARN] [1774900861.062116928] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.769309 ms (missed cycles : 2).
+[ros2_control_node-1] [INFO] [1774900861.812102000] [KortexMultiInterfaceHardware]: Actuator count reported by robot is '7'
+[ros2_control_node-1] [INFO] [1774900861.812270650] [KortexMultiInterfaceHardware]: Using internal bus communication for gripper!
+[ros2_control_node-1] [INFO] [1774900861.812279473] [KortexMultiInterfaceHardware]: Hardware Interface successfully configured
+[ros2_control_node-1] [INFO] [1774900861.812316690] [controller_manager]: Successful initialization of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [DEBUG] [1774900861.812408332] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_1
+[ros2_control_node-1] [DEBUG] [1774900861.812430195] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_2
+[ros2_control_node-1] [DEBUG] [1774900861.812432159] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_3
+[ros2_control_node-1] [DEBUG] [1774900861.812433408] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_4
+[ros2_control_node-1] [DEBUG] [1774900861.812434994] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_5
+[ros2_control_node-1] [DEBUG] [1774900861.812436241] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_6
+[ros2_control_node-1] [DEBUG] [1774900861.812437326] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_7
+[ros2_control_node-1] [DEBUG] [1774900861.812438405] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: robotiq_85_left_knuckle_joint
+[ros2_control_node-1] [INFO] [1774900861.813209236] [resource_manager]: 'configure' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1774900861.813232487] [resource_manager]: Successful 'configure' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1774900861.813251084] [resource_manager]: 'activate' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1774900861.813261943] [KortexMultiInterfaceHardware]: Activating KortexMultiInterfaceHardware...
+[ros2_control_node-1] [WARN] [1774900862.078711937] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.364864 ms (missed cycles : 2).
+[ros2_control_node-1] [INFO] [1774900862.079236847] [KortexMultiInterfaceHardware]: Gripper initial position is '0.873365'.
+[ros2_control_node-1] [INFO] [1774900862.092965215] [KortexMultiInterfaceHardware]: KortexMultiInterfaceHardware successfully activated!
+[ros2_control_node-1] [INFO] [1774900862.093022433] [resource_manager]: Successful 'activate' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1774900862.093106895] [controller_manager]: Registering statistics for : KortexMultiInterfaceHardware
+[ros2_control_node-1] [INFO] [1774900862.093166786] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[ros2_control_node-1] [INFO] [1774900862.224747154] [controller_manager]: Loading controller : 'joint_trajectory_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[ros2_control_node-1] [INFO] [1774900862.224865234] [controller_manager]: Loading controller 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1774900862.306734792] [controller_manager]: Controller 'joint_trajectory_controller' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml 
+[ros2_control_node-1] [WARN] [1774900862.626749802] [controller_manager]: Overrun might occur, Total time : 532752.178 us (Expected < 4000.000 us) --> Read time : 265229.126 us, Update time : 16.145 us, Write time : 267506.907 us
+[spawner-4] [INFO] [1774900862.646642010] [spawner_joint_trajectory_controller]: Loaded joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1774900862.653642918] [controller_manager]: Configuring controller: 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1774900862.654241309] [joint_trajectory_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[ros2_control_node-1] [INFO] [1774900862.654442302] [joint_trajectory_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[ros2_control_node-1] [INFO] [1774900862.654509301] [joint_trajectory_controller]: Using 'splines' interpolation method.
+[ros2_control_node-1] [INFO] [1774900862.699177721] [joint_trajectory_controller]: Action status changes will be monitored at 20.00 Hz.
+[ros2_control_node-1] [INFO] [1774900862.925732488] [controller_manager]: Activating controllers: [ joint_trajectory_controller ]
+[ros2_control_node-1] [WARN] [1774900863.180959460] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 263.614391 ms (missed cycles : 66).
+[ros2_control_node-1] [INFO] [1774900863.871031942] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [ERROR] [1774900866.903983812] [KortexMultiInterfaceHardware]: Runtime error: timeout detected: BaseCyclicClient::Refresh
+[ros2_control_node-1] 
+[ros2_control_node-1] [WARN] [1774900866.904060540] [controller_manager]: Overrun might occur, Total time : 3722178.819 us (Expected < 4000.000 us) --> Read time : 21.231 us, Update time : 689010.573 us (Switch time : 688992.914 us (Switch chained mode time : 10.886 us, perform mode change time : 687463.285 us, Activation time : 1506.206 us, Deactivation time : 5.491 us)), Write time : 3033147.015 us
+[ros2_control_node-1] [WARN] [1774900866.904115882] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 3722.769983 ms (missed cycles : 931).
+[spawner-4] [INFO] [1774900866.907682469] [spawner_joint_trajectory_controller]: Configured and activated joint_trajectory_controller
+[ros2_control_node-1] [WARN] [1774900866.916249890] [controller_manager]: Overrun might occur, Total time : 10632.546 us (Expected < 4000.000 us) --> Read time : 21.492 us, Update time : 152.803 us, Write time : 10458.251 us
+[spawner-3] [INFO] [1774900867.125075516] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-4]: process has finished cleanly [pid 3103]
+[ros2_control_node-1] [INFO] [1774900867.191440098] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[ros2_control_node-1] [INFO] [1774900867.191699579] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1774900867.216661224] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml 
+[spawner-3] [INFO] [1774900867.288132574] [spawner_joint_state_broadcaster]: Loaded joint_state_broadcaster
+[ros2_control_node-1] [INFO] [1774900867.291673501] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1774900867.292160132] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[ros2_control_node-1] [INFO] [1774900867.326037557] [controller_manager]: Activating controllers: [ joint_state_broadcaster ]
+[ros2_control_node-1] [INFO] [1774900867.343749413] [controller_manager]: Successfully switched controllers!
+[spawner-3] [INFO] [1774900867.380225305] [spawner_joint_state_broadcaster]: Configured and activated joint_state_broadcaster
+[spawner-7] [INFO] [1774900867.548143160] [spawner_fault_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-3]: process has finished cleanly [pid 3102]
+[ros2_control_node-1] [INFO] [1774900867.807193185] [controller_manager]: Loading controller : 'fault_controller' of type 'picknik_reset_fault_controller/PicknikResetFaultController'
+[ros2_control_node-1] [INFO] [1774900867.807231214] [controller_manager]: Loading controller 'fault_controller'
+[ros2_control_node-1] [INFO] [1774900867.827589416] [controller_manager]: Controller 'fault_controller' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml 
+[INFO] [move_group-9]: process started with pid [3214]
+[move_group-9] [INFO] [1774900868.965901142] [move_group.moveit.moveit.ros.rdf_loader]: Loaded robot model in 0.0097048 seconds
+[move_group-9] [INFO] [1774900868.966152444] [move_group.moveit.moveit.core.robot_model]: Loading robot model 'gen3'...
+[move_group-9] [INFO] [1774900868.966171996] [move_group.moveit.moveit.core.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[move_group-9] [INFO] [1774900869.359380329] [move_group.moveit.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'manipulator': 1 1 1 1 1 1 1
+[move_group-9] [INFO] [1774900869.875970969] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-9] [INFO] [1774900869.876862543] [move_group.moveit.moveit.ros.moveit_cpp]: Listening to 'joint_states' for joint states
+[move_group-9] [INFO] [1774900869.878038890] [move_group.moveit.moveit.ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
+[move_group-9] [INFO] [1774900869.879022305] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
+[move_group-9] [INFO] [1774900869.879043480] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopping existing planning scene publisher.
+[move_group-9] [INFO] [1774900869.880747399] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopped publishing maintained planning scene.
+[move_group-9] [INFO] [1774900869.883758385] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-9] [INFO] [1774900869.883913294] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[move_group-9] [INFO] [1774900869.898991702] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/planning_scene'
+[move_group-9] [INFO] [1774900869.899035968] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
+[move_group-9] [INFO] [1774900869.905011960] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'collision_object'
+[move_group-9] [INFO] [1774900869.909362813] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
+[move_group-9] [WARN] [1774900869.912236207] [move_group.moveit.moveit.ros.occupancy_map_monitor]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
+[move_group-9] [ERROR] [1774900869.912433869] [move_group.moveit.moveit.ros.occupancy_map_monitor]: No 3D sensor plugin(s) defined for octomap updates
+[move_group-9] [INFO] [1774900870.163887292] [move_group.moveit.moveit.ros.planning_pipeline]: Successfully loaded planner 'OMPL'
+[move_group-9] [INFO] [1774900870.169001533] [move_group]: Try loading adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-9] [INFO] [1774900870.181228987] [move_group]: Loaded adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-9] [INFO] [1774900870.181440216] [move_group]: Try loading adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-9] [INFO] [1774900870.181959560] [move_group]: Loaded adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-9] [INFO] [1774900870.181974791] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-9] [INFO] [1774900870.181996054] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-9] [INFO] [1774900870.181998945] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-9] [INFO] [1774900870.182005926] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-9] [INFO] [1774900870.187012382] [move_group]: Try loading adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-9] [INFO] [1774900870.218547221] [move_group]: Loaded adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-9] [INFO] [1774900870.218586475] [move_group]: Try loading adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-9] [INFO] [1774900870.230961059] [move_group]: Loaded adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-9] [INFO] [1774900870.231638726] [move_group]: Try loading adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-9] [INFO] [1774900870.233210164] [move_group]: Loaded adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-9] [INFO] [1774900870.376310248] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added FollowJointTrajectory controller for joint_trajectory_controller
+[move_group-9] [INFO] [1774900870.376902986] [move_group.moveit.moveit.plugins.simple_controller_manager]: robotiq_gripper_controller will command a max effort of: 0
+[move_group-9] [INFO] [1774900870.388808263] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added GripperCommand controller for robotiq_gripper_controller
+[move_group-9] [INFO] [1774900870.389556375] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-9] [INFO] [1774900870.389606430] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-9] [INFO] [1774900870.393250410] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Trajectory execution is managing controllers
+[move_group-9] [INFO] [1774900870.394905948] [move_group]: MoveGroup debug mode is ON
+[ros2_control_node-1] [ERROR] [1774900870.396559589] [KortexMultiInterfaceHardware]: Runtime error: timeout detected: BaseCyclicClient::Refresh
+[ros2_control_node-1] 
+[ros2_control_node-1] [WARN] [1774900870.396711537] [controller_manager]: Overrun might occur, Total time : 3030806.149 us (Expected < 4000.000 us) --> Read time : 37.032 us, Update time : 3244.334 us, Write time : 3027524.783 us
+[ros2_control_node-1] [WARN] [1774900870.396771983] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 3031.426385 ms (missed cycles : 758).
+[ros2_control_node-1] [INFO] [1774900870.403253160] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [WARN] [1774900870.403346051] [controller_manager]: ResourceManager has already loaded a urdf. Ignoring attempt to reload a robot description.
+[spawner-7] [INFO] [1774900870.411445635] [spawner_fault_controller]: Loaded fault_controller
+[ros2_control_node-1] [INFO] [1774900870.414473800] [controller_manager]: Configuring controller: 'fault_controller'
+[ros2_control_node-1] [INFO] [1774900870.464923208] [controller_manager]: Activating controllers: [ fault_controller ]
+[move_group-9] [INFO] [1774900870.574445338] [move_group.moveit.moveit.ros.move_group.executable]: 
+[move_group-9] 
+[move_group-9] ********************************************************
+[move_group-9] * MoveGroup using: 
+[move_group-9] *     - apply_planning_scene_service
+[move_group-9] *     - clear_octomap_service
+[move_group-9] *     - get_group_urdf
+[move_group-9] *     - load_geometry_from_file
+[move_group-9] *     - CartesianPathService
+[move_group-9] *     - execute_trajectory_action
+[move_group-9] *     - get_planning_scene_service
+[move_group-9] *     - kinematics_service
+[move_group-9] *     - move_action
+[move_group-9] *     - motion_plan_service
+[move_group-9] *     - query_planners_service
+[move_group-9] *     - state_validation_service
+[move_group-9] *     - save_geometry_to_file
+[move_group-9] ********************************************************
+[move_group-9] 
+[move_group-9] [INFO] [1774900870.574650510] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context using pipeline ompl
+[move_group-9] [INFO] [1774900870.574668070] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context initialization complete
+[move_group-9] Loading 'move_group/ApplyPlanningSceneService'...
+[move_group-9] Loading 'move_group/ClearOctomapService'...
+[move_group-9] Loading 'move_group/GetUrdfService'...
+[move_group-9] Loading 'move_group/LoadGeometryFromFileService'...
+[move_group-9] Loading 'move_group/MoveGroupCartesianPathService'...
+[move_group-9] Loading 'move_group/MoveGroupExecuteTrajectoryAction'...
+[move_group-9] Loading 'move_group/MoveGroupGetPlanningSceneService'...
+[move_group-9] Loading 'move_group/MoveGroupKinematicsService'...
+[move_group-9] Loading 'move_group/MoveGroupMoveAction'...
+[move_group-9] Loading 'move_group/MoveGroupPlanService'...
+[move_group-9] Loading 'move_group/MoveGroupQueryPlannersService'...
+[move_group-9] Loading 'move_group/MoveGroupStateValidationService'...
+[move_group-9] Loading 'move_group/SaveGeometryToFileService'...
+[move_group-9] 
+[move_group-9] You can start planning now!
+[move_group-9] 
+[ros2_control_node-1] [ERROR] [1774900873.527280780] [controller_manager]: Exception of type : St13runtime_error thrown during write of the component 'KortexMultiInterfaceHardware': timeout detected: BaseCyclicClient::RefreshFeedback
+[ros2_control_node-1] 
+[ros2_control_node-1] [ERROR] [1774900873.527521406] [controller_manager]: Deactivating following hardware components as their write cycle resulted in an error: [ KortexMultiInterfaceHardware ]
+[ros2_control_node-1] [ERROR] [1774900873.527539283] [controller_manager]: Deactivating following controllers as their hardware components write cycle resulted in an error: [ joint_trajectory_controller joint_state_broadcaster fault_controller ]
+[ros2_control_node-1] [ERROR] [1774900873.527616354] [controller_manager]: Not acceptable command interfaces combination: 
+[ros2_control_node-1] Start interfaces: 
+[ros2_control_node-1] [
+[ros2_control_node-1] ]
+[ros2_control_node-1] Stop interfaces: 
+[ros2_control_node-1] [
+[ros2_control_node-1]   joint_1/position
+[ros2_control_node-1]   joint_2/position
+[ros2_control_node-1]   joint_3/position
+[ros2_control_node-1]   joint_4/position
+[ros2_control_node-1]   joint_5/position
+[ros2_control_node-1]   joint_6/position
+[ros2_control_node-1]   joint_7/position
+[ros2_control_node-1]   reset_fault/command
+[ros2_control_node-1]   reset_fault/async_success
+[ros2_control_node-1] ]
+[ros2_control_node-1] Not available: 
+[ros2_control_node-1] [
+[ros2_control_node-1]  joint_1/position
+[ros2_control_node-1]  joint_2/position
+[ros2_control_node-1]  joint_3/position
+[ros2_control_node-1]  joint_4/position
+[ros2_control_node-1]  joint_5/position
+[ros2_control_node-1]  joint_6/position
+[ros2_control_node-1]  joint_7/position
+[ros2_control_node-1]  reset_fault/command
+[ros2_control_node-1]  reset_fault/async_success
+[ros2_control_node-1] ]
+[ros2_control_node-1] 
+[ros2_control_node-1] [ERROR] [1774900873.527644721] [controller_manager]: Error while attempting mode switch when deactivating controllers in write cycle!
+[ros2_control_node-1] [WARN] [1774900873.528095030] [controller_manager]: Overrun might occur, Total time : 3002391.217 us (Expected < 4000.000 us) --> Read time : 20.184 us, Update time : 488.559 us, Write time : 3001882.474 us
+[ros2_control_node-1] [WARN] [1774900873.528133305] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 3002.787712 ms (missed cycles : 751).
+[ros2_control_node-1] [WARN] [1774900873.530745259] [controller_manager]: Component 'KortexMultiInterfaceHardware' is not in INACTIVE or ACTIVE state, skipping the perform switch
+[ros2_control_node-1] [ERROR] [1774900873.530823820] [controller_manager]: Error while performing mode switch.
+[ros2_control_node-1] [ERROR] [1774900873.531168945] [controller_manager]: Could not activate controller : 'fault_controller'
+[ros2_control_node-1] [ERROR] [1774900873.531201259] [controller_manager]: Failed switching controllers.... 
+[ros2_control_node-1] [ERROR] [1774900873.531216065] [controller_manager]: Unable to activate controllers: [ fault_controller  ]
+[spawner-7] [ERROR] [1774900873.540405086] [spawner_fault_controller]: Failed to activate controller : fault_controller
+[spawner-5] [INFO] [1774900873.760175194] [spawner_twist_controller]: waiting for service /controller_manager/list_controllers to become available...
+[ERROR] [spawner-7]: process has died [pid 3106, exit code 1, cmd '/home/oliver/workspace/ros2_kortex_ws/install/controller_manager/lib/controller_manager/spawner fault_controller -c /controller_manager --ros-args'].
+[ros2_control_node-1] [INFO] [1774900874.016132833] [controller_manager]: Loading controller : 'twist_controller' of type 'picknik_twist_controller/PicknikTwistController'
+[ros2_control_node-1] [INFO] [1774900874.016296933] [controller_manager]: Loading controller 'twist_controller'
+[ros2_control_node-1] [INFO] [1774900874.040253391] [controller_manager]: Controller 'twist_controller' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml 
+[spawner-5] [INFO] [1774900874.100196847] [spawner_twist_controller]: Loaded twist_controller
+[ros2_control_node-1] [INFO] [1774900874.104759798] [controller_manager]: Configuring controller: 'twist_controller'
+[ros2_control_node-1] [INFO] [1774900874.105954662] [twist_controller]: configure successful
+[spawner-6] [INFO] [1774900874.352041519] [spawner_robotiq_gripper_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-5]: process has finished cleanly [pid 3104]
+[ros2_control_node-1] [WARN] [1774900874.709089850] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 27.744689 ms (missed cycles : 7).
+[ros2_control_node-1] [INFO] [1774900875.226028331] [controller_manager]: Loading controller : 'robotiq_gripper_controller' of type 'position_controllers/GripperActionController'
+[ros2_control_node-1] [INFO] [1774900875.226091125] [controller_manager]: Loading controller 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1774900875.243323804] [controller_manager]: Controller 'robotiq_gripper_controller' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml 
+[ros2_control_node-1] [WARN] [1774900875.329788616] [robotiq_gripper_controller]: [Deprecated]: the `position_controllers/GripperActionController` and `effort_controllers::GripperActionController` controllers are replaced by 'parallel_gripper_controllers/GripperActionController' controller
+[spawner-6] [INFO] [1774900875.336387019] [spawner_robotiq_gripper_controller]: Loaded robotiq_gripper_controller
+[ros2_control_node-1] [INFO] [1774900875.344351954] [controller_manager]: Configuring controller: 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1774900875.344484814] [robotiq_gripper_controller]: Action status changes will be monitored at 20.000000 Hz.
+[ros2_control_node-1] [INFO] [1774900875.360805124] [controller_manager]: Activating controllers: [ robotiq_gripper_controller ]
+[ros2_control_node-1] [WARN] [1774900875.360895068] [controller_manager]: Unable to activate controller 'robotiq_gripper_controller' since the command interface 'robotiq_85_left_knuckle_joint/position' is not available.
+[spawner-6] [ERROR] [1774900875.363963931] [spawner_robotiq_gripper_controller]: Failed to activate controller : robotiq_gripper_controller
+[ERROR] [spawner-6]: process has died [pid 3105, exit code 1, cmd '/home/oliver/workspace/ros2_kortex_ws/install/controller_manager/lib/controller_manager/spawner robotiq_gripper_controller -c /controller_manager --ros-args'].
+[ros2_control_node-1] [WARN] [1774900875.757760890] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.414363 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900876.541974271] [controller_manager]: Overrun might occur, Total time : 4126.826 us (Expected < 4000.000 us) --> Read time : 15.645 us, Update time : 4101.800 us, Write time : 9.381 us
+[ros2_control_node-1] [WARN] [1774900876.893743878] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 36.398584 ms (missed cycles : 10).
+[ros2_control_node-1] [WARN] [1774900878.302768420] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.423730 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900879.375443686] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 6.098522 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900880.386114879] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.770084 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900881.797752806] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.406382 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900882.818704131] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.358863 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900883.862229863] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 28.884715 ms (missed cycles : 8).
+[ros2_control_node-1] [WARN] [1774900884.868535839] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 19.191014 ms (missed cycles : 5).
+[ros2_control_node-1] [WARN] [1774900885.997665010] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.319772 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900887.130036201] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 8.690344 ms (missed cycles : 3).
+[ros2_control_node-1] [WARN] [1774900888.148382353] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 15.036781 ms (missed cycles : 4).
+[ros2_control_node-1] [WARN] [1774900889.174000779] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.655542 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900890.246330260] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.983843 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900891.375616187] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 10.270851 ms (missed cycles : 3).
+[ros2_control_node-1] [WARN] [1774900892.693351154] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.005276 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900893.332683438] [controller_manager]: Overrun might occur, Total time : 4254.982 us (Expected < 4000.000 us) --> Read time : 4229.452 us, Update time : 17.744 us, Write time : 7.786 us
+[ros2_control_node-1] [WARN] [1774900893.719455444] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 6.110221 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900894.926750407] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.405456 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900895.948434267] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 11.087680 ms (missed cycles : 3).
+[ros2_control_node-1] [WARN] [1774900897.162305379] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.956606 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900898.389990089] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.644161 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900899.575739418] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 6.393101 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900900.577968266] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.623131 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900901.661680405] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 8.335159 ms (missed cycles : 3).
+[ros2_control_node-1] [WARN] [1774900902.737652657] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.307016 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900903.845406344] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.060162 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900905.264116323] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 6.770998 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900906.309756114] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 8.410996 ms (missed cycles : 3).
+[ros2_control_node-1] [WARN] [1774900907.525654472] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.309271 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900908.551446538] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 6.099091 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900909.570993227] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.647010 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900910.647197514] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.852524 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900911.657547469] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.201479 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900913.086984285] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.638137 ms (missed cycles : 2).
+^C[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[move_group-9] [INFO] [1774900913.326940782] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[static_transform_publisher-8] [INFO] [1774900913.329574167] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-2] [INFO] [1774900913.331098910] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ros2_control_node-1] [INFO] [1774900913.331132572] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ros2_control_node-1] [INFO] [1774900913.331162646] [controller_manager]: Shutdown request received....
+[ros2_control_node-1] [INFO] [1774900913.331474094] [controller_manager]: Shutting down all controllers in the controller manager.
+[ros2_control_node-1] [INFO] [1774900913.331846199] [controller_manager]: Shutting down controller 'twist_controller'
+[ros2_control_node-1] [INFO] [1774900913.332286954] [controller_manager]: Shutting down controller 'fault_controller'
+[ros2_control_node-1] [INFO] [1774900913.332338861] [controller_manager]: Shutting down controller 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1774900913.332377084] [controller_manager]: Shutting down controller 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1774900913.332399396] [controller_manager]: Shutting down controller 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1774900913.334425232] [resource_manager]: 'shutdown' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1774900913.334447226] [resource_manager]: Successful 'shutdown' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [WARN] [1774900913.334450406] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'robotiq_85_left_knuckle_joint/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334465472] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'robotiq_85_left_knuckle_joint/set_gripper_max_velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334468554] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'robotiq_85_left_knuckle_joint/set_gripper_max_effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334540280] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_1/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334547377] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_1/velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334550330] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_1/effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334553488] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_2/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334561970] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_2/velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334566860] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_2/effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334569214] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_3/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334571787] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_3/velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334574248] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_3/effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334576897] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_4/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334594622] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_4/velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334597153] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_4/effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334599517] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_5/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334601970] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_5/velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334604274] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_5/effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.334606569] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_6/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335660358] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_6/velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335665206] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_6/effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335866392] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_7/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335873012] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_7/velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335877012] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_7/effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335880442] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'tcp/twist.linear.x' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335886355] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'tcp/twist.linear.y' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335888968] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'tcp/twist.linear.z' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335891611] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'tcp/twist.angular.x' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335894002] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'tcp/twist.angular.y' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335896668] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'tcp/twist.angular.z' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335899486] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'reset_fault/command' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335902039] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'reset_fault/async_success' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335905596] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'robotiq_85_left_knuckle_joint/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335924342] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'robotiq_85_left_knuckle_joint/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335927229] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_1/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335929542] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_1/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335931963] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_1/effort' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335934280] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_2/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335937485] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_2/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335939574] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_2/effort' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335941723] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_3/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335944100] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_3/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335946628] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_3/effort' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335948764] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_4/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335950969] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_4/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335952989] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_4/effort' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335955103] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_5/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335957442] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_5/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335959709] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_5/effort' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.335961835] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_6/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.336734418] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_6/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.337324948] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_6/effort' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.337397632] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_7/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.337408933] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_7/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.337416865] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_7/effort' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900913.337424009] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'reset_fault/internal_fault' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [INFO] [1774900913.339024660] [controller_manager]: Shutting down the controller manager.
+[ros2_control_node-1] [ERROR] [1774900913.339261900] [controller_manager.pal_statistics]: Exception in publisher thread: context cannot be slept with because it's invalid!. Aborting!
+[ros2_control_node-1] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:423
+[ros2_control_node-1] [ERROR] [1774900913.339359089] [controller_manager.pal_statistics]: Exception in publisher thread: context cannot be slept with because it's invalid!. Aborting!
+[ros2_control_node-1] Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:423
+[ros2_control_node-1] [INFO] [1774900913.385323124] [controller_manager.pal_statistics]: Async messages lost 0
+[ros2_control_node-1] [INFO] [1774900913.385393496] [controller_manager.pal_statistics]: publish_async_failures_ 1
+[ros2_control_node-1] [INFO] [1774900913.396564210] [controller_manager.pal_statistics]: Async messages lost 0
+[ros2_control_node-1] [INFO] [1774900913.396609699] [controller_manager.pal_statistics]: publish_async_failures_ 1
+[move_group-9] [INFO] [1774900913.399253696] [move_group.moveit.moveit.ros.moveit_cpp]: Deleting MoveItCpp
+[move_group-9] Stack trace (most recent call last):
+[move_group-9] #15   Object "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2", at 0xffffffffffffffff, in 
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 3101]
+[INFO] [static_transform_publisher-8]: process has finished cleanly [pid 3107]
+[ros2_control_node-1] _________ callback error _________Client protocol error, Error sub type=UNREGISTERED_FRAME_RECEIVED => <srv: 1, fct: 3, msgType: 3>
+[INFO] [ros2_control_node-1]: process has finished cleanly [pid 3100]
+[ros2_control_node-1] description: Unregistered message received: messageId=330
+^[[A[ERROR] [move_group-9]: process[move_group-9] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [move_group-9]: sending signal 'SIGTERM' to process[move_group-9]
+[ERROR] [move_group-9]: process has died [pid 3214, exit code -15, cmd '/opt/ros/jazzy/lib/moveit_ros_move_group/move_group --ros-args --params-file /tmp/launch_params_e2ldvv47'].
+oliver@oliver-VirtualBox:~/workspace/ros2_kortex_ws$ ros2 launch adl_tasks arm_vbox.launch.py robot_ip:=192.168.0.10 use_fake_hardware:=false use_joint_state_sanitizer:=false launch_rviz:=false
+[INFO] [launch]: All log files can be found below /home/oliver/.ros/log/2026-03-30-16-01-59-874104-oliver-VirtualBox-3259
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [launch.user]: [arm_vbox.launch] MoveIt current state source: raw /joint_states. ADL task helpers expect /joint_states_sanitized when motion tasks are enabled.
+[INFO] [launch.user]: [arm_vbox.launch] Using ADL VBox controller config (share/adl_tasks/config/ros2_controllers_vbox.yaml, update_rate:=250 Hz).
+[INFO] [ros2_control_node-1]: process started with pid [3262]
+[INFO] [robot_state_publisher-2]: process started with pid [3263]
+[INFO] [spawner-3]: process started with pid [3264]
+[INFO] [spawner-4]: process started with pid [3265]
+[INFO] [spawner-5]: process started with pid [3266]
+[INFO] [spawner-6]: process started with pid [3267]
+[INFO] [spawner-7]: process started with pid [3268]
+[INFO] [static_transform_publisher-8]: process started with pid [3269]
+[robot_state_publisher-2] [INFO] [1774900920.381647892] [robot_state_publisher]: Robot initialized
+[static_transform_publisher-8] [INFO] [1774900920.472444486] [static_transform_publisher]: Spinning until stopped - publishing transform
+[static_transform_publisher-8] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-8] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-8] from 'world' to 'base_link'
+[ros2_control_node-1] [INFO] [1774900920.547381176] [controller_manager]: Using Steady (Monotonic) clock for triggering controller manager cycles.
+[ros2_control_node-1] [INFO] [1774900920.569032805] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
+[ros2_control_node-1] [INFO] [1774900920.637725354] [controller_manager]: update rate is 250 Hz
+[ros2_control_node-1] [INFO] [1774900920.642352708] [controller_manager]: Overruns handling is : enabled
+[ros2_control_node-1] [INFO] [1774900920.644074288] [controller_manager]: Spawning controller_manager RT thread with scheduler priority: 50
+[ros2_control_node-1] [INFO] [1774900920.644941219] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [INFO] [1774900920.645010035] [controller_manager]: Enforcing command limits is disabled. Command limits from URDF will be ignored.
+[ros2_control_node-1] [WARN] [1774900920.646179162] [controller_manager]: Could not enable FIFO RT scheduling policy: with error number <1>(Operation not permitted). See [https://control.ros.org/master/doc/ros2_control/controller_manager/doc/userdoc.html] for details on how to enable realtime scheduling.
+[ros2_control_node-1] [INFO] [1774900920.708719573] [controller_manager]: Loading hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [WARN] [1774900920.726334346] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 13.869624 ms (missed cycles : 4).
+[ros2_control_node-1] [INFO] [1774900920.776338570] [KortexMultiInterfaceHardware]: Setting severity threshold to DEBUG
+[ros2_control_node-1] [INFO] [1774900920.776466404] [controller_manager]: Loaded hardware 'KortexMultiInterfaceHardware' from plugin 'kortex_driver/KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1774900920.787126776] [controller_manager]: Initialize hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1774900920.831408867] [KortexMultiInterfaceHardware]: Configuring Hardware Interface
+[ros2_control_node-1] [INFO] [1774900920.848523352] [KortexMultiInterfaceHardware]: Robot ip is '192.168.0.10'
+[ros2_control_node-1] [INFO] [1774900920.848626427] [KortexMultiInterfaceHardware]: Username is 'admin'
+[ros2_control_node-1] [INFO] [1774900920.848641652] [KortexMultiInterfaceHardware]: Port used '10000'
+[ros2_control_node-1] [INFO] [1774900920.848646043] [KortexMultiInterfaceHardware]: Realtime port used '10001'
+[ros2_control_node-1] [INFO] [1774900920.848649900] [KortexMultiInterfaceHardware]: Session inactivity timeout is '60000'
+[ros2_control_node-1] [INFO] [1774900920.848653864] [KortexMultiInterfaceHardware]: Connection inactivity timeout is '2000'
+[ros2_control_node-1] [INFO] [1774900920.848658407] [KortexMultiInterfaceHardware]: Gripper joint name is 'robotiq_85_left_knuckle_joint'
+[ros2_control_node-1] [INFO] [1774900920.848688705] [KortexMultiInterfaceHardware]: Connecting to robot at 192.168.0.10
+[ros2_control_node-1] [INFO] [1774900920.870750891] [KortexMultiInterfaceHardware]: Creating session for communication
+[spawner-6] [INFO] [1774900921.198916664] [spawner_robotiq_gripper_controller]: waiting for service /controller_manager/list_controllers to become available...
+[ros2_control_node-1] [INFO] [1774900921.305990828] [KortexMultiInterfaceHardware]: Session created
+[ros2_control_node-1] [WARN] [1774900921.946857172] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 6.390514 ms (missed cycles : 2).
+[ros2_control_node-1] [INFO] [1774900922.100138975] [KortexMultiInterfaceHardware]: Actuator count reported by robot is '7'
+[ros2_control_node-1] [INFO] [1774900922.100633166] [KortexMultiInterfaceHardware]: Using internal bus communication for gripper!
+[ros2_control_node-1] [INFO] [1774900922.100640540] [KortexMultiInterfaceHardware]: Hardware Interface successfully configured
+[ros2_control_node-1] [INFO] [1774900922.100666412] [controller_manager]: Successful initialization of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [DEBUG] [1774900922.100725434] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_1
+[ros2_control_node-1] [DEBUG] [1774900922.100738928] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_2
+[ros2_control_node-1] [DEBUG] [1774900922.100740600] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_3
+[ros2_control_node-1] [DEBUG] [1774900922.100741830] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_4
+[ros2_control_node-1] [DEBUG] [1774900922.100743382] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_5
+[ros2_control_node-1] [DEBUG] [1774900922.100744722] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_6
+[ros2_control_node-1] [DEBUG] [1774900922.100745919] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_7
+[ros2_control_node-1] [DEBUG] [1774900922.100747155] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: robotiq_85_left_knuckle_joint
+[ros2_control_node-1] [INFO] [1774900922.101220884] [resource_manager]: 'configure' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1774900922.101226529] [resource_manager]: Successful 'configure' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1774900922.101237407] [resource_manager]: 'activate' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1774900922.101241776] [KortexMultiInterfaceHardware]: Activating KortexMultiInterfaceHardware...
+[ros2_control_node-1] [INFO] [1774900922.115758099] [KortexMultiInterfaceHardware]: Gripper initial position is '0.873365'.
+[ros2_control_node-1] [INFO] [1774900922.133471095] [KortexMultiInterfaceHardware]: KortexMultiInterfaceHardware successfully activated!
+[ros2_control_node-1] [INFO] [1774900922.133548211] [resource_manager]: Successful 'activate' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1774900922.135525692] [controller_manager]: Registering statistics for : KortexMultiInterfaceHardware
+[ros2_control_node-1] [INFO] [1774900922.135867479] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[ros2_control_node-1] [WARN] [1774900922.167664060] [controller_manager]: Overrun might occur, Total time : 29163.161 us (Expected < 4000.000 us) --> Read time : 21178.931 us, Update time : 13.941 us, Write time : 7970.289 us
+[ros2_control_node-1] [INFO] [1774900924.993037333] [controller_manager]: Loading controller : 'robotiq_gripper_controller' of type 'position_controllers/GripperActionController'
+[ros2_control_node-1] [INFO] [1774900924.994354411] [controller_manager]: Loading controller 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1774900925.085588199] [controller_manager]: Controller 'robotiq_gripper_controller' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml 
+[ros2_control_node-1] [WARN] [1774900925.293848718] [robotiq_gripper_controller]: [Deprecated]: the `position_controllers/GripperActionController` and `effort_controllers::GripperActionController` controllers are replaced by 'parallel_gripper_controllers/GripperActionController' controller
+[ros2_control_node-1] [ERROR] [1774900925.391247764] [controller_manager]: Exception of type : St13runtime_error thrown during write of the component 'KortexMultiInterfaceHardware': timeout detected: BaseCyclicClient::RefreshFeedback
+[ros2_control_node-1] 
+[ros2_control_node-1] [ERROR] [1774900925.393464523] [controller_manager]: Deactivating following hardware components as their write cycle resulted in an error: [ KortexMultiInterfaceHardware ]
+[ros2_control_node-1] [WARN] [1774900925.395280655] [controller_manager]: Overrun might occur, Total time : 3006053.772 us (Expected < 4000.000 us) --> Read time : 18.824 us, Update time : 8.072 us, Write time : 3006026.876 us
+[ros2_control_node-1] [WARN] [1774900925.395367133] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 3006.902191 ms (missed cycles : 752).
+[spawner-6] [INFO] [1774900925.430212582] [spawner_robotiq_gripper_controller]: Loaded robotiq_gripper_controller
+[ros2_control_node-1] [INFO] [1774900925.459455373] [controller_manager]: Configuring controller: 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1774900925.459875765] [robotiq_gripper_controller]: Action status changes will be monitored at 20.000000 Hz.
+[ros2_control_node-1] [INFO] [1774900925.645843181] [controller_manager]: Activating controllers: [ robotiq_gripper_controller ]
+[ros2_control_node-1] [WARN] [1774900925.646841489] [controller_manager]: Unable to activate controller 'robotiq_gripper_controller' since the command interface 'robotiq_85_left_knuckle_joint/position' is not available.
+[spawner-6] [ERROR] [1774900925.667852032] [spawner_robotiq_gripper_controller]: Failed to activate controller : robotiq_gripper_controller
+[ERROR] [spawner-6]: process has died [pid 3267, exit code 1, cmd '/home/oliver/workspace/ros2_kortex_ws/install/controller_manager/lib/controller_manager/spawner robotiq_gripper_controller -c /controller_manager --ros-args'].
+[ros2_control_node-1] [INFO] [1774900926.412238078] [controller_manager]: Loading controller : 'fault_controller' of type 'picknik_reset_fault_controller/PicknikResetFaultController'
+[ros2_control_node-1] [INFO] [1774900926.412631104] [controller_manager]: Loading controller 'fault_controller'
+[ros2_control_node-1] [INFO] [1774900926.426135658] [controller_manager]: Controller 'fault_controller' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml 
+[ros2_control_node-1] [WARN] [1774900926.441383552] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.918590 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900926.606580811] [controller_manager]: Overrun might occur, Total time : 4383.127 us (Expected < 4000.000 us) --> Read time : 4350.533 us, Update time : 25.260 us, Write time : 7.334 us
+[spawner-7] [INFO] [1774900926.661621159] [spawner_fault_controller]: Loaded fault_controller
+[ros2_control_node-1] [INFO] [1774900926.709971711] [controller_manager]: Configuring controller: 'fault_controller'
+[ros2_control_node-1] [INFO] [1774900926.747937177] [controller_manager]: Activating controllers: [ fault_controller ]
+[ros2_control_node-1] [WARN] [1774900926.748039846] [controller_manager]: Unable to activate controller 'fault_controller' since the command interface 'reset_fault/command' is not available.
+[spawner-7] [ERROR] [1774900926.754049003] [spawner_fault_controller]: Failed to activate controller : fault_controller
+[ERROR] [spawner-7]: process has died [pid 3268, exit code 1, cmd '/home/oliver/workspace/ros2_kortex_ws/install/controller_manager/lib/controller_manager/spawner fault_controller -c /controller_manager --ros-args'].
+[ros2_control_node-1] [INFO] [1774900927.125905329] [controller_manager]: Loading controller : 'twist_controller' of type 'picknik_twist_controller/PicknikTwistController'
+[ros2_control_node-1] [INFO] [1774900927.125962345] [controller_manager]: Loading controller 'twist_controller'
+[ros2_control_node-1] [INFO] [1774900927.132767665] [controller_manager]: Controller 'twist_controller' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml 
+[spawner-5] [INFO] [1774900927.241181851] [spawner_twist_controller]: Loaded twist_controller
+[ros2_control_node-1] [INFO] [1774900927.263141082] [controller_manager]: Configuring controller: 'twist_controller'
+[ros2_control_node-1] [INFO] [1774900927.269335965] [twist_controller]: configure successful
+[ros2_control_node-1] [WARN] [1774900927.477087850] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.624215 ms (missed cycles : 2).
+[INFO] [spawner-5]: process has finished cleanly [pid 3266]
+[ros2_control_node-1] [WARN] [1774900927.646652497] [controller_manager]: Overrun might occur, Total time : 4532.444 us (Expected < 4000.000 us) --> Read time : 4492.487 us, Update time : 35.779 us, Write time : 4.178 us
+[ros2_control_node-1] [INFO] [1774900928.001580582] [controller_manager]: Loading controller : 'joint_trajectory_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[ros2_control_node-1] [INFO] [1774900928.001732669] [controller_manager]: Loading controller 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1774900928.005275641] [controller_manager]: Controller 'joint_trajectory_controller' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml 
+[spawner-4] [INFO] [1774900928.081812443] [spawner_joint_trajectory_controller]: Loaded joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1774900928.086550222] [controller_manager]: Configuring controller: 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1774900928.087794132] [joint_trajectory_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[ros2_control_node-1] [INFO] [1774900928.088523443] [joint_trajectory_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[ros2_control_node-1] [INFO] [1774900928.088921632] [joint_trajectory_controller]: Using 'splines' interpolation method.
+[ros2_control_node-1] [INFO] [1774900928.112871821] [joint_trajectory_controller]: Action status changes will be monitored at 20.00 Hz.
+[ros2_control_node-1] [INFO] [1774900928.240126788] [controller_manager]: Activating controllers: [ joint_trajectory_controller ]
+[ros2_control_node-1] [WARN] [1774900928.240228631] [controller_manager]: Unable to activate controller 'joint_trajectory_controller' since the command interface 'joint_1/position' is not available.
+[spawner-4] [ERROR] [1774900928.241969894] [spawner_joint_trajectory_controller]: Failed to activate controller : joint_trajectory_controller
+[ERROR] [spawner-4]: process has died [pid 3265, exit code 1, cmd '/home/oliver/workspace/ros2_kortex_ws/install/controller_manager/lib/controller_manager/spawner joint_trajectory_controller -c /controller_manager --ros-args'].
+[ros2_control_node-1] [WARN] [1774900928.569753744] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 9.286579 ms (missed cycles : 3).
+[spawner-3] [INFO] [1774900928.826825357] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[ros2_control_node-1] [INFO] [1774900929.088040699] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[ros2_control_node-1] [INFO] [1774900929.088099543] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1774900929.092833207] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml 
+[spawner-3] [INFO] [1774900929.173708612] [spawner_joint_state_broadcaster]: Loaded joint_state_broadcaster
+[ros2_control_node-1] [INFO] [1774900929.179390820] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1774900929.180556470] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[ros2_control_node-1] [INFO] [1774900929.208854254] [controller_manager]: Activating controllers: [ joint_state_broadcaster ]
+[ros2_control_node-1] [ERROR] [1774900929.213236670] [joint_state_broadcaster]: No state interfaces found to publish.
+[ros2_control_node-1] [ERROR] [1774900929.214072175] [joint_state_broadcaster]: Error initializing joint data. JointStateBroadcaster will not run.
+[ros2_control_node-1] [WARN] [1774900929.214172199] [joint_state_broadcaster]: Callback returned ERROR during the transition: activate
+[ros2_control_node-1] [ERROR] [1774900929.214218364] [controller_manager]: After activation, controller 'joint_state_broadcaster' is in state 'unconfigured' (1), expected 'active' (3). Releasing interfaces!
+[ros2_control_node-1] [ERROR] [1774900929.214243285] [controller_manager]: At least one controller failed to be activated. Releasing all interfaces and stopping all activated controllers because the switch strictness is set to STRICT.
+[ros2_control_node-1] [ERROR] [1774900929.215447674] [controller_manager]: Could not activate controller : 'joint_state_broadcaster'
+[ros2_control_node-1] [ERROR] [1774900929.215868461] [controller_manager]: Failed switching controllers.... 
+[ros2_control_node-1] [ERROR] [1774900929.215891378] [controller_manager]: Unable to activate controllers: [ joint_state_broadcaster  ]
+[spawner-3] [ERROR] [1774900929.220326727] [spawner_joint_state_broadcaster]: Failed to activate controller : joint_state_broadcaster
+[ERROR] [spawner-3]: process has died [pid 3264, exit code 1, cmd '/home/oliver/workspace/ros2_kortex_ws/install/controller_manager/lib/controller_manager/spawner joint_state_broadcaster --controller-manager /controller_manager --ros-args'].
+[ros2_control_node-1] [WARN] [1774900929.660462823] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 7.999513 ms (missed cycles : 2).
+[INFO] [move_group-9]: process started with pid [3395]
+[move_group-9] [INFO] [1774900930.639912623] [move_group.moveit.moveit.ros.rdf_loader]: Loaded robot model in 0.00668646 seconds
+[move_group-9] [INFO] [1774900930.640085627] [move_group.moveit.moveit.core.robot_model]: Loading robot model 'gen3'...
+[move_group-9] [INFO] [1774900930.640099051] [move_group.moveit.moveit.core.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[ros2_control_node-1] [WARN] [1774900930.671502349] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 7.036983 ms (missed cycles : 2).
+[ros2_control_node-1] [INFO] [1774900930.738927431] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [WARN] [1774900930.738972910] [controller_manager]: ResourceManager has already loaded a urdf. Ignoring attempt to reload a robot description.
+[move_group-9] [INFO] [1774900930.783787628] [move_group.moveit.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'manipulator': 1 1 1 1 1 1 1
+[move_group-9] [INFO] [1774900931.137426305] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-9] [INFO] [1774900931.137707736] [move_group.moveit.moveit.ros.moveit_cpp]: Listening to 'joint_states' for joint states
+[move_group-9] [INFO] [1774900931.138664133] [move_group.moveit.moveit.ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
+[move_group-9] [INFO] [1774900931.139044125] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
+[move_group-9] [INFO] [1774900931.139059372] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopping existing planning scene publisher.
+[move_group-9] [INFO] [1774900931.139731034] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopped publishing maintained planning scene.
+[move_group-9] [INFO] [1774900931.140213138] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-9] [INFO] [1774900931.140331030] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[move_group-9] [INFO] [1774900931.140686085] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/planning_scene'
+[move_group-9] [INFO] [1774900931.140699233] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
+[move_group-9] [INFO] [1774900931.140977194] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'collision_object'
+[move_group-9] [INFO] [1774900931.141276530] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
+[move_group-9] [WARN] [1774900931.142869079] [move_group.moveit.moveit.ros.occupancy_map_monitor]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
+[move_group-9] [ERROR] [1774900931.142944303] [move_group.moveit.moveit.ros.occupancy_map_monitor]: No 3D sensor plugin(s) defined for octomap updates
+[move_group-9] [INFO] [1774900931.349976312] [move_group.moveit.moveit.ros.planning_pipeline]: Successfully loaded planner 'OMPL'
+[move_group-9] [INFO] [1774900931.352573638] [move_group]: Try loading adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-9] [INFO] [1774900931.354288677] [move_group]: Loaded adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-9] [INFO] [1774900931.354373564] [move_group]: Try loading adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-9] [INFO] [1774900931.354775778] [move_group]: Loaded adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-9] [INFO] [1774900931.354788007] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-9] [INFO] [1774900931.354810476] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-9] [INFO] [1774900931.354813150] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-9] [INFO] [1774900931.354820663] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-9] [INFO] [1774900931.357308515] [move_group]: Try loading adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-9] [INFO] [1774900931.359890987] [move_group]: Loaded adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-9] [INFO] [1774900931.359983542] [move_group]: Try loading adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-9] [INFO] [1774900931.362881611] [move_group]: Loaded adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-9] [INFO] [1774900931.362927786] [move_group]: Try loading adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-9] [INFO] [1774900931.364427717] [move_group]: Loaded adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-9] [INFO] [1774900931.439889578] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added FollowJointTrajectory controller for joint_trajectory_controller
+[move_group-9] [INFO] [1774900931.439995077] [move_group.moveit.moveit.plugins.simple_controller_manager]: robotiq_gripper_controller will command a max effort of: 0
+[move_group-9] [INFO] [1774900931.443937818] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added GripperCommand controller for robotiq_gripper_controller
+[move_group-9] [INFO] [1774900931.444276574] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-9] [INFO] [1774900931.444315970] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-9] [INFO] [1774900931.451136255] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Trajectory execution is managing controllers
+[move_group-9] [INFO] [1774900931.451220938] [move_group]: MoveGroup debug mode is ON
+[move_group-9] [INFO] [1774900931.510527082] [move_group.moveit.moveit.ros.move_group.executable]: 
+[move_group-9] 
+[move_group-9] ********************************************************
+[move_group-9] * MoveGroup using: 
+[move_group-9] *     - apply_planning_scene_service
+[move_group-9] *     - clear_octomap_service
+[move_group-9] *     - get_group_urdf
+[move_group-9] *     - load_geometry_from_file
+[move_group-9] *     - CartesianPathService
+[move_group-9] *     - execute_trajectory_action
+[move_group-9] *     - get_planning_scene_service
+[move_group-9] *     - kinematics_service
+[move_group-9] *     - move_action
+[move_group-9] *     - motion_plan_service
+[move_group-9] *     - query_planners_service
+[move_group-9] *     - state_validation_service
+[move_group-9] *     - save_geometry_to_file
+[move_group-9] ********************************************************
+[move_group-9] 
+[move_group-9] [INFO] [1774900931.510653807] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context using pipeline ompl
+[move_group-9] [INFO] [1774900931.510662754] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context initialization complete
+[move_group-9] Loading 'move_group/ApplyPlanningSceneService'...
+[move_group-9] Loading 'move_group/ClearOctomapService'...
+[move_group-9] Loading 'move_group/GetUrdfService'...
+[move_group-9] Loading 'move_group/LoadGeometryFromFileService'...
+[move_group-9] Loading 'move_group/MoveGroupCartesianPathService'...
+[move_group-9] Loading 'move_group/MoveGroupExecuteTrajectoryAction'...
+[move_group-9] Loading 'move_group/MoveGroupGetPlanningSceneService'...
+[move_group-9] Loading 'move_group/MoveGroupKinematicsService'...
+[move_group-9] Loading 'move_group/MoveGroupMoveAction'...
+[move_group-9] Loading 'move_group/MoveGroupPlanService'...
+[move_group-9] Loading 'move_group/MoveGroupQueryPlannersService'...
+[move_group-9] Loading 'move_group/MoveGroupStateValidationService'...
+[move_group-9] Loading 'move_group/SaveGeometryToFileService'...
+[move_group-9] 
+[move_group-9] You can start planning now!
+[move_group-9] 
+[ros2_control_node-1] [WARN] [1774900931.760615041] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.151481 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900932.916667857] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.203142 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900934.124634226] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.170713 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900935.177985977] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.522195 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900936.269269185] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 8.805638 ms (missed cycles : 3).
+[ros2_control_node-1] [WARN] [1774900937.443829704] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 43.366242 ms (missed cycles : 11).
+[ros2_control_node-1] [WARN] [1774900938.532835872] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.371129 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900939.536246744] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 7.782180 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900940.551584830] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 7.118162 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900941.567926363] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 7.462024 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900942.785856826] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.392198 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900943.888925595] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.462211 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900944.899835709] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 7.372413 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900945.933305475] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.841272 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900947.133705579] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 9.242248 ms (missed cycles : 3).
+[ros2_control_node-1] [WARN] [1774900948.167111498] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 6.647898 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900949.168281280] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 7.815227 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900949.340207447] [controller_manager]: Overrun might occur, Total time : 4291.775 us (Expected < 4000.000 us) --> Read time : 3514.517 us, Update time : 760.492 us, Write time : 16.766 us
+[ros2_control_node-1] [WARN] [1774900950.178151164] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.684886 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900951.197327423] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.861581 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900951.283196714] [controller_manager]: Overrun might occur, Total time : 4860.947 us (Expected < 4000.000 us) --> Read time : 49.296 us, Update time : 4779.545 us, Write time : 32.106 us
+[ros2_control_node-1] [WARN] [1774900952.321841953] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.377609 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900953.362299857] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.833208 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900954.397219639] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.754591 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900955.453003817] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 12.535422 ms (missed cycles : 4).
+[ros2_control_node-1] [WARN] [1774900956.496824552] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.358960 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900957.462390780] [controller_manager]: Overrun might occur, Total time : 4925.440 us (Expected < 4000.000 us) --> Read time : 24.485 us, Update time : 24.385 us, Write time : 4876.570 us
+[ros2_control_node-1] [WARN] [1774900957.519486300] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 23.018899 ms (missed cycles : 6).
+[ros2_control_node-1] [WARN] [1774900958.606004711] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.541038 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900959.613620279] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 9.156806 ms (missed cycles : 3).
+[ros2_control_node-1] [WARN] [1774900960.662191080] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 13.727880 ms (missed cycles : 4).
+[ros2_control_node-1] [WARN] [1774900961.671903043] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 7.439593 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900962.871655072] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 11.189927 ms (missed cycles : 3).
+[ros2_control_node-1] [WARN] [1774900963.109857208] [controller_manager]: Overrun might occur, Total time : 4552.990 us (Expected < 4000.000 us) --> Read time : 19.361 us, Update time : 4513.444 us, Write time : 20.185 us
+[ros2_control_node-1] [WARN] [1774900964.014636511] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 10.170016 ms (missed cycles : 3).
+[ros2_control_node-1] [WARN] [1774900964.616040263] [controller_manager]: Overrun might occur, Total time : 7052.467 us (Expected < 4000.000 us) --> Read time : 20.314 us, Update time : 57.282 us, Write time : 6974.871 us
+[ros2_control_node-1] [WARN] [1774900965.116891409] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.426696 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900966.143939638] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 51.476160 ms (missed cycles : 13).
+[ros2_control_node-1] [WARN] [1774900967.516757380] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.290689 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900968.534408324] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 37.942988 ms (missed cycles : 10).
+[ros2_control_node-1] [WARN] [1774900968.728122059] [controller_manager]: Overrun might occur, Total time : 30708.168 us (Expected < 4000.000 us) --> Read time : 30472.951 us, Update time : 230.493 us, Write time : 4.724 us
+[ros2_control_node-1] [WARN] [1774900969.712283520] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 35.818798 ms (missed cycles : 9).
+[ros2_control_node-1] [WARN] [1774900970.901073930] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 36.609114 ms (missed cycles : 10).
+[ros2_control_node-1] [WARN] [1774900971.912258862] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 7.794825 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900973.029155571] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.692171 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900974.040072933] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 7.609386 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900975.052842474] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 8.377514 ms (missed cycles : 3).
+[ros2_control_node-1] [WARN] [1774900976.054811748] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 6.348548 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900977.208956400] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.493172 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900978.225524856] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.061497 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900979.260465199] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.001553 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900980.517875873] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.412160 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900981.573841444] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.377698 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900982.628768785] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.305396 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900983.631048539] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 6.584744 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900984.657365518] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 8.901975 ms (missed cycles : 3).
+[ros2_control_node-1] [WARN] [1774900985.866072459] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 9.608996 ms (missed cycles : 3).
+[ros2_control_node-1] [WARN] [1774900986.909958167] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 5.494671 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900987.812653756] [controller_manager]: Overrun might occur, Total time : 4408.572 us (Expected < 4000.000 us) --> Read time : 4385.267 us, Update time : 15.916 us, Write time : 7.389 us
+[ros2_control_node-1] [WARN] [1774900987.944802323] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.338735 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900988.960011008] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 7.545750 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900989.976859234] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 4.393793 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774900991.105178335] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 8.714902 ms (missed cycles : 3).
+[ros2_control_node-1] [WARN] [1774900992.159789910] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 250 Hz. The loop took 7.325266 ms (missed cycles : 2).
+^C[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[move_group-9] [INFO] [1774900992.599741510] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-2] [INFO] [1774900992.599924028] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ros2_control_node-1] [INFO] [1774900992.600031278] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ros2_control_node-1] [INFO] [1774900992.600058720] [controller_manager]: Shutdown request received....
+[ros2_control_node-1] [INFO] [1774900992.600167338] [controller_manager]: Shutting down all controllers in the controller manager.
+[ros2_control_node-1] [INFO] [1774900992.600186708] [controller_manager]: Shutting down controller 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1774900992.600407203] [controller_manager]: Shutting down controller 'twist_controller'
+[ros2_control_node-1] [INFO] [1774900992.600451273] [controller_manager]: Shutting down controller 'fault_controller'
+[ros2_control_node-1] [INFO] [1774900992.600472988] [controller_manager]: Shutting down controller 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1774900992.600492323] [controller_manager]: Shutting down controller 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1774900992.601423865] [resource_manager]: 'shutdown' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1774900992.601454611] [resource_manager]: Successful 'shutdown' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [WARN] [1774900992.601461875] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'robotiq_85_left_knuckle_joint/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601490401] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'robotiq_85_left_knuckle_joint/set_gripper_max_velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601498720] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'robotiq_85_left_knuckle_joint/set_gripper_max_effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601505748] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_1/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601512900] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_1/velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601519453] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_1/effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601526256] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_2/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601751259] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_2/velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601769065] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_2/effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601776947] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_3/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601784393] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_3/velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601791247] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_3/effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601797826] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_4/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601829730] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_4/velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601839452] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_4/effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601847934] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_5/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601862289] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_5/velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601869167] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_5/effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601875910] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_6/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601882599] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_6/velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[static_transform_publisher-8] [INFO] [1774900992.600237210] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ros2_control_node-1] [WARN] [1774900992.601889571] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_6/effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601896209] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_7/position' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601902902] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_7/velocity' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601909458] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_7/effort' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601916000] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'tcp/twist.linear.x' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601922414] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'tcp/twist.linear.y' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601928989] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'tcp/twist.linear.z' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601935488] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'tcp/twist.angular.x' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601942390] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'tcp/twist.angular.y' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601948906] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'tcp/twist.angular.z' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601956784] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'reset_fault/command' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601963676] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'reset_fault/async_success' command interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.601971785] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'robotiq_85_left_knuckle_joint/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602072419] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'robotiq_85_left_knuckle_joint/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602085242] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_1/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602093769] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_1/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602101211] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_1/effort' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602108693] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_2/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602115219] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_2/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602121518] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_2/effort' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602132394] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_3/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602139314] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_3/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602146262] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_3/effort' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602227610] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_4/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602241804] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_4/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602250324] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_4/effort' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602257720] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_5/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602264807] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_5/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602271785] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_5/effort' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602278372] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_6/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602285004] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_6/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602291940] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_6/effort' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602307831] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_7/position' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602322137] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_7/velocity' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602329383] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'joint_7/effort' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [WARN] [1774900992.602335935] [controller_manager]: (hardware 'KortexMultiInterfaceHardware'): 'reset_fault/internal_fault' state interface not in available list. This should not happen (hint: multiple cleanup calls).
+[ros2_control_node-1] [INFO] [1774900992.602383721] [controller_manager]: Shutting down the controller manager.
+[ros2_control_node-1] [ERROR] [1774900992.602772282] [controller_manager.pal_statistics]: Exception in publisher thread: context cannot be slept with because it's invalid!. Aborting!
+[ros2_control_node-1] [ERROR] [1774900992.603414752] [controller_manager.pal_statistics]: Exception in publisher thread: context cannot be slept with because it's invalid!. Aborting!
+[ros2_control_node-1] [INFO] [1774900992.632939743] [controller_manager.pal_statistics]: Async messages lost 0
+[ros2_control_node-1] [INFO] [1774900992.633007079] [controller_manager.pal_statistics]: publish_async_failures_ 2
+[ros2_control_node-1] [INFO] [1774900992.648144896] [controller_manager.pal_statistics]: Async messages lost 0
+[ros2_control_node-1] [INFO] [1774900992.648164807] [controller_manager.pal_statistics]: publish_async_failures_ 5
+[move_group-9] [INFO] [1774900992.693121470] [move_group.moveit.moveit.ros.moveit_cpp]: Deleting MoveItCpp
+[INFO] [static_transform_publisher-8]: process has finished cleanly [pid 3269]
+[move_group-9] Stack trace (most recent call last):
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 3263]
+[move_group-9] #15   Object "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2", at 0xffffffffffffffff, in 
+[move_group-9] #14   Object "/opt/ros/jazzy/lib/moveit_ros_move_group/move_group", at 0x612c14401a44, in _start
+[ros2_control_node-1] _________ callback error _________Client protocol error, Error sub type=UNREGISTERED_FRAME_RECEIVED => <srv: 1, fct: 3, msgType: 3>
+[INFO] [ros2_control_node-1]: process has finished cleanly [pid 3262]
+[ros2_control_node-1] description: Unregistered message received: messageId=428
+[move_group-9] #13   Source "../csu/libc-start.c", line 360, in __libc_start_main_impl [0x76e1d0a2a28a]
+[move_group-9] #12   Source "../sysdeps/nptl/libc_start_call_main.h", line 58, in __libc_start_call_main [0x76e1d0a2a1c9]
+[move_group-9] #11   Object "/opt/ros/jazzy/lib/moveit_ros_move_group/move_group", at 0x612c14400539, in main
+[move_group-9] #10   Object "/opt/ros/jazzy/lib/moveit_ros_move_group/move_group", at 0x612c14403159, in 
+[move_group-9] #9    Object "/opt/ros/jazzy/lib/libmoveit_cpp.so.2.12.4", at 0x76e1d176ead0, in moveit_cpp::MoveItCpp::~MoveItCpp()
+[move_group-9] #8    Object "/opt/ros/jazzy/lib/libmoveit_cpp.so.2.12.4", at 0x76e1d176e989, in 
+[move_group-9] #7    Object "/opt/ros/jazzy/lib/libmoveit_trajectory_execution_manager.so.2.12.4", at 0x76e1d0cdc5da, in trajectory_execution_manager::TrajectoryExecutionManager::~TrajectoryExecutionManager()
+[move_group-9] #6    Object "/opt/ros/jazzy/lib/libmoveit_trajectory_execution_manager.so.2.12.4", at 0x76e1d0cee735, in 
+[move_group-9] #5    Object "/opt/ros/jazzy/lib/librclcpp.so", at 0x76e1d1336954, in rclcpp::Node::~Node()
+[move_group-9] #4    Object "/opt/ros/jazzy/lib/librclcpp.so", at 0x76e1d12f17e5, in 
+[move_group-9] #3    Object "/opt/ros/jazzy/lib/librclcpp.so", at 0x76e1d1335220, in 
+[move_group-9] #2    Object "/opt/ros/jazzy/lib/librclcpp.so", at 0x76e1d1335163, in rclcpp::node_interfaces::NodeBase::~NodeBase()
+[move_group-9] #1    Object "/opt/ros/jazzy/lib/librclcpp.so", at 0x76e1d12f18a9, in 
+[move_group-9] #0    Object "/opt/ros/jazzy/lib/librclcpp.so", at 0x76e1d12f6379, in rclcpp::CallbackGroup::~CallbackGroup()
+[move_group-9] Segmentation fault (Address not mapped to object [0x76e1c00ecda0])
+[ERROR] [move_group-9]: process has died [pid 3395, exit code -11, cmd '/opt/ros/jazzy/lib/moveit_ros_move_group/move_group --ros-args --params-file /tmp/launch_params_b91_l8am'].
+oliver@oliver-VirtualBox:~/workspace/ros2_kortex_ws$ 
+
+liver@oliver-VirtualBox:~/workspace/ros2_kortex_ws$ cd ~/workspace/ros2_kortex_ws
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+ros2 run adl_tasks arm_home_stub --ros-args -p moveit_joint_states_topic:=/joint_states
+[INFO] [1774900986.582005584] [arm_home_stub_node]: MoveItHelper initialized. joint_state_topic=/joint_states (sanitized_expected=False)
+[INFO] [1774900986.582671822] [arm_home_stub_node]: Arm home stub ready. Waiting for joint states, then sending one go_home request.
+[WARN] [1774900986.802804383] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900987.067024261] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900987.329916738] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900987.602095035] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900987.861482778] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900988.129846751] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900988.394304352] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900988.654326617] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900988.915299218] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900989.183265274] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900989.446306903] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900989.711194520] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+^CTraceback (most recent call last):
+  File "/home/oliver/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/arm_home_stub", line 33, in <module>
+    sys.exit(load_entry_point('adl-tasks', 'console_scripts', 'arm_home_stub')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oliver/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/arm_home_stub.py", line 60, in main
+    if not node.run():
+           ^^^^^^^^^^
+  File "/home/oliver/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/arm_home_stub.py", line 27, in run
+    if not self.arm.wait_for_joint_state_ready(timeout=5.0):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oliver/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/helper_moves.py", line 1447, in wait_for_joint_state_ready
+    js = self._get_arm_joint_snapshot(timeout=0.2)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oliver/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/helper_moves.py", line 672, in _get_arm_joint_snapshot
+    _time.sleep(0.02)
+KeyboardInterrupt
+[ros2run]: Interrupt
+oliver@oliver-VirtualBox:~/workspace/ros2_kortex_ws$ 
+

@@ -1,0 +1,484 @@
+oliver@oliver-VirtualBox:~/workspace/ros2_kortex_ws$ ros2 run adl_tasks arm_home_stub --ros-args -p moveit_joint_states_topic:=/joint_states
+[INFO] [1774901243.399830014] [arm_home_stub_node]: MoveItHelper initialized. joint_state_topic=/joint_states (sanitized_expected=False)
+[INFO] [1774901243.403169414] [arm_home_stub_node]: Arm home stub ready. Waiting for joint states, then sending one go_home request.
+[INFO] [1774901243.566755907] [arm_home_stub_node]: is_near_home: current arm is not at target (worst=joint_6:1.833 rad > 0.100).
+[INFO] [1774901243.577276812] [arm_home_stub_node]: go_home: planning to HOME_JOINTS...
+[INFO] [1774901244.742065324] [arm_home_stub_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[WARN] [1774901244.744858342] [arm_home_stub_node]: _apply_real_start_state: raw /joint_states required MoveIt-safe normalization: joint_3:+3.142->+3.132; publishing canonicalized start_state.
+^CTraceback (most recent call last):
+  File "/home/oliver/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/arm_home_stub", line 33, in <module>
+    sys.exit(load_entry_point('adl-tasks', 'console_scripts', 'arm_home_stub')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oliver/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/arm_home_stub.py", line 60, in main
+    if not node.run():
+           ^^^^^^^^^^
+  File "/home/oliver/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/arm_home_stub.py", line 39, in run
+    ok = bool(self.arm.go_home())
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/oliver/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/helper_moves.py", line 1216, in go_home
+    result = self._go_to_joint_config(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oliver/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/helper_moves.py", line 1151, in _go_to_joint_config
+    return self._send_goal(req, timeout=60.0, cancel_cb=cancel_cb)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oliver/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/helper_moves.py", line 553, in _send_goal
+    wait_ok = self._wait_for_future(
+              ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oliver/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/helper_moves.py", line 261, in _wait_for_future
+    _time.sleep(0.05)
+KeyboardInterrupt
+[ros2run]: Interrupt
+oliver@oliver-VirtualBox:~/workspace/ros2_kortex_ws$ 
+
+
+oliver@oliver-VirtualBox:~/workspace/ros2_kortex_ws$ cd ~/workspace/ros2_kortex_ws
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+ros2 run adl_tasks arm_home_stub --ros-args -p moveit_joint_states_topic:=/joint_states
+[INFO] [1774900986.582005584] [arm_home_stub_node]: MoveItHelper initialized. joint_state_topic=/joint_states (sanitized_expected=False)
+[INFO] [1774900986.582671822] [arm_home_stub_node]: Arm home stub ready. Waiting for joint states, then sending one go_home request.
+[WARN] [1774900986.802804383] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900987.067024261] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900987.329916738] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900987.602095035] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900987.861482778] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900988.129846751] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900988.394304352] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900988.654326617] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900988.915299218] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900989.183265274] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900989.446306903] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+[WARN] [1774900989.711194520] [arm_home_stub_node]: Timed out waiting for complete arm joint state from /joint_states.
+^CTraceback (most recent call last):
+  File "/home/oliver/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/arm_home_stub", line 33, in <module>
+    sys.exit(load_entry_point('adl-tasks', 'console_scripts', 'arm_home_stub')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oliver/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/arm_home_stub.py", line 60, in main
+    if not node.run():
+           ^^^^^^^^^^
+  File "/home/oliver/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/arm_home_stub.py", line 27, in run
+    if not self.arm.wait_for_joint_state_ready(timeout=5.0):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oliver/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/helper_moves.py", line 1447, in wait_for_joint_state_ready
+    js = self._get_arm_joint_snapshot(timeout=0.2)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oliver/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/helper_moves.py", line 672, in _get_arm_joint_snapshot
+    _time.sleep(0.02)
+KeyboardInterrupt
+[ros2run]: Interrupt
+oliver@oliver-VirtualBox:~/workspace/ros2_kortex_ws$ cd ~/workspace/ros2_kortex_ws
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+ros2 launch kinova_gen3_7dof_robotiq_2f_85_moveit_config robot.launch.py robot_ip:=192.168.0.10 use_fake_hardware:=false
+[INFO] [launch]: All log files can be found below /home/oliver/.ros/log/2026-03-30-16-06-32-340391-oliver-VirtualBox-3497
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [ros2_control_node-1]: process started with pid [3500]
+[INFO] [robot_state_publisher-2]: process started with pid [3501]
+[INFO] [spawner-3]: process started with pid [3502]
+[INFO] [spawner-4]: process started with pid [3503]
+[INFO] [spawner-5]: process started with pid [3504]
+[INFO] [spawner-6]: process started with pid [3505]
+[INFO] [spawner-7]: process started with pid [3506]
+[INFO] [move_group-8]: process started with pid [3507]
+[INFO] [static_transform_publisher-9]: process started with pid [3508]
+[move_group-8] [INFO] [1774901193.135479194] [move_group.moveit.moveit.ros.rdf_loader]: Loaded robot model in 0.0118748 seconds
+[move_group-8] [INFO] [1774901193.173178279] [move_group.moveit.moveit.core.robot_model]: Loading robot model 'gen3'...
+[ros2_control_node-1] [INFO] [1774901193.177955416] [controller_manager]: Using Steady (Monotonic) clock for triggering controller manager cycles.
+[move_group-8] [INFO] [1774901193.176014835] [move_group.moveit.moveit.core.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[ros2_control_node-1] [INFO] [1774901193.310997160] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
+[static_transform_publisher-9] [INFO] [1774901193.317294791] [static_transform_publisher]: Spinning until stopped - publishing transform
+[static_transform_publisher-9] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-9] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-9] from 'world' to 'base_link'
+[robot_state_publisher-2] [INFO] [1774901193.319696939] [robot_state_publisher]: Robot initialized
+[ros2_control_node-1] [INFO] [1774901193.388301617] [controller_manager]: update rate is 1000 Hz
+[ros2_control_node-1] [INFO] [1774901193.388491987] [controller_manager]: Overruns handling is : enabled
+[ros2_control_node-1] [INFO] [1774901193.388509882] [controller_manager]: Spawning controller_manager RT thread with scheduler priority: 50
+[ros2_control_node-1] [INFO] [1774901193.389445846] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [INFO] [1774901193.389494397] [controller_manager]: Enforcing command limits is disabled. Command limits from URDF will be ignored.
+[ros2_control_node-1] [INFO] [1774901193.393929680] [controller_manager]: Loading hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [WARN] [1774901193.405125485] [controller_manager]: Could not enable FIFO RT scheduling policy: with error number <1>(Operation not permitted). See [https://control.ros.org/master/doc/ros2_control/controller_manager/doc/userdoc.html] for details on how to enable realtime scheduling.
+[ros2_control_node-1] [INFO] [1774901193.458211852] [KortexMultiInterfaceHardware]: Setting severity threshold to DEBUG
+[ros2_control_node-1] [INFO] [1774901193.458328818] [controller_manager]: Loaded hardware 'KortexMultiInterfaceHardware' from plugin 'kortex_driver/KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1774901193.458546327] [controller_manager]: Initialize hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [WARN] [1774901193.464181521] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 4.559668 ms (missed cycles : 5).
+[ros2_control_node-1] [INFO] [1774901193.526861904] [KortexMultiInterfaceHardware]: Configuring Hardware Interface
+[ros2_control_node-1] [INFO] [1774901193.527563086] [KortexMultiInterfaceHardware]: Robot ip is '192.168.0.10'
+[ros2_control_node-1] [INFO] [1774901193.527582839] [KortexMultiInterfaceHardware]: Username is 'admin'
+[ros2_control_node-1] [INFO] [1774901193.527592177] [KortexMultiInterfaceHardware]: Port used '10000'
+[ros2_control_node-1] [INFO] [1774901193.527594547] [KortexMultiInterfaceHardware]: Realtime port used '10001'
+[ros2_control_node-1] [INFO] [1774901193.527597075] [KortexMultiInterfaceHardware]: Session inactivity timeout is '60000'
+[ros2_control_node-1] [INFO] [1774901193.527599172] [KortexMultiInterfaceHardware]: Connection inactivity timeout is '2000'
+[ros2_control_node-1] [INFO] [1774901193.527601715] [KortexMultiInterfaceHardware]: Gripper joint name is 'robotiq_85_left_knuckle_joint'
+[ros2_control_node-1] [INFO] [1774901193.527627381] [KortexMultiInterfaceHardware]: Connecting to robot at 192.168.0.10
+[ros2_control_node-1] [INFO] [1774901193.545831346] [KortexMultiInterfaceHardware]: Creating session for communication
+[move_group-8] [INFO] [1774901193.884703296] [move_group.moveit.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'manipulator': 1 1 1 1 1 1 1
+[ros2_control_node-1] [INFO] [1774901193.984305044] [KortexMultiInterfaceHardware]: Session created
+[ros2_control_node-1] [WARN] [1774901194.144387179] [controller_manager]: Overrun might occur, Total time : 2681.101 us (Expected < 1000.000 us) --> Read time : 0.976 us, Update time : 2678.691 us, Write time : 1.434 us
+[spawner-7] [INFO] [1774901194.452056753] [spawner_fault_controller]: waiting for service /controller_manager/list_controllers to become available...
+[ros2_control_node-1] [WARN] [1774901194.466045973] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 1.421886 ms (missed cycles : 2).
+[move_group-8] [INFO] [1774901194.602930373] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-8] [INFO] [1774901194.603315316] [move_group.moveit.moveit.ros.moveit_cpp]: Listening to 'joint_states' for joint states
+[move_group-8] [INFO] [1774901194.604955147] [move_group.moveit.moveit.ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
+[move_group-8] [INFO] [1774901194.606251133] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
+[move_group-8] [INFO] [1774901194.606698818] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopping existing planning scene publisher.
+[move_group-8] [INFO] [1774901194.607151236] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopped publishing maintained planning scene.
+[move_group-8] [INFO] [1774901194.609068194] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-8] [INFO] [1774901194.610107006] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[move_group-8] [INFO] [1774901194.613083695] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/planning_scene'
+[move_group-8] [INFO] [1774901194.613122461] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
+[move_group-8] [INFO] [1774901194.614116751] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'collision_object'
+[move_group-8] [INFO] [1774901194.616067158] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
+[move_group-8] [WARN] [1774901194.617364564] [move_group.moveit.moveit.ros.occupancy_map_monitor]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
+[move_group-8] [ERROR] [1774901194.617416139] [move_group.moveit.moveit.ros.occupancy_map_monitor]: No 3D sensor plugin(s) defined for octomap updates
+[move_group-8] [INFO] [1774901194.851986044] [move_group.moveit.moveit.ros.planning_pipeline]: Successfully loaded planner 'OMPL'
+[move_group-8] [INFO] [1774901194.855796718] [move_group]: Try loading adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-8] [INFO] [1774901194.858138767] [move_group]: Loaded adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-8] [INFO] [1774901194.858583067] [move_group]: Try loading adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-8] [INFO] [1774901194.858990221] [move_group]: Loaded adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-8] [INFO] [1774901194.859005590] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-8] [INFO] [1774901194.859029517] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-8] [INFO] [1774901194.859032067] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-8] [INFO] [1774901194.859039421] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-8] [INFO] [1774901194.860964629] [move_group]: Try loading adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-8] [INFO] [1774901194.866287524] [move_group]: Loaded adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-8] [INFO] [1774901194.867519013] [move_group]: Try loading adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-8] [INFO] [1774901194.871978006] [move_group]: Loaded adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-8] [INFO] [1774901194.872753314] [move_group]: Try loading adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-8] [INFO] [1774901194.874676979] [move_group]: Loaded adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-8] [INFO] [1774901194.958672606] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added FollowJointTrajectory controller for joint_trajectory_controller
+[move_group-8] [INFO] [1774901194.959703623] [move_group.moveit.moveit.plugins.simple_controller_manager]: robotiq_gripper_controller will command a max effort of: 0
+[move_group-8] [INFO] [1774901194.972857071] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added GripperCommand controller for robotiq_gripper_controller
+[move_group-8] [INFO] [1774901194.973223591] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-8] [INFO] [1774901194.973259482] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-8] [INFO] [1774901194.974058146] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Trajectory execution is managing controllers
+[move_group-8] [INFO] [1774901194.974082812] [move_group]: MoveGroup debug mode is ON
+[move_group-8] [INFO] [1774901195.058641356] [move_group.moveit.moveit.ros.move_group.executable]: 
+[move_group-8] 
+[move_group-8] ********************************************************
+[move_group-8] * MoveGroup using: 
+[move_group-8] *     - apply_planning_scene_service
+[move_group-8] *     - clear_octomap_service
+[move_group-8] *     - get_group_urdf
+[move_group-8] *     - load_geometry_from_file
+[move_group-8] *     - CartesianPathService
+[move_group-8] *     - execute_trajectory_action
+[move_group-8] *     - get_planning_scene_service
+[move_group-8] *     - kinematics_service
+[move_group-8] *     - move_action
+[move_group-8] *     - motion_plan_service
+[move_group-8] *     - query_planners_service
+[move_group-8] *     - state_validation_service
+[move_group-8] *     - save_geometry_to_file
+[move_group-8] ********************************************************
+[move_group-8] 
+[move_group-8] [INFO] [1774901195.058740731] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context using pipeline ompl
+[move_group-8] [INFO] [1774901195.058748822] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context initialization complete
+[move_group-8] Loading 'move_group/ApplyPlanningSceneService'...
+[move_group-8] Loading 'move_group/ClearOctomapService'...
+[move_group-8] Loading 'move_group/GetUrdfService'...
+[move_group-8] Loading 'move_group/LoadGeometryFromFileService'...
+[move_group-8] Loading 'move_group/MoveGroupCartesianPathService'...
+[move_group-8] Loading 'move_group/MoveGroupExecuteTrajectoryAction'...
+[move_group-8] Loading 'move_group/MoveGroupGetPlanningSceneService'...
+[move_group-8] Loading 'move_group/MoveGroupKinematicsService'...
+[move_group-8] Loading 'move_group/MoveGroupMoveAction'...
+[move_group-8] Loading 'move_group/MoveGroupPlanService'...
+[move_group-8] Loading 'move_group/MoveGroupQueryPlannersService'...
+[move_group-8] Loading 'move_group/MoveGroupStateValidationService'...
+[move_group-8] Loading 'move_group/SaveGeometryToFileService'...
+[move_group-8] 
+[move_group-8] You can start planning now!
+[move_group-8] 
+[ros2_control_node-1] [INFO] [1774901195.155860213] [KortexMultiInterfaceHardware]: Actuator count reported by robot is '7'
+[ros2_control_node-1] [INFO] [1774901195.156030406] [KortexMultiInterfaceHardware]: Using internal bus communication for gripper!
+[ros2_control_node-1] [INFO] [1774901195.156034868] [KortexMultiInterfaceHardware]: Hardware Interface successfully configured
+[ros2_control_node-1] [INFO] [1774901195.156063521] [controller_manager]: Successful initialization of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [DEBUG] [1774901195.156122257] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_1
+[ros2_control_node-1] [DEBUG] [1774901195.156137541] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_2
+[ros2_control_node-1] [DEBUG] [1774901195.156139440] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_3
+[ros2_control_node-1] [DEBUG] [1774901195.156141024] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_4
+[ros2_control_node-1] [DEBUG] [1774901195.156142645] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_5
+[ros2_control_node-1] [DEBUG] [1774901195.156144330] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_6
+[ros2_control_node-1] [DEBUG] [1774901195.156217906] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_7
+[ros2_control_node-1] [DEBUG] [1774901195.156221628] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: robotiq_85_left_knuckle_joint
+[ros2_control_node-1] [INFO] [1774901195.158400199] [resource_manager]: 'configure' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1774901195.158480557] [resource_manager]: Successful 'configure' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1774901195.158496936] [resource_manager]: 'activate' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1774901195.158507131] [KortexMultiInterfaceHardware]: Activating KortexMultiInterfaceHardware...
+[ros2_control_node-1] [INFO] [1774901195.427828683] [KortexMultiInterfaceHardware]: Gripper initial position is '0.873365'.
+[ros2_control_node-1] [WARN] [1774901195.475681457] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 1.057618 ms (missed cycles : 2).
+[ros2_control_node-1] [INFO] [1774901195.690231244] [KortexMultiInterfaceHardware]: KortexMultiInterfaceHardware successfully activated!
+[ros2_control_node-1] [INFO] [1774901195.690285189] [resource_manager]: Successful 'activate' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1774901195.690366230] [controller_manager]: Registering statistics for : KortexMultiInterfaceHardware
+[ros2_control_node-1] [INFO] [1774901195.690424970] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[ros2_control_node-1] [INFO] [1774901195.742809890] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [WARN] [1774901195.742890296] [controller_manager]: ResourceManager has already loaded a urdf. Ignoring attempt to reload a robot description.
+[ros2_control_node-1] [WARN] [1774901195.979682017] [controller_manager]: Overrun might occur, Total time : 288816.434 us (Expected < 1000.000 us) --> Read time : 21351.952 us, Update time : 13.889 us, Write time : 267450.593 us
+[ros2_control_node-1] [WARN] [1774901196.521447834] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 266.828203 ms (missed cycles : 267).
+[ros2_control_node-1] [INFO] [1774901196.723428622] [controller_manager]: Loading controller : 'fault_controller' of type 'picknik_reset_fault_controller/PicknikResetFaultController'
+[ros2_control_node-1] [INFO] [1774901196.723595178] [controller_manager]: Loading controller 'fault_controller'
+[ros2_control_node-1] [INFO] [1774901196.739328183] [controller_manager]: Controller 'fault_controller' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/kinova_gen3_7dof_robotiq_2f_85_moveit_config/share/kinova_gen3_7dof_robotiq_2f_85_moveit_config/config/ros2_controllers.yaml 
+[ros2_control_node-1] [WARN] [1774901197.068964766] [controller_manager]: Overrun might occur, Total time : 260140.585 us (Expected < 1000.000 us) --> Read time : 20.065 us, Update time : 30.554 us, Write time : 260089.966 us
+[spawner-7] [INFO] [1774901197.073605724] [spawner_fault_controller]: Loaded fault_controller
+[ros2_control_node-1] [INFO] [1774901197.075632220] [controller_manager]: Configuring controller: 'fault_controller'
+[ros2_control_node-1] [INFO] [1774901197.345658509] [controller_manager]: Activating controllers: [ fault_controller ]
+[ros2_control_node-1] [WARN] [1774901197.607336169] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 268.716513 ms (missed cycles : 269).
+[ros2_control_node-1] [INFO] [1774901197.654925025] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1774901197.884730606] [controller_manager]: Overrun might occur, Total time : 277001.449 us (Expected < 1000.000 us) --> Read time : 15.898 us, Update time : 46600.209 us (Switch time : 46578.452 us (Switch chained mode time : 2.233 us, perform mode change time : 22.106 us, Activation time : 46500.634 us, Deactivation time : 1.420 us)), Write time : 230385.342 us
+[spawner-7] [INFO] [1774901197.889079433] [spawner_fault_controller]: Configured and activated fault_controller
+[spawner-5] [INFO] [1774901198.123927798] [spawner_twist_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-7]: process has finished cleanly [pid 3506]
+[ros2_control_node-1] [WARN] [1774901198.145798516] [controller_manager]: Overrun might occur, Total time : 259962.020 us (Expected < 1000.000 us) --> Read time : 22.646 us, Update time : 128.345 us, Write time : 259811.029 us
+[ros2_control_node-1] [WARN] [1774901198.688552378] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 267.932688 ms (missed cycles : 268).
+[ros2_control_node-1] [WARN] [1774901199.221548874] [controller_manager]: Overrun might occur, Total time : 266562.709 us (Expected < 1000.000 us) --> Read time : 18.774 us, Update time : 17.425 us, Write time : 266526.510 us
+[ros2_control_node-1] [WARN] [1774901199.759990834] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 266.370869 ms (missed cycles : 267).
+[ros2_control_node-1] [INFO] [1774901199.978220106] [controller_manager]: Loading controller : 'twist_controller' of type 'picknik_twist_controller/PicknikTwistController'
+[ros2_control_node-1] [INFO] [1774901199.978265343] [controller_manager]: Loading controller 'twist_controller'
+[ros2_control_node-1] [INFO] [1774901199.980304031] [controller_manager]: Controller 'twist_controller' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/kinova_gen3_7dof_robotiq_2f_85_moveit_config/share/kinova_gen3_7dof_robotiq_2f_85_moveit_config/config/ros2_controllers.yaml 
+[ros2_control_node-1] [WARN] [1774901200.311885137] [controller_manager]: Overrun might occur, Total time : 280033.109 us (Expected < 1000.000 us) --> Read time : 17.332 us, Update time : 47.791 us, Write time : 279967.986 us
+[spawner-5] [INFO] [1774901200.315142953] [spawner_twist_controller]: Loaded twist_controller
+[ros2_control_node-1] [INFO] [1774901200.404373611] [controller_manager]: Configuring controller: 'twist_controller'
+[ros2_control_node-1] [INFO] [1774901200.411133425] [twist_controller]: configure successful
+[spawner-4] [INFO] [1774901200.774392029] [spawner_joint_trajectory_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-5]: process has finished cleanly [pid 3504]
+[ros2_control_node-1] [WARN] [1774901200.859556404] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 267.936135 ms (missed cycles : 268).
+[ros2_control_node-1] [INFO] [1774901201.031935393] [controller_manager]: Loading controller : 'joint_trajectory_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[ros2_control_node-1] [INFO] [1774901201.031992414] [controller_manager]: Loading controller 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1774901201.038975714] [controller_manager]: Controller 'joint_trajectory_controller' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/kinova_gen3_7dof_robotiq_2f_85_moveit_config/share/kinova_gen3_7dof_robotiq_2f_85_moveit_config/config/ros2_controllers.yaml 
+[spawner-4] [INFO] [1774901201.133527622] [spawner_joint_trajectory_controller]: Loaded joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1774901201.137043821] [controller_manager]: Configuring controller: 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1774901201.137435638] [joint_trajectory_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[ros2_control_node-1] [INFO] [1774901201.137628518] [joint_trajectory_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[ros2_control_node-1] [INFO] [1774901201.138026133] [joint_trajectory_controller]: Using 'splines' interpolation method.
+[ros2_control_node-1] [INFO] [1774901201.161915195] [joint_trajectory_controller]: Action status changes will be monitored at 20.00 Hz.
+[ros2_control_node-1] [WARN] [1774901201.398115203] [controller_manager]: Overrun might occur, Total time : 266267.755 us (Expected < 1000.000 us) --> Read time : 15.057 us, Update time : 44.098 us, Write time : 266208.600 us
+[ros2_control_node-1] [INFO] [1774901201.408820556] [controller_manager]: Activating controllers: [ joint_trajectory_controller ]
+[ros2_control_node-1] [INFO] [1774901202.215615461] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1774901202.479153819] [controller_manager]: Overrun might occur, Total time : 812254.084 us (Expected < 1000.000 us) --> Read time : 43.977 us, Update time : 548342.351 us (Switch time : 548281.334 us (Switch chained mode time : 5.091 us, perform mode change time : 547929.600 us, Activation time : 338.344 us, Deactivation time : 0.874 us)), Write time : 263867.756 us
+[ros2_control_node-1] [WARN] [1774901202.479325577] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 812.704155 ms (missed cycles : 813).
+[spawner-4] [INFO] [1774901202.503189586] [spawner_joint_trajectory_controller]: Configured and activated joint_trajectory_controller
+[spawner-3] [INFO] [1774901202.697311231] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[ros2_control_node-1] [WARN] [1774901202.742501282] [controller_manager]: Overrun might occur, Total time : 258862.542 us (Expected < 1000.000 us) --> Read time : 35.684 us, Update time : 347.012 us, Write time : 258479.846 us
+[INFO] [spawner-4]: process has finished cleanly [pid 3503]
+[ros2_control_node-1] [INFO] [1774901203.010344570] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[ros2_control_node-1] [INFO] [1774901203.010416750] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1774901203.026058301] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/kinova_gen3_7dof_robotiq_2f_85_moveit_config/share/kinova_gen3_7dof_robotiq_2f_85_moveit_config/config/ros2_controllers.yaml 
+[spawner-3] [INFO] [1774901203.295137238] [spawner_joint_state_broadcaster]: Loaded joint_state_broadcaster
+[ros2_control_node-1] [INFO] [1774901203.298396938] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1774901203.298618717] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[ros2_control_node-1] [WARN] [1774901203.562416608] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 269.796389 ms (missed cycles : 270).
+[ros2_control_node-1] [INFO] [1774901203.581814226] [controller_manager]: Activating controllers: [ joint_state_broadcaster ]
+[ros2_control_node-1] [WARN] [1774901203.832340251] [controller_manager]: Overrun might occur, Total time : 269116.793 us (Expected < 1000.000 us) --> Read time : 30.985 us, Update time : 279.086 us, Write time : 268806.722 us
+[ros2_control_node-1] [INFO] [1774901203.842292398] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1774901204.113180303] [controller_manager]: Overrun might occur, Total time : 273718.565 us (Expected < 1000.000 us) --> Read time : 39.326 us, Update time : 1599.402 us (Switch time : 1164.468 us (Switch chained mode time : 1.474 us, perform mode change time : 0.544 us, Activation time : 1026.091 us, Deactivation time : 0.694 us)), Write time : 272079.837 us
+[spawner-3] [INFO] [1774901204.127905769] [spawner_joint_state_broadcaster]: Configured and activated joint_state_broadcaster
+[ros2_control_node-1] [WARN] [1774901204.645165766] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 258.544315 ms (missed cycles : 259).
+[INFO] [spawner-3]: process has finished cleanly [pid 3502]
+[ros2_control_node-1] [WARN] [1774901205.215321534] [controller_manager]: Overrun might occur, Total time : 567063.067 us (Expected < 1000.000 us) --> Read time : 50.559 us, Update time : 3452.012 us, Write time : 563560.496 us
+[INFO] [rviz2-10]: process started with pid [3658]
+[ros2_control_node-1] [WARN] [1774901205.767470132] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 297.848492 ms (missed cycles : 298).
+[ros2_control_node-1] [WARN] [1774901206.291881289] [controller_manager]: Overrun might occur, Total time : 97218.718 us (Expected < 1000.000 us) --> Read time : 44.910 us, Update time : 4373.915 us, Write time : 92799.893 us
+[spawner-6] [INFO] [1774901206.375963187] [spawner_robotiq_gripper_controller]: waiting for service /controller_manager/list_controllers to become available...
+[ros2_control_node-1] [INFO] [1774901206.992838020] [controller_manager]: Loading controller : 'robotiq_gripper_controller' of type 'position_controllers/GripperActionController'
+[ros2_control_node-1] [INFO] [1774901206.992894911] [controller_manager]: Loading controller 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1774901207.009320701] [controller_manager]: Controller 'robotiq_gripper_controller' node arguments: --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/kinova_gen3_7dof_robotiq_2f_85_moveit_config/share/kinova_gen3_7dof_robotiq_2f_85_moveit_config/config/ros2_controllers.yaml 
+[ros2_control_node-1] [WARN] [1774901207.450004684] [robotiq_gripper_controller]: [Deprecated]: the `position_controllers/GripperActionController` and `effort_controllers::GripperActionController` controllers are replaced by 'parallel_gripper_controllers/GripperActionController' controller
+[ros2_control_node-1] [ERROR] [1774901209.797137028] [KortexMultiInterfaceHardware]: Runtime error: timeout detected: BaseCyclicClient::Refresh
+[ros2_control_node-1] 
+[ros2_control_node-1] [WARN] [1774901209.797852275] [controller_manager]: Overrun might occur, Total time : 3069490.247 us (Expected < 1000.000 us) --> Read time : 47.279 us, Update time : 4258.558 us, Write time : 3065184.410 us
+[ros2_control_node-1] [WARN] [1774901209.797992014] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3105.368462 ms (missed cycles : 3106).
+[spawner-6] [INFO] [1774901209.852099105] [spawner_robotiq_gripper_controller]: Loaded robotiq_gripper_controller
+[ros2_control_node-1] [INFO] [1774901210.090113833] [controller_manager]: Configuring controller: 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1774901210.091026748] [robotiq_gripper_controller]: Action status changes will be monitored at 20.000000 Hz.
+[ros2_control_node-1] [INFO] [1774901210.451409811] [controller_manager]: Activating controllers: [ robotiq_gripper_controller ]
+[ros2_control_node-1] [WARN] [1774901210.856786674] [controller_manager]: Overrun might occur, Total time : 277285.011 us (Expected < 1000.000 us) --> Read time : 33.199 us, Update time : 9711.447 us, Write time : 267540.365 us
+[ros2_control_node-1] [WARN] [1774901210.857408197] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 278.783728 ms (missed cycles : 279).
+[ros2_control_node-1] [INFO] [1774901211.105089368] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1774901211.121440051] [controller_manager]: Overrun might occur, Total time : 263444.757 us (Expected < 1000.000 us) --> Read time : 39.699 us, Update time : 243042.913 us (Switch time : 241665.858 us (Switch chained mode time : 1.909 us, perform mode change time : 15.900 us, Activation time : 241637.805 us, Deactivation time : 0.851 us)), Write time : 20362.145 us
+[spawner-6] [INFO] [1774901211.162175703] [spawner_robotiq_gripper_controller]: Configured and activated robotiq_gripper_controller
+[ros2_control_node-1] [WARN] [1774901211.924165904] [controller_manager]: Overrun might occur, Total time : 266632.540 us (Expected < 1000.000 us) --> Read time : 43.732 us, Update time : 1675.076 us, Write time : 264913.732 us
+[ros2_control_node-1] [WARN] [1774901211.924603370] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 267.979759 ms (missed cycles : 268).
+[rviz2-10] [INFO] [1774901211.990192059] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-10] [INFO] [1774901211.991485504] [rviz2]: OpenGl version: 4.5 (GLSL 4.5)
+[INFO] [spawner-6]: process has finished cleanly [pid 3505]
+[rviz2-10] [INFO] [1774901212.430498775] [rviz2]: Stereo is NOT SUPPORTED
+[ros2_control_node-1] [WARN] [1774901213.004990796] [controller_manager]: Overrun might occur, Total time : 247773.766 us (Expected < 1000.000 us) --> Read time : 59.276 us, Update time : 4271.813 us, Write time : 243442.677 us
+[ros2_control_node-1] [WARN] [1774901213.007035752] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 251.410912 ms (missed cycles : 252).
+[ros2_control_node-1] [WARN] [1774901214.074205485] [controller_manager]: Overrun might occur, Total time : 260891.405 us (Expected < 1000.000 us) --> Read time : 37.446 us, Update time : 4947.161 us, Write time : 255906.798 us
+[ros2_control_node-1] [WARN] [1774901214.074376819] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 261.745370 ms (missed cycles : 262).
+[rviz2-10] Warning: class_loader.impl: SEVERE WARNING!!! A namespace collision has occurred with plugin factory for class rviz_default_plugins::displays::InteractiveMarkerDisplay. New factory will OVERWRITE existing one. This situation occurs when libraries containing plugins are directly linked against an executable (the one running right now generating this message). Please separate plugins out into their own library or just don't link against the library and use either class_loader::ClassLoader/MultiLibraryClassLoader to open.
+[rviz2-10]          at line 321 in /opt/ros/jazzy/include/class_loader/class_loader/class_loader_core.hpp
+[rviz2-10] [WARN] [1774901214.952511645] [rcl.logging_rosout]: Publisher already registered for node name: 'rviz2_moveit'. If this is due to multiple nodes with the same name then all logs for the logger named 'rviz2_moveit' will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[ros2_control_node-1] [WARN] [1774901215.153554659] [controller_manager]: Overrun might occur, Total time : 272451.924 us (Expected < 1000.000 us) --> Read time : 43.674 us, Update time : 6268.580 us, Write time : 266139.670 us
+[ros2_control_node-1] [WARN] [1774901215.154026630] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 273.402795 ms (missed cycles : 274).
+[ros2_control_node-1] [WARN] [1774901216.217223536] [controller_manager]: Overrun might occur, Total time : 264445.583 us (Expected < 1000.000 us) --> Read time : 30.700 us, Update time : 3569.366 us, Write time : 260845.517 us
+[ros2_control_node-1] [WARN] [1774901216.218035651] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 267.414264 ms (missed cycles : 268).
+[ros2_control_node-1] [WARN] [1774901217.301317326] [controller_manager]: Overrun might occur, Total time : 247861.535 us (Expected < 1000.000 us) --> Read time : 45.268 us, Update time : 3752.047 us, Write time : 244064.220 us
+[ros2_control_node-1] [WARN] [1774901217.301940491] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 260.318337 ms (missed cycles : 261).
+[ros2_control_node-1] [WARN] [1774901218.382154674] [controller_manager]: Overrun might occur, Total time : 261982.793 us (Expected < 1000.000 us) --> Read time : 35.146 us, Update time : 715.791 us, Write time : 261231.856 us
+[ros2_control_node-1] [WARN] [1774901218.382281557] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 263.659398 ms (missed cycles : 264).
+[rviz2-10] [ERROR] [1774901218.595697109] [rviz2_moveit.moveit.ros.motion_planning_frame]: Action server: /recognize_objects not available
+[rviz2-10] [INFO] [1774901218.868820616] [rviz2_moveit.moveit.ros.motion_planning_frame]: MoveGroup namespace changed: / -> . Reloading params.
+[rviz2-10] [INFO] [1774901219.263015961] [rviz2_moveit.moveit.ros.rdf_loader]: Loaded robot model in 0.0883795 seconds
+[rviz2-10] [INFO] [1774901219.264206611] [rviz2_moveit.moveit.core.robot_model]: Loading robot model 'gen3'...
+[rviz2-10] [INFO] [1774901219.264703245] [rviz2_moveit.moveit.core.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[ros2_control_node-1] [WARN] [1774901219.461161594] [controller_manager]: Overrun might occur, Total time : 271723.547 us (Expected < 1000.000 us) --> Read time : 10853.656 us, Update time : 11608.143 us, Write time : 249261.748 us
+[ros2_control_node-1] [WARN] [1774901219.461406037] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 272.784028 ms (missed cycles : 273).
+[ros2_control_node-1] [WARN] [1774901220.543100851] [controller_manager]: Overrun might occur, Total time : 249414.851 us (Expected < 1000.000 us) --> Read time : 31.379 us, Update time : 1262.472 us, Write time : 248121.000 us
+[ros2_control_node-1] [WARN] [1774901220.543819483] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 253.197578 ms (missed cycles : 254).
+[rviz2-10] [INFO] [1774901221.002898247] [rviz2_moveit.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'manipulator': 1 1 1 1 1 1 1
+[ros2_control_node-1] [WARN] [1774901221.612286306] [controller_manager]: Overrun might occur, Total time : 258853.721 us (Expected < 1000.000 us) --> Read time : 93.881 us, Update time : 8794.242 us, Write time : 249965.598 us
+[ros2_control_node-1] [WARN] [1774901221.613956196] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 263.331166 ms (missed cycles : 264).
+[ros2_control_node-1] [WARN] [1774901222.697511211] [controller_manager]: Overrun might occur, Total time : 253086.391 us (Expected < 1000.000 us) --> Read time : 495.481 us, Update time : 5266.221 us, Write time : 247324.689 us
+[ros2_control_node-1] [WARN] [1774901222.697680082] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 268.057532 ms (missed cycles : 269).
+[ros2_control_node-1] [WARN] [1774901223.760425359] [controller_manager]: Overrun might occur, Total time : 224405.255 us (Expected < 1000.000 us) --> Read time : 44.962 us, Update time : 565.452 us, Write time : 223794.841 us
+[ros2_control_node-1] [WARN] [1774901223.760790031] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 228.167012 ms (missed cycles : 229).
+[rviz2-10] [INFO] [1774901224.661284854] [rviz2_moveit.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[rviz2-10] [INFO] [1774901224.693364589] [rviz2_moveit.moveit.ros.planning_scene_monitor]: Listening to '/monitored_planning_scene'
+[ros2_control_node-1] [WARN] [1774901224.837292322] [controller_manager]: Overrun might occur, Total time : 264233.070 us (Expected < 1000.000 us) --> Read time : 121.869 us, Update time : 10049.877 us, Write time : 254061.324 us
+[ros2_control_node-1] [WARN] [1774901224.837401812] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 264.781902 ms (missed cycles : 265).
+[rviz2-10] [INFO] [1774901225.344325374] [interactive_marker_display_110307609221104]: Connected on namespace: /rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic
+[rviz2-10] [INFO] [1774901225.369683706] [rviz2_moveit.moveit.ros.robot_interaction]: No active joints or end effectors found for group 'gripper'. Make sure that kinematics.yaml is loaded in this node's namespace.
+[rviz2-10] [INFO] [1774901225.428085999] [rviz2_moveit.moveit.ros.motion_planning_frame]: group gripper
+[rviz2-10] [INFO] [1774901225.428406221] [rviz2_moveit.moveit.ros.motion_planning_frame]: Constructing new MoveGroup connection for group 'gripper' in namespace ''
+[rviz2-10] [INFO] [1774901225.498402606] [rviz2_moveit.moveit.ros.move_group_interface]: Ready to take commands for planning group gripper.
+[rviz2-10] [INFO] [1774901225.684023544] [interactive_marker_display_110307609221104]: Sending request for interactive markers
+[rviz2-10] [INFO] [1774901225.839133437] [interactive_marker_display_110307609221104]: Service response received for initialization
+[ros2_control_node-1] [WARN] [1774901225.911783700] [controller_manager]: Overrun might occur, Total time : 264417.957 us (Expected < 1000.000 us) --> Read time : 30.486 us, Update time : 155.924 us, Write time : 264231.547 us
+[ros2_control_node-1] [WARN] [1774901225.911901364] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 265.280207 ms (missed cycles : 266).
+[ros2_control_node-1] [WARN] [1774901226.986284867] [controller_manager]: Overrun might occur, Total time : 259315.767 us (Expected < 1000.000 us) --> Read time : 20.054 us, Update time : 169.892 us, Write time : 259125.821 us
+[ros2_control_node-1] [WARN] [1774901226.986422890] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 259.802090 ms (missed cycles : 260).
+[ros2_control_node-1] [WARN] [1774901228.059715998] [controller_manager]: Overrun might occur, Total time : 261535.020 us (Expected < 1000.000 us) --> Read time : 29.903 us, Update time : 325.949 us, Write time : 261179.168 us
+[ros2_control_node-1] [WARN] [1774901228.059855239] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 262.234586 ms (missed cycles : 263).
+[ros2_control_node-1] [WARN] [1774901229.146283561] [controller_manager]: Overrun might occur, Total time : 258071.179 us (Expected < 1000.000 us) --> Read time : 49.250 us, Update time : 2179.806 us, Write time : 255842.123 us
+[ros2_control_node-1] [WARN] [1774901229.146886811] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 259.262778 ms (missed cycles : 260).
+[ros2_control_node-1] [WARN] [1774901230.227767300] [controller_manager]: Overrun might occur, Total time : 280863.229 us (Expected < 1000.000 us) --> Read time : 74.967 us, Update time : 2088.657 us, Write time : 278699.605 us
+[ros2_control_node-1] [WARN] [1774901230.227890894] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 282.268425 ms (missed cycles : 283).
+[ros2_control_node-1] [WARN] [1774901231.289430782] [controller_manager]: Overrun might occur, Total time : 531895.841 us (Expected < 1000.000 us) --> Read time : 42.031 us, Update time : 4171.729 us, Write time : 527682.081 us
+[ros2_control_node-1] [WARN] [1774901231.289518828] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 532.898612 ms (missed cycles : 533).
+[ros2_control_node-1] [WARN] [1774901232.375457518] [controller_manager]: Overrun might occur, Total time : 267102.976 us (Expected < 1000.000 us) --> Read time : 24.512 us, Update time : 267.966 us, Write time : 266810.498 us
+[ros2_control_node-1] [WARN] [1774901232.375555296] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 267.935093 ms (missed cycles : 268).
+[ros2_control_node-1] [ERROR] [1774901235.855781992] [KortexMultiInterfaceHardware]: Runtime error: timeout detected: BaseCyclicClient::Refresh
+[ros2_control_node-1] 
+[ros2_control_node-1] [WARN] [1774901235.855904774] [controller_manager]: Overrun might occur, Total time : 3010041.543 us (Expected < 1000.000 us) --> Read time : 16.248 us, Update time : 467.243 us, Write time : 3009558.052 us
+[ros2_control_node-1] [WARN] [1774901235.855968449] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3010.348461 ms (missed cycles : 3011).
+[ros2_control_node-1] [ERROR] [1774901239.005259947] [KortexMultiInterfaceHardware]: Runtime error: timeout detected: BaseCyclicClient::Refresh
+[ros2_control_node-1] 
+[ros2_control_node-1] [WARN] [1774901239.006033083] [controller_manager]: Overrun might occur, Total time : 3012307.424 us (Expected < 1000.000 us) --> Read time : 17.507 us, Update time : 93.560 us, Write time : 3012196.357 us
+[ros2_control_node-1] [WARN] [1774901239.006441075] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3012.820669 ms (missed cycles : 3013).
+[ros2_control_node-1] [ERROR] [1774901243.068469291] [KortexMultiInterfaceHardware]: Runtime error: timeout detected: BaseCyclicClient::Refresh
+[ros2_control_node-1] 
+[ros2_control_node-1] [WARN] [1774901243.068555881] [controller_manager]: Overrun might occur, Total time : 3228253.813 us (Expected < 1000.000 us) --> Read time : 38.143 us, Update time : 1817.039 us, Write time : 3226398.631 us
+[ros2_control_node-1] [WARN] [1774901243.068618924] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3228.998083 ms (missed cycles : 3229).
+[ros2_control_node-1] [WARN] [1774901244.166741964] [controller_manager]: Overrun might occur, Total time : 286484.180 us (Expected < 1000.000 us) --> Read time : 22.183 us, Update time : 106.661 us, Write time : 286355.336 us
+[ros2_control_node-1] [WARN] [1774901244.167014782] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 287.394515 ms (missed cycles : 288).
+[move_group-8] [ERROR] [1774901244.689053317] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[move_group-8] [INFO] [1774901244.747516280] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-8] [INFO] [1774901244.755392969] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-8] [INFO] [1774901244.951076780] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-8] [WARN] [1774901244.951236957] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-8] [WARN] [1774901244.951355105] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-8] [INFO] [1774901244.952682832] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 5
+[move_group-8] [INFO] [1774901244.953322520] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-8] [INFO] [1774901244.954427343] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-8] [INFO] [1774901244.954662484] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-8] [INFO] [1774901244.954853370] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-8] [INFO] [1774901244.964016744] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-8] [INFO] [1774901244.964523156] [move_group]: Calling Planner 'OMPL'
+[move_group-8] [INFO] [1774901244.998101561] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-8] [INFO] [1774901245.028155063] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-8] [INFO] [1774901245.031665275] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-8] [WARN] [1774901245.032014271] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-8] [INFO] [1774901245.032302446] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-8] [INFO] [1774901245.032333430] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-8] [INFO] [1774901245.032447566] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[ros2_control_node-1] [WARN] [1774901245.217399656] [controller_manager]: Overrun might occur, Total time : 269653.827 us (Expected < 1000.000 us) --> Read time : 22.986 us, Update time : 1288.311 us, Write time : 268342.530 us
+[ros2_control_node-1] [WARN] [1774901245.217613074] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 269.992374 ms (missed cycles : 270).
+[move_group-8] [INFO] [1774901245.228345906] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-8] [INFO] [1774901245.228950941] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-8] [INFO] [1774901245.230064585] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-8] [INFO] [1774901245.230410341] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1774901245.234087412] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1774901245.234159701] [joint_trajectory_controller]: Accepted new action goal
+[move_group-8] [INFO] [1774901245.236002649] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-8] [INFO] [1774901245.236109810] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[ros2_control_node-1] [WARN] [1774901246.294974959] [controller_manager]: Overrun might occur, Total time : 270398.854 us (Expected < 1000.000 us) --> Read time : 37.142 us, Update time : 1299.142 us, Write time : 269062.570 us
+[ros2_control_node-1] [WARN] [1774901246.299240287] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 277.618686 ms (missed cycles : 278).
+[ros2_control_node-1] [WARN] [1774901247.363446211] [controller_manager]: Overrun might occur, Total time : 265912.840 us (Expected < 1000.000 us) --> Read time : 20.216 us, Update time : 169.132 us, Write time : 265723.492 us
+[ros2_control_node-1] [WARN] [1774901247.364104171] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 267.483478 ms (missed cycles : 268).
+[ros2_control_node-1] [ERROR] [1774901247.902026961] [KortexMultiInterfaceHardware]: Kortex exception: Device error, Error sub type=WRONG_SERVOING_MODE => <srv: 3, fct: 1, msgType: 3>
+[ros2_control_node-1] description: Wrong servoing mode, must be low level servoing mode
+[ros2_control_node-1] [ERROR] [1774901247.902160486] [KortexMultiInterfaceHardware]: Error sub-code: WRONG_SERVOING_MODE
+[ros2_control_node-1] [WARN] [1774901248.445028125] [controller_manager]: Overrun might occur, Total time : 264412.422 us (Expected < 1000.000 us) --> Read time : 28.891 us, Update time : 4145.851 us, Write time : 260237.680 us
+[ros2_control_node-1] [WARN] [1774901248.445854893] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 266.230527 ms (missed cycles : 267).
+[ros2_control_node-1] [WARN] [1774901249.521814863] [controller_manager]: Overrun might occur, Total time : 242531.884 us (Expected < 1000.000 us) --> Read time : 122.756 us, Update time : 647.123 us, Write time : 241762.005 us
+[ros2_control_node-1] [WARN] [1774901249.521907818] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 266.288021 ms (missed cycles : 267).
+^C[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[static_transform_publisher-9] [INFO] [1774901249.893721989] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ros2_control_node-1] [INFO] [1774901249.894079463] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ros2_control_node-1] [INFO] [1774901249.894261359] [controller_manager]: Shutdown request received....
+[ros2_control_node-1] [INFO] [1774901249.894415073] [controller_manager]: Shutting down all controllers in the controller manager.
+[ros2_control_node-1] [INFO] [1774901249.894586332] [controller_manager]: Deactivating controller 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1774901249.897722992] [controller_manager]: Shutting down controller 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1774901249.898428766] [controller_manager]: Deactivating controller 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1774901249.898527799] [controller_manager]: Shutting down controller 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1774901249.898603164] [controller_manager]: Deactivating controller 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1774901249.898662937] [controller_manager]: Shutting down controller 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1774901249.898913535] [controller_manager]: Shutting down controller 'twist_controller'
+[ros2_control_node-1] [INFO] [1774901249.898967873] [controller_manager]: Deactivating controller 'fault_controller'
+[ros2_control_node-1] [INFO] [1774901249.920676877] [controller_manager]: Shutting down controller 'fault_controller'
+[robot_state_publisher-2] [INFO] [1774901249.894653928] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[move_group-8] [INFO] [1774901249.895335499] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[move_group-8] [WARN] [1774901249.896959555] [move_group.moveit.moveit.ros.plan_execution]: Stopping execution due to unknown reason.Possibly the node is about to shut down.
+[move_group-8] [INFO] [1774901249.896993271] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Cancelling execution for joint_trajectory_controller
+[rviz2-10] [INFO] [1774901249.900642474] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-10] [WARN] [1774901249.943993240] [interactive_marker_display_110307609221104]: Server not available while running, resetting
+[ros2_control_node-1] [INFO] [1774901250.054366306] [resource_manager]: 'deactivate' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1774901250.058242193] [KortexMultiInterfaceHardware]: Deactivating KortexMultiInterfaceHardware...
+[INFO] [static_transform_publisher-9]: process has finished cleanly [pid 3508]
+[move_group-8] [INFO] [1774901250.106050777] [move_group.moveit.moveit.ros.moveit_cpp]: Deleting MoveItCpp
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 3501]
+[ros2_control_node-1] [WARN] [1774901250.523929390] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 1.305617 ms (missed cycles : 2).
+[ros2_control_node-1] [WARN] [1774901250.616356198] [controller_manager]: Overrun might occur, Total time : 1703.641 us (Expected < 1000.000 us) --> Read time : 4.760 us, Update time : 1697.898 us, Write time : 0.983 us
+[ros2_control_node-1] [WARN] [1774901251.526995945] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 24.371001 ms (missed cycles : 25).
+[ERROR] [rviz2-10]: process has died [pid 3658, exit code -11, cmd '/opt/ros/jazzy/lib/rviz2/rviz2 -d /home/oliver/workspace/ros2_kortex_ws/install/kinova_gen3_7dof_robotiq_2f_85_moveit_config/share/kinova_gen3_7dof_robotiq_2f_85_moveit_config/config/moveit.rviz --ros-args -r __node:=rviz2_moveit --params-file /tmp/launch_params_edo4zpjj --params-file /tmp/launch_params_qateykfd --params-file /tmp/launch_params_dyjejdfk --params-file /tmp/launch_params_82u9gjb3 --params-file /tmp/launch_params_kt76qzmr'].
+[ros2_control_node-1] [INFO] [1774901251.633111689] [KortexMultiInterfaceHardware]: KortexMultiInterfaceHardware successfully deactivated!
+[ros2_control_node-1] [INFO] [1774901251.633194920] [resource_manager]: Successful 'deactivate' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1774901251.633204137] [resource_manager]: 'shutdown' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1774901251.633208030] [resource_manager]: Successful 'shutdown' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1774901251.633437901] [controller_manager]: Shutting down the controller manager.
+[ros2_control_node-1] [ERROR] [1774901251.633697503] [controller_manager.pal_statistics]: Exception in publisher thread: context cannot be slept with because it's invalid!. Aborting!
+[ros2_control_node-1] [ERROR] [1774901251.633757183] [controller_manager.pal_statistics]: Exception in publisher thread: context cannot be slept with because it's invalid!. Aborting!
+[ros2_control_node-1] [INFO] [1774901251.645301499] [controller_manager.pal_statistics]: Async messages lost 0
+[ros2_control_node-1] [INFO] [1774901251.645446743] [controller_manager.pal_statistics]: publish_async_failures_ 1
+[ros2_control_node-1] [INFO] [1774901251.651986195] [controller_manager.pal_statistics]: Async messages lost 0
+[ros2_control_node-1] [INFO] [1774901251.652040095] [controller_manager.pal_statistics]: publish_async_failures_ 1
+[ros2_control_node-1] Stack trace (most recent call last):
+[ros2_control_node-1] #17   Object "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2", at 0xffffffffffffffff, in 
+[move_group-8] [WARN] [1774901252.562537030] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: waitForExecution timed out
+[ros2_control_node-1] #16   Object "/home/oliver/workspace/ros2_kortex_ws/build/controller_manager/ros2_control_node", at 0x57cbf3e95554, in _start
+[ros2_control_node-1] #15   Source "../csu/libc-start.c", line 360, in __libc_start_main_impl [0x7f0d0d42a28a]
+[ros2_control_node-1] #14   Source "../sysdeps/nptl/libc_start_call_main.h", line 58, in __libc_start_call_main [0x7f0d0d42a1c9]
+[ros2_control_node-1] #13   Object "/home/oliver/workspace/ros2_kortex_ws/build/controller_manager/ros2_control_node", at 0x57cbf3e94b12, in main
+[ros2_control_node-1] #12   Object "/home/oliver/workspace/ros2_kortex_ws/build/controller_manager/ros2_control_node", at 0x57cbf3e9968d, in std::_Sp_counted_base<(__gnu_cxx::_Lock_policy)2>::_M_release_last_use_cold()
+[ros2_control_node-1] #11   Object "/home/oliver/workspace/ros2_kortex_ws/install/controller_manager/lib/libcontroller_manager.so", at 0x7f0d0e0df3a3, in controller_manager::ControllerManager::~ControllerManager()
+[ros2_control_node-1] #10   Object "/home/oliver/workspace/ros2_kortex_ws/install/hardware_interface/lib/libhardware_interface.so", at 0x7f0d0db7902c, in hardware_interface::ResourceManager::~ResourceManager()
+[ros2_control_node-1] #9    Object "/home/oliver/workspace/ros2_kortex_ws/install/hardware_interface/lib/libhardware_interface.so", at 0x7f0d0db78d61, in hardware_interface::ResourceManager::~ResourceManager()
+[ros2_control_node-1] #8    Object "/home/oliver/workspace/ros2_kortex_ws/install/hardware_interface/lib/libhardware_interface.so", at 0x7f0d0dbaa69c, in std::vector<hardware_interface::HardwareComponent, std::allocator<hardware_interface::HardwareComponent> >::~vector()
+[ros2_control_node-1] #7    Object "/home/oliver/workspace/ros2_kortex_ws/build/kortex_driver/libkortex_driver.so", at 0x7f0cdba7b035, in kortex_driver::KortexMultiInterfaceHardware::~KortexMultiInterfaceHardware()
+[ros2_control_node-1] #6    Object "/home/oliver/workspace/ros2_kortex_ws/build/kortex_driver/libkortex_driver.so", at 0x7f0cdba7af67, in kortex_driver::KortexMultiInterfaceHardware::~KortexMultiInterfaceHardware()
+[ros2_control_node-1] #5    Object "/home/oliver/workspace/ros2_kortex_ws/build/kortex_driver/libkortex_driver.so", at 0x7f0cdbb085cd, in Kinova::Api::BaseCyclic::Command::~Command()
+[ros2_control_node-1] #4    Object "/home/oliver/workspace/ros2_kortex_ws/build/kortex_driver/libkortex_driver.so", at 0x7f0cdbb21e68, in Kinova::Api::InterconnectCyclic::Command::~Command()
+[ros2_control_node-1] #3    Object "/home/oliver/workspace/ros2_kortex_ws/build/kortex_driver/libkortex_driver.so", at 0x7f0cdbb21e26, in Kinova::Api::InterconnectCyclic::Command::~Command()
+[ros2_control_node-1] #2    Object "/home/oliver/workspace/ros2_kortex_ws/build/kortex_driver/libkortex_driver.so", at 0x7f0cdbb21d88, in Kinova::Api::InterconnectCyclic::Command::clear_tool_command()
+[ros2_control_node-1] #1    Object "/home/oliver/workspace/ros2_kortex_ws/build/kortex_driver/libkortex_driver.so", at 0x7f0cdbb1b418, in Kinova::Api::GripperCyclic::Command::~Command()
+[ros2_control_node-1] #0    Object "/home/oliver/workspace/ros2_kortex_ws/build/kortex_driver/libkortex_driver.so", at 0x7f0cdbb1b3dd, in Kinova::Api::GripperCyclic::Command::~Command()
+[ros2_control_node-1] Segmentation fault (Address not mapped to object [0x7f0b4ccab508])
+[ERROR] [move_group-8]: process[move_group-8] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[ERROR] [ros2_control_node-1]: process[ros2_control_node-1] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [move_group-8]: sending signal 'SIGTERM' to process[move_group-8]
+[INFO] [ros2_control_node-1]: sending signal 'SIGTERM' to process[ros2_control_node-1]
+[ERROR] [move_group-8]: process has died [pid 3507, exit code -15, cmd '/opt/ros/jazzy/lib/moveit_ros_move_group/move_group --ros-args --params-file /tmp/launch_params_uvk0w_ft'].
+[ERROR] [ros2_control_node-1]: process has died [pid 3500, exit code -11, cmd '/home/oliver/workspace/ros2_kortex_ws/install/controller_manager/lib/controller_manager/ros2_control_node --ros-args --params-file /home/oliver/workspace/ros2_kortex_ws/install/kinova_gen3_7dof_robotiq_2f_85_moveit_config/share/kinova_gen3_7dof_robotiq_2f_85_moveit_config/config/ros2_controllers.yaml -r /controller_manager/robot_description:=/robot_description'].
+oliver@oliver-VirtualBox:~/workspace/ros2_kortex_ws$ 
