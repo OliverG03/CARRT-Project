@@ -47,7 +47,6 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
 from geometry_msgs.msg import Pose
-from scipy.spatial.transform import Rotation
 
 from adl_tasks.helper_moves import MoveItHelper
 from adl_tasks.apriltag_key import OBJECTS
@@ -57,7 +56,6 @@ from adl_tasks.task_base import TaskBase, STATUS_SUCCEEDED, STATUS_FAILED, STATU
 from adl_tasks.motion_profiles import DEFAULT_PROFILE, MotionProfile, PoseTolerance
 from adl_tasks.scene_utils import remove_collision_object, attach_object, detach_object
 from adl_tasks.adl_logging import log_pose, log_arm_snapshot
-from adl_tasks.adl_config import TABLE_SURFACE_Z, TOP_EE_TO_PINCH_CENTER_M
 from adl_tasks.grasp_and_place import (
     CLEAR_TABLE_CONFIG,                 DROP_CONFIG,
     SIDE_APPROACH_CONFIG,               TOP_APPROACH_CONFIG,
@@ -70,7 +68,6 @@ from adl_tasks.grasp_and_place import (
     post_place_escape,                  side_front_clearance_delta,
     top_orientation_soft_ok,            go_inter_object_bridge,
     top_live_pose_ok,
-    top_orientation_error_rad,
     should_publish_placed_collision,    compute_side_front_clearance_m,
     compute_side_qr_face_standoff_m,    side_qr_face_standoff_delta,
     side_qr_face_distance_xy,
@@ -118,8 +115,17 @@ class clearTableNode(Node):
         self.get_logger().info("Starting Clear Table Task...")
         self.base.publish_status(STATUS_RUNNING, "Starting Clear Table Task")
         self.base.update_detail("Initializing clear_table execution.")
-        self.base.update_detail("Clearing remembered scene objects before table scan.")
-        self.vision.clear_scene_memory(timeout_s=4.0)
+
+        if hasattr(self.arm, "wait_for_motion_stack_ready"):
+            # [FLAG clear-table-dependency-gate] The initial scan pose depends on live joint state,
+            # MoveIt action availability, and FK. Wait for that stack explicitly so a split-launch
+            # race surfaces as "arm not ready" instead of an opaque scan-pose failure.
+            if not self.arm.wait_for_motion_stack_ready(timeout=12.0):
+                self.base.publish_status(
+                    STATUS_FAILED,
+                    "Arm/MoveIt stack is not ready. Verify the stock arm launch and sanitizer.",
+                )
+                return
         
         # Step 0: move to look at table position and perform initial scan
         startup_ok = self._startup_move()
@@ -135,10 +141,10 @@ class clearTableNode(Node):
             )
             return
         self.vision.set_enabled(True)
-        self.base.update_detail("Initial scan complete. Collecting scene memory.")
+        self.base.update_detail("Initial scan complete. Reading visible tags.")
         
         # Step 1: get visible tags and determine which to clear based on config
-        to_clear = self._scan_target_ids_with_extension()
+        to_clear = [ id for id in self.vision.visible_ids if id in CLEAR_TABLE_CONFIG["ids"] ]
         if not to_clear:
             self.get_logger().warn("No target objects detected on the table. Clear Table task will end.")
             self.base.publish_status(STATUS_SUCCEEDED, "No target objects detected. Task complete.")
@@ -155,7 +161,7 @@ class clearTableNode(Node):
         # failure can be retried from a fresh pose lookup instead of being skipped immediately.
         object_retry_enable = bool(FLOW_CONFIG.get("object_retry_from_scratch_enable", False))
         object_retry_max_retries = max(0, int(FLOW_CONFIG.get("object_retry_from_scratch_max_retries", 0)))
-        object_retry_total_attempts = 1 + object_retry_max_retries if object_retry_enable else 1
+        object_retry_total_attempts = 1 + object_retry_max_retries
         object_attempt_counts = {tid: 0 for tid in remaining}
         idx = 0
         while idx < len(remaining):
@@ -438,9 +444,6 @@ class clearTableNode(Node):
     
     def _get_pose(self, tag_id: int):
         return self.vision.get_tag_pose(tag_id)
-
-    def _get_live_pose(self, tag_id: int):
-        return self.vision.get_live_tag_pose(tag_id)
     
     def _distance_from_base(self, tag_id: int) -> float:
         pose = self._get_pose(tag_id)
@@ -448,120 +451,12 @@ class clearTableNode(Node):
             return float('inf')  # Missing pose should sort last, not crash ordering.
         return (pose.position.x ** 2 + pose.position.y ** 2) ** 0.5
 
-    def _scan_target_ids_with_extension(self) -> list[int]:
-        scan_timeout_s = float(CLEAR_TABLE_CONFIG.get("scene_scan_timeout_s", 6.0))
-        retry_enabled = bool(CLEAR_TABLE_CONFIG.get("empty_scan_retry_enable", False))
-        retry_count = max(0, int(CLEAR_TABLE_CONFIG.get("empty_scan_retry_count", 0))) if retry_enabled else 0
-        retry_pause_s = max(0.0, float(CLEAR_TABLE_CONFIG.get("empty_scan_retry_pause_s", 0.0)))
-        total_attempts = 1 + retry_count
-
-        for attempt_idx in range(total_attempts):
-            if attempt_idx > 0:
-                self.get_logger().warn(
-                    f"No clear-table targets were found in scan {attempt_idx}/{total_attempts}. "
-                    "Changing the scan viewpoint before retrying."
-                )
-                self.base.update_detail(
-                    f"No task objects found yet. Repositioning for another scene scan "
-                    f"({attempt_idx + 1}/{total_attempts})."
-                )
-                if retry_pause_s > 0.0:
-                    time.sleep(retry_pause_s)
-                if not self._perform_empty_scan_retry_motion(attempt_idx, total_attempts):
-                    self.get_logger().warn(
-                        "Empty-scan retry reposition did not complete cleanly; retrying the scan from the current pose."
-                    )
-
-            scanned_ids = self.vision.scan_scene(timeout_s=scan_timeout_s)
-            to_clear = [tag_id for tag_id in scanned_ids if tag_id in CLEAR_TABLE_CONFIG["ids"]]
-            if to_clear:
-                return to_clear
-
-        return []
-
-    def _perform_empty_scan_retry_motion(self, attempt_idx: int, total_attempts: int) -> bool:
-        if attempt_idx <= 0:
-            return True
-
-        if not bool(CLEAR_TABLE_CONFIG.get("empty_scan_retry_reposition_enable", True)):
-            return True
-
-        scan_settle_s = max(0.0, float(CLEAR_TABLE_CONFIG.get("scan_settle_s", 1.5)))
-        moved_any = False
-
-        self.scene.lock(True)
-        try:
-            if self.base.is_cancelled():
-                self.get_logger().warn(
-                    "Empty-scan retry motion cancelled before the recovery scan sweep."
-                )
-                return False
-
-            if (
-                CLEAR_TABLE_CONFIG.get("empty_scan_retry_side_sweep_enable", True)
-                and CLEAR_TABLE_CONFIG.get("side_tag_scan_pose_enable", True)
-                and hasattr(self.arm, "look_at_table_side_tags")
-            ):
-                self.get_logger().info(
-                    f"Retry scan sweep {attempt_idx + 1}/{total_attempts}: moving through side-tag view before rescanning."
-                )
-                side_ok = bool(self.arm.look_at_table_side_tags())
-                moved_any = moved_any or side_ok
-                if self.base.is_cancelled():
-                    self.get_logger().warn(
-                        "Empty-scan retry motion cancelled during the side-tag recovery sweep."
-                    )
-                    return False
-                if not side_ok:
-                    self.get_logger().warn(
-                        "Side-tag recovery sweep failed; continuing to the inward retry scan pose."
-                    )
-
-            if (
-                CLEAR_TABLE_CONFIG.get("empty_scan_retry_inward_pose_enable", True)
-                and hasattr(self.arm, "look_at_table_retry_scan")
-            ):
-                self.get_logger().info(
-                    f"Retry scan sweep {attempt_idx + 1}/{total_attempts}: moving to inward recovery scan pose."
-                )
-                retry_ok = bool(self.arm.look_at_table_retry_scan())
-                moved_any = moved_any or retry_ok
-                if self.base.is_cancelled():
-                    self.get_logger().warn(
-                        "Empty-scan retry motion cancelled while moving to the inward retry scan pose."
-                    )
-                    return False
-                if not retry_ok:
-                    self.get_logger().warn(
-                        "Inward retry scan pose failed; falling back to the normal table scan pose."
-                    )
-
-            if not moved_any:
-                fallback_ok = bool(self.arm.look_at_table())
-                moved_any = moved_any or fallback_ok
-                if self.base.is_cancelled():
-                    self.get_logger().warn(
-                        "Empty-scan retry motion cancelled while returning to the normal table scan pose."
-                    )
-                    return False
-                if not fallback_ok:
-                    self.get_logger().warn(
-                        "Failed to reseed the arm at any recovery scan pose before the retry scan."
-                    )
-                    return False
-        finally:
-            self.scene.lock(False)
-
-        if moved_any and scan_settle_s > 0.0:
-            time.sleep(scan_settle_s)
-        return moved_any
-
     # --- Task Helpers --- #
 
     # Initial Scene Scan: before any movement, look at table and get visible tags
     def _startup_move(self) -> bool:
-        if hasattr(self.arm, "wait_for_joint_state_ready"):
-            self.arm.wait_for_joint_state_ready(timeout=3.0)
+        if hasattr(self.arm, "wait_for_motion_stack_ready"):
+            self.arm.wait_for_motion_stack_ready(timeout=8.0)
         self.scene.lock(True)
         try:
             self.get_logger().info("Moving to perform the initial scene scan for clear table task...")
@@ -579,69 +474,6 @@ class clearTableNode(Node):
                     "Initial scene scan move failed. Holding current position for operator review."
                 )
                 return False
-
-            # Top-facing tags and side-facing tags are not equally visible from one wrist-camera
-            # angle. If enabled, briefly unlock after the normal scan pose, then try a second
-            # oblique pose for vertical/curved side tags without changing the rest of the task flow.
-            self.scene.lock(False)
-            time.sleep(float(CLEAR_TABLE_CONFIG.get("scan_settle_s", 1.5)))
-            if self.base.is_cancelled():
-                self.get_logger().warn(
-                    "Initial scene scan cancelled after reaching the top scan pose."
-                )
-                return False
-            if (
-                CLEAR_TABLE_CONFIG.get("side_tag_scan_pose_enable", True)
-                and hasattr(self.arm, "look_at_table_side_tags")
-            ):
-                self.scene.lock(True)
-                side_scan_ok = bool(self.arm.look_at_table_side_tags())
-                self.scene.lock(False)
-                if self.base.is_cancelled():
-                    self.get_logger().warn(
-                        "Initial scene scan cancelled during the side-tag scan motion."
-                    )
-                    return False
-                if side_scan_ok:
-                    time.sleep(float(CLEAR_TABLE_CONFIG.get("scan_settle_s", 1.5)))
-                    if self.base.is_cancelled():
-                        self.get_logger().warn(
-                            "Initial scene scan cancelled after the side-tag scan pose."
-                        )
-                        return False
-                else:
-                    self.get_logger().warn(
-                        "Side-tag scan pose failed; continuing with normal table scan data."
-                    )
-
-                # The final scene scan that seeds clear_table should be collected from the
-                # normal top-down table pose. Side-tag detections can still latch while this
-                # brief oblique pass is unlocked, but top-facing objects like the cube and
-                # remote need the later scan_scene() call to run after we have reseated the
-                # wrist camera over the table.
-                if self.base.is_cancelled():
-                    self.get_logger().warn(
-                        "Initial scene scan cancelled before returning from the side-tag scan pose."
-                    )
-                    return False
-                self.scene.lock(True)
-                returned_ok = bool(self.arm.look_at_table())
-                self.scene.lock(False)
-                if self.base.is_cancelled():
-                    self.get_logger().warn(
-                        "Initial scene scan cancelled while returning to the normal table scan pose."
-                    )
-                    return False
-                if returned_ok:
-                    time.sleep(float(CLEAR_TABLE_CONFIG.get("scan_settle_s", 1.5)))
-                else:
-                    self.get_logger().error(
-                        "Failed to return from side-tag scan pose to the normal table scan pose."
-                    )
-                    self.base.update_detail(
-                        "Failed to return to the normal table scan pose after side-tag scan."
-                    )
-                    return False
 
             self.base._ready = True
             self.get_logger().info("Initial scene scan complete. Clear Table task is ready to execute.")
@@ -837,86 +669,6 @@ class clearTableNode(Node):
             override = getattr(obj, attr_name, None)
             return float(override) if override is not None else float(TOP_APPROACH_CONFIG[cfg_key])
 
-        def _apply_top_grasp_clearance_floor(
-            candidate_grasp: Pose,
-            candidate_approach: Pose,
-            *,
-            context: str,
-        ) -> None:
-            if not is_top_grasp:
-                return
-            top_clearance_override = getattr(obj, "top_min_tool_clearance_above_table_m", None)
-            top_tool_clearance = float(
-                top_clearance_override
-                if top_clearance_override is not None
-                else TOP_APPROACH_CONFIG["stage2_min_tool_clearance_above_table_m"]
-            )
-            top_min_grasp_z = float(TABLE_SURFACE_Z + TOP_EE_TO_PINCH_CENTER_M + top_tool_clearance)
-            if candidate_grasp.position.z < top_min_grasp_z:
-                delta_z = float(top_min_grasp_z - candidate_grasp.position.z)
-                self.get_logger().warn(
-                    f"[{obj.name}] {context}: top grasp Z {candidate_grasp.position.z:.3f} is below the "
-                    f"tool-clearance floor {top_min_grasp_z:.3f}; raising grasp and approach by {delta_z:.3f}m."
-                )
-                candidate_grasp.position.z = float(top_min_grasp_z)
-                candidate_approach.position.z = float(candidate_approach.position.z + delta_z)
-
-        def _apply_top_yaw_free_orientation_bias(
-            candidate_grasp: Pose,
-            candidate_approach: Pose,
-            *,
-            context: str,
-            reference_orientation=None,
-        ) -> None:
-            if not is_top_grasp or not bool(getattr(obj, "top_yaw_free", False)):
-                return
-
-            if reference_orientation is None:
-                live_pose = self.arm.get_current_end_effector_pose(timeout=0.75)
-                if live_pose is not None:
-                    reference_orientation = live_pose.orientation
-            if reference_orientation is None:
-                reference_orientation = candidate_approach.orientation
-
-            base_rot = Rotation.from_quat([
-                float(candidate_approach.orientation.x),
-                float(candidate_approach.orientation.y),
-                float(candidate_approach.orientation.z),
-                float(candidate_approach.orientation.w),
-            ])
-            reference_rot = Rotation.from_quat([
-                float(reference_orientation.x),
-                float(reference_orientation.y),
-                float(reference_orientation.z),
-                float(reference_orientation.w),
-            ])
-
-            best_idx = 0
-            best_rot = base_rot
-            best_err = float((reference_rot.inv() * base_rot).magnitude())
-            for idx in range(1, 4):
-                candidate_rot = Rotation.from_euler("z", 90.0 * idx, degrees=True) * base_rot
-                candidate_err = float((reference_rot.inv() * candidate_rot).magnitude())
-                if candidate_err + 1e-9 < best_err:
-                    best_idx = idx
-                    best_rot = candidate_rot
-                    best_err = candidate_err
-
-            q = best_rot.as_quat()
-            for pose in (candidate_grasp, candidate_approach):
-                pose.orientation.x = float(q[0])
-                pose.orientation.y = float(q[1])
-                pose.orientation.z = float(q[2])
-                pose.orientation.w = float(q[3])
-
-            self.get_logger().info(
-                f"[{obj.name}] {context}: yaw-free top grasp chose the {best_idx * 90:d}deg symmetric wrist candidate "
-                f"(rotation from reference={best_err:.3f} rad)."
-            )
-
-        _apply_top_grasp_clearance_floor(grasp_pose, approach_pose, context="Initial target")
-        _apply_top_yaw_free_orientation_bias(grasp_pose, approach_pose, context="Initial target")
-
         top_allow_soft_fail = _top_obj_bool(
             "top_allow_orientation_soft_fail",
             "allow_stage1_orientation_soft_fail",
@@ -957,11 +709,6 @@ class clearTableNode(Node):
             "top_stage2_prealign_max_err_rad",
             "stage2_prealign_max_err_rad",
         )
-        top_orientation_mode = (
-            "approach_axis"
-            if bool(getattr(obj, "top_yaw_free", False)) else
-            "full"
-        )
         top_primary_position_fallback = bool(
             TOP_APPROACH_CONFIG.get("stage1_position_fallback_enable", False)
         )
@@ -997,186 +744,8 @@ class clearTableNode(Node):
                 f"retry_pos_fallback={top_retry_position_fallback}, "
                 f"staged_pos_fallback={top_staging_position_fallback}, "
                 f"retry_table_reseed={top_retry_allow_table_reseed}, "
-                f"ori_mode={top_orientation_mode}, "
                 f"plan_s=({top_stage1_profile.planning_time:.1f}/{top_stage1_retry_profile.planning_time:.1f})."
             )
-
-        def _refresh_top_target_from_approach() -> bool:
-            nonlocal tag_pose, grasp_pose, approach_pose
-            if not is_top_grasp or not bool(TOP_APPROACH_CONFIG.get("stage1_live_tag_refresh_enable", False)):
-                return True
-
-            unlock_s = float(TOP_APPROACH_CONFIG.get("stage1_live_tag_refresh_unlock_s", 0.20))
-            min_xy_shift = float(TOP_APPROACH_CONFIG.get("stage1_live_tag_refresh_min_xy_shift_m", 0.008))
-            max_xy_shift = float(TOP_APPROACH_CONFIG.get("stage1_live_tag_refresh_max_xy_shift_m", 0.050))
-            refresh_pos_tol = float(TOP_APPROACH_CONFIG.get("stage1_live_tag_refresh_pos_tol_m", 0.025))
-
-            original_approach = copy.deepcopy(approach_pose)
-            self.get_logger().info(
-                f"[{obj.name}] Stage 1 live refresh: briefly unlocking scene to re-read the tag from the settled approach pose."
-            )
-            self.scene.lock(False)
-            try:
-                time.sleep(unlock_s)
-                if self.base.is_cancelled():
-                    return False
-                live_tag_pose = self._get_live_pose(tag_id)
-            finally:
-                self.scene.lock(True)
-
-            if live_tag_pose is None:
-                self.get_logger().warn(
-                    f"[{obj.name}] Stage 1 live refresh: no fresh tag pose available from the approach view. Continuing with the scan pose target."
-                )
-                return True
-
-            refreshed_grasp = obj.compute_grasp_pose(live_tag_pose)
-            refreshed_approach = obj.compute_approach_pose(live_tag_pose)
-            _apply_top_grasp_clearance_floor(
-                refreshed_grasp,
-                refreshed_approach,
-                context="Stage 1 live refresh",
-            )
-            _apply_top_yaw_free_orientation_bias(
-                refreshed_grasp,
-                refreshed_approach,
-                context="Stage 1 live refresh",
-                reference_orientation=original_approach.orientation,
-            )
-            dx = float(refreshed_approach.position.x - approach_pose.position.x)
-            dy = float(refreshed_approach.position.y - approach_pose.position.y)
-            shift_xy = math.hypot(dx, dy)
-
-            self.get_logger().info(
-                f"[{obj.name}] Stage 1 live refresh: approach delta dx={dx:+.3f}, dy={dy:+.3f}, |xy|={shift_xy:.3f} m."
-            )
-            if shift_xy > max_xy_shift:
-                self.get_logger().warn(
-                    f"[{obj.name}] Stage 1 live refresh: ignoring live correction because |xy|={shift_xy:.3f} m exceeds the safety limit {max_xy_shift:.3f} m."
-                )
-                return True
-
-            if shift_xy < min_xy_shift:
-                tag_pose = live_tag_pose
-                grasp_pose = refreshed_grasp
-                approach_pose = refreshed_approach
-                self.get_logger().info(
-                    f"[{obj.name}] Stage 1 live refresh: live view agrees closely with the scan pose; updated the cached target without another arm move."
-                )
-                return True
-
-            self._log_pose(f"[{obj.name}] Stage 1 live refresh target", refreshed_approach)
-            refresh_ok = self.arm.go_to_pose(
-                refreshed_approach,
-                tol=PoseTolerance(
-                    pos=refresh_pos_tol,
-                    ori_xy=float(top_stage1_retry_ori_xy_tol),
-                    ori_z=float(top_stage1_retry_ori_z_tol),
-                ),
-                orientation_required=True,
-                profile=top_stage1_retry_profile,
-            )
-            if (not refresh_ok) and top_allow_soft_fail:
-                refresh_ok = top_orientation_soft_ok(
-                    node=self,
-                    arm=self.arm,
-                    obj_name=obj.name,
-                    target_pose=refreshed_approach,
-                    where="Stage 1 live refresh",
-                    quat_angle_fn=quat_angle_rad,
-                    max_err_override=float(TOP_APPROACH_CONFIG["stage1_retry_soft_continue_max_err_rad"]),
-                    orientation_mode=top_orientation_mode,
-                )
-            if not refresh_ok:
-                self.get_logger().warn(
-                    f"[{obj.name}] Stage 1 live refresh: failed to refine on the updated target. Returning to the original approach pose."
-                )
-                self.arm.go_to_pose(
-                    original_approach,
-                    tol=PoseTolerance(
-                        pos=refresh_pos_tol,
-                        ori_xy=float(top_stage1_retry_ori_xy_tol),
-                        ori_z=float(top_stage1_retry_ori_z_tol),
-                    ),
-                    orientation_required=True,
-                    profile=top_stage1_retry_profile,
-                )
-                return True
-
-            self.arm.wait_for_settle(timeout=0.75)
-            settled_ok = top_live_pose_ok(
-                node=self,
-                arm=self.arm,
-                obj_name=obj.name,
-                target_pose=refreshed_approach,
-                where="Stage 1 live refresh settle",
-                quat_angle_fn=quat_angle_rad,
-                max_pos_err_m=max(refresh_pos_tol, top_stage2_live_pos_tol),
-                max_ori_err_rad=min(float(TOP_APPROACH_CONFIG["stage1_retry_soft_continue_max_err_rad"]), top_stage1_live_ori_tol),
-                orientation_mode=top_orientation_mode,
-            )
-            if not settled_ok:
-                self.get_logger().warn(
-                    f"[{obj.name}] Stage 1 live refresh: refined target did not settle cleanly. Keeping the arm where it is, but not adopting the refreshed grasp target."
-                )
-                return True
-
-            tag_pose = live_tag_pose
-            grasp_pose = refreshed_grasp
-            approach_pose = refreshed_approach
-            self.get_logger().info(
-                f"[{obj.name}] Stage 1 live refresh: adopted the updated grasp target from the approach view."
-            )
-            return True
-
-        def _refresh_top_target_from_table_rescan() -> bool:
-            nonlocal tag_pose, grasp_pose, approach_pose, stage2_recover_pose
-            if not is_top_grasp:
-                return True
-
-            self.get_logger().info(
-                f"[{obj.name}] Stage 1 retry: rescanning from the table view before retrying the top approach."
-            )
-            self.scene.lock(False)
-            try:
-                rescanned_ids = self.vision.scan_scene(
-                    timeout_s=float(CLEAR_TABLE_CONFIG.get("scene_scan_timeout_s", 6.0))
-                )
-                rescanned_pose = self._get_pose(tag_id) if tag_id in rescanned_ids else None
-            finally:
-                self.scene.lock(True)
-
-            if rescanned_pose is None:
-                self.get_logger().warn(
-                    f"[{obj.name}] Stage 1 retry rescan: tag {tag_id} was not reacquired cleanly. Keeping the previous target."
-                )
-                return True
-
-            refreshed_grasp = obj.compute_grasp_pose(rescanned_pose)
-            refreshed_approach = obj.compute_approach_pose(rescanned_pose)
-            _apply_top_grasp_clearance_floor(
-                refreshed_grasp,
-                refreshed_approach,
-                context="Stage 1 retry rescan",
-            )
-            _apply_top_yaw_free_orientation_bias(
-                refreshed_grasp,
-                refreshed_approach,
-                context="Stage 1 retry rescan",
-                reference_orientation=approach_pose.orientation,
-            )
-            dx = float(refreshed_approach.position.x - approach_pose.position.x)
-            dy = float(refreshed_approach.position.y - approach_pose.position.y)
-            shift_xy = math.hypot(dx, dy)
-            self.get_logger().info(
-                f"[{obj.name}] Stage 1 retry rescan: updated approach delta dx={dx:+.3f}, dy={dy:+.3f}, |xy|={shift_xy:.3f} m."
-            )
-
-            tag_pose = rescanned_pose
-            grasp_pose = refreshed_grasp
-            approach_pose = refreshed_approach
-            stage2_recover_pose = copy.deepcopy(approach_pose)
-            return True
 
         # [FLAG pre-approach-wrap-guard] Refuse to start a pick attempt while any arm
         # joint still needs sanitizer-style normalization. The remote failure in 323 1700
@@ -1337,7 +906,6 @@ class clearTableNode(Node):
                         where="Stage 1 top staged fallback align",
                         quat_angle_fn=quat_angle_rad,
                         max_err_override=soft_limit,
-                        orientation_mode=top_orientation_mode,
                     )
                 if not align_ok:
                     return False
@@ -1372,7 +940,6 @@ class clearTableNode(Node):
                 quat_angle_fn=quat_angle_rad,
                 max_pos_err_m=top_stage1_live_pos_tol,
                 max_ori_err_rad=min(soft_limit, top_stage1_live_ori_tol),
-                orientation_mode=top_orientation_mode,
             )
             if not live_ok:
                 self.get_logger().warn(
@@ -1429,6 +996,7 @@ class clearTableNode(Node):
         dest_pull_up.position.z += FLOW_CONFIG["dest_standoff_z"] # add standoff
         dest_pull_up.orientation = copy.deepcopy(dest_pose.orientation)
 
+        dest_pose_for_drop = copy.deepcopy(dest_pose)
         obj_id = f'obj_{tag_id}'
         
         # -- Pick Sequence -- #
@@ -1506,7 +1074,6 @@ class clearTableNode(Node):
                             target_pose=approach_pose,
                             where="Stage 1 primary",
                             quat_angle_fn=quat_angle_rad,
-                            orientation_mode=top_orientation_mode,
                         )
                         if ok:
                             self.get_logger().warn(
@@ -1525,7 +1092,6 @@ class clearTableNode(Node):
                             quat_angle_fn=quat_angle_rad,
                             max_pos_err_m=top_stage1_live_pos_tol,
                             max_ori_err_rad=top_stage1_live_ori_tol,
-                            orientation_mode=top_orientation_mode,
                         )
                         if not ok:
                             self.get_logger().warn(
@@ -1555,13 +1121,11 @@ class clearTableNode(Node):
             time.sleep(float(FLOW_CONFIG["stage1_retry_pause_s"]))
             
             if is_side_grasp:
-                self.get_logger().info(f"[{obj.name}] Stage 1 retry: reseeding with go_home before side approach.")
-                reseeded = self.arm.go_home()
+                self.get_logger().info(f"[{obj.name}] Stage 1 retry: reseeding with look_at_table before side approach.")
+                reseeded = self.arm.look_at_table()
                 if not reseeded:
-                    self.get_logger().warn(
-                        f"[{obj.name}] Stage 1 retry: go_home reseed failed; trying go_retract fallback."
-                    )
-                    reseeded = bool(getattr(self.arm, "go_retract", lambda: False)())
+                    self.get_logger().warn(f"[{obj.name}] Stage 1 retry: look_at_table reseed failed; trying go_home reseed.")
+                    reseeded = self.arm.go_home()
                 if not reseeded:
                     self.get_logger().warn(f"[{obj.name}] Stage 1 retry: reseed failed; retrying from current state.")
                 else:
@@ -1571,23 +1135,22 @@ class clearTableNode(Node):
                     stage2_recover_pose = copy.deepcopy(approach_pose)
             else:
                 if is_top_grasp and bool(TOP_APPROACH_CONFIG.get("stage1_reseed_before_retry", False)):
+                    # For locked-scene top retries, go_home is a more deterministic reseed than look_at_table and avoids an extra vision sweep.
                     self.get_logger().info(
-                        f"[{obj.name}] Stage 1 retry: reseeding with look_at_table before top approach."
+                        f"[{obj.name}] Stage 1 retry: reseeding with go_home before top approach."
                     )
-                    reseeded = self.arm.look_at_table()
-                    if not reseeded:
+                    reseeded = self.arm.go_home()
+                    if (not reseeded) and top_retry_allow_table_reseed:
                         self.get_logger().warn(
-                            f"[{obj.name}] Stage 1 retry: look_at_table reseed failed; trying go_home fallback."
+                            f"[{obj.name}] Stage 1 retry: go_home reseed failed; trying look_at_table fallback."
                         )
-                        reseeded = self.arm.go_home()
+                        reseeded = self.arm.look_at_table()
                     if not reseeded:
                         self.get_logger().warn(
                             f"[{obj.name}] Stage 1 retry: top reseed failed; retrying from current state."
                         )
                     else:
                         self.arm.wait_for_settle(timeout=1.0)
-                        if not _refresh_top_target_from_table_rescan():
-                            return False
                 if not _guard_moveit_safe_current_state("Stage 1 retry guard", timeout=2.0):
                     return False
                 if is_top_grasp:
@@ -1629,7 +1192,6 @@ class clearTableNode(Node):
                                 where="Stage 1 retry",
                                 quat_angle_fn=quat_angle_rad,
                                 max_err_override=float(TOP_APPROACH_CONFIG["stage1_retry_soft_continue_max_err_rad"]),
-                                orientation_mode=top_orientation_mode,
                             )
                             if ok:
                                 self.get_logger().warn(
@@ -1648,7 +1210,6 @@ class clearTableNode(Node):
                                 quat_angle_fn=quat_angle_rad,
                                 max_pos_err_m=top_stage1_live_pos_tol,
                                 max_ori_err_rad=top_stage1_live_ori_tol,
-                                orientation_mode=top_orientation_mode,
                             )
                             if not ok:
                                 self.get_logger().warn(
@@ -1685,7 +1246,6 @@ class clearTableNode(Node):
                                 where="Stage 1 retry",
                                 quat_angle_fn=quat_angle_rad,
                                 max_err_override=float(TOP_APPROACH_CONFIG["stage1_retry_soft_continue_max_err_rad"]),
-                                orientation_mode=top_orientation_mode,
                             )
                             if ok:
                                 self.get_logger().warn(
@@ -1704,7 +1264,6 @@ class clearTableNode(Node):
                                 quat_angle_fn=quat_angle_rad,
                                 max_pos_err_m=top_stage1_live_pos_tol,
                                 max_ori_err_rad=top_stage1_live_ori_tol,
-                                orientation_mode=top_orientation_mode,
                             )
                             if not ok:
                                 self.get_logger().warn(
@@ -1716,10 +1275,6 @@ class clearTableNode(Node):
                     f"Failed to move to approach pose for object {obj.name} (ID: {tag_id}). Aborting."
                 )
                 self.base.update_detail(f"[{obj.name}] Stage 1 failed: could not reach approach pose.")
-                return False
-
-        if ok and is_top_grasp:
-            if not _refresh_top_target_from_approach():
                 return False
 
         # Guarantee side-grasp descend is purely vertical from approach XY
@@ -1759,15 +1314,10 @@ class clearTableNode(Node):
             prealign_err_lim = float(top_stage2_prealign_err_tol)
             live_top = self.arm.get_current_end_effector_pose(timeout=1.0)
             if live_top is not None:
-                prealign_err = top_orientation_error_rad(
-                    live_top.orientation,
-                    approach_pose.orientation,
-                    orientation_mode=top_orientation_mode,
-                    quat_angle_fn=quat_angle_rad,
-                )
+                prealign_err = quat_angle_rad(live_top.orientation, approach_pose.orientation)
                 self.get_logger().info(
                     f"[{obj.name}] Stage 2 top prealign orientation error={prealign_err:.3f} rad "
-                    f"(limit={prealign_err_lim:.3f}, mode={top_orientation_mode})."
+                    f"(limit={prealign_err_lim:.3f})."
                 )
                 if prealign_err > prealign_err_lim:
                     self.get_logger().warn(
@@ -1791,7 +1341,6 @@ class clearTableNode(Node):
                             where="Stage 2 top prealign",
                             quat_angle_fn=quat_angle_rad,
                             max_err_override=prealign_err_lim,
-                            orientation_mode=top_orientation_mode,
                         )
                     if align_ok:
                         align_ok = top_live_pose_ok(
@@ -1803,7 +1352,6 @@ class clearTableNode(Node):
                             quat_angle_fn=quat_angle_rad,
                             max_pos_err_m=top_stage2_live_pos_tol,
                             max_ori_err_rad=min(prealign_err_lim, top_stage2_live_ori_tol),
-                            orientation_mode=top_orientation_mode,
                         )
                         if not align_ok:
                             self.get_logger().warn(
@@ -1838,31 +1386,12 @@ class clearTableNode(Node):
             if is_side_grasp else
             float(TOP_APPROACH_CONFIG["stage2_cart_min_fraction"])
         )
-        ok = False
-        if self.arm.use_short_cartesian_servo():
-            servo_cfg = SIDE_APPROACH_CONFIG if is_side_grasp else TOP_APPROACH_CONFIG
-            servo_label = "vertical descend" if is_side_grasp else "top descend"
-            ok = self.arm.go_short_cartesian(
-                grasp_pose,
-                pos_tolerance=float(servo_cfg.get("stage2_servo_pos_tol_m", 0.008)),
-                orientation_tolerance_rad=float(servo_cfg.get("stage2_servo_ori_tol_rad", 0.25)),
-                max_linear_speed=float(servo_cfg.get("stage2_servo_linear_speed_mps", 0.030)),
-                max_distance=float(servo_cfg.get("stage2_servo_max_distance_m", 0.120)),
-                timeout=float(servo_cfg.get("stage2_servo_timeout_s", 6.0)),
-                context=f"[{obj.name}] Stage 2 {servo_label}",
-            )
-            if not ok:
-                self.get_logger().warn(
-                    f"[{obj.name}] Stage 2 short-motion servo attempt did not complete cleanly; "
-                    "falling back to MoveIt Cartesian planning."
-                )
-        if not ok:
-            ok = self.arm.go_cartesian(
-                [grasp_pose],
-                avoid_collisions=stage2_avoid_collisions,
-                min_fraction=stage2_min_fraction,
-                fallback_to_pose=False,
-            )
+        ok = self.arm.go_cartesian(
+            [grasp_pose],
+            avoid_collisions=stage2_avoid_collisions,
+            min_fraction=stage2_min_fraction,
+            fallback_to_pose=False,
+        )
         if (not ok) and is_side_grasp:
             self.get_logger().warn(
                 f'[{obj.name}] Stage 2 side Cartesian failed with collisions enabled. Retrying with collisions disabled.'
@@ -2153,7 +1682,7 @@ class clearTableNode(Node):
 
         if not used_hard_preset:
             ok_align, aligned_above = self.arm.move_above_and_align_drop(
-                dest_pose=dest_pose_for_drop,
+                dest_pose=dest_pose,
                 standoff_z=FLOW_CONFIG["dest_standoff_z"],
                 above_pos_tol=DROP_CONFIG["stage5_fallback_above_pos_tol"],
                 align_xy_tol=DROP_CONFIG["stage5_fallback_align_xy_tol"],
@@ -2187,21 +1716,11 @@ class clearTableNode(Node):
                 dest_pull_up = aligned_above
 
         # 6. cartesian lower to pose
-        dest_pose_for_drop = copy.deepcopy(dest_pose)
-        stage6_release_gap_by_slot = DROP_CONFIG.get("stage6_nominal_release_gap_by_slot_m", {})
-        stage6_release_gap = float(stage6_release_gap_by_slot.get(place_slot, 0.0)) if place_slot else 0.0
-        if stage6_release_gap > 0.0:
-            dest_pose_for_drop.position.z = float(dest_pose_for_drop.position.z + stage6_release_gap)
-            self.get_logger().info(
-                f"[{obj.name}] Stage 6: using a shallower drop target for {place_slot} "
-                f"(+{stage6_release_gap:.3f}m release gap above nominal destination depth)."
-            )
-
         self.get_logger().info(
             f'[{obj.name}] Stage 6: lower to destination (cartesian) '
-            f'({dest_pose_for_drop.position.x:.3f}, '
-            f'{dest_pose_for_drop.position.y:.3f}, '
-            f'{dest_pose_for_drop.position.z:.3f})'
+            f'({dest_pose.position.x:.3f}, '
+            f'{dest_pose.position.y:.3f}, '
+            f'{dest_pose.position.z:.3f})'
         )
         self.base.update_detail(f"[{obj.name}] Stage 6/9: cartesian drop to destination.")
         
@@ -2417,7 +1936,7 @@ class clearTableNode(Node):
             arm=self.arm,
             obj_name=obj.name,
             start_pose=current_drop_start,
-            dest_pose=dest_pose_for_drop,
+            dest_pose=dest_pose,
             log_pose_cb=self._log_pose,
             preset_pose=preset_pose,
             dest_pull_up=dest_pull_up,
@@ -2537,16 +2056,9 @@ class clearTableNode(Node):
             self._log_pose(f"[{obj.name}] Stage 8 retreat target with escape offset", retreat_target)
 
         if escape_ok:
-            cleanup_retreat_enabled = bool(FLOW_CONFIG.get("post_place_cleanup_retreat_after_escape", False))
-            # After a successful deterministic escape, avoid asking MoveIt for another long above-slot
-            # cleanup move unless it is explicitly re-enabled for debugging. That extra retreat has been
-            # the main source of post-place wrist overturning and cable twist.
-            if not cleanup_retreat_enabled:
-                self.get_logger().info(
-                    f"[{obj.name}] Stage 8: deterministic escape succeeded. Skipping the redundant cleanup retreat."
-                )
-                retreat_ok = True
-            elif place_slot == "BIN":
+            # After a successful deterministic escape, do NOT ask MoveIt for a full pose-constrained
+            # retreat. That is where the hesitation/catch is happening.
+            if place_slot == "BIN":
                 self.get_logger().info(
                     f"[{obj.name}] Stage 8: deterministic escape already cleared the BIN. "
                     "Skipping pose-based retreat."
@@ -2566,6 +2078,7 @@ class clearTableNode(Node):
                     f"{'OK' if retreat_ok else 'FAILED'}."
                 )
             else:
+                # Default safe behavior for any other slot type.
                 self.get_logger().info(
                     f"[{obj.name}] Stage 8: deterministic escape succeeded. "
                     "Skipping additional pose-based retreat."

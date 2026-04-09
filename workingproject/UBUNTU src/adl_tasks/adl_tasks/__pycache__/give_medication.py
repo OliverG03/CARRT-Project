@@ -56,6 +56,10 @@ class GiveMedication(Node):
         self.create_subscription(String, "/patient_name_camera", self._on_camera_name, 10)
         self.create_subscription(String, "/patient_name_entered", self._on_entered_name, 10)
 
+        # [FLAG medication-ready-state] This node has no separate startup park move, so it can
+        # advertise command-readiness immediately and let execute_task gate on arm/MoveIt runtime
+        # readiness before the first motion.
+        self.base._ready = True
         self.get_logger().info("give_medication ready.")
 
     def _on_camera_name(self, msg: String):
@@ -274,33 +278,7 @@ class GiveMedication(Node):
             ),
             orientation_required=True,
         ):
-            servo_ok = False
-            if self.arm.use_short_cartesian_servo():
-                servo_ok = self.arm.go_short_cartesian(
-                    approach_pose,
-                    pos_tolerance=float(
-                        GIVE_MEDICATION_CONFIG.get("pick_approach_servo_pos_tol_m", 0.008)
-                    ),
-                    orientation_tolerance_rad=float(
-                        GIVE_MEDICATION_CONFIG.get("pick_approach_servo_ori_tol_rad", 0.25)
-                    ),
-                    max_linear_speed=float(
-                        GIVE_MEDICATION_CONFIG.get("pick_approach_servo_linear_speed_mps", 0.030)
-                    ),
-                    max_distance=float(
-                        GIVE_MEDICATION_CONFIG.get("pick_approach_servo_max_distance_m", 0.100)
-                    ),
-                    timeout=float(
-                        GIVE_MEDICATION_CONFIG.get("pick_approach_servo_timeout_s", 6.0)
-                    ),
-                    context="[Medication] Pick approach descend",
-                )
-                if not servo_ok:
-                    self.get_logger().warn(
-                        "[Medication] Short-motion servo approach did not complete cleanly; "
-                        "falling back to MoveIt Cartesian planning."
-                    )
-            if servo_ok or self.arm.go_cartesian(
+            if self.arm.go_cartesian(
                 [approach_pose],
                 avoid_collisions=True,
                 min_fraction=float(GIVE_MEDICATION_CONFIG.get("pick_approach_cart_min_fraction", 0.92)),
@@ -375,29 +353,7 @@ class GiveMedication(Node):
         grasp_pose.position.x = float(approach_pose.position.x)
         grasp_pose.position.y = float(approach_pose.position.y)
         grasp_pose.orientation = copy.deepcopy(approach_pose.orientation)
-        servo_ok = False
-        if self.arm.use_short_cartesian_servo():
-            servo_ok = self.arm.go_short_cartesian(
-                grasp_pose,
-                pos_tolerance=float(GIVE_MEDICATION_CONFIG.get("pick_servo_pos_tol_m", 0.008)),
-                orientation_tolerance_rad=float(
-                    GIVE_MEDICATION_CONFIG.get("pick_servo_ori_tol_rad", 0.25)
-                ),
-                max_linear_speed=float(
-                    GIVE_MEDICATION_CONFIG.get("pick_servo_linear_speed_mps", 0.030)
-                ),
-                max_distance=float(
-                    GIVE_MEDICATION_CONFIG.get("pick_servo_max_distance_m", 0.100)
-                ),
-                timeout=float(GIVE_MEDICATION_CONFIG.get("pick_servo_timeout_s", 6.0)),
-                context="[Medication] Final grasp descend",
-            )
-            if not servo_ok:
-                self.get_logger().warn(
-                    "[Medication] Short-motion servo grasp descend did not complete cleanly; "
-                    "falling back to MoveIt Cartesian planning."
-                )
-        if servo_ok or self.arm.go_cartesian(
+        if self.arm.go_cartesian(
             [grasp_pose],
             avoid_collisions=True,
             min_fraction=float(GIVE_MEDICATION_CONFIG["pick_cart_min_fraction"]),
@@ -500,8 +456,17 @@ class GiveMedication(Node):
         try:
             self.base.publish_status(STATUS_RUNNING, "Starting give medication task.")
             self._reset_verification_inputs()
-            self.base.update_detail("Clearing remembered scene objects before medication search.")
-            self.vision.clear_scene_memory(timeout_s=4.0)
+
+            if hasattr(self.arm, "wait_for_motion_stack_ready"):
+                # [FLAG medication-dependency-gate] The table-view move and later verification calls
+                # need the same split arm stack as the other tasks. Wait here so startup races are
+                # reported clearly before any medication logic begins.
+                if not self.arm.wait_for_motion_stack_ready(timeout=12.0):
+                    self.base.publish_status(
+                        STATUS_FAILED,
+                        "Arm/MoveIt stack is not ready. Verify the stock arm launch and sanitizer.",
+                    )
+                    return
 
             # 1) Find the bottle from the table scan posture.
             self.base.update_detail("Looking for medication bottle.")

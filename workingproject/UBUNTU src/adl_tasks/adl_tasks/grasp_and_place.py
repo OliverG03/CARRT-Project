@@ -38,7 +38,16 @@ def _pose_xyz_q(x: float, y: float, z: float, qx: float, qy: float, qz: float, q
 
 # Grouped configuration blocks
 CLEAR_TABLE_CONFIG = {
-    "ids": [2, 3, 4],  # Current test order: cube, cup # 2, 3, 4
+    "ids": [2, 3, 4],  # Clear-table tag IDs; runtime order is re-sorted by distance from base.
+    "scene_scan_timeout_s": 12.0,
+    "scan_settle_s": 1.25,
+    "side_tag_scan_pose_enable": True,
+    "empty_scan_retry_enable": True,
+    "empty_scan_retry_count": 1,
+    "empty_scan_retry_pause_s": 0.75,
+    "empty_scan_retry_reposition_enable": True,
+    "empty_scan_retry_side_sweep_enable": True,
+    "empty_scan_retry_inward_pose_enable": True,
 }
 
 DROP_CONFIG = {
@@ -102,6 +111,16 @@ DROP_CONFIG = {
     "stage6_early_joint_hazard_steps": 3,
     "stage6_early_joint_hazard_repeat_count": 2,
     "stage6_joint_branch_restore_slots": ["BIN", "SHELF_LEFT", "SHELF_RIGHT"],
+    "stage6_servo_pos_tol_m": 0.008,
+    "stage6_servo_ori_tol_rad": 0.20,
+    "stage6_servo_linear_speed_mps": 0.018,
+    "stage6_servo_max_distance_m": 0.300,
+    "stage6_servo_timeout_s": 10.0,
+    "stage6_nominal_release_gap_by_slot_m": {
+        "SHELF_LEFT": 0.025,
+        "SHELF_RIGHT": 0.025,
+        "BIN": 0.020,
+    }, # m, end the guarded vertical drop slightly above the slot walls and let release/settle finish the last bit instead of driving deeper into the container.
 }
 
 SIDE_APPROACH_CONFIG = {
@@ -146,6 +165,11 @@ SIDE_APPROACH_CONFIG = {
     "stage2_recover_max_step": 0.005,
     "stage2_recover_min_fraction": 0.80,
     "stage2_recover_pos_tol": 0.08,
+    "stage2_servo_pos_tol_m": 0.008,
+    "stage2_servo_ori_tol_rad": 0.25,
+    "stage2_servo_linear_speed_mps": 0.030,
+    "stage2_servo_max_distance_m": 0.120,
+    "stage2_servo_timeout_s": 6.0,
 }
 
 TOP_APPROACH_CONFIG = {
@@ -155,7 +179,7 @@ TOP_APPROACH_CONFIG = {
     "stage1_retry_position_fallback_enable": False, # Bool, allow positon-only fallback during retry top approach 
     "stage1_staging_position_fallback_enable": False,   # Bool, allow staged top fallback to reach high Z above-grasp position first before alignment
     "stage1_reseed_before_retry": True,             # Bool, reseed to a known posture before the top-approach retry
-    "stage1_retry_allow_table_reseed_fallback": False, # Bool, after failed go_home reseed on top retries, optionally allow a wider look_at_table sweep
+    "stage1_retry_allow_table_reseed_fallback": False, # Legacy diagnostic flag retained for logs; top retries now prefer look_at_table first and fall back to go_home.
     "stage1_staging_fallback_enable": True,         # Bool, enable staged top fallback when stage 1 fails
     
     "stage1_pos_tol": 0.05,                 # m, XY tolerance for stage 1 approach success when orientation is within tol
@@ -192,6 +216,17 @@ TOP_APPROACH_CONFIG = {
     "stage2_step_min_fraction": 0.85,       # %, minimum fraction of stage 2 approach height to descend for stage 2 stepwise descend
     "stage2_step_retry_min_fraction": 0.75, # %, minimum fraction of stage 2 approach height to descend for retry of stage 2 stepwise descend
     "stage2_cart_min_fraction": 0.99,       # %, minimum fraction of the stage 2 approach height to descend for a successful single step cartesian move
+    "stage2_min_tool_clearance_above_table_m": 0.018, # m, keep a small real table margin for top grasps so thin objects like the remote do not drive the fingertips too close to the surface
+    "stage2_servo_pos_tol_m": 0.008,
+    "stage2_servo_ori_tol_rad": 0.20,
+    "stage2_servo_linear_speed_mps": 0.020,
+    "stage2_servo_max_distance_m": 0.160,
+    "stage2_servo_timeout_s": 7.0,
+    "stage1_live_tag_refresh_enable": True,
+    "stage1_live_tag_refresh_unlock_s": 0.40,
+    "stage1_live_tag_refresh_min_xy_shift_m": 0.008,
+    "stage1_live_tag_refresh_max_xy_shift_m": 0.050,
+    "stage1_live_tag_refresh_pos_tol_m": 0.025,
 }
 
 FLOW_CONFIG = {
@@ -199,7 +234,8 @@ FLOW_CONFIG = {
     "post_object_table_reseed": False,  # Bool, look_at_table reseed after each successful place
     "inter_object_bridge_after_place": False, # Bool, optional bridge pose after place
     "post_place_always_escape": True,   # Bool, always escape after placing an object to avoid collisions
-    "return_home_after_place": True,    # Bool, deterministic joint-space reseed after a place
+    "post_place_cleanup_retreat_after_escape": False, # Bool, after a successful deterministic escape, skip the extra above-slot cleanup move by default because it has been causing long wrist-twisting transitions.
+    "return_home_after_place": False,   # Bool, after place default to the lighter inter-object retract reseed instead of a full go_home.
     
     "dest_standoff_z": 0.25,            # m, Z standoff from destination for pre-place pose (above destination)
     "lift_clear_z": 0.15,               # m, Z clearance for lifting object off source surface before travel
@@ -208,17 +244,17 @@ FLOW_CONFIG = {
     "travel_gripper_width_rad": 0.120,  # m, gripper width to use during non-grasp travel to reduce collision risk
     "travel_gripper_force_n": 10.0,     # N, gripper force to use during non-grasp travel when gripper state is relevant
     
-    "stage5_reseed_look_at_table": True,        # Bool, look_at_table reseed before stage 5 descend when enabled
+    "stage5_reseed_look_at_table": False,       # Bool, keep carried-object branch by default; the extra sweep through look_at_table has been causing large detours before shelf placement
     "stage5_bin_reseed_look_at_table": False,   # [FLAG stage5-bin-no-reseed] Keep BIN transit on the carried-object branch; look_at_table reseed has been causing remote/bin start-state churn.
     "post_place_scene_wait_s": 0.40,    # s, time between place and publishing scene changes for the placed object, SIM ONLY ### check accuracy
     "post_place_controller_cooldown_s": 0.25,   # s, cooldown after place before next pick
     "post_object_pause_s": 0.50,        # s, pause after placing an object
     "post_object_home_pause_s": 0.50,   # s, pause after returning home
-    "failure_bridge_pause_s": 0.60,     # s, pause before moving to bridge after a failure
-    "object_retry_from_scratch_enable": True,   # [FLAG object-retry-enable] On a hard pick/place failure, retry the same object from the start before skipping deeper objects behind it.
-    "object_retry_from_scratch_max_retries": 1, # [FLAG object-retry-budget] One full retry keeps the front-object safety benefit without turning every hard failure into a long loop.
+    "failure_bridge_pause_s": 0.35,     # s, pause before moving to bridge after a failure
+    "object_retry_from_scratch_enable": False,  # [FLAG object-retry-enable] Keep the fast local Stage 1 retry, but skip the expensive full-object restart loop by default.
+    "object_retry_from_scratch_max_retries": 0, # [FLAG object-retry-budget] Disabled with the default runtime policy above; raise this only for focused debugging runs.
     "object_retry_from_scratch_pause_s": 0.75,  # [FLAG object-retry-pause] Brief pause after transition recovery before re-reading pose and retrying the same object.
-    "stage1_retry_pause_s": 0.50,       # s, pause before retrying stage 1 approach after a failure
+    "stage1_retry_pause_s": 0.30,       # s, pause before retrying stage 1 approach after a failure
     "scene_remove_sync_s": 0.40,        # s, time before scene sync after removing an object for better sim stability
     "drop_fail_release_wait_s": 1.00,   # s, wait time after a failed drop release before next action
     "gripper_attach_sync_s": 0.30,      # s, time to wait after gripper attach command before next action
@@ -325,6 +361,16 @@ GIVE_MEDICATION_CONFIG = {
     "pick_setup_pre_z_offset_m": 0.120, # [FLAG medication-pick-setup] Leave the QR-read pose before opening the gripper so the fingers are not already intersecting the table or bottle when the pick starts.
     "pick_setup_backoff_x_m": 0.060,
     "pick_cart_min_fraction": 0.92,
+    "pick_approach_servo_pos_tol_m": 0.008,
+    "pick_approach_servo_ori_tol_rad": 0.25,
+    "pick_approach_servo_linear_speed_mps": 0.030,
+    "pick_approach_servo_max_distance_m": 0.100,
+    "pick_approach_servo_timeout_s": 6.0,
+    "pick_servo_pos_tol_m": 0.008,
+    "pick_servo_ori_tol_rad": 0.25,
+    "pick_servo_linear_speed_mps": 0.030,
+    "pick_servo_max_distance_m": 0.100,
+    "pick_servo_timeout_s": 6.0,
     "handover_standoff_z_m": 0.18,
     "handover_above_pos_tol_m": 0.06,
     "handover_align_xy_tol_rad": 0.35,
@@ -390,6 +436,20 @@ def quat_angle_rad(q1, q2) -> float:
     )
     dot = max(-1.0, min(1.0, abs(dot)))
     return 2.0 * math.acos(dot)
+
+def top_approach_axis_angle_rad(q1, q2) -> float:
+    r1 = Rotation.from_quat([float(q1.x), float(q1.y), float(q1.z), float(q1.w)])
+    r2 = Rotation.from_quat([float(q2.x), float(q2.y), float(q2.z), float(q2.w)])
+    axis1 = r1.as_matrix()[:, 2]
+    axis2 = r2.as_matrix()[:, 2]
+    dot = float(np.dot(axis1, axis2))
+    dot = max(-1.0, min(1.0, dot))
+    return float(math.acos(dot))
+
+def top_orientation_error_rad(q1, q2, *, orientation_mode: str, quat_angle_fn) -> float:
+    if str(orientation_mode) == "approach_axis":
+        return top_approach_axis_angle_rad(q1, q2)
+    return float(quat_angle_fn(q1, q2))
 
 def compute_shelf_release_width(grasp_width: float) -> float:
     return max(
@@ -787,6 +847,29 @@ def cartesian_descend_stepwise(
             f"[{obj_name}] Stage 6 invalid descent setup: start_z={z_cur:.3f}, goal_z={z_goal:.3f}."
         )
         return _result(False, "invalid_setup")
+
+    if hasattr(arm, "use_short_cartesian_servo") and arm.use_short_cartesian_servo():
+        node.get_logger().info(
+            f"[{obj_name}] Stage 6: trying the real-hardware short-motion servo path before "
+            "segmented Cartesian planning."
+        )
+        servo_ok = arm.go_short_cartesian(
+            dest_pose,
+            joint_locks=joint_locks,
+            pos_tolerance=float(DROP_CONFIG.get("stage6_servo_pos_tol_m", 0.008)),
+            orientation_tolerance_rad=float(DROP_CONFIG.get("stage6_servo_ori_tol_rad", 0.20)),
+            max_linear_speed=float(DROP_CONFIG.get("stage6_servo_linear_speed_mps", 0.025)),
+            max_distance=float(DROP_CONFIG.get("stage6_servo_max_distance_m", 0.120)),
+            timeout=float(DROP_CONFIG.get("stage6_servo_timeout_s", 8.0)),
+            cancel_cb=cancel_cb,
+            context=f"[{obj_name}] Stage 6 servo descend",
+        )
+        if servo_ok:
+            return _result(True, "success", remaining_gap=0.0, step_idx=1, z_cur_out=z_goal)
+        node.get_logger().warn(
+            f"[{obj_name}] Stage 6: short-motion servo path did not complete cleanly. "
+            "Falling back to segmented Cartesian planning."
+        )
 
     step_idx = 0
     early_lock_hits: dict[str, int] = {}
@@ -1206,6 +1289,7 @@ def top_orientation_soft_ok(
     *,
     quat_angle_fn,
     max_err_override: float | None = None,
+    orientation_mode: str = "full",
 ) -> bool:
     live = arm.get_current_end_effector_pose(timeout=1.0)
     if live is None:
@@ -1218,10 +1302,15 @@ def top_orientation_soft_ok(
         if max_err_override is not None else
         float(TOP_APPROACH_CONFIG["stage1_soft_continue_max_err_rad"])
     )
-    err = quat_angle_fn(live.orientation, target_pose.orientation)
+    err = top_orientation_error_rad(
+        live.orientation,
+        target_pose.orientation,
+        orientation_mode=orientation_mode,
+        quat_angle_fn=quat_angle_fn,
+    )
     node.get_logger().warn(
         f"[{obj_name}] {where}: top-orientation error={err:.3f} rad "
-        f"(limit={max_err:.3f})."
+        f"(limit={max_err:.3f}, mode={orientation_mode})."
     )
     return err <= max_err
 
@@ -1235,6 +1324,7 @@ def top_live_pose_ok(
     quat_angle_fn,
     max_pos_err_m: float,
     max_ori_err_rad: float,
+    orientation_mode: str = "full",
 ) -> bool:
     live = arm.get_current_end_effector_pose(timeout=1.0)
     if live is None:
@@ -1247,11 +1337,17 @@ def top_live_pose_ok(
     dy = float(live.position.y - target_pose.position.y)
     dz = float(live.position.z - target_pose.position.z)
     pos_err = math.sqrt(dx * dx + dy * dy + dz * dz)
-    ori_err = quat_angle_fn(live.orientation, target_pose.orientation)
+    ori_err = top_orientation_error_rad(
+        live.orientation,
+        target_pose.orientation,
+        orientation_mode=orientation_mode,
+        quat_angle_fn=quat_angle_fn,
+    )
     node.get_logger().info(
         f"[{obj_name}] {where}: live pose error pos={pos_err:.3f} m "
+        f"(dx={dx:+.3f}, dy={dy:+.3f}, dz={dz:+.3f}) "
         f"(limit={float(max_pos_err_m):.3f}), ori={ori_err:.3f} rad "
-        f"(limit={float(max_ori_err_rad):.3f})."
+        f"(limit={float(max_ori_err_rad):.3f}, mode={orientation_mode})."
     )
     return pos_err <= float(max_pos_err_m) and ori_err <= float(max_ori_err_rad)
 

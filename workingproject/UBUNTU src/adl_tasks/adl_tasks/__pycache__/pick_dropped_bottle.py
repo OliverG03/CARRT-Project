@@ -5,6 +5,7 @@
 import copy
 import math
 import time
+import threading
 
 import rclpy
 from rclpy.node import Node
@@ -57,11 +58,6 @@ SIDE_RETRY_ORI_Z_TOL = 1.10
 GRASP_CART_MAX_STEP = 0.01
 GRASP_CART_MIN_FRACTION = 0.92
 GRASP_CART_RETRY_MIN_FRACTION = 0.85
-GRASP_SERVO_POS_TOL_M = 0.008
-GRASP_SERVO_ORI_TOL_RAD = 0.25
-GRASP_SERVO_LINEAR_SPEED_MPS = 0.030
-GRASP_SERVO_MAX_DISTANCE_M = 0.120
-GRASP_SERVO_TIMEOUT_S = 6.0
 
 # Stepwise descent settings for placing the bottle down
 DROP_DESCENT_STEP_DZ = 0.01
@@ -69,11 +65,6 @@ DROP_DESCENT_MIN_STEP_DZ = 0.002
 DROP_DESCENT_MAX_STEP = 0.005
 DROP_DESCENT_MIN_FRACTION = 0.90
 DROP_EARLY_RELEASE_MAX_Z_GAP = 0.06
-DROP_SERVO_POS_TOL_M = 0.008
-DROP_SERVO_ORI_TOL_RAD = 0.20
-DROP_SERVO_LINEAR_SPEED_MPS = 0.025
-DROP_SERVO_MAX_DISTANCE_M = 0.120
-DROP_SERVO_TIMEOUT_S = 8.0
 DROP_DIRECT_POSE_POS_TOL = 0.04
 DROP_DIRECT_POSE_ORI_XY_TOL = 0.35
 DROP_DIRECT_POSE_ORI_Z_TOL = 0.80
@@ -111,11 +102,41 @@ class PickDroppedBottle(Node):
         # Listen for incoming task commands
         self.create_subscription(String, "/adl_command", self.command_callback, 10)
 
-        self.base._ready = True
         self.get_logger().info("PickDroppedBottle ready. Waiting for command.")
-        self.get_logger().info(
-            "Startup motion disabled at node load; motion begins only after pick_dropped_bottle command."
-        )
+
+        # Start a background initialization move so the arm begins from a safe posture
+        threading.Thread(target=self._startup_move, daemon=True).start()
+
+    def _startup_move(self):
+        """Move to retract on startup before accepting commands."""
+        self.base._ready = False
+        if hasattr(self.arm, "wait_for_motion_stack_ready"):
+            # [FLAG startup-dependency-gate] In split bringup, ADL can start before the stock arm
+            # launch has exposed joint states / MoveIt services. Wait here so startup retract only
+            # runs once the arm stack is actually usable.
+            if not self.arm.wait_for_motion_stack_ready(timeout=20.0):
+                self.get_logger().error(
+                    "Startup aborted: arm/MoveIt dependencies never became ready. "
+                    "Node will stay not-ready until restarted."
+                )
+                return
+
+        self.scene.lock(True)
+        try:
+            # [FLAG startup-retract-only] Keep startup posture consistent with the controller: go to
+            # RETRACT at node load instead of HOME. Do not switch to HOME here unless the user asks.
+            self.get_logger().info("Startup: moving to retract posture.")
+            if not self.arm.go_retract():
+                self.get_logger().warn(
+                    "Startup go_retract failed. Node will stay not-ready so commands do not start "
+                    "from an unknown pose."
+                )
+                return
+        finally:
+            self.scene.lock(False)
+
+        self.base._ready = True
+        self.get_logger().info("Startup complete. Node is ready for commands.")
 
     def command_callback(self, msg: String):
         """Handle incoming commands from /adl_command."""
@@ -454,23 +475,6 @@ class PickDroppedBottle(Node):
         """
         log_pose(self, "[Bottle] Stage 2 grasp target", grasp)
 
-        if self.arm.use_short_cartesian_servo():
-            servo_ok = self.arm.go_short_cartesian(
-                grasp,
-                pos_tolerance=GRASP_SERVO_POS_TOL_M,
-                orientation_tolerance_rad=GRASP_SERVO_ORI_TOL_RAD,
-                max_linear_speed=GRASP_SERVO_LINEAR_SPEED_MPS,
-                max_distance=GRASP_SERVO_MAX_DISTANCE_M,
-                timeout=GRASP_SERVO_TIMEOUT_S,
-                context="[Bottle] Stage 2 short-motion grasp",
-            )
-            if servo_ok:
-                return True
-            self.get_logger().warn(
-                "[Bottle] Stage 2 short-motion servo grasp did not complete cleanly. "
-                "Falling back to MoveIt Cartesian planning."
-            )
-
         ok = self.arm.go_cartesian(
             [grasp],
             avoid_collisions=False,
@@ -545,23 +549,6 @@ class PickDroppedBottle(Node):
                 f"Invalid drop descent setup: start_z={z_cur:.3f}, goal_z={z_goal:.3f}."
             )
             return False
-
-        if self.arm.use_short_cartesian_servo():
-            servo_ok = self.arm.go_short_cartesian(
-                dest_pose,
-                pos_tolerance=DROP_SERVO_POS_TOL_M,
-                orientation_tolerance_rad=DROP_SERVO_ORI_TOL_RAD,
-                max_linear_speed=DROP_SERVO_LINEAR_SPEED_MPS,
-                max_distance=DROP_SERVO_MAX_DISTANCE_M,
-                timeout=DROP_SERVO_TIMEOUT_S,
-                context="[Bottle] Stage 6 short-motion drop",
-            )
-            if servo_ok:
-                return True
-            self.get_logger().warn(
-                "[Bottle] Stage 6 short-motion servo drop did not complete cleanly. "
-                "Falling back to segmented Cartesian lowering."
-            )
 
         step_idx = 0
         while z_cur - z_goal > 1e-4:
@@ -909,10 +896,19 @@ class PickDroppedBottle(Node):
                 self.get_logger().warn("Task cancelled before start.")
                 return
 
+            if hasattr(self.arm, "wait_for_motion_stack_ready"):
+                # [FLAG task-dependency-gate] Re-check the split arm stack at command time so the
+                # task fails early with a graph/dependency explanation if the arm launch died after
+                # node startup.
+                if not self.arm.wait_for_motion_stack_ready(timeout=12.0):
+                    self.base.publish_status(
+                        STATUS_FAILED,
+                        "Arm/MoveIt stack is not ready. Verify the stock arm launch and sanitizer.",
+                    )
+                    return
+
             self.base.publish_status(STATUS_RUNNING, "Starting pick_dropped_bottle task.")
             self.base.update_detail("Scanning for dropped bottle pose.")
-            self.base.update_detail("Clearing remembered scene objects before bottle scan.")
-            self.vision.clear_scene_memory(timeout_s=4.0)
             log_arm_snapshot(self, self.arm, "[Bottle] Pre-task snapshot")
 
             # Move to scan pose first so the camera can detect the bottle

@@ -21,10 +21,8 @@ import threading
 from threading import Lock
 import math
 
-from builtin_interfaces.msg import Duration
-from control_msgs.action import GripperCommand, FollowJointTrajectory
-from controller_manager_msgs.srv import ListControllers, SwitchController
-from geometry_msgs.msg import Pose, Quaternion, Twist
+from control_msgs.action import GripperCommand
+from geometry_msgs.msg import Pose, Quaternion
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from moveit_msgs.action import MoveGroup, ExecuteTrajectory
 from moveit_msgs.msg import (
@@ -42,7 +40,6 @@ from moveit_msgs.srv import GetStateValidity, GetCartesianPath, GetPositionFK
 from sensor_msgs.msg import JointState
 from shape_msgs.msg import SolidPrimitive
 from rclpy.action import ActionClient
-from rclpy.callback_groups import ReentrantCallbackGroup
 from std_msgs.msg import Header
 import rclpy
 
@@ -88,50 +85,6 @@ class MoveItHelper:
         "joint_6": -0.87,
         "joint_7": 1.57,
     }
-
-    # --- LOOK AT TABLE --- fixed lab scan pose captured from /joint_states_sanitized.
-    # Use joint-space by default so the wrist/camera returns to the same IK branch every time.
-    LOOK_AT_TABLE_JOINTS = {
-        "joint_1": -0.026914971240776353,
-        "joint_2": -0.45171206829379074,
-        "joint_3": -3.0729454154352567,
-        "joint_4": -2.0136488570903195,
-        "joint_5": -0.00561820463563123,
-        "joint_6": -0.887566077560594,
-        "joint_7": 1.63611301569018,
-    }
-    LOOK_AT_TABLE_PROFILE = MotionProfile(
-        planning_time=15.0,
-        velocity_scaling=0.10,
-        accel_scaling=0.08,
-    )
-    LOOK_AT_TABLE_GOAL_TOLERANCE_RAD = 0.03
-    LOOK_AT_TABLE_VERIFY_MAX_ERR_RAD = 0.08
-    LOOK_AT_TABLE_SIDE_TAG_BRIDGE_JOINTS = {
-        "joint_1": -0.026914971240776353,
-        "joint_2": -0.4100000000000000,
-        "joint_3": -3.0600000000000000,
-        "joint_4": -1.9450000000000001,
-        "joint_5": -0.00561820463563123,
-        "joint_6": -0.8000000000000000,
-        "joint_7": 1.63611301569018,
-    }
-    LOOK_AT_TABLE_SIDE_TAG_JOINTS = {
-        "joint_1": -0.026914971240776353,
-        "joint_2": -0.3900000000000000,
-        "joint_3": -3.0450000000000000,
-        "joint_4": -1.9250000000000000,
-        "joint_5": -0.00561820463563123,
-        "joint_6": -0.7800000000000000,
-        "joint_7": 1.63611301569018,
-    }
-    LOOK_AT_TABLE_SIDE_TAG_PROFILE = MotionProfile(
-        planning_time=18.0,
-        velocity_scaling=0.08,
-        accel_scaling=0.06,
-    )
-    LOOK_AT_TABLE_SIDE_TAG_GOAL_TOLERANCE_RAD = 0.03
-    LOOK_AT_TABLE_SIDE_TAG_VERIFY_MAX_ERR_RAD = 0.08
     
     # Arm Control
     ARM_JOINT_NAMES = [
@@ -150,23 +103,6 @@ class MoveItHelper:
     SANITIZED_JOINT_STATE_FRAME_ID = "adl_joint_state_sanitized"
     START_STATE_CANONICALIZE_WRAPPED_JOINTS = True
     REFUSE_RAW_WRAPPED_START_STATE = True
-    REAL_HARDWARE_MODE_ENV = "ADL_REAL_HARDWARE_MODE"
-    SHORT_CARTESIAN_MODE_ENV = "ADL_SHORT_CARTESIAN_MODE"
-    SHORT_CARTESIAN_ALLOWED_MODES = {"auto", "planned", "hybrid", "servo"}
-    CONTROLLER_MANAGER_SWITCH_SERVICE = "/controller_manager/switch_controller"
-    CONTROLLER_MANAGER_LIST_SERVICE = "/controller_manager/list_controllers"
-    JOINT_TRAJECTORY_CONTROLLER_NAME = "joint_trajectory_controller"
-    TWIST_CONTROLLER_NAME = "twist_controller"
-    TWIST_COMMAND_TOPIC = "/twist_controller/commands"
-    SHORT_CARTESIAN_DEFAULT_MAX_DISTANCE_M = 0.12
-    SHORT_CARTESIAN_DEFAULT_POSITION_TOL_M = 0.008
-    SHORT_CARTESIAN_DEFAULT_ORIENTATION_TOL_RAD = 0.25
-    SHORT_CARTESIAN_DEFAULT_LINEAR_SPEED_MPS = 0.03
-    SHORT_CARTESIAN_DEFAULT_MIN_LINEAR_SPEED_MPS = 0.006
-    SHORT_CARTESIAN_DEFAULT_CONTROL_HZ = 20.0
-    SHORT_CARTESIAN_DEFAULT_TIMEOUT_S = 8.0
-    SHORT_CARTESIAN_DEFAULT_SLOW_RADIUS_M = 0.03
-    SHORT_CARTESIAN_ZERO_HOLD_CYCLES = 3
     
     # --- LOOK AT GROUND --- 
     LOOK_AT_GROUND_JOINTS = {
@@ -191,8 +127,6 @@ class MoveItHelper:
         velocity_scaling=0.10,
         accel_scaling=0.08,
     )
-    RETRACT_GOAL_TOLERANCE_RAD = 0.03
-    RETRACT_VERIFY_MAX_ERR_RAD = 0.08
     
     # Gripper Control
     GRIPPER_JOINT_NAMES = ["robotiq_85_left_knuckle_joint"]
@@ -205,65 +139,22 @@ class MoveItHelper:
     # Server Names
     MOVE_ACTION = "/move_action"
     GRIPPER_ACTION = "/robotiq_gripper_controller/gripper_cmd"
-    FIXED_JOINT_TRAJ_ACTION = "/joint_trajectory_controller/follow_joint_trajectory"
-    DIRECT_FIXED_JOINTS_ENV = "ADL_DIRECT_FIXED_JOINTS"
-    SIDE_TAG_SCAN_USE_POSE_GOAL_ENV = "ADL_SIDE_TAG_SCAN_USE_POSE_GOAL"
     
     # ---
 
     def __init__(self, node):
 
         self.node = node
-        self._real_hardware_mode = self._resolve_real_hardware_mode()
-        self._short_cartesian_mode = self._resolve_short_cartesian_mode()
         self._moveit_joint_states_topic = self._resolve_moveit_joint_states_topic()
         self._expect_sanitized_joint_states = (
             self._moveit_joint_states_topic == self.MOVEIT_JOINT_STATES_TOPIC
         )
-        self._ros_cb_group = ReentrantCallbackGroup()
-        self.move_client = ActionClient(
-            node,
-            MoveGroup,
-            self.MOVE_ACTION,
-            callback_group=self._ros_cb_group,
-        )
+        self.move_client = ActionClient(node, MoveGroup, self.MOVE_ACTION)
         self._last_goal_handle = None
-        self._gripper_client = ActionClient(
-            node,
-            GripperCommand,
-            self.GRIPPER_ACTION,
-            callback_group=self._ros_cb_group,
-        )
-        self._validity_client = node.create_client(
-            GetStateValidity,
-            '/check_state_validity',
-            callback_group=self._ros_cb_group,
-        )
-        self._cartesian_client = node.create_client(
-            GetCartesianPath,
-            '/compute_cartesian_path',
-            callback_group=self._ros_cb_group,
-        )
-        self._fk_client = node.create_client(
-            GetPositionFK,
-            '/compute_fk',
-            callback_group=self._ros_cb_group,
-        )
-        self._switch_controller_client = node.create_client(
-            SwitchController,
-            self.CONTROLLER_MANAGER_SWITCH_SERVICE,
-            callback_group=self._ros_cb_group,
-        )
-        self._list_controllers_client = node.create_client(
-            ListControllers,
-            self.CONTROLLER_MANAGER_LIST_SERVICE,
-            callback_group=self._ros_cb_group,
-        )
-        self._twist_pub = node.create_publisher(
-            Twist,
-            self.TWIST_COMMAND_TOPIC,
-            10,
-        )
+        self._gripper_client = ActionClient(node, GripperCommand, self.GRIPPER_ACTION)
+        self._validity_client = node.create_client(GetStateValidity, '/check_state_validity')
+        self._cartesian_client = node.create_client(GetCartesianPath, '/compute_cartesian_path')
+        self._fk_client = node.create_client(GetPositionFK, '/compute_fk') 
         
         self._js_lock = Lock()
         self._latest_joint_state: JointState | None = None
@@ -277,7 +168,6 @@ class MoveItHelper:
             self._moveit_joint_states_topic,
             self._on_joint_state,
             50,
-            callback_group=self._ros_cb_group,
         )
     
         # gripper trajectory publisher, for grab_object function force/speed
@@ -296,9 +186,7 @@ class MoveItHelper:
         node.get_logger().info(
             "MoveItHelper initialized. "
             f"joint_state_topic={self._moveit_joint_states_topic} "
-            f"(sanitized_expected={self._expect_sanitized_joint_states}) "
-            f"real_hardware_mode={self._real_hardware_mode} "
-            f"short_cartesian_mode={self._short_cartesian_mode}"
+            f"(sanitized_expected={self._expect_sanitized_joint_states})"
         )
         
     # --- INTERNAL NODE --- #
@@ -342,25 +230,6 @@ class MoveItHelper:
             )
             return default_topic
 
-    def _resolve_real_hardware_mode(self) -> bool:
-        return self._env_bool(self.REAL_HARDWARE_MODE_ENV, default=False)
-
-    def _resolve_short_cartesian_mode(self) -> str:
-        raw = os.getenv(self.SHORT_CARTESIAN_MODE_ENV, "auto").strip().lower() or "auto"
-        if raw not in self.SHORT_CARTESIAN_ALLOWED_MODES:
-            self.node.get_logger().warn(
-                f"{self.SHORT_CARTESIAN_MODE_ENV}={raw!r} is invalid. Falling back to 'auto'."
-            )
-            raw = "auto"
-        if raw == "auto":
-            return "hybrid" if self._real_hardware_mode else "planned"
-        return raw
-
-    def use_short_cartesian_servo(self) -> bool:
-        return self._real_hardware_mode and (
-            self._short_cartesian_mode in {"hybrid", "servo"}
-        )
-
     def _cancel_requested(self, cancel_cb=None, *, use_registered_cancel: bool = True) -> bool:
         resolved_cb = self._resolve_cancel_cb(
             cancel_cb,
@@ -376,103 +245,6 @@ class MoveItHelper:
             )
             return False
 
-    def _duration_msg(self, seconds: float) -> Duration:
-        seconds = max(0.0, float(seconds))
-        msg = Duration()
-        msg.sec = int(seconds)
-        msg.nanosec = int((seconds - float(msg.sec)) * 1_000_000_000.0)
-        return msg
-
-    def _list_controller_states(self, timeout: float = 2.0) -> dict[str, str] | None:
-        if not self._list_controllers_client.wait_for_service(timeout_sec=float(timeout)):
-            self.node.get_logger().warn("list_controllers service is not available.")
-            return None
-        future = self._list_controllers_client.call_async(ListControllers.Request())
-        if not self._wait_for_future(
-            future,
-            timeout=float(timeout),
-            use_registered_cancel=False,
-            context="list_controllers",
-        ):
-            self.node.get_logger().warn("list_controllers request timed out.")
-            return None
-        response = future.result()
-        if response is None:
-            self.node.get_logger().warn("list_controllers response was None.")
-            return None
-        return {
-            str(controller.name): str(controller.state).strip().lower()
-            for controller in response.controller
-        }
-
-    def _switch_motion_controllers(
-        self,
-        *,
-        activate: list[str],
-        deactivate: list[str],
-        timeout: float = 3.0,
-    ) -> bool:
-        if not self._switch_controller_client.wait_for_service(timeout_sec=float(timeout)):
-            self.node.get_logger().warn("switch_controller service is not available.")
-            return False
-
-        request = SwitchController.Request()
-        request.activate_controllers = list(activate)
-        request.deactivate_controllers = list(deactivate)
-        request.strictness = SwitchController.Request.STRICT
-        request.activate_asap = True
-        request.timeout = self._duration_msg(timeout)
-
-        future = self._switch_controller_client.call_async(request)
-        if not self._wait_for_future(
-            future,
-            timeout=float(timeout) + 1.0,
-            use_registered_cancel=False,
-            context="switch_controller",
-        ):
-            self.node.get_logger().warn(
-                f"switch_controller timed out (activate={activate}, deactivate={deactivate})."
-            )
-            return False
-
-        response = future.result()
-        if response is None:
-            self.node.get_logger().warn("switch_controller returned None.")
-            return False
-        if not bool(response.ok):
-            self.node.get_logger().warn(
-                f"switch_controller rejected request activate={activate}, deactivate={deactivate}."
-            )
-            return False
-        return True
-
-    def _ensure_twist_controller_active(self) -> bool:
-        states = self._list_controller_states(timeout=1.5)
-        if states and states.get(self.TWIST_CONTROLLER_NAME) == "active":
-            return True
-        return self._switch_motion_controllers(
-            activate=[self.TWIST_CONTROLLER_NAME],
-            deactivate=[self.JOINT_TRAJECTORY_CONTROLLER_NAME],
-            timeout=3.0,
-        )
-
-    def _ensure_joint_trajectory_controller_active(self) -> bool:
-        states = self._list_controller_states(timeout=1.5)
-        if states and states.get(self.JOINT_TRAJECTORY_CONTROLLER_NAME) == "active":
-            return True
-        return self._switch_motion_controllers(
-            activate=[self.JOINT_TRAJECTORY_CONTROLLER_NAME],
-            deactivate=[self.TWIST_CONTROLLER_NAME],
-            timeout=3.0,
-        )
-
-    def _publish_zero_twist(self, cycles: int = 1, sleep_s: float = 0.0) -> None:
-        zero = Twist()
-        for _ in range(max(1, int(cycles))):
-            self._twist_pub.publish(zero)
-            if sleep_s > 0.0:
-                _time.sleep(float(sleep_s))
-
     # wait for a future without reentering a spin loop. true if done
     def _wait_for_future(
         self,
@@ -485,14 +257,7 @@ class MoveItHelper:
     ) -> bool | None:
         start = _time.monotonic()
         self._last_wait_cancelled = False
-        done_event = threading.Event()
-        try:
-            future.add_done_callback(lambda _future: done_event.set())
-        except Exception:
-            pass
-        while rclpy.ok():
-            if future.done():
-                return True
+        while rclpy.ok() and not future.done():
             if self._cancel_requested(
                 cancel_cb,
                 use_registered_cancel=use_registered_cancel,
@@ -505,10 +270,9 @@ class MoveItHelper:
                         f"{context}: cancel requested while waiting on a ROS future."
                     )
                 return None
-            elapsed = _time.monotonic() - start
-            if elapsed > timeout:
+            if _time.monotonic() - start > timeout:
                 return False
-            done_event.wait(timeout=min(0.10, max(0.0, timeout - elapsed)))
+            _time.sleep(0.05)
         return future.done()    
     
     
@@ -815,63 +579,59 @@ class MoveItHelper:
     
         # store handle for emergency stop
         self._last_goal_handle = goal_handle
-        try:
-            result_future = goal_handle.get_result_async()
-            wait_ok = self._wait_for_future(
-                result_future,
-                timeout,
-                cancel_cb=cancel_cb,
-                context="_send_goal get_result_async",
+        result_future = goal_handle.get_result_async()
+        wait_ok = self._wait_for_future(
+            result_future,
+            timeout,
+            cancel_cb=cancel_cb,
+            context="_send_goal get_result_async",
+        )
+        if wait_ok is None:
+            self.node.get_logger().warn(
+                "_send_goal: cancel requested while waiting for MoveGroup execution result."
             )
-            if wait_ok is None:
-                self.node.get_logger().warn(
-                    "_send_goal: cancel requested while waiting for MoveGroup execution result."
-                )
-                self.stop_motion(timeout=1.0)
-                return False
-            if not wait_ok:
-                self.node.get_logger().error("MoveGroup result timed out.")
-                self._recover_after_failure("get_result_async timed out")
-                return False
-            
-            result = result_future.result()
-            if result is None:
-                self.node.get_logger().error("MoveGroup result timed out.")
-                self._recover_after_failure("result is None")
-                return False
-            
-            ### consider modulating
-            error_code = result.result.error_code.val
-            if error_code != 1: # fail
-                if error_code == -26:
-                    raw_joints = self.get_arm_joint_positions(timeout=0.5)
-                    if raw_joints:
-                        raw_desc = ", ".join(
-                            [f"{jn}={float(raw_joints[jn]):+.3f}" for jn in self.ARM_JOINT_NAMES if jn in raw_joints]
-                        )
-                        self.node.get_logger().warn(
-                            f"_send_goal: -26 raw arm joint snapshot: {raw_desc}"
-                        )
-                        self._sanitize_start_state_positions(
-                            raw_joints,
-                            context="_send_goal -26 diagnostics",
-                        )
-                self.node.get_logger().error(
-                    "MoveGroup execution failed.\n"
-                    f"  error_code.val = {error_code}\n"
-                    f"  group_name      = {request.group_name}\n"
-                    f"  num_attempts    = {request.num_planning_attempts}\n"
-                    f"  allowed_time    = {request.allowed_planning_time}\n"
-                    f"  vel_scale       = {request.max_velocity_scaling_factor}\n"
-                    f"  accel_scale     = {request.max_acceleration_scaling_factor}\n"
-                    "If this persists, check move_group / controller logs for the meaning of this code "
-                    "(often control abort, invalid start state, or planning pipeline failure)."
-                )
-                self._recover_after_failure(f"MoveGroup error_code={error_code}")
-                return False
-        finally:
-            if self._last_goal_handle is goal_handle:
-                self._last_goal_handle = None
+            self.stop_motion(timeout=1.0)
+            return False
+        if not wait_ok:
+            self.node.get_logger().error("MoveGroup result timed out.")
+            self._recover_after_failure("get_result_async timed out")
+            return False
+        
+        result = result_future.result()
+        if result is None:
+            self.node.get_logger().error("MoveGroup result timed out.")
+            self._recover_after_failure("result is None")
+            return False
+        
+        ### consider modulating
+        error_code = result.result.error_code.val
+        if error_code != 1: # fail
+            if error_code == -26:
+                raw_joints = self.get_arm_joint_positions(timeout=0.5)
+                if raw_joints:
+                    raw_desc = ", ".join(
+                        [f"{jn}={float(raw_joints[jn]):+.3f}" for jn in self.ARM_JOINT_NAMES if jn in raw_joints]
+                    )
+                    self.node.get_logger().warn(
+                        f"_send_goal: -26 raw arm joint snapshot: {raw_desc}"
+                    )
+                    self._sanitize_start_state_positions(
+                        raw_joints,
+                        context="_send_goal -26 diagnostics",
+                    )
+            self.node.get_logger().error(
+                "MoveGroup execution failed.\n"
+                f"  error_code.val = {error_code}\n"
+                f"  group_name      = {request.group_name}\n"
+                f"  num_attempts    = {request.num_planning_attempts}\n"
+                f"  allowed_time    = {request.allowed_planning_time}\n"
+                f"  vel_scale       = {request.max_velocity_scaling_factor}\n"
+                f"  accel_scale     = {request.max_acceleration_scaling_factor}\n"
+                "If this persists, check move_group / controller logs for the meaning of this code "
+                "(often control abort, invalid start state, or planning pipeline failure)."
+            )
+            self._recover_after_failure(f"MoveGroup error_code={error_code}")
+            return False
         self.wait_for_settle(timeout=4.0)
         return True
     
@@ -1046,19 +806,6 @@ class MoveItHelper:
             joint_targets,
             context="go_to_joint_positions",
         )
-        if all(joint_name in joint_targets for joint_name in self.ARM_JOINT_NAMES):
-            self.node.get_logger().info(
-                "go_to_joint_positions: full-arm joint preset detected; using deterministic "
-                "fixed-joint execution path first."
-            )
-            return self._go_to_joint_config(
-                {joint_name: joint_targets[joint_name] for joint_name in self.ARM_JOINT_NAMES},
-                profile=DEFAULT_PROFILE,
-                joint_tolerance_rad=0.03,
-                prefer_direct=True,
-                verify_max_err_rad=0.08,
-                cancel_cb=cancel_cb,
-            )
         req = self._base_request(self.ARM_GROUP)
         constraints = Constraints()
         for joint_name, pos in joint_targets.items():
@@ -1130,236 +877,6 @@ class MoveItHelper:
         pos_err = math.sqrt((dx * dx) + (dy * dy) + (dz * dz))
         ori_err = self._orientation_distance_rad(current.orientation, target.orientation)
         return pos_err, ori_err
-
-    def _check_live_joint_locks(self, joint_locks: dict | None) -> dict | None:
-        if not joint_locks:
-            return None
-        joints = self.get_arm_joint_positions(timeout=0.5)
-        if not joints:
-            return None
-
-        for joint_name, (lock_center, tol) in joint_locks.items():
-            if joint_name not in joints:
-                return {
-                    "kind": "missing_joint",
-                    "missing": [str(joint_name)],
-                }
-            actual = float(joints[joint_name])
-            center = float(lock_center)
-            tol_f = float(tol)
-            err = abs(self._canonicalize_joint_angle(actual - center))
-            if err > tol_f:
-                return {
-                    "kind": "lock_violation",
-                    "joint": str(joint_name),
-                    "actual": actual,
-                    "center": center,
-                    "tol": tol_f,
-                    "err": err,
-                    "path": "twist_servo",
-                }
-        return None
-
-    def go_short_cartesian(
-        self,
-        target_pose: Pose,
-        *,
-        joint_locks: dict | None = None,
-        pos_tolerance: float | None = None,
-        orientation_tolerance_rad: float | None = None,
-        max_linear_speed: float | None = None,
-        max_distance: float | None = None,
-        timeout: float | None = None,
-        control_hz: float | None = None,
-        cancel_cb=None,
-        context: str = "",
-    ) -> bool:
-        # [FLAG helper-short-cartesian-servo] For real hardware, short straight-line descents are
-        # quieter through the Gen3 twist controller than through repeated micro-trajectories. Keep
-        # this helper narrow: no collision checking, zero angular command, and hard limits on path
-        # length/orientation drift so the existing MoveIt path remains the fallback for harder moves.
-        self._set_last_cartesian_lock_violation(None)
-        if not self.use_short_cartesian_servo():
-            return False
-        if self._cancel_requested(cancel_cb):
-            self.node.get_logger().warn(
-                f"{context or 'go_short_cartesian'}: cancel requested before twist motion; skipping."
-            )
-            return False
-
-        pos_tolerance = float(
-            self.SHORT_CARTESIAN_DEFAULT_POSITION_TOL_M
-            if pos_tolerance is None else pos_tolerance
-        )
-        orientation_tolerance_rad = float(
-            self.SHORT_CARTESIAN_DEFAULT_ORIENTATION_TOL_RAD
-            if orientation_tolerance_rad is None else orientation_tolerance_rad
-        )
-        max_linear_speed = float(
-            self.SHORT_CARTESIAN_DEFAULT_LINEAR_SPEED_MPS
-            if max_linear_speed is None else max_linear_speed
-        )
-        max_distance = float(
-            self.SHORT_CARTESIAN_DEFAULT_MAX_DISTANCE_M
-            if max_distance is None else max_distance
-        )
-        timeout = float(
-            self.SHORT_CARTESIAN_DEFAULT_TIMEOUT_S
-            if timeout is None else timeout
-        )
-        control_hz = max(
-            5.0,
-            float(
-                self.SHORT_CARTESIAN_DEFAULT_CONTROL_HZ
-                if control_hz is None else control_hz
-            ),
-        )
-
-        start_pose = self.get_current_end_effector_pose(timeout=1.0)
-        if start_pose is None:
-            self.node.get_logger().warn(
-                f"{context or 'go_short_cartesian'}: current EE pose unavailable; falling back to MoveIt."
-            )
-            return False
-
-        start_pos_err, start_ori_err = self._pose_error(start_pose, target_pose)
-        if start_pos_err <= pos_tolerance and start_ori_err <= orientation_tolerance_rad:
-            self.node.get_logger().info(
-                f"{context or 'go_short_cartesian'}: already within the short-motion goal window."
-            )
-            return True
-        if start_ori_err > orientation_tolerance_rad:
-            self.node.get_logger().warn(
-                f"{context or 'go_short_cartesian'}: live orientation error "
-                f"({start_ori_err:.3f} rad) exceeds the short-motion limit "
-                f"({orientation_tolerance_rad:.3f} rad)."
-            )
-            return False
-        if start_pos_err > max_distance:
-            self.node.get_logger().info(
-                f"{context or 'go_short_cartesian'}: target is {start_pos_err:.3f} m away, "
-                f"outside the short-motion servo range ({max_distance:.3f} m)."
-            )
-            return False
-
-        if not self._ensure_twist_controller_active():
-            self.node.get_logger().warn(
-                f"{context or 'go_short_cartesian'}: could not activate {self.TWIST_CONTROLLER_NAME}; "
-                "falling back to MoveIt."
-            )
-            return False
-
-        self.node.get_logger().info(
-            f"{context or 'go_short_cartesian'}: using {self.TWIST_CONTROLLER_NAME} for a "
-            f"{start_pos_err:.3f} m short Cartesian move."
-        )
-
-        sleep_dt = 1.0 / control_hz
-        min_linear_speed = float(self.SHORT_CARTESIAN_DEFAULT_MIN_LINEAR_SPEED_MPS)
-        slow_radius = float(self.SHORT_CARTESIAN_DEFAULT_SLOW_RADIUS_M)
-        success = False
-        restore_ok = True
-        last_dist = start_pos_err
-        stale_loops = 0
-
-        try:
-            deadline = _time.monotonic() + timeout
-            while _time.monotonic() < deadline:
-                if self._cancel_requested(cancel_cb):
-                    self.node.get_logger().warn(
-                        f"{context or 'go_short_cartesian'}: cancel requested during twist motion."
-                    )
-                    break
-
-                live_lock_violation = self._check_live_joint_locks(joint_locks)
-                if live_lock_violation is not None:
-                    self._set_last_cartesian_lock_violation(live_lock_violation)
-                    self.node.get_logger().warn(
-                        f"{context or 'go_short_cartesian'}: live joint lock drift exceeded tolerance; "
-                        "aborting twist motion."
-                    )
-                    break
-
-                current_pose = self.get_current_end_effector_pose(timeout=max(0.25, sleep_dt))
-                if current_pose is None:
-                    _time.sleep(sleep_dt)
-                    continue
-
-                dx = float(target_pose.position.x) - float(current_pose.position.x)
-                dy = float(target_pose.position.y) - float(current_pose.position.y)
-                dz = float(target_pose.position.z) - float(current_pose.position.z)
-                dist = math.sqrt((dx * dx) + (dy * dy) + (dz * dz))
-                ori_err = self._orientation_distance_rad(
-                    current_pose.orientation,
-                    target_pose.orientation,
-                )
-
-                if dist <= pos_tolerance and ori_err <= orientation_tolerance_rad:
-                    success = True
-                    break
-                if ori_err > orientation_tolerance_rad:
-                    self.node.get_logger().warn(
-                        f"{context or 'go_short_cartesian'}: orientation drift grew to "
-                        f"{ori_err:.3f} rad during twist motion."
-                    )
-                    break
-
-                speed = min(max_linear_speed, max(min_linear_speed, dist * 1.5))
-                if dist < slow_radius:
-                    speed = min(speed, max(min_linear_speed, dist))
-
-                cmd = Twist()
-                if dist > 1e-9:
-                    scale = speed / dist
-                    cmd.linear.x = dx * scale
-                    cmd.linear.y = dy * scale
-                    cmd.linear.z = dz * scale
-                self._twist_pub.publish(cmd)
-
-                if dist >= (last_dist - 0.0005):
-                    stale_loops += 1
-                    if stale_loops >= max(5, int(control_hz)):
-                        self.node.get_logger().warn(
-                            f"{context or 'go_short_cartesian'}: twist motion stopped making progress; "
-                            "falling back to MoveIt."
-                        )
-                        break
-                else:
-                    stale_loops = 0
-                last_dist = dist
-                _time.sleep(sleep_dt)
-        finally:
-            self._publish_zero_twist(
-                cycles=self.SHORT_CARTESIAN_ZERO_HOLD_CYCLES,
-                sleep_s=max(0.01, 1.0 / control_hz),
-            )
-            restore_ok = self._ensure_joint_trajectory_controller_active()
-            if not restore_ok:
-                self.node.get_logger().error(
-                    f"{context or 'go_short_cartesian'}: failed to restore "
-                    f"{self.JOINT_TRAJECTORY_CONTROLLER_NAME} after twist motion."
-                )
-
-        if not success or not restore_ok:
-            return False
-
-        final_pose = self.get_current_end_effector_pose(timeout=1.0)
-        if final_pose is None:
-            self.node.get_logger().warn(
-                f"{context or 'go_short_cartesian'}: final EE pose unavailable after twist motion."
-            )
-            return False
-
-        final_pos_err, final_ori_err = self._pose_error(final_pose, target_pose)
-        if final_pos_err > (pos_tolerance * 1.5) or final_ori_err > orientation_tolerance_rad:
-            self.node.get_logger().warn(
-                f"{context or 'go_short_cartesian'}: final pose stayed outside tolerance "
-                f"(pos={final_pos_err:.3f} m, ori={final_ori_err:.3f} rad)."
-            )
-            return False
-
-        self.wait_for_settle(timeout=1.0)
-        return True
     
     def _rpy_deg_to_quat(self, roll: float, pitch: float, yaw: float) -> Quaternion:
         r = math.radians(roll)
@@ -1377,57 +894,6 @@ class MoveItHelper:
         q.y = cr * sp * cy + sr * cp * sy
         q.z = cr * cp * sy - sr * sp * cy
         return q
-
-    def _env_float(self, name: str, default: float) -> float:
-        raw = os.getenv(name, "").strip()
-        if not raw:
-            return float(default)
-        try:
-            return float(raw)
-        except ValueError:
-            self.node.get_logger().warn(
-                f"{name}={raw!r} is not a valid float; using default {default}."
-            )
-            return float(default)
-
-    def _env_bool(self, name: str, default: bool = False) -> bool:
-        raw = os.getenv(name, "").strip()
-        if not raw:
-            return bool(default)
-        return raw.lower() in ("1", "true", "yes", "on")
-
-    def _env_joint_config(self, prefix: str, defaults: dict) -> dict:
-        config = {}
-        for joint_name, default in defaults.items():
-            env_key = f"{prefix}_{joint_name.upper()}"
-            config[joint_name] = self._env_float(env_key, float(default))
-        return config
-
-    def _move_to_fixed_joint_pose(
-        self,
-        label: str,
-        joint_config: dict,
-        profile: MotionProfile,
-        *,
-        joint_tolerance_rad: float,
-        verify_max_err_rad: float,
-        cancel_cb=None,
-    ) -> bool:
-        if self._cancel_requested(cancel_cb):
-            self.node.get_logger().warn(f"{label}: cancel requested before motion; skipping.")
-            return False
-        if self._is_near_joint_config(joint_config, label, max_err_rad=verify_max_err_rad):
-            self.node.get_logger().info(f"{label}: already near target fixed joint pose; skipping motion.")
-            return True
-        self.node.get_logger().info(f"{label}: moving with deterministic fixed joint pose.")
-        return self._go_to_joint_config(
-            joint_config,
-            profile=profile,
-            joint_tolerance_rad=joint_tolerance_rad,
-            prefer_direct=True,
-            verify_max_err_rad=verify_max_err_rad,
-            cancel_cb=cancel_cb,
-        )
     
     # --- LOOK AT FUNCTIONS --- #
     
@@ -1435,44 +901,12 @@ class MoveItHelper:
         if self._cancel_requested(cancel_cb):
             self.node.get_logger().warn("look_at_table: cancel requested before motion; skipping.")
             return False
-        env_override_keys = (
-            "ADL_LOOK_AT_TABLE_X",
-            "ADL_LOOK_AT_TABLE_Y",
-            "ADL_LOOK_AT_TABLE_Z",
-            "ADL_LOOK_AT_TABLE_ROLL_DEG",
-            "ADL_LOOK_AT_TABLE_PITCH_DEG",
-            "ADL_LOOK_AT_TABLE_YAW_DEG",
-        )
-        if not any(os.getenv(key) is not None for key in env_override_keys):
-            # The normal lab scan posture is joint-space, not Cartesian, so MoveIt does not pick a
-            # different IK branch for the same end-effector pose on repeated test days.
-            if self.is_near_look_at_table(max_err_rad=self.LOOK_AT_TABLE_VERIFY_MAX_ERR_RAD):
-                self.node.get_logger().info(
-                    "look_at_table: already near fixed lab scan joint pose; skipping motion."
-                )
-                return True
-            self.node.get_logger().info("look_at_table: planning to LOOK_AT_TABLE_JOINTS.")
-            return self._go_to_joint_config(
-                self.LOOK_AT_TABLE_JOINTS,
-                profile=self.LOOK_AT_TABLE_PROFILE,
-                joint_tolerance_rad=self.LOOK_AT_TABLE_GOAL_TOLERANCE_RAD,
-                prefer_direct=True,
-                verify_max_err_rad=self.LOOK_AT_TABLE_VERIFY_MAX_ERR_RAD,
-                cancel_cb=cancel_cb,
-            )
-
         # rotate wrist so camera on top can see the table clearly
         pose = Pose()
-        # Tuning hook: keep the ADL flow the same, but allow scan pose experiments
-        # without editing task code for every test run.
-        pose.position.x = self._env_float("ADL_LOOK_AT_TABLE_X", 0.238)
-        pose.position.y = self._env_float("ADL_LOOK_AT_TABLE_Y", -0.014)
-        pose.position.z = self._env_float("ADL_LOOK_AT_TABLE_Z", 0.537)
-        pose.orientation = self._rpy_deg_to_quat(
-            self._env_float("ADL_LOOK_AT_TABLE_ROLL_DEG", 140.357),
-            self._env_float("ADL_LOOK_AT_TABLE_PITCH_DEG", 0.349),
-            self._env_float("ADL_LOOK_AT_TABLE_YAW_DEG", 90.887),
-        )
+        pose.position.x = 0.215
+        pose.position.y = 0.0
+        pose.position.z = 0.77
+        pose.orientation = self._rpy_deg_to_quat(138.0, 4.3, 90.0)
 
         # [FLAG look-at-table-already-there] The startup scan can be requested multiple times
         # during recovery or task restart. Skip replanning when the wrist is already at the scan
@@ -1489,8 +923,8 @@ class MoveItHelper:
         
         profile = MotionProfile(
             planning_time=10.0,
-            velocity_scaling=self.LOOK_AT_TABLE_PROFILE.velocity_scaling,
-            accel_scaling=self.LOOK_AT_TABLE_PROFILE.accel_scaling,
+            velocity_scaling=0.3,
+            accel_scaling=0.3,
         )
         
         req = self._base_request(self.ARM_GROUP, profile=profile)
@@ -1530,107 +964,12 @@ class MoveItHelper:
             auto_clear_faults=True,
             cancel_cb=cancel_cb,
         )
-
-    def look_at_table_side_tags(self, cancel_cb=None) -> bool:
-        if self._cancel_requested(cancel_cb):
-            self.node.get_logger().warn(
-                "look_at_table_side_tags: cancel requested before motion; skipping."
-            )
-            return False
-
-        if self._env_bool(self.SIDE_TAG_SCAN_USE_POSE_GOAL_ENV, default=False):
-            overrides = {
-                "ADL_LOOK_AT_TABLE_X": os.getenv("ADL_SIDE_TAG_SCAN_X", "0.215"),
-                "ADL_LOOK_AT_TABLE_Y": os.getenv("ADL_SIDE_TAG_SCAN_Y", "0.0"),
-                "ADL_LOOK_AT_TABLE_Z": os.getenv("ADL_SIDE_TAG_SCAN_Z", "0.68"),
-                "ADL_LOOK_AT_TABLE_ROLL_DEG": os.getenv("ADL_SIDE_TAG_SCAN_ROLL_DEG", "125.0"),
-                "ADL_LOOK_AT_TABLE_PITCH_DEG": os.getenv("ADL_SIDE_TAG_SCAN_PITCH_DEG", "4.3"),
-                "ADL_LOOK_AT_TABLE_YAW_DEG": os.getenv("ADL_SIDE_TAG_SCAN_YAW_DEG", "90.0"),
-            }
-            previous = {key: os.environ.get(key) for key in overrides}
-            try:
-                os.environ.update(overrides)
-                self.node.get_logger().warn(
-                    "look_at_table_side_tags: using debug pose-goal path because "
-                    f"{self.SIDE_TAG_SCAN_USE_POSE_GOAL_ENV}=true."
-                )
-                return self.look_at_table(cancel_cb=cancel_cb)
-            finally:
-                for key, value in previous.items():
-                    if value is None:
-                        os.environ.pop(key, None)
-                    else:
-                        os.environ[key] = value
-
-        bridge_joints = self._env_joint_config(
-            "ADL_SIDE_TAG_SCAN_BRIDGE",
-            self.LOOK_AT_TABLE_SIDE_TAG_BRIDGE_JOINTS,
-        )
-        side_joints = self._env_joint_config(
-            "ADL_SIDE_TAG_SCAN",
-            self.LOOK_AT_TABLE_SIDE_TAG_JOINTS,
-        )
-
-        self.node.get_logger().info(
-            "look_at_table_side_tags: moving through deterministic bridge -> side-tag joint poses."
-        )
-        if not self.is_near_look_at_table(max_err_rad=self.LOOK_AT_TABLE_VERIFY_MAX_ERR_RAD):
-            if not self.look_at_table(cancel_cb=cancel_cb):
-                return False
-
-        if not self._move_to_fixed_joint_pose(
-            "look_at_table_side_tags bridge",
-            bridge_joints,
-            self.LOOK_AT_TABLE_SIDE_TAG_PROFILE,
-            joint_tolerance_rad=self.LOOK_AT_TABLE_SIDE_TAG_GOAL_TOLERANCE_RAD,
-            verify_max_err_rad=self.LOOK_AT_TABLE_SIDE_TAG_VERIFY_MAX_ERR_RAD,
-            cancel_cb=cancel_cb,
-        ):
-            return False
-        return self._move_to_fixed_joint_pose(
-            "look_at_table_side_tags",
-            side_joints,
-            self.LOOK_AT_TABLE_SIDE_TAG_PROFILE,
-            joint_tolerance_rad=self.LOOK_AT_TABLE_SIDE_TAG_GOAL_TOLERANCE_RAD,
-            verify_max_err_rad=self.LOOK_AT_TABLE_SIDE_TAG_VERIFY_MAX_ERR_RAD,
-            cancel_cb=cancel_cb,
-        )
-
-    def look_at_table_retry_scan(self, cancel_cb=None) -> bool:
-        if self._cancel_requested(cancel_cb):
-            self.node.get_logger().warn(
-                "look_at_table_retry_scan: cancel requested before motion; skipping."
-            )
-            return False
-
-        overrides = {
-            "ADL_LOOK_AT_TABLE_X": os.getenv("ADL_LOOK_AT_TABLE_RETRY_X", "0.285"),
-            "ADL_LOOK_AT_TABLE_Y": os.getenv("ADL_LOOK_AT_TABLE_RETRY_Y", "-0.010"),
-            "ADL_LOOK_AT_TABLE_Z": os.getenv("ADL_LOOK_AT_TABLE_RETRY_Z", "0.515"),
-            "ADL_LOOK_AT_TABLE_ROLL_DEG": os.getenv("ADL_LOOK_AT_TABLE_RETRY_ROLL_DEG", "140.357"),
-            "ADL_LOOK_AT_TABLE_PITCH_DEG": os.getenv("ADL_LOOK_AT_TABLE_RETRY_PITCH_DEG", "0.349"),
-            "ADL_LOOK_AT_TABLE_YAW_DEG": os.getenv("ADL_LOOK_AT_TABLE_RETRY_YAW_DEG", "90.887"),
-        }
-        previous = {key: os.environ.get(key) for key in overrides}
-        try:
-            os.environ.update(overrides)
-            self.node.get_logger().info(
-                "look_at_table_retry_scan: moving to inward recovery scan pose."
-            )
-            return self.look_at_table(cancel_cb=cancel_cb)
-        finally:
-            for key, value in previous.items():
-                if value is None:
-                    os.environ.pop(key, None)
-                else:
-                    os.environ[key] = value
         
     def look_at_ground(self, cancel_cb=None) -> bool:
         self.node.get_logger().info("look_at_ground: planning to LOOK_AT_GROUND_JOINTS...")
         return self._go_to_joint_config(
             self.LOOK_AT_GROUND_JOINTS,
             profile=self.LOOK_AT_GROUND_PROFILE,
-            prefer_direct=True,
             cancel_cb=cancel_cb,
         )
     
@@ -1754,10 +1093,7 @@ class MoveItHelper:
         # execute the planned Cartesian path
         if not hasattr(self, "_exec_client"):
             self._exec_client = ActionClient(
-                self.node,
-                ExecuteTrajectory,
-                "/execute_trajectory",
-                callback_group=self._ros_cb_group,
+                self.node, ExecuteTrajectory, "/execute_trajectory"
             )
         if not self._exec_client.wait_for_server(timeout_sec=5.0):
             self.node.get_logger().error(
@@ -1790,231 +1126,47 @@ class MoveItHelper:
             return False
         
         self._last_exec_goal_handle = gh
-        try:
-            result_future = gh.get_result_async()
-            wait_ok = self._wait_for_future(
-                result_future,
-                30.0,
-                cancel_cb=cancel_cb,
-                context="go_cartesian wait for execute_trajectory result",
+        
+        result_future = gh.get_result_async()
+        wait_ok = self._wait_for_future(
+            result_future,
+            30.0,
+            cancel_cb=cancel_cb,
+            context="go_cartesian wait for execute_trajectory result",
+        )
+        if wait_ok is None:
+            self.node.get_logger().warn(
+                "go_cartesian: cancel requested while waiting for Cartesian execution result."
             )
-            if wait_ok is None:
-                self.node.get_logger().warn(
-                    "go_cartesian: cancel requested while waiting for Cartesian execution result."
-                )
-                self.stop_motion(timeout=1.0)
-                return False
-            if not wait_ok:
-                self.node.get_logger().error("ExecuteTrajectory result timed out.")
-                return False
-            
-            result = result_future.result()
-            if result is None:
-                return False
-            
-            err = result.result.error_code.val
-            if err != 1:
-                self.node.get_logger().error(
-                    f"ExecuteTrajectory failed with error code {err}."
-                )
-                return False
-        finally:
-            if self._last_exec_goal_handle is gh:
-                self._last_exec_goal_handle = None
+            self.stop_motion(timeout=1.0)
+            return False
+        if not wait_ok:
+            self.node.get_logger().error("ExecuteTrajectory result timed out.")
+            return False
+        
+        result = result_future.result()
+        if result is None:
+            return False
+        
+        err = result.result.error_code.val
+        if err != 1:
+            self.node.get_logger().error(
+                f"ExecuteTrajectory failed with error code {err}."
+            )
+            return False
         self.wait_for_settle(timeout=3.0)
         return True
     
     # plan and execute to a dict of joint values
-    def _direct_fixed_joints_enabled(self) -> bool:
-        raw = os.getenv(self.DIRECT_FIXED_JOINTS_ENV, "true").strip().lower()
-        return raw not in ("0", "false", "no", "off")
-
-    def _estimate_direct_joint_duration_s(
-        self,
-        current_joints: dict,
-        joint_config: dict,
-        profile: MotionProfile,
-    ) -> float:
-        max_delta = 0.0
-        for joint_name, target in joint_config.items():
-            cur = current_joints.get(joint_name, None)
-            if cur is None:
-                continue
-            delta = abs(self._canonicalize_joint_angle(float(target) - float(cur)))
-            if delta > max_delta:
-                max_delta = delta
-
-        velocity_scale = max(0.05, float(profile.velocity_scaling))
-        accel_scale = max(0.04, float(profile.accel_scaling))
-        # Fixed postures do not need aggressive timing. Use a long single-segment duration so the
-        # joint_trajectory_controller can interpolate gently instead of relying on a full MoveIt
-        # plan plus time-parameterization for known-safe parked scan poses.
-        duration_s = (2.0 + (4.0 * max_delta)) * max(
-            1.0,
-            0.10 / velocity_scale,
-            0.08 / accel_scale,
-        )
-        return min(max(duration_s, 3.0), 10.0)
-
-    def _send_direct_joint_trajectory(
-        self,
-        joint_config: dict,
-        profile: MotionProfile,
-        *,
-        verify_max_err_rad: float = 0.10,
-        cancel_cb=None,
-    ) -> bool:
-        if self._cancel_requested(cancel_cb):
-            self.node.get_logger().warn(
-                "_send_direct_joint_trajectory: cancel requested before motion; skipping."
-            )
-            return False
-
-        current_joints = self.get_arm_joint_positions(timeout=1.0)
-        if current_joints is None:
-            self.node.get_logger().warn(
-                "_send_direct_joint_trajectory: no live arm joint state available; "
-                "falling back to MoveIt joint planning."
-            )
-            return False
-
-        if not hasattr(self, "_joint_traj_client"):
-            self._joint_traj_client = ActionClient(
-                self.node,
-                FollowJointTrajectory,
-                self.FIXED_JOINT_TRAJ_ACTION,
-                callback_group=self._ros_cb_group,
-            )
-        if not self._joint_traj_client.wait_for_server(timeout_sec=3.0):
-            self.node.get_logger().warn(
-                f"_send_direct_joint_trajectory: action server {self.FIXED_JOINT_TRAJ_ACTION} "
-                "not available; falling back to MoveIt joint planning."
-            )
-            return False
-
-        duration_s = self._estimate_direct_joint_duration_s(current_joints, joint_config, profile)
-        self.node.get_logger().info(
-            "_send_direct_joint_trajectory: sending fixed joint posture directly to "
-            f"{self.FIXED_JOINT_TRAJ_ACTION} over {duration_s:.2f}s."
-        )
-
-        traj = JointTrajectory()
-        traj.joint_names = list(self.ARM_JOINT_NAMES)
-        point = JointTrajectoryPoint()
-        point.positions = [float(joint_config[joint_name]) for joint_name in self.ARM_JOINT_NAMES]
-        point.velocities = [0.0] * len(self.ARM_JOINT_NAMES)
-        whole_s = int(duration_s)
-        point.time_from_start.sec = whole_s
-        point.time_from_start.nanosec = int((duration_s - whole_s) * 1e9)
-        traj.points.append(point)
-
-        goal = FollowJointTrajectory.Goal()
-        goal.trajectory = traj
-
-        future = self._joint_traj_client.send_goal_async(goal)
-        wait_ok = self._wait_for_future(
-            future,
-            timeout=max(15.0, duration_s + 5.0),
-            cancel_cb=cancel_cb,
-            context="_send_direct_joint_trajectory send_goal_async",
-        )
-        if wait_ok is None:
-            self.node.get_logger().warn(
-                "_send_direct_joint_trajectory: cancel requested while waiting for "
-                "trajectory goal acceptance."
-            )
-            return False
-        if not wait_ok:
-            self.node.get_logger().warn(
-                "_send_direct_joint_trajectory: goal send timed out; falling back to MoveIt."
-            )
-            return False
-
-        goal_handle = future.result()
-        if goal_handle is None or not goal_handle.accepted:
-            self.node.get_logger().warn(
-                "_send_direct_joint_trajectory: goal rejected; falling back to MoveIt."
-            )
-            return False
-
-        self._last_goal_handle = goal_handle
-        try:
-            result_future = goal_handle.get_result_async()
-            wait_ok = self._wait_for_future(
-                result_future,
-                timeout=max(15.0, duration_s + 5.0),
-                cancel_cb=cancel_cb,
-                context="_send_direct_joint_trajectory get_result_async",
-            )
-            if wait_ok is None:
-                self.node.get_logger().warn(
-                    "_send_direct_joint_trajectory: cancel requested while waiting for "
-                    "trajectory result."
-                )
-                self.stop_motion(timeout=1.0)
-                return False
-            if not wait_ok:
-                self.node.get_logger().warn(
-                    "_send_direct_joint_trajectory: result timed out; falling back to MoveIt."
-                )
-                return False
-
-            result = result_future.result()
-            if result is None:
-                self.node.get_logger().warn(
-                    "_send_direct_joint_trajectory: empty result; falling back to MoveIt."
-                )
-                return False
-
-            error_code = int(result.result.error_code)
-            if error_code != int(FollowJointTrajectory.Result.SUCCESSFUL):
-                self.node.get_logger().warn(
-                    "_send_direct_joint_trajectory: controller returned error "
-                    f"{error_code} ({result.result.error_string}); falling back to MoveIt."
-                )
-                return False
-        finally:
-            if self._last_goal_handle is goal_handle:
-                self._last_goal_handle = None
-
-        self.wait_for_settle(timeout=max(3.0, min(6.0, duration_s)))
-        if not self._is_near_joint_config(
-            joint_config,
-            "_send_direct_joint_trajectory verify",
-            max_err_rad=verify_max_err_rad,
-        ):
-            self.node.get_logger().warn(
-                "_send_direct_joint_trajectory: live arm did not settle near the requested "
-                "joint posture; falling back to MoveIt."
-            )
-            return False
-        return True
-
     def _go_to_joint_config(
         self,
         joint_config: dict,
         profile: MotionProfile | None = None,
         *,
         joint_tolerance_rad: float = 0.05,
-        prefer_direct: bool = False,
-        verify_max_err_rad: float = 0.10,
         cancel_cb=None,
     ) -> bool:
-        active_profile = profile or DEFAULT_PROFILE
-        if prefer_direct and self._direct_fixed_joints_enabled():
-            if self._send_direct_joint_trajectory(
-                joint_config,
-                active_profile,
-                verify_max_err_rad=verify_max_err_rad,
-                cancel_cb=cancel_cb,
-            ):
-                return True
-            self.node.get_logger().warn(
-                "_go_to_joint_config: direct fixed-joint trajectory did not complete cleanly; "
-                "retrying the posture through MoveIt."
-            )
-
-        req = self._base_request(self.ARM_GROUP, profile=active_profile)
+        req = self._base_request(self.ARM_GROUP, profile=profile or DEFAULT_PROFILE)
         constraints = Constraints()
         
         for joint_name, pos in joint_config.items():
@@ -2099,8 +1251,6 @@ class MoveItHelper:
                 self.HOME_JOINTS,
                 profile=self.HOME_PROFILE,
                 joint_tolerance_rad=self.HOME_GOAL_TOLERANCE_RAD,
-                prefer_direct=True,
-                verify_max_err_rad=self.HOME_VERIFY_MAX_ERR_RAD,
                 cancel_cb=cancel_cb,
             )
             if result:
@@ -2265,9 +1415,6 @@ class MoveItHelper:
         return self._go_to_joint_config(
             self.RETRACT_JOINTS,
             profile=self.RETRACT_PROFILE,
-            joint_tolerance_rad=self.RETRACT_GOAL_TOLERANCE_RAD,
-            prefer_direct=True,
-            verify_max_err_rad=self.RETRACT_VERIFY_MAX_ERR_RAD,
             cancel_cb=cancel_cb,
         )
 
@@ -2309,22 +1456,6 @@ class MoveItHelper:
     def is_near_home(self, max_err_rad: float = 0.10) -> bool:
         return self._is_near_joint_config(self.HOME_JOINTS, "is_near_home", max_err_rad=max_err_rad)
 
-    # Compare live joints against the fixed lab scan posture used by look_at_table().
-    def is_near_look_at_table(self, max_err_rad: float = 0.10) -> bool:
-        return self._is_near_joint_config(
-            self.LOOK_AT_TABLE_JOINTS,
-            "is_near_look_at_table",
-            max_err_rad=max_err_rad,
-        )
-
-    # Compare live joints against the fixed floor scan posture used by look_at_ground().
-    def is_near_look_at_ground(self, max_err_rad: float = 0.10) -> bool:
-        return self._is_near_joint_config(
-            self.LOOK_AT_GROUND_JOINTS,
-            "is_near_look_at_ground",
-            max_err_rad=max_err_rad,
-        )
-
     # wait for settle: wait till arm has stopped moving
     # compare max_joint_delta across arms with a timeout
     def wait_for_settle(
@@ -2364,6 +1495,51 @@ class MoveItHelper:
                 return True
             _time.sleep(0.05)
         return False
+
+    def wait_for_motion_stack_ready(
+        self,
+        timeout: float = 12.0,
+        *,
+        require_fk: bool = True,
+        require_validity: bool = True,
+        require_move_action: bool = True,
+    ) -> bool:
+        # [FLAG helper-motion-stack-ready] ADL task nodes can launch before the split arm/MoveIt
+        # bringup is fully visible on the ROS graph. Gate startup/task motions on the same runtime
+        # dependencies they actually need so failures report "arm stack not ready" instead of a
+        # misleading planning error from stale joint state or missing services.
+        deadline = _time.monotonic() + timeout
+        last_missing: tuple[str, ...] | None = None
+
+        while _time.monotonic() < deadline:
+            missing: list[str] = []
+
+            if not self.wait_for_joint_state_ready(timeout=0.35):
+                missing.append(self._moveit_joint_states_topic)
+            if require_move_action and not self.move_client.wait_for_server(timeout_sec=0.2):
+                missing.append(self.MOVE_ACTION)
+            if require_fk and not self._fk_client.wait_for_service(timeout_sec=0.2):
+                missing.append("/compute_fk")
+            if require_validity and not self._validity_client.wait_for_service(timeout_sec=0.2):
+                missing.append("/check_state_validity")
+
+            if not missing:
+                return True
+
+            missing_tuple = tuple(missing)
+            if missing_tuple != last_missing:
+                self.node.get_logger().warn(
+                    "Motion stack not ready yet. Waiting for: " + ", ".join(missing)
+                )
+                last_missing = missing_tuple
+            _time.sleep(0.2)
+
+        self.node.get_logger().error(
+            "Timed out waiting for the arm/MoveIt motion stack. "
+            f"Expected joint state topic {self._moveit_joint_states_topic}, "
+            "the MoveGroup action, and core MoveIt services."
+        )
+        return False
     
     def stop_motion(self, timeout: float = 2.0) -> bool:
         try:
@@ -2390,14 +1566,6 @@ class MoveItHelper:
                 self._last_exec_goal_handle = None
         except Exception as e:
             self.node.get_logger().warn(f"stop_motion: failed to cancel ExecuteTrajectory goal: {e}")
-        try:
-            self._publish_zero_twist(cycles=self.SHORT_CARTESIAN_ZERO_HOLD_CYCLES, sleep_s=0.01)
-            states = self._list_controller_states(timeout=0.5)
-            if states and states.get(self.TWIST_CONTROLLER_NAME) == "active":
-                self._ensure_joint_trajectory_controller_active()
-        except Exception as e:
-            self.node.get_logger().warn(f"stop_motion: failed to restore twist controller state: {e}")
-        return True
 
     # --- Pose Space --- #
     

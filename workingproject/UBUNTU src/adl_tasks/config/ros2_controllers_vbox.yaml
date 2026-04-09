@@ -1,10 +1,9 @@
 controller_manager:
   ros__parameters:
-    # [FLAG vbox-controller-rate] The vendor config targets a 1000 Hz loop, but the VBox logs show
-    # repeated 50-3000 ms controller overruns and BaseCyclic timeouts at that rate. Even the first
-    # VBox cut to 250 Hz was still too aggressive during motion, so keep the full ADL VBox profile
-    # lower as well. This is the "project full stack" config, not the leanest motion-only config.
-    update_rate: 125  # Hz
+    # [FLAG vbox-controller-rate] Keep the full ADL controller profile conservative by default.
+    # The latest real-arm clear-table logs still missed 125 Hz badly enough to sound physically
+    # harsh, so use the slower 50 Hz project profile unless a caller explicitly overrides it.
+    update_rate: 50  # Hz
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -36,12 +35,28 @@ joint_trajectory_controller:
     state_interfaces:
       - position
       - velocity
-    state_publish_rate: 100.0
-    action_monitor_rate: 20.0
+    # Keep arm status publication modest as well; the earlier 100 Hz / 20 Hz rates added traffic
+    # while the controller loop was already missing deadlines.
+    state_publish_rate: 20.0
+    action_monitor_rate: 10.0
     allow_partial_joints_goal: false
+    # Start each replacement trajectory from the controller's last desired command rather than
+    # snapping back toward delayed hardware feedback. This is the closest JTC-side analogue to the
+    # smoother command handoff you feel in twist/servo control.
+    interpolate_from_desired_state: true
+    allow_nonzero_velocity_at_trajectory_end: false
     constraints:
-      stopped_velocity_tolerance: 0.0
+      # Surface partial stops and early controller success as failures instead of silently treating
+      # a noisy, under-executed arm motion as complete.
+      stopped_velocity_tolerance: 0.01
       goal_time: 0.0
+      joint_1: {trajectory: 0.10, goal: 0.03}
+      joint_2: {trajectory: 0.10, goal: 0.03}
+      joint_3: {trajectory: 0.10, goal: 0.03}
+      joint_4: {trajectory: 0.10, goal: 0.03}
+      joint_5: {trajectory: 0.10, goal: 0.03}
+      joint_6: {trajectory: 0.10, goal: 0.03}
+      joint_7: {trajectory: 0.10, goal: 0.03}
 
 twist_controller:
   ros__parameters:

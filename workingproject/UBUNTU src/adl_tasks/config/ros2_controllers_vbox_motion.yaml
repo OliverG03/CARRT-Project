@@ -3,7 +3,7 @@ controller_manager:
     # [FLAG vbox-motion-controller-rate] Motion tests in VirtualBox do not need every auxiliary
     # controller active, and the logs show the guest still missing deadlines badly above this rate.
     # Keep the loop conservative first; smooth motion matters more than matching the vendor 1000 Hz.
-    update_rate: 500  # Hz
+    update_rate: 50  # Hz
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -32,12 +32,14 @@ joint_trajectory_controller:
     state_publish_rate: 20.0
     action_monitor_rate: 10.0
     allow_partial_joints_goal: false
+    interpolate_from_desired_state: true
+    allow_nonzero_velocity_at_trajectory_end: false
     constraints:
       # [FLAG vbox-motion-goal-check] The last VBox HOME run reported controller success even
       # though the arm visibly stopped early. Tighten the arm-only controller goal checks so a
       # partial stop is more likely to surface as a failure than a false success.
       stopped_velocity_tolerance: 0.01
-      goal_time: 1.0
+      goal_time: 0.0
       joint_1: {trajectory: 0.10, goal: 0.03}
       joint_2: {trajectory: 0.10, goal: 0.03}
       joint_3: {trajectory: 0.10, goal: 0.03}

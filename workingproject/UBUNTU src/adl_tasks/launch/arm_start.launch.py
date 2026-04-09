@@ -4,7 +4,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, LogInfo, OpaqueFunction, RegisterEventHandler, SetEnvironmentVariable, TimerAction
 from launch.conditions import IfCondition, UnlessCondition
-from launch.event_handlers import OnProcessExit
+from launch.event_handlers import OnProcessExit, OnProcessIO
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from moveit_configs_utils import MoveItConfigsBuilder
@@ -22,6 +22,45 @@ def _parse_cpu_affinity(value: str):
     if not cores:
         return None
     return cores[0] if len(cores) == 1 else cores
+
+
+def _wrist_camera_static_tf_nodes(condition):
+    # [FLAG launch-wrist-camera-static-tf] Keep the frame-name bridge in project launch space
+    # instead of patching vendor Kortex Xacro. On the real arm, camera_color_frame is already
+    # aligned with the USB/AprilTag optical image axes for the table scan pose, so do not apply
+    # a second optical-frame rotation here.
+    camera_tf_chain = [
+        (
+            "camera_color_optical_bridge_tf_pub",
+            "camera_color_frame",
+            "wrist_mounted_camera_color_optical_frame",
+            ("0.0", "0.0", "0.0"),
+            ("0.0", "0.0", "0.0"),
+        ),
+    ]
+
+    static_tf_nodes = []
+    for node_name, parent_frame, child_frame, xyz, rpy in camera_tf_chain:
+        static_tf_nodes.append(
+            Node(
+                package="tf2_ros",
+                executable="static_transform_publisher",
+                name=node_name,
+                output="log",
+                arguments=[
+                    "--x", xyz[0],
+                    "--y", xyz[1],
+                    "--z", xyz[2],
+                    "--roll", rpy[0],
+                    "--pitch", rpy[1],
+                    "--yaw", rpy[2],
+                    "--frame-id", parent_frame,
+                    "--child-frame-id", child_frame,
+                ],
+                condition=condition,
+            )
+        )
+    return static_tf_nodes
 
 
 def launch_setup(context, *args, **kwargs):
@@ -43,15 +82,20 @@ def launch_setup(context, *args, **kwargs):
     adl_share_dir = get_package_share_directory("adl_tasks")
     use_sanitizer = _as_bool(use_joint_state_sanitizer.perform(context))
     motion_only = _as_bool(motion_only_mode.perform(context))
+    use_fake_hw = _as_bool(use_fake_hardware.perform(context))
     configured_update_rate = controller_update_rate.perform(context).strip()
     configured_cpu_affinity = _parse_cpu_affinity(controller_cpu_affinity.perform(context))
     if not configured_update_rate:
-        # [FLAG arm-vbox-explicit-rate] The latest VM logs showed the installed YAML and the launch
-        # message drifting apart, which made the motion tests hard to interpret. Pick an explicit
-        # per-mode default here so the controller manager always receives the intended rate.
-        configured_update_rate = "500" if motion_only else "125"
+        # [FLAG arm-real-hardware-rate] The ADL wrapper keeps low defaults for fake hardware, but
+        # the physical Gen3 path should default back to the vendor-style high-rate controller loop.
+        # This gives the hybrid short-motion mode a cleaner hardware control path without requiring
+        # the user to remember a separate controller_update_rate override on every run.
+        if use_fake_hw:
+            configured_update_rate = "50" if motion_only else "125"
+        else:
+            configured_update_rate = "1000"
 
-    # [FLAG arm-vbox-project-wrapper] Keep VBox-specific planning state handling in the ADL package
+    # [FLAG arm-project-wrapper] Keep project-specific planning state handling in the ADL package
     # instead of patching the vendor Kortex launch. This wrapper mirrors the vendor bringup
     # structure, but it is only for the project build path; direct vendor robot.launch.py remains
     # the baseline arm launch for stock debugging.
@@ -84,10 +128,32 @@ def launch_setup(context, *args, **kwargs):
         # [FLAG arm-vbox-sanitized-moveit] ADL helpers expect MoveIt to consume the sanitized arm
         # state stream so wrapped joints do not poison start-state validation in the VM.
         move_group_remappings.append(("/joint_states", "/joint_states_sanitized"))
-    move_group_parameters = [moveit_config.to_dict()]
+    move_group_joint_state_topic = "/joint_states_sanitized" if use_sanitizer else "/joint_states"
+    planning_scene_monitor_parameters = {
+        "publish_planning_scene": True,
+        "publish_geometry_updates": True,
+        "publish_state_updates": True,
+        "publish_transforms_updates": True,
+        "planning_scene_monitor_options": {
+            "name": "planning_scene_monitor",
+            "robot_description": "robot_description",
+            "joint_state_topic": move_group_joint_state_topic,
+            "attached_collision_object_topic": "/move_group/planning_scene_monitor",
+            "publish_planning_scene_topic": "/move_group/publish_planning_scene",
+            "monitored_planning_scene_topic": "/move_group/monitored_planning_scene",
+            "wait_for_initial_state_timeout": 10.0,
+        },
+        # Mirror the nested parameter with a flat override as well. The MoveIt builder can inject
+        # its own default monitor options, and this keeps the final parameter merge deterministic.
+        "planning_scene_monitor_options.joint_state_topic": move_group_joint_state_topic,
+    }
+    move_group_parameters = [
+        moveit_config.to_dict(),
+        planning_scene_monitor_parameters,
+    ]
     if motion_only:
-        # [FLAG arm-vbox-motion-only-moveit] The Kinova API examples keep arm motion and gripper
-        # control as separate operations. Mirror that in the VBox arm-only test path so MoveIt does
+        # [FLAG arm-motion-only-moveit] The Kinova API examples keep arm motion and gripper
+        # control as separate operations. Mirror that in the arm-only test path so MoveIt does
         # not waste time discovering or monitoring a gripper controller that is intentionally absent.
         move_group_parameters.append(
             {
@@ -113,9 +179,9 @@ def launch_setup(context, *args, **kwargs):
                 },
             }
         )
-    # [FLAG arm-vbox-quiet-console] VBox motion tests are already dominated by controller write
+    # [FLAG arm-quiet-console] Motion-only tests are already dominated by controller write
     # stalls. Keep high-volume node logs in rosout/log files instead of flooding the interactive
-    # terminal, which reduces guest-side console I/O during real-arm motion tests.
+    # terminal during real-arm motion tests.
     motion_test_output = "log" if motion_only else "screen"
     motion_test_output_both = "log" if motion_only else "both"
 
@@ -126,6 +192,36 @@ def launch_setup(context, *args, **kwargs):
         parameters=move_group_parameters,
         remappings=move_group_remappings,
     )
+    move_group_state_guard = None
+    if use_sanitizer:
+        move_group_state_guard_triggered = {"value": False}
+
+        def _guard_move_group_state_source(event):
+            if move_group_state_guard_triggered["value"]:
+                return None
+            text = event.text.decode(errors="ignore").strip()
+            if not text:
+                return None
+
+            reason = None
+            if "Found empty JointState message" in text:
+                reason = (
+                    "move_group reported an empty JointState while sanitizer mode is active. "
+                    "Keeping the launch alive, but this still indicates a planning-state problem."
+                )
+            if reason is None:
+                return None
+
+            move_group_state_guard_triggered["value"] = True
+            return [LogInfo(msg=f"[arm_start.launch] {reason} move_group output: {text}")]
+
+        move_group_state_guard = RegisterEventHandler(
+            event_handler=OnProcessIO(
+                target_action=move_group_node,
+                on_stdout=_guard_move_group_state_source,
+                on_stderr=_guard_move_group_state_source,
+            )
+        )
 
     joint_state_sanitizer_node = Node(
         package="adl_tasks",
@@ -154,9 +250,9 @@ def launch_setup(context, *args, **kwargs):
     )
 
     if motion_only:
-        # [FLAG arm-vbox-motion-profile] For motion debugging in VBox, keep only the arm trajectory
+        # [FLAG arm-motion-profile] For arm-only motion debugging, keep only the arm trajectory
         # and joint-state controllers alive. This removes gripper/fault/twist controller switching
-        # from the startup path so the VM has a smaller realtime burden.
+        # from the startup path so the control loop has a smaller realtime burden.
         ros2_controllers_filename = "ros2_controllers_vbox_motion.yaml"
     else:
         ros2_controllers_filename = "ros2_controllers_vbox.yaml"
@@ -164,27 +260,27 @@ def launch_setup(context, *args, **kwargs):
     ros2_control_parameters = [
         ros2_controllers_path,
         {
-            # [FLAG arm-vbox-rate-override] Inline launch dictionaries target the node's
+            # [FLAG arm-rate-override] Inline launch dictionaries target the node's
             # parameter namespace directly, unlike YAML files which wrap values under
             # controller_manager.ros__parameters. Keep this flat so controller_update_rate:=N
             # actually overrides the installed YAML instead of silently leaving 500 Hz active.
             "update_rate": int(configured_update_rate),
-            # [FLAG arm-vbox-memory-lock] ros2_control supports locking memory to cut page-fault
-            # jitter. Leave this configurable from the project wrapper so VBox tuning stays in
+            # [FLAG arm-memory-lock] ros2_control supports locking memory to cut page-fault
+            # jitter. Leave this configurable from the project wrapper so launch tuning stays in
             # adl_tasks instead of leaking into vendor launch files.
             "lock_memory": _as_bool(lock_memory.perform(context)),
-            # [FLAG arm-vbox-thread-priority] Expose controller_manager priority from launch so the
+            # [FLAG arm-thread-priority] Expose controller_manager priority from launch so the
             # motion wrapper can experiment with scheduler settings without editing vendor files.
             "thread_priority": int(controller_thread_priority.perform(context)),
-            # [FLAG arm-vbox-overrun-print] The overrun warnings are diagnostically useful, but the
-            # warning flood can add extra console/log pressure in VBox. Keep it configurable.
+            # [FLAG arm-overrun-print] The overrun warnings are diagnostically useful, but the
+            # warning flood can add extra console/log pressure. Keep it configurable.
             "overruns.print_warnings": _as_bool(
                 controller_print_overrun_warnings.perform(context)
             ),
         },
     ]
     if configured_cpu_affinity is not None:
-        # [FLAG arm-vbox-cpu-affinity] Pinning controller_manager to a stable VM vCPU can reduce
+        # [FLAG arm-cpu-affinity] Pinning controller_manager to a stable CPU can reduce
         # scheduler jitter on overloaded hosts. Accept either a single core like "2" or a list
         # like "2,3" from launch.
         ros2_control_parameters[1]["cpu_affinity"] = configured_cpu_affinity
@@ -259,12 +355,12 @@ def launch_setup(context, *args, **kwargs):
 
     if use_sanitizer:
         state_source_msg = (
-            "[arm_vbox.launch] MoveIt current state source: /joint_states_sanitized. "
+            "[arm_start.launch] MoveIt current state source: /joint_states_sanitized. "
             "Use use_joint_state_sanitizer:=false for raw-state viewer debugging."
         )
     else:
         state_source_msg = (
-            "[arm_vbox.launch] MoveIt current state source: raw /joint_states. "
+            "[arm_start.launch] MoveIt current state source: raw /joint_states. "
             "ADL task helpers expect /joint_states_sanitized when motion tasks are enabled."
         )
     state_source_info = LogInfo(msg=state_source_msg)
@@ -280,20 +376,20 @@ def launch_setup(context, *args, **kwargs):
     )
     if motion_only:
         controller_config_msg = (
-            "[arm_vbox.launch] Motion-only VBox controller profile enabled "
+            "[arm_start.launch] Motion-only ADL controller profile enabled "
             "(share/adl_tasks/config/ros2_controllers_vbox_motion.yaml, "
             f"update_rate:={configured_update_rate} Hz, no gripper/twist/fault controller "
             "spawners, MoveIt gripper controller removed)."
         )
     else:
         controller_config_msg = (
-            "[arm_vbox.launch] Using ADL VBox controller config "
+            "[arm_start.launch] Using ADL controller config "
             f"(share/adl_tasks/config/ros2_controllers_vbox.yaml, update_rate:={configured_update_rate} Hz)."
         )
     controller_config_info = LogInfo(msg=controller_config_msg)
     fake_hw_warning = LogInfo(
         msg=(
-            "[arm_vbox.launch] use_fake_hardware:=true. RViz/MoveIt will follow fake controller "
+            "[arm_start.launch] use_fake_hardware:=true. RViz/MoveIt will follow fake controller "
             "state instead of the physical Kinova arm."
         ),
         condition=IfCondition(use_fake_hardware),
@@ -324,11 +420,12 @@ def launch_setup(context, *args, **kwargs):
     )
 
     moveit_and_rviz_start = TimerAction(
-        period=1.0,
+        period=1.5,
         actions=[
             # [FLAG arm-vbox-startup-delay] Let the arm controllers settle after startup before
-            # MoveIt and RViz construct their initial current-state view. This keeps the first
-            # planning sample closer to the actual hardware state in VBox.
+            # MoveIt and RViz construct their initial current-state view. In sanitizer mode this
+            # also gives the relay time to publish a fresh non-empty joint-state sample before
+            # move_group subscribes.
             move_group_node,
             rviz_node,
         ],
@@ -352,7 +449,9 @@ def launch_setup(context, *args, **kwargs):
         joint_state_broadcaster_spawner,
         start_arm_controllers_after_joint_state_broadcaster,
         delay_moveit_and_rviz_after_joint_trajectory_spawner,
+        *( [move_group_state_guard] if move_group_state_guard is not None else [] ),
         static_tf,
+        *_wrist_camera_static_tf_nodes(condition=IfCondition(vision)),
     ]
 
     return nodes_to_start
@@ -363,6 +462,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             "robot_ip",
+            default_value="192.168.0.10",
             description="IP address by which the robot can be reached.",
         )
     )
@@ -388,7 +488,7 @@ def generate_launch_description():
             "motion_only_mode",
             default_value="false",
             description=(
-                "Use the lean VBox motion profile: lower controller rate and only arm "
+                "Use the lean arm-only motion profile: lower controller rate and only arm "
                 "trajectory/joint-state controllers."
             ),
         )
@@ -398,8 +498,8 @@ def generate_launch_description():
             "controller_update_rate",
             default_value="",
             description=(
-                "Override ros2_control update_rate in Hz. Leave empty to use the project default "
-                "(500 in motion_only_mode, 125 otherwise)."
+                "Override ros2_control update_rate in Hz. Leave empty to use the project defaults "
+                "(50 in motion_only_mode, 125 for fake-hardware full-stack, 1000 for real hardware)."
             ),
         )
     )
@@ -436,7 +536,7 @@ def generate_launch_description():
             default_value="true",
             description=(
                 "Forward overruns.print_warnings to ros2_control_node. Disable only when you want "
-                "to reduce warning spam during VBox tuning runs."
+                "to reduce warning spam during motion tuning runs."
             ),
         )
     )

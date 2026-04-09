@@ -27,6 +27,8 @@ from adl_tasks.adl_config import (
     WCWALL_X, WCWALL_Y, WCWALL_Z, WCWALL_POS_X, WCWALL_POS_Y, WCWALL_POS_Z,
     BIN_WIDTH, BIN_DEPTH, BIN_HEIGHT, BIN_POS_X, BIN_POS_Y,
     BACKWALL_X, BACKWALL_Y, BACKWALL_Z, BACKWALL_POS_X, BACKWALL_POS_Y, BACKWALL_POS_Z,
+    LEFT_DESK_WALL_X, LEFT_DESK_WALL_Y, LEFT_DESK_WALL_Z,
+    LEFT_DESK_WALL_POS_X, LEFT_DESK_WALL_POS_Y, LEFT_DESK_WALL_POS_Z,
     FLOOR_X, FLOOR_Y, FLOOR_Z, FLOOR_POS_Z,
 )
 
@@ -65,12 +67,22 @@ def make_remove(frame_id, object_id) -> CollisionObject:
 class StaticSceneNode(Node):
     def __init__(self):
         super().__init__('static_scene_node')
+        self.declare_parameter("include_wheelchair_wall", True)
+        self.declare_parameter("include_left_desk_wall", True)
+        self.include_wheelchair_wall = bool(
+            self.get_parameter("include_wheelchair_wall").value
+        )
+        self.include_left_desk_wall = bool(
+            self.get_parameter("include_left_desk_wall").value
+        )
         ### Logging
         self.get_logger().info('Static Scene Node started.')
         self.get_logger().info(
             f'WHEELCHAIR_BASE_HEIGHT = {WHEELCHAIR_BASE_HEIGHT}m  |  '
             f'Table surface at z = {TABLE_SURFACE_Z:.3f}m | '
-            f'Table center at x = {TABLE_POS_X:.3f}m'
+            f'Table center at x = {TABLE_POS_X:.3f}m | '
+            f'include_wheelchair_wall={self.include_wheelchair_wall} | '
+            f'include_left_desk_wall={self.include_left_desk_wall}'
         )        
         ###
         # create service client for applying planning scene
@@ -177,13 +189,6 @@ class StaticSceneNode(Node):
                 TABLE_SURFACE_Z + BIN_HEIGHT / 2.0,
             ),
             
-            # WHEELCHAIR
-            make_box(
-                frame, "wheelchair_wall",
-                WCWALL_X, WCWALL_Y, WCWALL_Z,
-                WCWALL_POS_X, WCWALL_POS_Y, WCWALL_POS_Z
-            ),
-            
             # BACK WALL
             make_box(
                 frame, "back_wall",
@@ -198,6 +203,22 @@ class StaticSceneNode(Node):
                 0.0, 0.0, FLOOR_POS_Z
             ),
         ]
+        if self.include_wheelchair_wall:
+            objects.append(
+                make_box(
+                    frame, "wheelchair_wall",
+                    WCWALL_X, WCWALL_Y, WCWALL_Z,
+                    WCWALL_POS_X, WCWALL_POS_Y, WCWALL_POS_Z
+                )
+            )
+        if self.include_left_desk_wall:
+            objects.append(
+                make_box(
+                    frame, "left_desk_wall",
+                    LEFT_DESK_WALL_X, LEFT_DESK_WALL_Y, LEFT_DESK_WALL_Z,
+                    LEFT_DESK_WALL_POS_X, LEFT_DESK_WALL_POS_Y, LEFT_DESK_WALL_POS_Z
+                )
+            )
         
         # build planning scene message
         scene = PlanningScene()

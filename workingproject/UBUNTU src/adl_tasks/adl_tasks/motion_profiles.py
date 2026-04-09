@@ -13,8 +13,11 @@ class PoseTolerance:
 @dataclass(frozen=True)
 class MotionProfile:
     planning_time: float = 10.0
-    velocity_scaling: float = 0.3
-    accel_scaling: float = 0.3
+    # Keep the project-wide default conservative on the real arm. The last clear-table runs were
+    # already controller-rate limited on VBox/hardware, so the safest default is to reduce general
+    # task cruise speed a bit and cut acceleration more noticeably to soften starts/stops.
+    velocity_scaling: float = 0.2
+    accel_scaling: float = 0.12
     
 # default profiles
 

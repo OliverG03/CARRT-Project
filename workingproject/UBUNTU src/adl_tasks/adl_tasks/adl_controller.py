@@ -10,6 +10,7 @@ import time
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Bool, String
+from std_srvs.srv import Trigger
 
 from adl_interfaces.msg import AdlTaskStatus
 from adl_tasks.grasp_and_place import FLOW_CONFIG
@@ -30,6 +31,7 @@ class ADLController(Node):
 
         self._status_pub = self.create_publisher(AdlTaskStatus, "/adl_task_status", 10)
         self._task_cmd_pub = self.create_publisher(String, "/adl_command", 10)
+        self._clear_scene_client = self.create_client(Trigger, "clear_scene_memory")
         self._task_status_sub = self.create_subscription(
             AdlTaskStatus, "/adl_task_status", self._on_task_status, 10
         )
@@ -152,6 +154,37 @@ class ADLController(Node):
         msg.data = "stop_task"
         self._task_cmd_pub.publish(msg)
 
+    def _clear_scene_memory(self, context: str, timeout_s: float = 5.0) -> bool:
+        if not self._clear_scene_client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().warn(
+                f"Scene clear skipped after {context}: clear_scene_memory service is unavailable."
+            )
+            return False
+
+        future = self._clear_scene_client.call_async(Trigger.Request())
+        start = time.monotonic()
+        while rclpy.ok() and not future.done():
+            if time.monotonic() - start > float(timeout_s):
+                self.get_logger().warn(
+                    f"Scene clear timed out after {context}."
+                )
+                return False
+            time.sleep(0.05)
+
+        try:
+            result = future.result()
+        except Exception as exc:
+            self.get_logger().warn(f"Scene clear failed after {context}: {exc}")
+            return False
+        if result is None or not result.success:
+            self.get_logger().warn(
+                f"Scene clear was rejected after {context}: "
+                f"{result.message if result else 'no response'}"
+            )
+            return False
+        self.get_logger().info(result.message)
+        return True
+
     def _on_system_command(self, msg: String):
         cmd = str(msg.data).strip()
         if not cmd:
@@ -216,11 +249,12 @@ class ADLController(Node):
             if active_task is None:
                 self._park_retract(
                     context="emergency stop retract",
-                    idle_detail="Emergency stop retract complete. Arm parked at retract.",
+                    idle_detail="Emergency stop retract complete. Arm parked at retract and idle.",
                     tuck_gripper=False,
                     publish_status_updates=True,
-                    final_status=STATUS_CANCELLED,
+                    final_status=STATUS_IDLE,
                 )
+                self._clear_scene_memory(context="idle emergency stop retract")
                 with self._state_lock:
                     self._emergency_retract_pending = False
             return
@@ -233,6 +267,8 @@ class ADLController(Node):
         status = msg.status.strip().upper() if msg.status else "UNKNOWN"
         should_park = False
         park_detail = ""
+        park_publish_status_updates = False
+        park_final_status = STATUS_IDLE
 
         with self._state_lock:
             prev_status = self._task_last_status.get(task_name)
@@ -243,29 +279,35 @@ class ADLController(Node):
                 return
 
             if status in {STATUS_SUCCEEDED, STATUS_FAILED, STATUS_CANCELLED}:
-                if self._active_task_name == task_name:
+                active_task_went_terminal = self._active_task_name == task_name
+                if active_task_went_terminal:
                     self._active_task_name = None
 
                 # [FLAG controller-terminal-park] Tasks now keep their terminal status visible instead
                 # of auto-publishing IDLE. Trigger the retract park from terminal task outcomes without
                 # replacing the task's SUCCEEDED/FAILED/CANCELLED state in the UI.
-                if prev_status == STATUS_RUNNING or self._emergency_retract_pending:
+                if active_task_went_terminal or prev_status == STATUS_RUNNING or self._emergency_retract_pending:
                     should_park = True
                     if self._emergency_retract_pending:
                         park_detail = (
-                            f"{task_name} stopped after emergency stop. Arm parked at retract."
+                            f"{task_name} stopped after emergency stop. Arm parked at retract and idle."
                         )
+                        park_publish_status_updates = True
+                        park_final_status = STATUS_IDLE
                         self._emergency_retract_pending = False
                     else:
                         park_detail = f"{task_name} finished. Arm parked at retract."
 
         if should_park:
-            self._park_retract(
+            parked_ok = self._park_retract(
                 context=f"{task_name} terminal transition",
                 idle_detail=park_detail,
                 tuck_gripper=False,
-                publish_status_updates=False,
+                publish_status_updates=park_publish_status_updates,
+                final_status=park_final_status,
             )
+            if parked_ok:
+                self._clear_scene_memory(context=f"{task_name} terminal transition")
             
 
 

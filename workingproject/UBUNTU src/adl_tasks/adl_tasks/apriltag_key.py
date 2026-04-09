@@ -22,9 +22,13 @@ from adl_tasks.adl_config import (
     BOTTLE_DIAMETER, BOTTLE_RADIUS, BOTTLE_HEIGHT, 
     MEDICATION_DIAMETER, MEDICATION_RADIUS, MEDICATION_HEIGHT, 
     CUP_DIAMETER, CUP_RADIUS, CUP_HEIGHT, 
+    MEDICATION_TAG_TO_BODY_CENTER_VERTICAL_M, CUP_TAG_TO_BODY_CENTER_VERTICAL_M,
     REMOTE_WIDTH, REMOTE_LENGTH, REMOTE_THICKNESS, REMOTE_TAG_FROM_END, 
-    REMOTE_LENGTH_AXIS, BOTTLE_LENGTH_AXIS,
-    CUBE_SIZE, 
+    REMOTE_LENGTH_AXIS, REMOTE_TAG_TO_CENTER_SIGN, BOTTLE_LENGTH_AXIS,
+    CUBE_SIZE,
+    CUBE_GRIPPER_SQUEEZE_MARGIN_M, CUBE_GRIPPER_FORCE_N,
+    CUBE_TAG_TO_CENTER_X_M, CUBE_TAG_TO_CENTER_Y_M,
+    CUBE_WORLD_X_OFFSET_M, CUBE_WORLD_Y_OFFSET_M,
     # X Values
     SHELF_DROP_X, BIN_DROP_X,
     # Grasp Z Values
@@ -108,7 +112,9 @@ class AprilTagObject:
                  top_stage1_ori_z_tol_rad: float | None = None,
                  top_stage1_retry_ori_xy_tol_rad: float | None = None,
                  top_stage1_retry_ori_z_tol_rad: float | None = None,
-                 top_stage2_prealign_max_err_rad: float | None = None):
+                 top_stage2_prealign_max_err_rad: float | None = None,
+                 top_min_tool_clearance_above_table_m: float | None = None,
+                 top_yaw_free: bool | None = None):
         self.name = name
         self.ID = ID
         self.object_type = object_type  
@@ -146,6 +152,8 @@ class AprilTagObject:
         self.top_stage1_retry_ori_xy_tol_rad = top_stage1_retry_ori_xy_tol_rad
         self.top_stage1_retry_ori_z_tol_rad = top_stage1_retry_ori_z_tol_rad
         self.top_stage2_prealign_max_err_rad = top_stage2_prealign_max_err_rad
+        self.top_min_tool_clearance_above_table_m = top_min_tool_clearance_above_table_m
+        self.top_yaw_free = top_yaw_free
 
     def is_at_destination(self, tag_pose: Pose) -> bool:
         """
@@ -264,7 +272,10 @@ class AprilTagObject:
             width_axis = tag_x if REMOTE_LENGTH_AXIS == "y" else tag_y
             
             # shift along length
-            center_shift = (REMOTE_LENGTH/2.0 - REMOTE_TAG_FROM_END)
+            center_shift = (
+                float(REMOTE_TAG_TO_CENTER_SIGN)
+                * (REMOTE_LENGTH/2.0 - REMOTE_TAG_FROM_END)
+            )
             grasp.position.x = float(grasp.position.x + length_axis[0] * center_shift)
             grasp.position.y = float(grasp.position.y + length_axis[1] * center_shift)
             grasp.position.z = float(grasp.position.z + length_axis[2] * center_shift)
@@ -276,8 +287,26 @@ class AprilTagObject:
             gripper_x = tag_x if BOTTLE_LENGTH_AXIS == "y" else tag_y
             
             # 
-        else:    
-            # cube top-grasp
+        elif self.ID == 4:
+            # Keep the cube grasp target aligned with the scene collision object. The cube tag is
+            # on the top face, so these corrections change only the table-plane center.
+            cube_x_axis = np.array([tag_x[0], tag_x[1], 0.0], dtype=float)
+            cube_y_axis = np.array([tag_y[0], tag_y[1], 0.0], dtype=float)
+            if np.linalg.norm(cube_x_axis) < 1e-6:
+                cube_x_axis = np.array([1.0, 0.0, 0.0], dtype=float)
+            if np.linalg.norm(cube_y_axis) < 1e-6:
+                cube_y_axis = np.array([0.0, 1.0, 0.0], dtype=float)
+            cube_x_axis = cube_x_axis / (np.linalg.norm(cube_x_axis) + 1e-9)
+            cube_y_axis = cube_y_axis / (np.linalg.norm(cube_y_axis) + 1e-9)
+            cube_offset = (
+                cube_x_axis * CUBE_TAG_TO_CENTER_X_M
+                + cube_y_axis * CUBE_TAG_TO_CENTER_Y_M
+            )
+            grasp.position.x = float(grasp.position.x + cube_offset[0] + CUBE_WORLD_X_OFFSET_M)
+            grasp.position.y = float(grasp.position.y + cube_offset[1] + CUBE_WORLD_Y_OFFSET_M)
+            gripper_x = tag_x
+        else:
+            # default top-grasp yaw
             gripper_x = tag_x
             
         # -- Build Gripper Frame --
@@ -419,7 +448,8 @@ OBJECTS = {
         object_type=    "medication",
         adl_used=       "give_medication",
         approach_type=  "side",
-        grasp_offset=   [0, 0, -MEDICATION_RADIUS], # should pull from config for medication height and QR placement
+        # Side tag +Y is vertical, and +Z is the tag face normal.
+        grasp_offset=   [0, MEDICATION_TAG_TO_BODY_CENTER_VERTICAL_M, -MEDICATION_RADIUS],
         
         gripper_width=  _meters_to_rads(MEDICATION_DIAMETER), # rads calc
         gripper_force=  7.0,
@@ -439,7 +469,8 @@ OBJECTS = {
         object_type=    "Household Object",
         adl_used=       "clear_table",
         approach_type=  "side",
-        grasp_offset=   [0, 0, -CUP_RADIUS], # should pull from config for cup height and QR placement
+        # Side tag +Y is vertical, and +Z is the tag face normal.
+        grasp_offset=   [0, CUP_TAG_TO_BODY_CENTER_VERTICAL_M, -CUP_RADIUS],
         
         gripper_width=  _meters_to_rads(CUP_DIAMETER), # rads calc
         gripper_force=  7.0,
@@ -484,9 +515,10 @@ OBJECTS = {
         top_stage2_live_pose_pos_tol_m=0.040,  # [FLAG remote-stage2-live-window] Let Stage 2 accept the modest XY drift we keep seeing instead of aborting into a large recovery move.
         top_stage2_live_pose_ori_err_rad=0.40, # [FLAG remote-stage2-live-window] Keep the remote strict, but not so strict that a few degrees of residual error trigger full reseeds.
         top_stage2_prealign_max_err_rad=0.45,  # [FLAG remote-stage2-prealign-window] Allow prealign to engage on the common near-threshold remote cases seen in the latest fail logs.
+        top_min_tool_clearance_above_table_m=0.020,
     ),
     # tag on top of cube, facing up
-    # approach from SIDE, grab at midpoint, where QR is placed
+    # approach from above; cube yaw is free because the top grasp is symmetric.
     4: AprilTagObject(
         name=           "Cube",
         ID=             4,
@@ -495,13 +527,21 @@ OBJECTS = {
         approach_type=  "top",
         grasp_offset=   [0, 0, CUBE_GRASP_Z], ### should pull from config for cube width
         
-        gripper_width=  _meters_to_rads(CUBE_SIZE), # rads calculation
-        gripper_force=  10.0,
+        gripper_width=  _meters_to_rads(max(0.0, CUBE_SIZE - CUBE_GRIPPER_SQUEEZE_MARGIN_M)), # slight squeeze margin for a more reliable cube grip
+        gripper_force=  CUBE_GRIPPER_FORCE_N,
         gripper_speed=  0.03,
 
         destination=    LOCATIONS["Shelf 1 (Left)"], # Shelf 1
         object_width_m= CUBE_SIZE,
         object_height_m= CUBE_SIZE,
         grasp_axis_size_m= CUBE_SIZE,
+        top_yaw_free=  True,
+        top_allow_orientation_soft_fail=False,
+        top_stage1_ori_xy_tol_rad=0.35,
+        top_stage1_ori_z_tol_rad=0.35,
+        top_stage1_retry_ori_xy_tol_rad=0.45,
+        top_stage1_retry_ori_z_tol_rad=0.45,
+        top_stage2_prealign_max_err_rad=0.35,
+        top_min_tool_clearance_above_table_m=0.045,
     ),
 }

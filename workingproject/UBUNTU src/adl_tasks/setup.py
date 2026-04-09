@@ -39,7 +39,9 @@ setup(
             'vision_usb_qr_stub = adl_tasks.vision_usb_qr_stub:main',
             'wrist_camera_usb_publisher = adl_tasks.wrist_camera_usb_publisher:main',
             'joint_state_sanitizer = adl_tasks.joint_state_sanitizer:main', # sanitize MoveIt joint states
-            'arm_home_stub = adl_tasks.arm_home_stub:main', # [FLAG arm-home-stub] minimal one-shot home command
+            'arm_home_stub = adl_tasks.arm_home_stub:main_table', # [FLAG arm-home-stub] compatibility name; now sends one look_at_table command
+            'arm_look_at_table_stub = adl_tasks.arm_home_stub:main_table',
+            'arm_look_at_floor_stub = adl_tasks.arm_home_stub:main_floor',
             # Layer 2: Vision
             'vision_stub = adl_tasks.vision_stub:main',           # temp fake vision
             'vision_apriltag = adl_tasks.vision_apriltag:main',   # real cam + OpenCV + detection
