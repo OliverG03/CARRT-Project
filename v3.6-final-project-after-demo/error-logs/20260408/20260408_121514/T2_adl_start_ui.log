@@ -1,0 +1,258 @@
+
+===== 2026-04-08T12:15:49-04:00 | T2_adl_start_ui =====
+cwd=/home/carrt-cse-project/workspace/ros2_kortex_ws
+cmd=ros2 launch adl_tasks adl_start.launch.py start_arm:=false use_stub:=false launch_ui:=true 
+
+[INFO] [launch]: All log files can be found below /home/carrt-cse-project/.ros/log/2026-04-08-12-15-49-856215-carrt-cse-project-OptiPlex-5050-16715
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [scene_static-1]: process started with pid [16719]
+[INFO] [joint_state_sanitizer-2]: process started with pid [16720]
+[INFO] [static_transform_publisher-3]: process started with pid [16721]
+[INFO] [wrist_camera_usb_publisher-4]: process started with pid [16722]
+[INFO] [vision_apriltag-5]: process started with pid [16723]
+[INFO] [scene_from_vision-6]: process started with pid [16724]
+[INFO] [adl_controller-7]: process started with pid [16725]
+[INFO] [pick_dropped_bottle-8]: process started with pid [16726]
+[INFO] [clear_table-9]: process started with pid [16727]
+[INFO] [give_medication-10]: process started with pid [16728]
+[INFO] [adl_ui-11]: process started with pid [16729]
+[static_transform_publisher-3] [INFO] [1775664950.263581036] [camera_color_optical_bridge_tf_pub]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'camera_color_frame' to 'wrist_mounted_camera_color_optical_frame'
+[joint_state_sanitizer-2] [INFO] [1775664951.466916955] [joint_state_sanitizer_node]: joint_state_sanitizer started. raw=/joint_states -> sanitized=/joint_states_sanitized
+[scene_from_vision-6] [INFO] [1775664952.082026914] [scene_from_vision_node]: Scene From Vision Node Started
+[scene_static-1] [INFO] [1775664952.163537952] [scene_static_node]: Static Scene Node started.
+[scene_static-1] [INFO] [1775664952.164226856] [scene_static_node]: WHEELCHAIR_BASE_HEIGHT = 0.36195m  |  Table surface at z = 0.088m | Table center at x = 0.681m | include_wheelchair_wall=True
+[scene_from_vision-6] [INFO] [1775664952.277087409] [scene_from_vision_node]: SceneFromVision: Updating planning scene. Tracking 5 object shape(s). memory_mode=True, scan_duration_s=3.0, scan_min_samples=3, scan_prune_unseen_objects=False, continuous_scene_updates=False, latch_first_detection_updates=True, apply_planning_scene_service_updates=True, publish_monitored_planning_scene_updates=True, side_viewpoint=wrist_mounted_camera_color_optical_frame->base_link, reject_table_objects_outside_bounds=False.
+[scene_from_vision-6] [INFO] [1775664952.286286583] [scene_from_vision_node]: SceneFromVision calibration: xy_offset=(0.000, 0.060), z_offset=0.000, yaw_deg=0.00, xy_scale=1.0000, clamp_table_objects_to_table_bounds=False, table_bounds_margin_m=0.030.
+[scene_from_vision-6] [INFO] [1775664952.288451923] [scene_from_vision_node]: SceneFromVision object offsets: remote_axis=y, remote_tag_to_center_sign=-1.0, remote_tag_from_end_m=0.020, cube_tag_to_center=(0.000, 0.000), cube_world_offset=(0.000, -0.022), cube_yaw_offset_deg=0.0, medication_face_to_center_m=0.030, cup_face_to_center_m=0.037.
+[vision_apriltag-5] [INFO] [1775664952.306294451] [vision_apriltag_node]: Vision AprilTag Node Started
+[vision_apriltag-5] [INFO] [1775664952.313064577] [vision_apriltag_node]: Subscribing to camera topic: /wrist_mounted_camera/image
+[adl_ui-11] [INFO] [1775664952.318318094] [adl_ui_node]: ADL UI Node started.
+[adl_ui-11] [INFO] [1775664952.319622533] [adl_ui_node]: Automatic retract on UI load is disabled; startup sends no motion.
+[vision_apriltag-5] [INFO] [1775664952.321407775] [vision_apriltag_node]: Subscribing to camera info topic: /wrist_mounted_camera/camera_info
+[adl_ui-11]  * Serving Flask app 'adl_tasks.adl_ui'
+[adl_ui-11]  * Debug mode: off
+[vision_apriltag-5] [INFO] [1775664952.330647999] [vision_apriltag_node]: Camera frame: wrist_mounted_camera_color_optical_frame | use_image_header_frame=True
+[adl_ui-11] [INFO] [1775664952.337124514] [adl_ui_node]: Web UI available at http://localhost:5000
+[vision_apriltag-5] [INFO] [1775664952.341512394] [vision_apriltag_node]: Tag size: 0.025m | pose_cache_retention_s=20.0 | get_pose_wait_timeout_s=5.0 | max_returned_pose_age_s=20.0 | camera_params=[554.25, 554.25, 320.0, 240.0] | families=tag36h11 | quad_decimate=1.0 | requested_backend=opencv | backend=cv2.aruco | opencv_pose_solver=ippe_square | use_image_timestamp_for_tf=False
+[vision_apriltag-5] [INFO] [1775664952.343801949] [vision_apriltag_node]: Top-tag known-plane projection: enabled=True, planes={3: 0.10995, 4: 0.14505}
+[vision_apriltag-5] [INFO] [1775664952.357190709] [vision_apriltag_node]: pupil_apriltags tuning: nthreads=1, quad_sigma=0.0, refine_edges=1, decode_sharpening=0.25, debug=0, preprocess_variants=['raw', 'clahe', 'adaptive', 'clahe_sharp', 'clahe_up2', 'sharp_up2'], tile_search_if_empty=True, tile_search_grid=3x2, tile_search_scale=2.0, tile_search_overlap=0.25
+[vision_apriltag-5] [WARN] [1775664952.366622326] [vision_apriltag_node]: pupil_apriltags is not importable by this node, so detection is using OpenCV fallback only. python=/usr/bin/python3, import_error=No module named 'pupil_apriltags'. If .venv contains pupil_apriltags, rebuild adl_tasks with that venv active or run the module with the venv Python.
+[vision_apriltag-5] [INFO] [1775664952.370687251] [vision_apriltag_node]: Publishing AprilTag debug images on /vision_apriltag/debug_image at up to 1.0 Hz.
+[adl_ui-11] WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+[adl_ui-11]  * Running on all addresses (0.0.0.0)
+[adl_ui-11]  * Running on http://127.0.0.1:5000
+[adl_ui-11]  * Running on http://192.168.0.231:5000
+[adl_ui-11] Press CTRL+C to quit
+[adl_controller-7] [INFO] [1775664952.391641983] [adl_controller_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[adl_controller-7] [INFO] [1775664952.405216937] [adl_controller_node]: ADL controller ready. Waiting for UI/system commands.
+[wrist_camera_usb_publisher-4] [INFO] [1775664952.462620061] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-4] [INFO] [1775664952.480785122] [wrist_camera_usb_publisher_node]: USB camera publisher: opened camera source index 2.
+[wrist_camera_usb_publisher-4] [INFO] [1775664952.482195443] [wrist_camera_usb_publisher_node]: Wrist Camera USB Publisher started.
+[wrist_camera_usb_publisher-4] [INFO] [1775664952.486201979] [wrist_camera_usb_publisher_node]: Publishing USB camera frames on /wrist_mounted_camera/image with frame_id=wrist_mounted_camera_color_optical_frame.
+[wrist_camera_usb_publisher-4] [INFO] [1775664952.487591569] [wrist_camera_usb_publisher_node]: Publishing camera info on /wrist_mounted_camera/camera_info from reference intrinsics [554.25, 554.25, 320.0, 240.0] @ 640x480.
+[wrist_camera_usb_publisher-4] [INFO] [1775664952.489106884] [wrist_camera_usb_publisher_node]: Using explicit camera_matrix for CameraInfo. matrix_size=1280x720, K=[920.874267578125, 0.0, 644.7646484375, 0.0, 921.5654907226562, 343.1528625488281, 0.0, 0.0, 1.0], d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[wrist_camera_usb_publisher-4] [INFO] [1775664952.492329393] [wrist_camera_usb_publisher_node]: Requested source=2 size=1280x720 fps=10.0
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:15:52] "GET /status_json HTTP/1.1" 200 -
+[give_medication-10] [INFO] [1775664952.685869006] [give_medication_node]: give_medication starting...
+[scene_static-1] [INFO] [1775664952.716173496] [scene_static_node]: Planning scene service available. Building static scene...
+[scene_static-1] [INFO] [1775664952.724820164] [scene_static_node]: Static scene built: 14 objects added to MoveIt planning scene.
+[clear_table-9] [INFO] [1775664952.839290670] [clear_table_node]: Clear Table Node Started
+[clear_table-9] [INFO] [1775664953.062271997] [clear_table_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[pick_dropped_bottle-8] [INFO] [1775664953.066463579] [pick_dropped_bottle_node]: PickDroppedBottle starting...
+[clear_table-9] [INFO] [1775664953.081999632] [clear_table_node]: Vision Client initialized, waiting for service...
+[wrist_camera_usb_publisher-4] [INFO] [1775664953.132905520] [wrist_camera_usb_publisher_node]: USB camera info active intrinsics: size=1280x720, fx=920.87, fy=921.57, cx=644.76, cy=343.15, d=array('d', [0.0, 0.0, 0.0, 0.0, 0.0])
+[wrist_camera_usb_publisher-4] [INFO] [1775664953.134015153] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775664953.138417558] [vision_apriltag_node]: Vision AprilTag camera model updated from CameraInfo: size=1280x720, fx=920.87, fy=921.57, cx=644.76, cy=343.15, d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[pick_dropped_bottle-8] [INFO] [1775664953.179305740] [pick_dropped_bottle_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[pick_dropped_bottle-8] [INFO] [1775664953.197940055] [pick_dropped_bottle_node]: Vision Client initialized, waiting for service...
+[give_medication-10] [INFO] [1775664953.383516183] [give_medication_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[give_medication-10] [INFO] [1775664953.405503007] [give_medication_node]: Vision Client initialized, waiting for service...
+[give_medication-10] [INFO] [1775664953.406343651] [give_medication_node]: Vision service is ready.
+[give_medication-10] [INFO] [1775664953.421134478] [give_medication_node]: give_medication ready.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:15:53] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775664953.690013991] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775664954.124050206] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[pick_dropped_bottle-8] [INFO] [1775664954.450150009] [pick_dropped_bottle_node]: Vision service is ready.
+[pick_dropped_bottle-8] [INFO] [1775664954.466230311] [pick_dropped_bottle_node]: PickDroppedBottle ready. Waiting for command.
+[pick_dropped_bottle-8] [INFO] [1775664954.467024352] [pick_dropped_bottle_node]: Startup motion disabled at node load; motion begins only after pick_dropped_bottle command.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:15:54] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775664954.833645579] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[clear_table-9] [INFO] [1775664955.086061626] [clear_table_node]: Vision service is not available, waiting...
+[vision_apriltag-5] [INFO] [1775664955.280286014] [vision_apriltag_node]: Service: Tag 4 found and base-frame pose returned.
+[scene_from_vision-6] [INFO] [1775664955.286659400] [scene_from_vision_node]: Latched first detection for tag ID 4 into scene memory.
+[clear_table-9] [INFO] [1775664955.337394443] [clear_table_node]: Vision service is ready.
+[clear_table-9] [INFO] [1775664955.354831891] [clear_table_node]: Clear Table Node ready. Waiting for command.
+[clear_table-9] [INFO] [1775664955.355536814] [clear_table_node]: Startup motion disabled at node load; motion begins only after clear_table command.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:15:55] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664955.782518484] [scene_from_vision_node]: Published obj_4 (new) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[scene_from_vision-6] [INFO] [1775664955.787322346] [scene_from_vision_node]: /apply_planning_scene accepted dynamic scene updates; MoveIt should mirror these objects to RViz.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:15:56] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:15:57] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775664958.277330261] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_from_vision-6] [INFO] [1775664958.281633079] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:15:58] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775664958.758379704] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:clahe@(1101,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:15:59] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:00] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664960.779569201] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:01] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:02] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664962.784010572] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[wrist_camera_usb_publisher-4] [INFO] [1775664963.439073118] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:03] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775664963.920935358] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:clahe@(1100,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:04] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664965.278911799] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:05] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:06] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664967.280854819] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:07] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:08] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775664968.598029916] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775664969.020905451] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:clahe@(1101,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:09] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664969.777824238] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:10] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:11] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664972.280375168] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:12] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:13] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775664973.760448950] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775664974.190475833] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:clahe@(1101,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:14] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664974.781334514] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:15] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:16] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664977.279174335] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:17] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:18] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775664978.928281635] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775664979.297198054] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:clahe@(1100,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:19] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664979.779086298] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:20] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:21] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664981.789345439] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:22] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:23] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775664984.079309940] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_from_vision-6] [INFO] [1775664984.276959756] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[vision_apriltag-5] [INFO] [1775664984.305289431] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:clahe@(1100,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:24] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:25] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664986.280005198] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:26] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:27] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664988.290856725] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:28] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775664989.243993546] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775664989.519089339] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:clahe@(1101,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:29] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:30] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664990.792120347] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:31] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:32] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664993.278330830] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:33] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775664994.401540463] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775664994.628868165] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:clahe@(1100,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:34] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:35] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664995.780165880] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:36] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:37] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775664998.277273954] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:38] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775664999.563587064] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:39] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775664999.973590364] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:clahe@(1100,620)
+[scene_from_vision-6] [INFO] [1775665000.277717612] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:40] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:41] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:42] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665002.776539127] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:43] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775665004.565367569] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:44] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665004.777767954] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[vision_apriltag-5] [INFO] [1775665005.165494928] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:clahe@(1101,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:45] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:46] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665007.279348362] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:47] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:48] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775665009.722992383] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:49] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665009.782437835] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[vision_apriltag-5] [INFO] [1775665010.205788755] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:clahe@(1101,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:50] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:51] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665012.279132018] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:52] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:53] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665014.280335119] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:54] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775665014.887149909] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775665015.226268768] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:clahe@(1101,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:55] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665016.281665167] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:56] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:57] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665018.780558621] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:58] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:16:59] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775665020.040304422] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775665020.427610824] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:clahe@(1100,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:00] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665021.277797959] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:01] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:02] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665023.777218903] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:03] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:04] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775665025.200415548] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775665025.429155735] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:raw@(1101,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:05] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665026.279126335] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:06] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:07] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665028.779353672] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:08] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:09] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775665030.201175586] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775665030.581720691] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:adaptive@(1101,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:10] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665031.279263080] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:11] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:12] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665033.279094369] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:13] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:14] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665035.279346348] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[wrist_camera_usb_publisher-4] [INFO] [1775665035.357806873] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775665035.643831444] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:adaptive@(1101,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:15] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:16] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665037.279158959] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:17] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:18] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665039.777597219] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:19] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775665040.516749269] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775665040.744628239] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:adaptive@(1101,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:20] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:21] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665042.281259031] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:22] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:23] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665044.777693262] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:24] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775665045.679478303] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775665045.822492771] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:clahe@(1101,620)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:25] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:26] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775665047.284961214] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.477, y=-0.191, z=0.117, yaw=+0.1deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 12:17:27] "GET /status_json HTTP/1.1" 200 -

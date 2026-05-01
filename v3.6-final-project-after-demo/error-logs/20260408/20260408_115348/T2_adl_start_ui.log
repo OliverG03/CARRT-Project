@@ -1,0 +1,292 @@
+
+===== 2026-04-08T11:53:55-04:00 | T2_adl_start_ui =====
+cwd=/home/carrt-cse-project/workspace/ros2_kortex_ws
+cmd=ros2 launch adl_tasks adl_start.launch.py start_arm:=false use_stub:=true launch_ui:=true 
+
+[INFO] [launch]: All log files can be found below /home/carrt-cse-project/.ros/log/2026-04-08-11-53-56-062966-carrt-cse-project-OptiPlex-5050-10854
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [launch.user]: [adl_start.launch] arm_use_fake_hardware:=true, so RViz/MoveIt will show fake arm state instead of the physical Kinova.
+[INFO] [scene_static-1]: process started with pid [10873]
+[INFO] [joint_state_sanitizer-2]: process started with pid [10874]
+[INFO] [vision_stub-3]: process started with pid [10875]
+[INFO] [scene_from_vision-4]: process started with pid [10876]
+[INFO] [adl_controller-5]: process started with pid [10877]
+[INFO] [pick_dropped_bottle-6]: process started with pid [10878]
+[INFO] [clear_table-7]: process started with pid [10879]
+[INFO] [give_medication-8]: process started with pid [10880]
+[INFO] [adl_ui-9]: process started with pid [10881]
+[adl_ui-9] [INFO] [1775663637.002093702] [adl_ui_node]: ADL UI Node started.
+[adl_ui-9] [INFO] [1775663637.003572393] [adl_ui_node]: Automatic retract on UI load is disabled; startup sends no motion.
+[adl_ui-9]  * Serving Flask app 'adl_tasks.adl_ui'
+[adl_ui-9]  * Debug mode: off
+[adl_ui-9] [INFO] [1775663637.007832602] [adl_ui_node]: Web UI available at http://localhost:5000
+[adl_ui-9] WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+[adl_ui-9]  * Running on all addresses (0.0.0.0)
+[adl_ui-9]  * Running on http://127.0.0.1:5000
+[adl_ui-9]  * Running on http://192.168.0.231:5000
+[adl_ui-9] Press CTRL+C to quit
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:57] "GET /status_json HTTP/1.1" 200 -
+[joint_state_sanitizer-2] [INFO] [1775663637.243564453] [joint_state_sanitizer_node]: joint_state_sanitizer started. raw=/joint_states -> sanitized=/joint_states_sanitized
+[vision_stub-3] [INFO] [1775663637.393711704] [vision_stub_node]: Vision Stub Node started.
+[vision_stub-3] [INFO] [1775663637.394429845] [vision_stub_node]: Serving stub poses for tag IDs: [0, 2, 3, 4]
+[vision_stub-3] [WARN] [1775663637.395185069] [vision_stub_node]: STUB MODE: returning hardcoded values / poses.Replace with actual vision node for real hardware testing.
+[scene_static-1] [INFO] [1775663637.432977570] [scene_static_node]: Static Scene Node started.
+[scene_static-1] [INFO] [1775663637.433645150] [scene_static_node]: WHEELCHAIR_BASE_HEIGHT = 0.36195m  |  Table surface at z = 0.088m | Table center at x = 0.681m | include_wheelchair_wall=True
+[scene_from_vision-4] [INFO] [1775663637.456684551] [scene_from_vision_node]: Scene From Vision Node Started
+[scene_from_vision-4] [INFO] [1775663637.570919487] [scene_from_vision_node]: SceneFromVision: Updating planning scene. Tracking 5 object shape(s). memory_mode=True, scan_duration_s=3.0, scan_min_samples=3, scan_prune_unseen_objects=False, continuous_scene_updates=False, latch_first_detection_updates=True, apply_planning_scene_service_updates=True, publish_monitored_planning_scene_updates=True, side_viewpoint=wrist_mounted_camera_color_optical_frame->base_link, reject_table_objects_outside_bounds=False.
+[scene_from_vision-4] [INFO] [1775663637.572853760] [scene_from_vision_node]: SceneFromVision calibration: xy_offset=(0.000, 0.060), z_offset=0.000, yaw_deg=0.00, xy_scale=1.0000, clamp_table_objects_to_table_bounds=False, table_bounds_margin_m=0.030.
+[scene_from_vision-4] [INFO] [1775663637.574820824] [scene_from_vision_node]: SceneFromVision object offsets: remote_axis=y, remote_tag_to_center_sign=-1.0, remote_tag_from_end_m=0.020, cube_tag_to_center=(0.000, 0.000), cube_world_offset=(0.000, -0.022), cube_yaw_offset_deg=0.0, medication_face_to_center_m=0.030, cup_face_to_center_m=0.037.
+[adl_controller-5] [INFO] [1775663637.724502343] [adl_controller_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[clear_table-7] [INFO] [1775663637.727598723] [clear_table_node]: Clear Table Node Started
+[adl_controller-5] [INFO] [1775663637.737343615] [adl_controller_node]: ADL controller ready. Waiting for UI/system commands.
+[pick_dropped_bottle-6] [INFO] [1775663637.751744490] [pick_dropped_bottle_node]: PickDroppedBottle starting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:57] "GET /status_json HTTP/1.1" 200 -
+[clear_table-7] [INFO] [1775663637.813921992] [clear_table_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[clear_table-7] [INFO] [1775663637.824270126] [clear_table_node]: Vision Client initialized, waiting for service...
+[clear_table-7] [INFO] [1775663637.825146614] [clear_table_node]: Vision service is ready.
+[pick_dropped_bottle-6] [INFO] [1775663637.834167187] [pick_dropped_bottle_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[clear_table-7] [INFO] [1775663637.835510223] [clear_table_node]: Clear Table Node ready. Waiting for command.
+[clear_table-7] [INFO] [1775663637.836184268] [clear_table_node]: Startup motion disabled at node load; motion begins only after clear_table command.
+[pick_dropped_bottle-6] [INFO] [1775663637.853653645] [pick_dropped_bottle_node]: Vision Client initialized, waiting for service...
+[pick_dropped_bottle-6] [INFO] [1775663637.854521558] [pick_dropped_bottle_node]: Vision service is ready.
+[pick_dropped_bottle-6] [INFO] [1775663637.863231494] [pick_dropped_bottle_node]: PickDroppedBottle ready. Waiting for command.
+[vision_stub-3] [INFO] [1775663637.884346671] [vision_stub_node]: Stub: Scene LOCKED.
+[pick_dropped_bottle-6] [INFO] [1775663637.884529752] [pick_dropped_bottle_node]: Scene LOCKED.
+[scene_from_vision-4] [INFO] [1775663637.885005568] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[give_medication-8] [INFO] [1775663637.920311475] [give_medication_node]: give_medication starting...
+[give_medication-8] [INFO] [1775663637.986269946] [give_medication_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[give_medication-8] [INFO] [1775663637.999637165] [give_medication_node]: Vision Client initialized, waiting for service...
+[give_medication-8] [INFO] [1775663638.000371430] [give_medication_node]: Vision service is ready.
+[give_medication-8] [INFO] [1775663638.008426427] [give_medication_node]: give_medication ready.
+[pick_dropped_bottle-6] [INFO] [1775663638.035297205] [pick_dropped_bottle_node]: Startup: moving to retract posture.
+[pick_dropped_bottle-6] [INFO] [1775663638.035736077] [pick_dropped_bottle_node]: go_retract: planning to RETRACT_JOINTS...
+[pick_dropped_bottle-6] [INFO] [1775663638.088733660] [pick_dropped_bottle_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[pick_dropped_bottle-6] [ERROR] [1775663638.200213397] [pick_dropped_bottle_node]: MoveGroup execution failed.
+[pick_dropped_bottle-6]   error_code.val = -4
+[pick_dropped_bottle-6]   group_name      = manipulator
+[pick_dropped_bottle-6]   num_attempts    = 10
+[pick_dropped_bottle-6]   allowed_time    = 15.0
+[pick_dropped_bottle-6]   vel_scale       = 0.1
+[pick_dropped_bottle-6]   accel_scale     = 0.08
+[pick_dropped_bottle-6] If this persists, check move_group / controller logs for the meaning of this code (often control abort, invalid start state, or planning pipeline failure).
+[pick_dropped_bottle-6] [WARN] [1775663638.201097522] [pick_dropped_bottle_node]: _recover_after_failure(): MoveGroup error_code=-4
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:58] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:59] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [INFO] [1775663639.329986193] [scene_static_node]: Planning scene service available. Building static scene...
+[pick_dropped_bottle-6] [WARN] [1775663639.453572770] [pick_dropped_bottle_node]: Startup go_retract failed.
+[pick_dropped_bottle-6] [INFO] [1775663639.454273951] [pick_dropped_bottle_node]: Scene UNLOCKED.
+[vision_stub-3] [INFO] [1775663639.454545175] [vision_stub_node]: Stub: Scene UNLOCKED.
+[scene_from_vision-4] [INFO] [1775663639.455964474] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[vision_stub-3] [INFO] [1775663639.571067173] [vision_stub_node]: Stub: served pose for tag 0 - 0.300, 0.000, -0.302
+[vision_stub-3] [INFO] [1775663639.572212775] [vision_stub_node]: Stub: served pose for tag 2 - 0.619, -0.200, 0.141
+[scene_from_vision-4] [INFO] [1775663639.574019660] [scene_from_vision_node]: Latched first detection for tag ID 0 into scene memory.
+[vision_stub-3] [INFO] [1775663639.575042989] [vision_stub_node]: Stub: served pose for tag 3 - 0.681, -0.150, 0.110
+[vision_stub-3] [INFO] [1775663639.576245989] [vision_stub_node]: Stub: served pose for tag 4 - 0.501, -0.150, 0.145
+[scene_from_vision-4] [INFO] [1775663639.578010743] [scene_from_vision_node]: Latched first detection for tag ID 3 into scene memory.
+[scene_from_vision-4] [INFO] [1775663639.581386290] [scene_from_vision_node]: Latched first detection for tag ID 2 into scene memory.
+[scene_from_vision-4] [INFO] [1775663639.581557958] [scene_from_vision_node]: Latched first detection for tag ID 4 into scene memory.
+[pick_dropped_bottle-6] [INFO] [1775663639.605336743] [pick_dropped_bottle_node]: Startup complete. Node is ready for commands.
+[scene_static-1] [INFO] [1775663639.658430697] [scene_static_node]: Static scene built: 14 objects added to MoveIt planning scene.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:00] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663640.071238769] [scene_from_vision_node]: Published obj_0 (new) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663640.072123994] [scene_from_vision_node]: Published obj_2 (new) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663640.073007692] [scene_from_vision_node]: Published obj_3 (new) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663640.073967221] [scene_from_vision_node]: Published obj_4 (new) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663640.078401790] [scene_from_vision_node]: /apply_planning_scene accepted dynamic scene updates; MoveIt should mirror these objects to RViz.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:00] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:01] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663642.073029460] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663642.074752577] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663642.076195239] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663642.079154973] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:02] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:03] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:03] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:04] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663644.573123662] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663644.575267970] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663644.577689955] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663644.579803762] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:05] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:06] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663646.575744348] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663646.579480081] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663646.582982809] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663646.586766211] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:06] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:07] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:08] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:09] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663649.074170550] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663649.077029512] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663649.086012046] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663649.089419400] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:09] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:10] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663651.074464481] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663651.077311547] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663651.080525297] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663651.084046509] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:11] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:12] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:12] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:13] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663653.573721661] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663653.575870269] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663653.577508945] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663653.580027045] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:14] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:15] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663655.585600360] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663655.589269561] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663655.592985194] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663655.595556342] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:15] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:16] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:17] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:18] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663658.073231195] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663658.075422352] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663658.078513405] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663658.081495862] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:18] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:19] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:20] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663660.571841665] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663660.573306938] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663660.574511015] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663660.575609421] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:21] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:21] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:22] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663662.585199752] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663662.589089549] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663662.592465422] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663662.594782930] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:23] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:24] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:24] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663665.074965966] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663665.077778906] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663665.082738441] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663665.085149764] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:25] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:26] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:27] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663667.575386260] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663667.579605463] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663667.582601565] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663667.585212524] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:27] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:28] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:29] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:30] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663670.074047743] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663670.077224684] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663670.085993529] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663670.090768679] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:30] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:31] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663672.074838173] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663672.077570753] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663672.081243760] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663672.085217012] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:32] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:33] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:33] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:34] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663674.576583527] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663674.582939602] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663674.586203149] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663674.590731321] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:35] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:36] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:36] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663677.073473523] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663677.075595850] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663677.077781377] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663677.085344623] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:37] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:38] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:39] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663679.073156190] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663679.075239185] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663679.077171350] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663679.080240348] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:39] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:40] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663681.075304625] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663681.078188922] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663681.082132165] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663681.085013917] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:41] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:42] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:42] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663683.078716339] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663683.082110063] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663683.085667072] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663683.090184595] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:43] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:44] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:45] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663685.575348634] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663685.578668164] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663685.582147455] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663685.585660053] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:45] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:46] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:47] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663687.578021330] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663687.582941423] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663687.589013414] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663687.593674064] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:48] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:48] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:49] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663689.577167255] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663689.581156557] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663689.584990537] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663689.588503883] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:50] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:51] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:51] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663692.075205458] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663692.078426037] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663692.082314172] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663692.085561906] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:52] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:53] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:54] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663694.077026935] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663694.081408825] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663694.084597894] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663694.088544437] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:54] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:55] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663696.075715117] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663696.078895018] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663696.081903665] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663696.085137737] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:56] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:57] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:57] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:58] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663698.576641576] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663698.579439516] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663698.582328335] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663698.593900624] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:54:59] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:55:00] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:55:00] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663701.074327108] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663701.076670591] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663701.079633098] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663701.083176533] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:55:01] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:55:02] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:55:03] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663703.075462088] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663703.080459666] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663703.085261301] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663703.089977761] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:55:03] "GET /status_json HTTP/1.1" 200 -

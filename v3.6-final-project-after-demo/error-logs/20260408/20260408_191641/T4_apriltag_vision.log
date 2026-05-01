@@ -1,0 +1,202 @@
+
+===== 2026-04-08T19:17:11-04:00 | T4_apriltag_vision =====
+cwd=/home/carrt-cse-project/workspace/ros2_kortex_ws
+cmd=ros2 run adl_tasks vision_apriltag --ros-args -p detector_backend:=opencv -p opencv_pose_solver:=ippe_square -p tag_size_m:=0.025 -p tag_sizes_m_by_id:=0:0.020 -p use_tuned_aruco_parameters:=false -p preprocess_variants:=raw\,clahe\,adaptive\,clahe_sharp\,clahe_up2\,sharp_up2\,clahe_up3\,sharp_up3 -p tile_search_if_empty:=true -p tile_search_grid_x:=4 -p tile_search_grid_y:=3 -p tile_search_scale:=3.0 
+
+[INFO] [1775690235.242549993] [vision_apriltag_node]: Vision AprilTag Node Started
+[INFO] [1775690235.243661637] [vision_apriltag_node]: Subscribing to camera topic: /wrist_mounted_camera/image
+[INFO] [1775690235.245289313] [vision_apriltag_node]: Subscribing to camera info topic: /wrist_mounted_camera/camera_info
+[INFO] [1775690235.246465735] [vision_apriltag_node]: Camera frame: wrist_mounted_camera_color_optical_frame | use_image_header_frame=True
+[INFO] [1775690235.247720351] [vision_apriltag_node]: Tag size: 0.025m | pose_cache_retention_s=20.0 | get_pose_wait_timeout_s=5.0 | max_returned_pose_age_s=20.0 | camera_params=[554.25, 554.25, 320.0, 240.0] | families=tag36h11 | quad_decimate=1.0 | requested_backend=opencv | backend=cv2.aruco | opencv_pose_solver=ippe_square | use_image_timestamp_for_tf=False
+[INFO] [1775690235.249153391] [vision_apriltag_node]: Top-tag known-plane projection: enabled=True, planes={3: 0.10995, 4: 0.14505}
+[INFO] [1775690235.250514971] [vision_apriltag_node]: Tag-specific size overrides active: {0: 0.02}. These are applied to OpenCV PnP pose estimation.
+[INFO] [1775690235.251813792] [vision_apriltag_node]: pupil_apriltags tuning: nthreads=1, quad_sigma=0.0, refine_edges=1, decode_sharpening=0.25, debug=0, preprocess_variants=['raw', 'clahe', 'adaptive', 'clahe_sharp', 'clahe_up2', 'sharp_up2', 'clahe_up3', 'sharp_up3'], tile_search_if_empty=True, tile_search_grid=4x3, tile_search_scale=3.0, tile_search_overlap=0.25
+[WARN] [1775690235.254380476] [vision_apriltag_node]: pupil_apriltags is not importable by this node, so detection is using OpenCV fallback only. python=/usr/bin/python3, import_error=No module named 'pupil_apriltags'. If .venv contains pupil_apriltags, rebuild adl_tasks with that venv active or run the module with the venv Python.
+[INFO] [1775690235.257326027] [vision_apriltag_node]: Publishing AprilTag debug images on /vision_apriltag/debug_image at up to 1.0 Hz.
+[INFO] [1775690235.314227387] [vision_apriltag_node]: Vision AprilTag camera model updated from CameraInfo: size=1280x720, fx=920.87, fy=921.57, cx=644.76, cy=343.15, d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[INFO] [1775690236.715042306] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(691,481)
+[WARN] [1775690236.985644494] [vision_apriltag_node]: TF transform unavailable for wrist_mounted_camera_color_optical_frame->base_link: "base_link" passed to lookupTransform argument target_frame does not exist. . Detected tag corners cannot be published as base_link poses until the camera frame is connected to base_link. Check T1: KortexMultiInterfaceHardware should be active, joint_state_broadcaster should be active, and /joint_states should be live.
+[INFO] [1775690238.647916123] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[INFO] [1775690239.471875843] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690242.555698827] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[INFO] [1775690242.566047348] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 3.1s.
+[INFO] [1775690247.820039758] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[INFO] [1775690247.823243975] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 2.8s.
+[INFO] [1775690250.217456234] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 5.2s.
+[INFO] [1775690251.922811696] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 6.9s.
+[INFO] [1775690252.479081864] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[INFO] [1775690253.331233669] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[INFO] [1775690254.203373060] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 9.2s.
+[INFO] [1775690256.009818846] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 11.0s.
+[INFO] [1775690257.598656194] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 12.5s.
+[INFO] [1775690258.805054720] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[INFO] [1775690260.289961095] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 15.2s.
+[INFO] [1775690262.158850466] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 17.1s.
+[INFO] [1775690263.868830991] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[INFO] [1775690263.871942015] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 18.8s.
+[INFO] [1775690269.064484605] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[INFO] [1775690269.186758816] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 3.3s.
+[INFO] [1775690271.948200083] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 6.0s.
+[INFO] [1775690274.566342999] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[INFO] [1775690276.456375424] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 3.6s.
+[INFO] [1775690277.269682174] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 4.4s.
+[INFO] [1775690280.133722700] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[INFO] [1775690280.177828852] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690280.595837314] [vision_apriltag_node]: Service: Tag 4 found and base-frame pose returned.
+[INFO] [1775690282.839983172] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690285.317028448] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[INFO] [1775690289.317045260] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 3.0s.
+[INFO] [1775690290.771068785] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[INFO] [1775690292.106789039] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 5.8s.
+[INFO] [1775690294.004524844] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 7.7s.
+[INFO] [1775690296.007816399] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[INFO] [1775690296.710843616] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690297.026464919] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690297.105929526] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690297.304899769] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690298.022203383] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690298.074564251] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690299.985738086] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690300.598262650] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690300.990651017] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:sharp_up2@(425,342)
+[INFO] [1775690301.791148389] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690302.296519408] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690302.705154882] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690303.009163812] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690303.733927716] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690304.789007312] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690305.781154385] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690306.007390090] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:raw@(424,341)
+[INFO] [1775690306.642962898] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690308.614422457] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690308.755427985] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690311.167359731] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:raw@(424,341)
+[INFO] [1775690311.169335915] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690311.213804404] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690312.390105601] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690312.611362329] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690313.035951531] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690313.514401513] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690316.069119044] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690316.504353418] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(564,416), 4:cv2.solvePnP_ippe_square:raw@(424,341)
+[INFO] [1775690316.523742154] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690316.619754898] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690317.052358637] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690318.165941213] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690318.173838668] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690320.278725420] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690320.610447269] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690321.970584661] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:sharp_up2@(425,342)
+[INFO] [1775690321.971686072] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690322.160399987] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690322.424974854] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690322.797616565] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690323.803094944] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690323.891541396] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690326.972819441] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(564,416), 4:cv2.solvePnP_ippe_square:sharp_up2@(425,342)
+[INFO] [1775690330.121320823] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690330.541115700] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690331.104463642] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690331.798177950] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690331.990467473] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(564,416), 4:cv2.solvePnP_ippe_square:sharp_up2@(425,342)
+[INFO] [1775690332.970297880] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690333.592625072] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690334.133189042] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690334.149694770] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690334.585394583] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690335.050532765] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690336.702580566] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690337.057914172] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(564,416), 4:cv2.solvePnP_ippe_square:sharp_up3@(425,342)
+[INFO] [1775690337.061332611] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690338.157278063] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690338.576594620] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690338.633487042] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690339.011141273] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690339.518969637] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690339.810198721] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690339.981015506] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690340.719524651] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690341.118856994] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690341.723151831] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690342.405709358] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(564,416), 4:cv2.solvePnP_ippe_square:sharp_up3@(425,342)
+[INFO] [1775690342.408675914] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690343.031881738] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690343.593325952] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690343.650699415] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690344.289512303] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690344.717887778] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690344.985568829] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690345.357911845] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690345.464643576] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690346.575730746] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690347.635361879] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(564,416), 4:cv2.solvePnP_ippe_square:sharp_up2@(425,342)
+[INFO] [1775690348.515104747] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690349.128001615] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690349.190889503] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690349.788036595] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690350.014241859] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690350.132619639] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690350.458966465] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690351.733569310] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690352.958532993] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:sharp_up2@(424,342)
+[INFO] [1775690352.984128099] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690354.568306573] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690355.828268084] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690356.346087725] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[INFO] [1775690356.357868896] [vision_apriltag_node]: Service: Tag 4 found and base-frame pose returned.
+[INFO] [1775690357.979080451] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:sharp_up2@(425,342)
+[INFO] [1775690359.821643806] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690362.346818066] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[WARN] [1775690363.192655238] [vision_apriltag_node]: Vision AprilTag: last image on /wrist_mounted_camera/image arrived 2.2s ago.
+[INFO] [1775690363.801851457] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[INFO] [1775690365.186119396] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 2.8s.
+[INFO] [1775690367.188553884] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 4.8s.
+[INFO] [1775690369.102260702] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:sharp_up2@(425,342)
+[INFO] [1775690374.442329223] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:sharp_up2@(425,342)
+[INFO] [1775690375.431616139] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690376.656020685] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690377.899612396] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690379.450508696] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690379.737226081] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(564,416), 4:cv2.solvePnP_ippe_square:sharp_up2@(424,342)
+[INFO] [1775690380.776919255] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690385.263210606] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(564,416)
+[INFO] [1775690385.281965911] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690385.515971456] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690387.942985148] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690389.252213564] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690390.721757001] [vision_apriltag_node]: Vision AprilTag detection debug: 4:cv2.solvePnP_ippe_square:sharp_up2@(424,342)
+[INFO] [1775690395.008870635] [vision_apriltag_node]: Vision AprilTag visible IDs: [3, 4]
+[INFO] [1775690396.363326877] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[INFO] [1775690398.219422206] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[INFO] [1775690401.948869341] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[INFO] [1775690402.807734943] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[INFO] [1775690403.194952878] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690405.185055236] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690407.185337357] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690409.184712721] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690411.187884498] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690413.192122254] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690415.185573610] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690417.185516490] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690419.185127464] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690421.185455832] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690423.185840936] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690425.184979517] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690427.184835397] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690429.186007582] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690431.184633325] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690433.186584393] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690435.185648068] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690437.185651597] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690439.187649923] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690441.184794968] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690443.185695429] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690445.186435614] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690447.185181664] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690449.184607284] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690451.185125404] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690453.186893787] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690455.184680005] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690457.186067452] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690459.185060467] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[INFO] [1775690461.185216181] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.

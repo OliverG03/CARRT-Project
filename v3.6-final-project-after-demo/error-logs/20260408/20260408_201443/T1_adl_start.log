@@ -1,0 +1,1121 @@
+
+===== 2026-04-08T20:14:43-04:00 | T1_adl_start =====
+cwd=/home/carrt-cse-project/workspace/ros2_kortex_ws
+cmd=ros2 launch adl_tasks adl_start.launch.py start_arm:=true arm_robot_ip:=192.168.0.10 arm_use_fake_hardware:=false arm_use_joint_state_sanitizer:=true use_stub:=false start_usb_camera_publisher:=true launch_ui:=true 
+
+[INFO] [launch]: All log files can be found below /home/carrt-cse-project/.ros/log/2026-04-08-20-14-44-266208-carrt-cse-project-OptiPlex-5050-13546
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [launch.user]: [arm_vbox.launch] MoveIt current state source: /joint_states_sanitized. Use use_joint_state_sanitizer:=false for raw-state viewer debugging.
+[INFO] [launch.user]: [arm_vbox.launch] Using ADL VBox controller config (share/adl_tasks/config/ros2_controllers_vbox.yaml, update_rate:=50 Hz).
+[INFO] [ros2_control_node-1]: process started with pid [13550]
+[INFO] [robot_state_publisher-2]: process started with pid [13551]
+[INFO] [joint_state_sanitizer-3]: process started with pid [13552]
+[INFO] [spawner-4]: process started with pid [13553]
+[INFO] [static_transform_publisher-5]: process started with pid [13554]
+[INFO] [static_transform_publisher-6]: process started with pid [13555]
+[INFO] [scene_static-7]: process started with pid [13556]
+[INFO] [wrist_camera_usb_publisher-8]: process started with pid [13557]
+[INFO] [vision_apriltag-9]: process started with pid [13558]
+[INFO] [scene_from_vision-10]: process started with pid [13559]
+[INFO] [adl_controller-11]: process started with pid [13560]
+[INFO] [pick_dropped_bottle-12]: process started with pid [13561]
+[INFO] [clear_table-13]: process started with pid [13562]
+[INFO] [give_medication-14]: process started with pid [13563]
+[INFO] [adl_ui-15]: process started with pid [13564]
+[static_transform_publisher-5] [INFO] [1775693684.602155276] [static_transform_publisher]: Spinning until stopped - publishing transform
+[static_transform_publisher-5] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-5] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-5] from 'world' to 'base_link'
+[static_transform_publisher-6] [INFO] [1775693684.619742774] [camera_color_optical_bridge_tf_pub]: Spinning until stopped - publishing transform
+[static_transform_publisher-6] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-6] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-6] from 'camera_color_frame' to 'wrist_mounted_camera_color_optical_frame'
+[robot_state_publisher-2] [INFO] [1775693684.626777608] [robot_state_publisher]: Robot initialized
+[ros2_control_node-1] [INFO] [1775693684.726662245] [controller_manager]: Using Steady (Monotonic) clock for triggering controller manager cycles.
+[ros2_control_node-1] [INFO] [1775693684.762805279] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
+[ros2_control_node-1] [INFO] [1775693684.773688767] [controller_manager]: update rate is 50 Hz
+[ros2_control_node-1] [INFO] [1775693684.773722404] [controller_manager]: Overruns handling is : enabled
+[ros2_control_node-1] [INFO] [1775693684.773733552] [controller_manager]: Spawning controller_manager RT thread with scheduler priority: 50
+[ros2_control_node-1] [INFO] [1775693684.773817086] [controller_manager]: Successful set up FIFO RT scheduling policy with priority 50.
+[ros2_control_node-1] [INFO] [1775693684.910480952] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [INFO] [1775693684.911160861] [controller_manager]: Enforcing command limits is disabled. Command limits from URDF will be ignored.
+[ros2_control_node-1] [INFO] [1775693684.929751639] [controller_manager]: Loading hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1775693684.964276958] [KortexMultiInterfaceHardware]: Setting severity threshold to DEBUG
+[ros2_control_node-1] [INFO] [1775693684.964342001] [controller_manager]: Loaded hardware 'KortexMultiInterfaceHardware' from plugin 'kortex_driver/KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1775693684.964941966] [controller_manager]: Initialize hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1775693684.993156056] [KortexMultiInterfaceHardware]: Configuring Hardware Interface
+[ros2_control_node-1] [INFO] [1775693684.993563082] [KortexMultiInterfaceHardware]: Robot ip is '192.168.0.10'
+[ros2_control_node-1] [INFO] [1775693684.993575038] [KortexMultiInterfaceHardware]: Username is 'admin'
+[ros2_control_node-1] [INFO] [1775693684.993589011] [KortexMultiInterfaceHardware]: Port used '10000'
+[ros2_control_node-1] [INFO] [1775693684.993595121] [KortexMultiInterfaceHardware]: Realtime port used '10001'
+[ros2_control_node-1] [INFO] [1775693684.993600550] [KortexMultiInterfaceHardware]: Session inactivity timeout is '60000'
+[ros2_control_node-1] [INFO] [1775693684.993606178] [KortexMultiInterfaceHardware]: Connection inactivity timeout is '2000'
+[ros2_control_node-1] [INFO] [1775693684.993612981] [KortexMultiInterfaceHardware]: Gripper joint name is 'robotiq_85_left_knuckle_joint'
+[ros2_control_node-1] [INFO] [1775693684.993646957] [KortexMultiInterfaceHardware]: Connecting to robot at 192.168.0.10
+[ros2_control_node-1] [INFO] [1775693685.002668659] [KortexMultiInterfaceHardware]: Creating session for communication
+[spawner-4] [INFO] [1775693685.231659964] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[ros2_control_node-1] [INFO] [1775693685.258334105] [KortexMultiInterfaceHardware]: Session created
+[joint_state_sanitizer-3] [INFO] [1775693685.362651505] [joint_state_sanitizer_node]: joint_state_sanitizer started. raw=/joint_states -> sanitized=/joint_states_sanitized
+[adl_ui-15] [INFO] [1775693685.508142043] [adl_ui_node]: ADL UI Node started.
+[adl_ui-15] [INFO] [1775693685.508880739] [adl_ui_node]: Automatic retract on UI load is disabled; startup sends no motion.
+[adl_ui-15]  * Serving Flask app 'adl_tasks.adl_ui'
+[adl_ui-15]  * Debug mode: off
+[adl_ui-15] [INFO] [1775693685.515801805] [adl_ui_node]: Web UI available at http://localhost:5000
+[adl_ui-15] WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+[adl_ui-15]  * Running on all addresses (0.0.0.0)
+[adl_ui-15]  * Running on http://127.0.0.1:5000
+[adl_ui-15]  * Running on http://192.168.0.231:5000
+[adl_ui-15] Press CTRL+C to quit
+[scene_static-7] [INFO] [1775693685.910366738] [scene_static_node]: Static Scene Node started.
+[scene_static-7] [INFO] [1775693685.911065913] [scene_static_node]: WHEELCHAIR_BASE_HEIGHT = 0.36195m  |  Table surface at z = 0.088m | Table center at x = 0.681m | include_wheelchair_wall=True | include_left_desk_wall=True
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:14:46] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1775693686.058887707] [KortexMultiInterfaceHardware]: Actuator count reported by robot is '7'
+[ros2_control_node-1] [INFO] [1775693686.059040078] [KortexMultiInterfaceHardware]: Using internal bus communication for gripper!
+[ros2_control_node-1] [INFO] [1775693686.059044599] [KortexMultiInterfaceHardware]: Hardware Interface successfully configured
+[ros2_control_node-1] [INFO] [1775693686.059115388] [controller_manager]: Successful initialization of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [DEBUG] [1775693686.059167753] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_1
+[ros2_control_node-1] [DEBUG] [1775693686.059188668] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_2
+[ros2_control_node-1] [DEBUG] [1775693686.059192399] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_3
+[ros2_control_node-1] [DEBUG] [1775693686.059195397] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_4
+[ros2_control_node-1] [DEBUG] [1775693686.059198011] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_5
+[ros2_control_node-1] [DEBUG] [1775693686.059200863] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_6
+[ros2_control_node-1] [DEBUG] [1775693686.059203269] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_7
+[ros2_control_node-1] [DEBUG] [1775693686.059205638] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: robotiq_85_left_knuckle_joint
+[ros2_control_node-1] [INFO] [1775693686.060957835] [resource_manager]: 'configure' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1775693686.060990726] [resource_manager]: Successful 'configure' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1775693686.061110607] [resource_manager]: 'activate' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1775693686.061131981] [KortexMultiInterfaceHardware]: Activating KortexMultiInterfaceHardware...
+[ros2_control_node-1] [INFO] [1775693686.066103830] [KortexMultiInterfaceHardware]: Gripper initial position is '14.410482'.
+[ros2_control_node-1] [INFO] [1775693686.070641742] [KortexMultiInterfaceHardware]: KortexMultiInterfaceHardware successfully activated!
+[ros2_control_node-1] [INFO] [1775693686.070679997] [resource_manager]: Successful 'activate' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1775693686.070906889] [controller_manager]: Registering statistics for : KortexMultiInterfaceHardware
+[ros2_control_node-1] [INFO] [1775693686.071034127] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[adl_controller-11] [INFO] [1775693686.103585265] [adl_controller_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[adl_controller-11] [INFO] [1775693686.109764914] [adl_controller_node]: ADL controller ready. Waiting for UI/system commands.
+[ros2_control_node-1] [INFO] [1775693686.234200311] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[ros2_control_node-1] [INFO] [1775693686.234242475] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1775693686.240643064] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_36wa25f7 
+[spawner-4] [INFO] [1775693686.275510881] [spawner_joint_state_broadcaster]: Loaded joint_state_broadcaster
+[ros2_control_node-1] [INFO] [1775693686.276838167] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1775693686.277045252] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[ros2_control_node-1] [INFO] [1775693686.296221583] [controller_manager]: Activating controllers: [ joint_state_broadcaster ]
+[ros2_control_node-1] [INFO] [1775693686.316391882] [controller_manager]: Successfully switched controllers!
+[spawner-4] [INFO] [1775693686.339382979] [spawner_joint_state_broadcaster]: Configured and activated joint_state_broadcaster
+[wrist_camera_usb_publisher-8] [INFO] [1775693686.359758569] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [INFO] [1775693686.369586505] [wrist_camera_usb_publisher_node]: USB camera publisher: opened camera source index 2.
+[wrist_camera_usb_publisher-8] [INFO] [1775693686.370604174] [wrist_camera_usb_publisher_node]: Wrist Camera USB Publisher started.
+[wrist_camera_usb_publisher-8] [INFO] [1775693686.371530540] [wrist_camera_usb_publisher_node]: Publishing USB camera frames on /wrist_mounted_camera/image with frame_id=wrist_mounted_camera_color_optical_frame.
+[wrist_camera_usb_publisher-8] [INFO] [1775693686.372617297] [wrist_camera_usb_publisher_node]: Publishing camera info on /wrist_mounted_camera/camera_info from reference intrinsics [554.25, 554.25, 320.0, 240.0] @ 640x480.
+[wrist_camera_usb_publisher-8] [INFO] [1775693686.373606265] [wrist_camera_usb_publisher_node]: Using explicit camera_matrix for CameraInfo. matrix_size=1280x720, K=[920.874267578125, 0.0, 644.7646484375, 0.0, 921.5654907226562, 343.1528625488281, 0.0, 0.0, 1.0], d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[wrist_camera_usb_publisher-8] [INFO] [1775693686.374893122] [wrist_camera_usb_publisher_node]: Requested source=2 size=1280x720 fps=10.0
+[give_medication-14] [INFO] [1775693686.436984935] [give_medication_node]: give_medication starting...
+[pick_dropped_bottle-12] [INFO] [1775693686.453616578] [pick_dropped_bottle_node]: PickDroppedBottle starting...
+[scene_from_vision-10] [INFO] [1775693686.467767871] [scene_from_vision_node]: Scene From Vision Node Started
+[give_medication-14] [INFO] [1775693686.500136954] [give_medication_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[give_medication-14] [INFO] [1775693686.507557978] [give_medication_node]: Vision Client initialized, waiting for service...
+[pick_dropped_bottle-12] [INFO] [1775693686.514524781] [pick_dropped_bottle_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[pick_dropped_bottle-12] [INFO] [1775693686.521161757] [pick_dropped_bottle_node]: Vision Client initialized, waiting for service...
+[INFO] [spawner-4]: process has finished cleanly [pid 13553]
+[scene_from_vision-10] [INFO] [1775693686.532843821] [scene_from_vision_node]: SceneFromVision: Updating planning scene. Tracking 5 object shape(s). memory_mode=True, scan_duration_s=3.0, scan_min_samples=3, scan_prune_unseen_objects=False, continuous_scene_updates=False, latch_first_detection_updates=True, log_object_pose_debug=False, apply_planning_scene_service_updates=True, publish_monitored_planning_scene_updates=True, side_viewpoint=wrist_mounted_camera_color_optical_frame->base_link, reject_table_objects_outside_bounds=False.
+[scene_from_vision-10] [INFO] [1775693686.534357307] [scene_from_vision_node]: SceneFromVision calibration: xy_offset=(-0.228, 0.004), z_offset=0.000, yaw_deg=4.00, xy_scale=1.3370, clamp_table_objects_to_table_bounds=False, table_bounds_margin_m=0.030.
+[scene_from_vision-10] [INFO] [1775693686.535622050] [scene_from_vision_node]: SceneFromVision object offsets: remote_axis=y, remote_tag_to_center_sign=-1.0, remote_tag_from_end_m=0.020, cube_tag_to_center=(0.000, 0.000), cube_world_offset=(0.000, -0.022), cube_yaw_offset_deg=0.0, medication_face_to_center_m=0.030, cup_face_to_center_m=0.037.
+[vision_apriltag-9] [INFO] [1775693686.848789784] [vision_apriltag_node]: Vision AprilTag Node Started
+[vision_apriltag-9] [INFO] [1775693686.850069754] [vision_apriltag_node]: Subscribing to camera topic: /wrist_mounted_camera/image
+[vision_apriltag-9] [INFO] [1775693686.851513196] [vision_apriltag_node]: Subscribing to camera info topic: /wrist_mounted_camera/camera_info
+[vision_apriltag-9] [INFO] [1775693686.852672941] [vision_apriltag_node]: Camera frame: wrist_mounted_camera_color_optical_frame | use_image_header_frame=True
+[vision_apriltag-9] [INFO] [1775693686.854304282] [vision_apriltag_node]: Tag size: 0.025m | pose_cache_retention_s=20.0 | get_pose_wait_timeout_s=5.0 | max_returned_pose_age_s=20.0 | camera_params=[554.25, 554.25, 320.0, 240.0] | families=tag36h11 | quad_decimate=1.0 | requested_backend=opencv | backend=cv2.aruco | opencv_pose_solver=ippe_square | use_image_timestamp_for_tf=False
+[vision_apriltag-9] [INFO] [1775693686.855506497] [vision_apriltag_node]: Top-tag known-plane projection: enabled=True, planes={3: 0.10995, 4: 0.14505}
+[vision_apriltag-9] [INFO] [1775693686.856828596] [vision_apriltag_node]: pupil_apriltags tuning: nthreads=1, quad_sigma=0.0, refine_edges=1, decode_sharpening=0.25, debug=0, preprocess_variants=['raw', 'clahe', 'adaptive', 'clahe_sharp', 'clahe_up2', 'sharp_up2'], tile_search_if_empty=True, tile_search_grid=3x2, tile_search_scale=2.0, tile_search_overlap=0.25
+[vision_apriltag-9] [WARN] [1775693686.858737303] [vision_apriltag_node]: pupil_apriltags is not importable by this node, so detection is using OpenCV fallback only. python=/usr/bin/python3, import_error=No module named 'pupil_apriltags'. If .venv contains pupil_apriltags, rebuild adl_tasks with that venv active or run the module with the venv Python.
+[vision_apriltag-9] [INFO] [1775693686.860677519] [vision_apriltag_node]: Publishing AprilTag debug images on /vision_apriltag/debug_image at up to 1.0 Hz.
+[clear_table-13] [INFO] [1775693686.863949217] [clear_table_node]: Clear Table Node Started
+[clear_table-13] [INFO] [1775693686.923968864] [clear_table_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[clear_table-13] [INFO] [1775693686.931662344] [clear_table_node]: Vision Client initialized, waiting for service...
+[clear_table-13] [INFO] [1775693686.932425502] [clear_table_node]: Vision service is ready.
+[clear_table-13] [INFO] [1775693686.941498302] [clear_table_node]: Clear Table Node ready. Waiting for command.
+[clear_table-13] [INFO] [1775693686.942169000] [clear_table_node]: Startup motion disabled at node load; motion begins only after clear_table command.
+[give_medication-14] [INFO] [1775693687.009084458] [give_medication_node]: Vision service is ready.
+[give_medication-14] [INFO] [1775693687.020867523] [give_medication_node]: give_medication ready.
+[pick_dropped_bottle-12] [INFO] [1775693687.022975474] [pick_dropped_bottle_node]: Vision service is ready.
+[wrist_camera_usb_publisher-8] [INFO] [1775693687.025117561] [wrist_camera_usb_publisher_node]: USB camera info active intrinsics: size=1280x720, fx=920.87, fy=921.57, cx=644.76, cy=343.15, d=array('d', [0.0, 0.0, 0.0, 0.0, 0.0])
+[wrist_camera_usb_publisher-8] [INFO] [1775693687.027401669] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[pick_dropped_bottle-12] [INFO] [1775693687.032417107] [pick_dropped_bottle_node]: PickDroppedBottle ready. Waiting for command.
+[pick_dropped_bottle-12] [INFO] [1775693687.033703412] [pick_dropped_bottle_node]: Startup motion disabled at node load; motion begins only after pick_dropped_bottle command.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:14:47] "GET /status_json HTTP/1.1" 200 -
+[INFO] [spawner-16]: process started with pid [13803]
+[INFO] [spawner-17]: process started with pid [13804]
+[INFO] [spawner-18]: process started with pid [13805]
+[INFO] [spawner-19]: process started with pid [13806]
+[vision_apriltag-9] [INFO] [1775693687.230746327] [vision_apriltag_node]: Vision AprilTag camera model updated from CameraInfo: size=1280x720, fx=920.87, fy=921.57, cx=644.76, cy=343.15, d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[spawner-16] [INFO] [1775693687.557554796] [spawner_joint_trajectory_controller]: waiting for service /controller_manager/list_controllers to become available...
+[vision_apriltag-9] [INFO] [1775693687.917252169] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:14:48] "GET /status_json HTTP/1.1" 200 -
+[scene_static-7] [WARN] [1775693688.054858915] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-9] [INFO] [1775693688.739516786] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[ros2_control_node-1] [INFO] [1775693688.812191230] [controller_manager]: Loading controller : 'joint_trajectory_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[ros2_control_node-1] [INFO] [1775693688.812223643] [controller_manager]: Loading controller 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1775693688.817276960] [controller_manager]: Controller 'joint_trajectory_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_36wa25f7 
+[spawner-16] [INFO] [1775693688.876185403] [spawner_joint_trajectory_controller]: Loaded joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1775693688.877936020] [controller_manager]: Configuring controller: 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1775693688.878666293] [joint_trajectory_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[ros2_control_node-1] [INFO] [1775693688.878908987] [joint_trajectory_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[ros2_control_node-1] [INFO] [1775693688.879092088] [joint_trajectory_controller]: Using 'splines' interpolation method.
+[ros2_control_node-1] [INFO] [1775693688.884155601] [joint_trajectory_controller]: Action status changes will be monitored at 10.00 Hz.
+[ros2_control_node-1] [INFO] [1775693688.917562091] [controller_manager]: Activating controllers: [ joint_trajectory_controller ]
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:14:49] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1775693689.163593929] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1775693689.166521447] [controller_manager]: Overrun might occur, Total time : 32562.003 us (Expected < 20000.000 us) --> Read time : 45.540 us, Update time : 29579.123 us (Switch time : 29498.207 us (Switch chained mode time : 3.699 us, perform mode change time : 28500.278 us, Activation time : 985.385 us, Deactivation time : 1.233 us)), Write time : 2937.340 us
+[ros2_control_node-1] [WARN] [1775693689.166671496] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 50 Hz. The loop took 32.758062 ms (missed cycles : 2).
+[spawner-16] [INFO] [1775693689.176731741] [spawner_joint_trajectory_controller]: Configured and activated joint_trajectory_controller
+[spawner-18] [INFO] [1775693689.314362658] [spawner_robotiq_gripper_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-16]: process has finished cleanly [pid 13803]
+[vision_apriltag-9] [INFO] [1775693689.719488747] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[scene_from_vision-10] [INFO] [1775693689.724140843] [scene_from_vision_node]: Latched first detection for tag ID 3 into scene memory.
+[scene_from_vision-10] [INFO] [1775693690.033748440] [scene_from_vision_node]: Published obj_3 (new) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[scene_from_vision-10] [WARN] [1775693690.034942848] [scene_from_vision_node]: /apply_planning_scene is not ready; published vision object update on /planning_scene only.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:14:50] "GET /status_json HTTP/1.1" 200 -
+[scene_static-7] [WARN] [1775693690.057382527] [scene_static_node]: Planning scene service not available, waiting...
+[INFO] [move_group-20]: process started with pid [13868]
+[INFO] [rviz2-21]: process started with pid [13869]
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:14:51] "GET /status_json HTTP/1.1" 200 -
+[move_group-20] [INFO] [1775693691.149327047] [move_group.moveit.moveit.ros.rdf_loader]: Loaded robot model in 0.00937784 seconds
+[move_group-20] [INFO] [1775693691.149461941] [move_group.moveit.moveit.core.robot_model]: Loading robot model 'gen3'...
+[move_group-20] [INFO] [1775693691.149481094] [move_group.moveit.moveit.core.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[ros2_control_node-1] [INFO] [1775693691.322244375] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [WARN] [1775693691.322288769] [controller_manager]: ResourceManager has already loaded a urdf. Ignoring attempt to reload a robot description.
+[move_group-20] [INFO] [1775693691.329507976] [move_group.moveit.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'manipulator': 1 1 1 1 1 1 1
+[rviz2-21] [INFO] [1775693691.431242026] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-21] [INFO] [1775693691.431318941] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-21] [INFO] [1775693691.463126104] [rviz2]: Stereo is NOT SUPPORTED
+[ros2_control_node-1] [INFO] [1775693691.470209818] [controller_manager]: Loading controller : 'robotiq_gripper_controller' of type 'position_controllers/GripperActionController'
+[ros2_control_node-1] [INFO] [1775693691.470259706] [controller_manager]: Loading controller 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1775693691.472551561] [controller_manager]: Controller 'robotiq_gripper_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_36wa25f7 
+[ros2_control_node-1] [WARN] [1775693691.510060506] [robotiq_gripper_controller]: [Deprecated]: the `position_controllers/GripperActionController` and `effort_controllers::GripperActionController` controllers are replaced by 'parallel_gripper_controllers/GripperActionController' controller
+[spawner-18] [INFO] [1775693691.517262641] [spawner_robotiq_gripper_controller]: Loaded robotiq_gripper_controller
+[ros2_control_node-1] [INFO] [1775693691.521611798] [controller_manager]: Configuring controller: 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1775693691.521780182] [robotiq_gripper_controller]: Action status changes will be monitored at 20.000000 Hz.
+[ros2_control_node-1] [INFO] [1775693691.537451835] [controller_manager]: Activating controllers: [ robotiq_gripper_controller ]
+[rviz2-21] Warning: class_loader.impl: SEVERE WARNING!!! A namespace collision has occurred with plugin factory for class rviz_default_plugins::displays::InteractiveMarkerDisplay. New factory will OVERWRITE existing one. This situation occurs when libraries containing plugins are directly linked against an executable (the one running right now generating this message). Please separate plugins out into their own library or just don't link against the library and use either class_loader::ClassLoader/MultiLibraryClassLoader to open.
+[rviz2-21]          at line 321 in /opt/ros/jazzy/include/class_loader/class_loader/class_loader_core.hpp
+[rviz2-21] [WARN] [1775693691.621525820] [rcl.logging_rosout]: Publisher already registered for node name: 'rviz2_moveit'. If this is due to multiple nodes with the same name then all logs for the logger named 'rviz2_moveit' will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[move_group-20] [INFO] [1775693691.724997096] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-20] [INFO] [1775693691.725155647] [move_group.moveit.moveit.ros.moveit_cpp]: Listening to 'joint_states' for joint states
+[move_group-20] [INFO] [1775693691.726330883] [move_group.moveit.moveit.ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
+[move_group-20] [INFO] [1775693691.727168044] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
+[move_group-20] [INFO] [1775693691.727192534] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopping existing planning scene publisher.
+[move_group-20] [INFO] [1775693691.727355948] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopped publishing maintained planning scene.
+[move_group-20] [INFO] [1775693691.727826218] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-20] [INFO] [1775693691.727928506] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[move_group-20] [INFO] [1775693691.728701667] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/planning_scene'
+[move_group-20] [INFO] [1775693691.728731028] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
+[move_group-20] [INFO] [1775693691.729767952] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'collision_object'
+[move_group-20] [INFO] [1775693691.730402994] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
+[move_group-20] [WARN] [1775693691.731149663] [move_group.moveit.moveit.ros.occupancy_map_monitor]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
+[move_group-20] [ERROR] [1775693691.731169063] [move_group.moveit.moveit.ros.occupancy_map_monitor]: No 3D sensor plugin(s) defined for octomap updates
+[ros2_control_node-1] [INFO] [1775693691.760584062] [controller_manager]: Successfully switched controllers!
+[spawner-18] [INFO] [1775693691.776233747] [spawner_robotiq_gripper_controller]: Configured and activated robotiq_gripper_controller
+[spawner-17] [INFO] [1775693691.915549608] [spawner_twist_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-18]: process has finished cleanly [pid 13805]
+[move_group-20] [INFO] [1775693691.988581292] [move_group.moveit.moveit.ros.planning_pipeline]: Successfully loaded planner 'OMPL'
+[move_group-20] [INFO] [1775693691.993676833] [move_group]: Try loading adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-20] [INFO] [1775693691.996165258] [move_group]: Loaded adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-20] [INFO] [1775693691.996251668] [move_group]: Try loading adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1775693691.996805174] [move_group]: Loaded adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1775693691.996824555] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-20] [INFO] [1775693691.996859907] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-20] [INFO] [1775693691.996867987] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-20] [INFO] [1775693691.996885543] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-20] [INFO] [1775693692.005106317] [move_group]: Try loading adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1775693692.009603967] [move_group]: Loaded adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1775693692.009631290] [move_group]: Try loading adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-20] [INFO] [1775693692.013149120] [move_group]: Loaded adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-20] [INFO] [1775693692.013177271] [move_group]: Try loading adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-20] [INFO] [1775693692.014188284] [move_group]: Loaded adapter 'default_planning_response_adapters/DisplayMotionPath'
+[scene_from_vision-10] [INFO] [1775693692.033791513] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[scene_static-7] [WARN] [1775693692.059690850] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:14:52] "GET /status_json HTTP/1.1" 200 -
+[move_group-20] [INFO] [1775693692.076992693] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added FollowJointTrajectory controller for joint_trajectory_controller
+[move_group-20] [INFO] [1775693692.077054190] [move_group.moveit.moveit.plugins.simple_controller_manager]: robotiq_gripper_controller will command a max effort of: 0
+[move_group-20] [INFO] [1775693692.082684982] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added GripperCommand controller for robotiq_gripper_controller
+[move_group-20] [INFO] [1775693692.082871708] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693692.082918782] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693692.083392006] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Trajectory execution is managing controllers
+[move_group-20] [INFO] [1775693692.083410849] [move_group]: MoveGroup debug mode is ON
+[move_group-20] [INFO] [1775693692.117261118] [move_group.moveit.moveit.ros.move_group.executable]: 
+[move_group-20] 
+[move_group-20] ********************************************************
+[move_group-20] * MoveGroup using: 
+[move_group-20] *     - apply_planning_scene_service
+[move_group-20] *     - clear_octomap_service
+[move_group-20] *     - get_group_urdf
+[move_group-20] *     - load_geometry_from_file
+[move_group-20] *     - CartesianPathService
+[move_group-20] *     - execute_trajectory_action
+[move_group-20] *     - get_planning_scene_service
+[move_group-20] *     - kinematics_service
+[move_group-20] *     - move_action
+[move_group-20] *     - motion_plan_service
+[move_group-20] *     - query_planners_service
+[move_group-20] *     - state_validation_service
+[move_group-20] *     - save_geometry_to_file
+[move_group-20] ********************************************************
+[move_group-20] 
+[move_group-20] [INFO] [1775693692.117339886] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context using pipeline ompl
+[move_group-20] [INFO] [1775693692.117376355] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context initialization complete
+[move_group-20] [96mLoading 'move_group/ApplyPlanningSceneService'...[0m
+[move_group-20] [96mLoading 'move_group/ClearOctomapService'...[0m
+[move_group-20] [96mLoading 'move_group/GetUrdfService'...[0m
+[move_group-20] [96mLoading 'move_group/LoadGeometryFromFileService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupCartesianPathService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupExecuteTrajectoryAction'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupGetPlanningSceneService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupKinematicsService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupMoveAction'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupPlanService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupQueryPlannersService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupStateValidationService'...[0m
+[move_group-20] [96mLoading 'move_group/SaveGeometryToFileService'...[0m
+[move_group-20] 
+[move_group-20] [92mYou can start planning now![0m
+[move_group-20] 
+[wrist_camera_usb_publisher-8] [INFO] [1775693692.163813396] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_static-7] [INFO] [1775693692.310698053] [scene_static_node]: Planning scene service available. Building static scene...
+[scene_static-7] [INFO] [1775693692.314151718] [scene_static_node]: Static scene built: 15 objects added to MoveIt planning scene.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:14:53] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693693.144061256] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[scene_from_vision-10] [INFO] [1775693694.034813196] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[scene_from_vision-10] [INFO] [1775693694.044251872] [scene_from_vision_node]: /apply_planning_scene accepted dynamic scene updates; MoveIt should mirror these objects to RViz.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:14:54] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1775693694.502589748] [controller_manager]: Loading controller : 'twist_controller' of type 'picknik_twist_controller/PicknikTwistController'
+[ros2_control_node-1] [INFO] [1775693694.502638016] [controller_manager]: Loading controller 'twist_controller'
+[ros2_control_node-1] [INFO] [1775693694.505726509] [controller_manager]: Controller 'twist_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_36wa25f7 
+[spawner-17] [INFO] [1775693694.555736094] [spawner_twist_controller]: Loaded twist_controller
+[ros2_control_node-1] [INFO] [1775693694.558736782] [controller_manager]: Configuring controller: 'twist_controller'
+[ros2_control_node-1] [INFO] [1775693694.561390034] [twist_controller]: configure successful
+[rviz2-21] [ERROR] [1775693694.671560418] [rviz2_moveit.moveit.ros.motion_planning_frame]: Action server: /recognize_objects not available
+[rviz2-21] [INFO] [1775693694.716784762] [rviz2_moveit.moveit.ros.motion_planning_frame]: MoveGroup namespace changed: / -> . Reloading params.
+[INFO] [spawner-17]: process has finished cleanly [pid 13804]
+[spawner-19] [INFO] [1775693694.760617781] [spawner_fault_controller]: waiting for service /controller_manager/list_controllers to become available...
+[rviz2-21] [INFO] [1775693694.786975241] [rviz2_moveit.moveit.ros.rdf_loader]: Loaded robot model in 0.0107197 seconds
+[rviz2-21] [INFO] [1775693694.787070469] [rviz2_moveit.moveit.core.robot_model]: Loading robot model 'gen3'...
+[rviz2-21] [INFO] [1775693694.787099202] [rviz2_moveit.moveit.core.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[rviz2-21] [INFO] [1775693694.987930123] [rviz2_moveit.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'manipulator': 1 1 1 1 1 1 1
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:14:55] "GET /status_json HTTP/1.1" 200 -
+[rviz2-21] [INFO] [1775693695.364879747] [rviz2_moveit.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[rviz2-21] [INFO] [1775693695.365942583] [rviz2_moveit.moveit.ros.planning_scene_monitor]: Listening to '/monitored_planning_scene'
+[rviz2-21] [INFO] [1775693695.668151851] [interactive_marker_display_104494005048224]: Connected on namespace: /rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic
+[rviz2-21] [INFO] [1775693695.675677765] [rviz2_moveit.moveit.ros.robot_interaction]: No active joints or end effectors found for group 'gripper'. Make sure that kinematics.yaml is loaded in this node's namespace.
+[rviz2-21] [INFO] [1775693695.676555231] [rviz2_moveit.moveit.ros.robot_interaction]: No active joints or end effectors found for group 'gripper'. Make sure that kinematics.yaml is loaded in this node's namespace.
+[rviz2-21] [INFO] [1775693695.688517879] [rviz2_moveit.moveit.ros.motion_planning_frame]: group gripper
+[rviz2-21] [INFO] [1775693695.688560704] [rviz2_moveit.moveit.ros.motion_planning_frame]: Constructing new MoveGroup connection for group 'gripper' in namespace ''
+[rviz2-21] [INFO] [1775693695.703162180] [interactive_marker_display_104494005048224]: Sending request for interactive markers
+[rviz2-21] [INFO] [1775693695.735272532] [rviz2_moveit.moveit.ros.move_group_interface]: Ready to take commands for planning group gripper.
+[rviz2-21] [INFO] [1775693695.738521783] [interactive_marker_display_104494005048224]: Service response received for initialization
+[rviz2-21] [INFO] [1775693695.745309119] [rviz2_moveit.moveit.ros.motion_planning_frame]: group gripper
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:14:56] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693696.534214452] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:14:57] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693697.325588564] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:14:58] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693698.204459404] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[ros2_control_node-1] [INFO] [1775693698.267243663] [controller_manager]: Loading controller : 'fault_controller' of type 'picknik_reset_fault_controller/PicknikResetFaultController'
+[ros2_control_node-1] [INFO] [1775693698.267282569] [controller_manager]: Loading controller 'fault_controller'
+[ros2_control_node-1] [INFO] [1775693698.272353753] [controller_manager]: Controller 'fault_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_36wa25f7 
+[spawner-19] [INFO] [1775693698.337431966] [spawner_fault_controller]: Loaded fault_controller
+[ros2_control_node-1] [INFO] [1775693698.344050741] [controller_manager]: Configuring controller: 'fault_controller'
+[ros2_control_node-1] [INFO] [1775693698.363758390] [controller_manager]: Activating controllers: [ fault_controller ]
+[ros2_control_node-1] [INFO] [1775693698.580193495] [controller_manager]: Successfully switched controllers!
+[spawner-19] [INFO] [1775693698.597848299] [spawner_fault_controller]: Configured and activated fault_controller
+[INFO] [spawner-19]: process has finished cleanly [pid 13806]
+[scene_from_vision-10] [INFO] [1775693699.039652237] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:14:59] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:00] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693701.052892095] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:01] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:02] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693702.485919272] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_from_vision-10] [INFO] [1775693703.042779732] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:03] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693703.311089077] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(486,348)
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:04] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:05] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693705.534800954] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:06] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:07] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693707.534797249] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[wrist_camera_usb_publisher-8] [INFO] [1775693707.648159797] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:08] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693708.352112964] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:sharp_up2@(486,348)
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:09] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693710.033814198] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:10] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:11] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693712.034582791] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:12] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693712.808393471] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:13] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693713.616914476] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(486,348)
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:14] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693714.534114795] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:15] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:16] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693716.534552384] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[vision_apriltag-9] [INFO] [1775693716.815431145] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 2.1s.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:17] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693717.968863777] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:18] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693718.707270364] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-9] [INFO] [1775693718.817298501] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 4.1s.
+[scene_from_vision-10] [INFO] [1775693719.033806094] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:19] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:20] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693721.034040128] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:21] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:22] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693723.033878932] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[wrist_camera_usb_publisher-8] [INFO] [1775693723.129341965] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:23] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693724.000148164] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(404,310)
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:24] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:25] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693725.534607206] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:26] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:27] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693728.034727093] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:28] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693728.292552836] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-9] [INFO] [1775693729.177130515] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:29] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693730.034136399] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:30] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693731.103756559] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 2.3s.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:31] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693732.035130252] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:32] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693732.916501051] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 4.1s.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:33] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693733.450630216] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:34] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693734.335315223] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[scene_from_vision-10] [INFO] [1775693734.535256434] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:35] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:36] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693737.064790576] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:37] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:38] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693738.611738045] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:39] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693739.407062864] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(402,308)
+[scene_from_vision-10] [INFO] [1775693739.534411481] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:40] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:41] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693742.033412597] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:42] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:43] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693743.773128651] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_from_vision-10] [INFO] [1775693744.033653333] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:44] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693744.503643823] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(402,308)
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:45] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693746.034087059] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:46] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:47] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:47] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693748.034371619] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:48] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693748.932566459] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:49] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693749.548283372] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(402,308)
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:50] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693750.533730099] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:50] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:51] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:52] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693752.534454526] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] [INFO] [1775693752.711822652] [adl_ui_node]: UI command published: clear_table
+[clear_table-13] [INFO] [1775693752.713368752] [clear_table_node]: Received clear_table command. Starting task execution.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:52] "POST /command HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1775693752.727262350] [clear_table_node]: Starting Clear Table Task...
+[clear_table-13] [INFO] [1775693752.731021879] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1775693752.733965680] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:52] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693752.814959346] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[clear_table-13] [INFO] [1775693752.881594249] [clear_table_node]: Moving to perform the initial scene scan for clear table task...
+[clear_table-13] [INFO] [1775693752.882329986] [clear_table_node]: look_at_table: already near fixed lab scan joint pose; skipping motion.
+[clear_table-13] [INFO] [1775693752.882975397] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1775693752.885032088] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:53] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693754.094567611] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:54] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1775693754.533702773] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1775693754.540817751] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[scene_from_vision-10] [INFO] [1775693754.543047090] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[vision_apriltag-9] [INFO] [1775693754.665812904] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(402,308)
+[clear_table-13] [INFO] [1775693754.684484812] [clear_table_node]: look_at_table_side_tags: moving through deterministic bridge -> side-tag joint poses.
+[clear_table-13] [INFO] [1775693754.685056393] [clear_table_node]: look_at_table_side_tags bridge: current arm is not at target (worst=joint_4:0.128 rad > 0.080).
+[clear_table-13] [INFO] [1775693754.685497870] [clear_table_node]: look_at_table_side_tags bridge: moving with deterministic fixed joint pose.
+[clear_table-13] [INFO] [1775693754.697507464] [clear_table_node]: _send_direct_joint_trajectory: sending fixed joint posture directly to /joint_trajectory_controller/follow_joint_trajectory over 7.28s.
+[ros2_control_node-1] [INFO] [1775693754.698351027] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1775693754.698429185] [joint_trajectory_controller]: Accepted new action goal
+[vision_apriltag-9] [INFO] [1775693754.819903931] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:55] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:55] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:56] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693756.848977915] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:57] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:58] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:58] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693758.814667876] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[wrist_camera_usb_publisher-8] [INFO] [1775693759.254326215] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:15:59] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:00] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693760.815067851] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:01] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:01] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1775693761.994485530] [joint_trajectory_controller]: Goal reached, success!
+[clear_table-13] [INFO] [1775693762.106146398] [clear_table_node]: look_at_table_side_tags: current arm is not at target (worst=joint_4:0.160 rad > 0.080).
+[clear_table-13] [INFO] [1775693762.107529395] [clear_table_node]: look_at_table_side_tags: moving with deterministic fixed joint pose.
+[clear_table-13] [INFO] [1775693762.110217643] [clear_table_node]: _send_direct_joint_trajectory: sending fixed joint posture directly to /joint_trajectory_controller/follow_joint_trajectory over 7.60s.
+[ros2_control_node-1] [INFO] [1775693762.112128942] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1775693762.112297203] [joint_trajectory_controller]: Accepted new action goal
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:02] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693762.833530837] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:03] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:04] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693764.422099690] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:04] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693764.818540922] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:05] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:06] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693766.820078250] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:07] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:07] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:08] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693768.831940463] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:09] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693769.581263730] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[ros2_control_node-1] [INFO] [1775693769.714445887] [joint_trajectory_controller]: Goal reached, success!
+[clear_table-13] [INFO] [1775693769.925586538] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1775693769.935189181] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:10] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693770.039608319] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:10] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693770.859558246] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-9] [INFO] [1775693770.903550268] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 16.2s.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:11] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1775693771.578406805] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1775693771.583706546] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[clear_table-13] [INFO] [1775693771.729138129] [clear_table_node]: is_near_look_at_table: current arm is not at target (worst=joint_6:0.277 rad > 0.080).
+[clear_table-13] [INFO] [1775693771.729531993] [clear_table_node]: look_at_table: planning to LOOK_AT_TABLE_JOINTS.
+[clear_table-13] [INFO] [1775693771.730112984] [clear_table_node]: _send_direct_joint_trajectory: sending fixed joint posture directly to /joint_trajectory_controller/follow_joint_trajectory over 4.39s.
+[ros2_control_node-1] [INFO] [1775693771.730675582] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1775693771.730758095] [joint_trajectory_controller]: Accepted new action goal
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:12] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693772.820627901] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:13] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:13] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:14] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693774.743556152] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-9] [INFO] [1775693774.822844611] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:15] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:16] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1775693776.114465345] [joint_trajectory_controller]: Goal reached, success!
+[clear_table-13] [INFO] [1775693776.249546464] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1775693776.249799789] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[vision_apriltag-9] [INFO] [1775693776.319933945] [vision_apriltag_node]: Removed stale tag ID 3 from detected tags
+[scene_from_vision-10] [INFO] [1775693776.535637003] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:16] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693776.816170241] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 22.1s.
+[vision_apriltag-9] [INFO] [1775693776.834503150] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:17] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1775693777.905154075] [clear_table_node]: Initial scene scan complete. Clear Table task is ready to execute.
+[clear_table-13] [INFO] [1775693777.907847558] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1775693777.909412432] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[clear_table-13] [INFO] [1775693778.059654707] [clear_table_node]: Vision ENABLED.
+[scene_from_vision-10] [INFO] [1775693778.064050359] [scene_from_vision_node]: Scene scan started for 3.0s. Visible detections will be sampled, filtered, and committed at scan end.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:18] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693778.568576290] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:19] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693779.298280064] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 24.6s.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:19] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693779.898776511] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-9] [INFO] [1775693780.134410707] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:20] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693780.575711402] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[scene_from_vision-10] [INFO] [1775693780.588846936] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[vision_apriltag-9] [INFO] [1775693781.043765359] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[scene_from_vision-10] [WARN] [1775693781.093074925] [scene_from_vision_node]: Scan rejected tag 3: raw=2, accepted=2, required=3.
+[scene_from_vision-10] [INFO] [1775693781.096047420] [scene_from_vision_node]: Scene scan kept remembered IDs not reacquired in this scan: [3]. This is expected for ADL memory mode; use scan_prune_unseen_objects:=true for calibration runs after manually moving objects.
+[scene_from_vision-10] [INFO] [1775693781.102142361] [scene_from_vision_node]: Scene scan complete. Remembered object IDs: [3]
+[clear_table-13] [INFO] [1775693781.130301872] [clear_table_node]: Scene scan complete. Remembered object IDs: [3]
+[clear_table-13] [INFO] [1775693781.242415356] [clear_table_node]: Detected 1 objects to clear (IDs, sorted by distance): [3]
+[clear_table-13] [INFO] [1775693781.243154766] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1775693781.251938703] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:21] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1775693781.394350689] [clear_table_node]: Attempting to clear object TV Remote (ID 3) attempt 1/2. 1 objects remaining.
+[clear_table-13] [INFO] [1775693781.397408633] [clear_table_node]: [TV Remote] Pre-attempt joints: joint_1=-0.027, joint_2=-0.452, joint_3=-3.073, joint_4=-2.014, joint_5=-0.006, joint_6=-0.888, joint_7=+1.636
+[clear_table-13] [INFO] [1775693781.405944147] [clear_table_node]: [TV Remote] Pre-attempt ee: pos=(0.238, -0.014, 0.537), ori=(0.659, 0.671, 0.240, 0.240)
+[clear_table-13] [INFO] [1775693781.418188677] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1775693781.426258653] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[clear_table-13] [INFO] [1775693781.588992877] [clear_table_node]: [TV Remote] [FLAG top-policy] stage1_ori_xy=0.300, stage1_ori_z=0.220, retry_ori_xy=0.400, retry_ori_z=0.300, stage1_live_ori=0.450, stage2_prealign=0.450, soft_fail=False, primary_pos_fallback=False, retry_pos_fallback=False, staged_pos_fallback=False, retry_table_reseed=False, ori_mode=full, plan_s=(12.0/14.0).
+[clear_table-13] [INFO] [1775693781.591179448] [clear_table_node]: [TV Remote] Stage 1: approach (0.718, 0.206, 0.402)
+[clear_table-13] [INFO] [1775693781.592028045] [clear_table_node]: Stage 1 Approach Target: pos=(0.718, 0.206, 0.402), ori=(0.713, 0.701, 0.000, 0.000)
+[clear_table-13] [INFO] [1775693781.592607133] [clear_table_node]: open_gripper(): opening gripper fully...
+[ros2_control_node-1] [INFO] [1775693781.593539793] [robotiq_gripper_controller]: Received & accepted new action goal
+[clear_table-13] [INFO] [1775693781.850853851] [clear_table_node]: Gripper reached position=0.007 stalled=False reached_goal=True
+[clear_table-13] [INFO] [1775693781.852583070] [clear_table_node]: go_to_pose: planning to pose at 0.718,0.206, 0.402
+[move_group-20] [ERROR] [1775693781.855543138] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[INFO] [launch.user]: [arm_vbox.launch] move_group reported an empty JointState while sanitizer mode is active. Keeping the launch alive, but this still indicates a planning-state problem. move_group output: [ERROR] [1775693781.855543138] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1775693781.870654731] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1775693781.875300155] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1775693781.876926439] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1775693781.880196776] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1775693781.880635321] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1775693781.880762189] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1775693781.880855959] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1775693781.882927204] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1775693781.883156103] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1775693781.883232665] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1775693781.883427084] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1775693781.886830181] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1775693781.887743900] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1775693781.998533551] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:22] "GET /status_json HTTP/1.1" 200 -
+[move_group-20] [INFO] [1775693782.015425736] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1775693782.019423697] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1775693782.019940911] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1775693782.021708371] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693782.021794705] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693782.021988015] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1775693782.038317822] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1775693782.038455175] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693782.038539336] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693782.038917790] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1775693782.039834640] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1775693782.039970942] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1775693782.040299178] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1775693782.040338739] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:22] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693782.819762641] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:23] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:24] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693784.818867864] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:25] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693785.066140194] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:25] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:26] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693786.824732653] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:27] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1775693787.894453376] [joint_trajectory_controller]: Goal reached, success!
+[move_group-20] [INFO] [1775693787.942553329] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' successfully finished
+[move_group-20] [INFO] [1775693787.998695348] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-20] [INFO] [1775693788.008710432] [move_group.moveit.moveit.ros.move_group.move_action]: Solution was found and executed.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:28] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1775693788.218395606] [clear_table_node]: go_to_pose: planning to pose at 0.718,0.206, 0.402
+[move_group-20] [ERROR] [1775693788.223607676] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1775693788.235859159] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1775693788.238989787] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1775693788.240776560] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1775693788.259767595] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1775693788.259954602] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1775693788.260038528] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1775693788.260082375] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1775693788.260844795] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1775693788.260991935] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1775693788.261058929] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1775693788.261154318] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1775693788.262488354] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1775693788.262699626] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1775693788.340431766] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1775693788.341480578] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1775693788.341955935] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1775693788.342095620] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1775693788.342327840] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693788.342386753] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693788.342485377] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1775693788.357956488] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1775693788.358039882] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693788.358086297] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693788.358284561] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1775693788.358664864] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1775693788.358732580] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1775693788.359529872] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1775693788.359549096] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:28] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693788.817889034] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[ros2_control_node-1] [INFO] [1775693789.154629096] [joint_trajectory_controller]: Goal reached, success!
+[move_group-20] [INFO] [1775693789.163492233] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' successfully finished
+[move_group-20] [INFO] [1775693789.224035782] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-20] [INFO] [1775693789.228177366] [move_group.moveit.moveit.ros.move_group.move_action]: Solution was found and executed.
+[clear_table-13] [INFO] [1775693789.350756990] [clear_table_node]: [TV Remote] Stage 1 primary settle: live pose error pos=0.036 m (dx=-0.024, dy=-0.010, dz=-0.025) (limit=0.040), ori=0.326 rad (limit=0.450, mode=full).
+[clear_table-13] [INFO] [1775693789.357800960] [clear_table_node]: [TV Remote] Stage 2: push to grasp (cartesian) (0.718, 0.206, 0.252)
+[clear_table-13] [INFO] [1775693789.375964079] [clear_table_node]: [TV Remote] Stage 2 top prealign orientation error=0.326 rad (limit=0.450, mode=full).
+[clear_table-13] [INFO] [1775693789.408368627] [clear_table_node]: Removed collision object obj_3 from planning scene.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:29] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1775693790.171469259] [clear_table_node]: [TV Remote] Stage 2 start (live/current): pos=(0.694, 0.197, 0.377), ori=(0.673, 0.723, 0.156, 0.009)
+[move_group-20] [INFO] [1775693790.172877686] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Received request to compute Cartesian path
+[move_group-20] [INFO] [1775693790.178727736] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Attempting to follow 1 waypoints for link 'end_effector_link' using a step of 0.010000 m and jump threshold 0.000000 (in global reference frame)
+[wrist_camera_usb_publisher-8] [INFO] [1775693790.226727733] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[move_group-20] [INFO] [1775693790.243965602] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Computed Cartesian path with 6 points (followed 38.461538% of requested trajectory)
+[clear_table-13] [INFO] [1775693790.253064287] [clear_table_node]: Cartesian path computed with 38.5% success.
+[clear_table-13] [ERROR] [1775693790.254705645] [clear_table_node]: Cartesian path only 38.5% complete — aborting.Last waypoint was (0.718, 0.206, 0.252).
+[clear_table-13] [WARN] [1775693790.260935435] [clear_table_node]: [TV Remote] Stage 2 top Cartesian failed. Retrying with segmented descend.
+[clear_table-13] [INFO] [1775693790.265599683] [clear_table_node]: [TV Remote] Stage 2 top stepwise descend target: pos=(0.718, 0.206, 0.362), ori=(0.713, 0.701, 0.000, 0.000)
+[move_group-20] [INFO] [1775693790.266522129] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Received request to compute Cartesian path
+[move_group-20] [INFO] [1775693790.266733334] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Attempting to follow 1 waypoints for link 'end_effector_link' using a step of 0.005000 m and jump threshold 0.000000 (in global reference frame)
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:30] "GET /status_json HTTP/1.1" 200 -
+[move_group-20] [INFO] [1775693790.288280593] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Computed Cartesian path with 4 points (followed 15.789474% of requested trajectory)
+[clear_table-13] [INFO] [1775693790.291208651] [clear_table_node]: Cartesian path computed with 15.8% success.
+[clear_table-13] [ERROR] [1775693790.291937341] [clear_table_node]: Cartesian path only 15.8% complete — aborting.Last waypoint was (0.718, 0.206, 0.362).
+[clear_table-13] [INFO] [1775693790.292517642] [clear_table_node]: [TV Remote] Stage 2 top stepwise half-step target: pos=(0.718, 0.206, 0.370), ori=(0.713, 0.701, 0.000, 0.000)
+[move_group-20] [INFO] [1775693790.292993017] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Received request to compute Cartesian path
+[move_group-20] [INFO] [1775693790.293084573] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Attempting to follow 1 waypoints for link 'end_effector_link' using a step of 0.005000 m and jump threshold 0.000000 (in global reference frame)
+[move_group-20] [INFO] [1775693790.312511201] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Computed Cartesian path with 4 points (followed 15.789474% of requested trajectory)
+[clear_table-13] [INFO] [1775693790.315564256] [clear_table_node]: Cartesian path computed with 15.8% success.
+[clear_table-13] [ERROR] [1775693790.316476016] [clear_table_node]: Cartesian path only 15.8% complete — aborting.Last waypoint was (0.718, 0.206, 0.370).
+[clear_table-13] [ERROR] [1775693790.320715099] [clear_table_node]: Failed move to grasp pose for object TV Remote (ID 3). Retreating to approach and aborting.
+[clear_table-13] [INFO] [1775693790.322336879] [clear_table_node]: go_to_position: (0.718,0.206, 0.402) - orientation free
+[move_group-20] [ERROR] [1775693790.323015571] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1775693790.325765919] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1775693790.326529040] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1775693790.326727639] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1775693790.338593524] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1775693790.338637496] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1775693790.338651495] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1775693790.338659430] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1775693790.338908390] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1775693790.338943596] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1775693790.338959589] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1775693790.338987790] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1775693790.339318313] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1775693790.339385667] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1775693790.385148826] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1775693790.400970327] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1775693790.402808978] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1775693790.402974060] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1775693790.403327749] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693790.403358611] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693790.403452717] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1775693790.418359193] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1775693790.418488365] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693790.418547676] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693790.418907546] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1775693790.419944172] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1775693790.420048624] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1775693790.420272787] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1775693790.420291025] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[vision_apriltag-9] [INFO] [1775693790.818579755] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:31] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:31] "GET /status_json HTTP/1.1" 200 -
+[joint_state_sanitizer-3] [WARN] [1775693792.397709351] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_3:-3.134->-3.132
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:32] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693792.827707896] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:33] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:34] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:34] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693794.818755275] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[wrist_camera_usb_publisher-8] [INFO] [1775693795.385151364] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:35] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:36] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693796.817508010] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:37] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:37] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:38] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693798.823939908] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:39] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:40] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693800.545966858] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:40] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693800.819347383] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[joint_state_sanitizer-3] [WARN] [1775693801.416870550] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_5:-3.135->-3.132
+[ros2_control_node-1] [INFO] [1775693801.474453375] [joint_trajectory_controller]: Goal reached, success!
+[move_group-20] [INFO] [1775693801.521727709] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' successfully finished
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:41] "GET /status_json HTTP/1.1" 200 -
+[move_group-20] [INFO] [1775693801.578427828] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-20] [INFO] [1775693801.588806280] [move_group.moveit.moveit.ros.move_group.move_action]: Solution was found and executed.
+[clear_table-13] [WARN] [1775693801.702609797] [clear_table_node]: Recovering motion state. pick and place failure for TV Remote
+[clear_table-13] [INFO] [1775693801.803945215] [clear_table_node]: Parking arm to retract pose (recovery: pick and place failure for TV Remote).
+[clear_table-13] [INFO] [1775693801.905124622] [clear_table_node]: Parking prep: tucking gripper for travel at width=0.120rad.
+[clear_table-13] [INFO] [1775693801.906285383] [clear_table_node]: close_gripper(): closing gripper to width=0.120rad, force=10.0N
+[ros2_control_node-1] [INFO] [1775693801.907299842] [robotiq_gripper_controller]: Received & accepted new action goal
+[clear_table-13] [INFO] [1775693802.115843783] [clear_table_node]: Gripper reached position=0.117 stalled=False reached_goal=True
+[clear_table-13] [INFO] [1775693802.117379391] [clear_table_node]: go_retract: planning to RETRACT_JOINTS...
+[clear_table-13] [INFO] [1775693802.124914082] [clear_table_node]: _send_direct_joint_trajectory: sending fixed joint posture directly to /joint_trajectory_controller/follow_joint_trajectory over 14.00s.
+[ros2_control_node-1] [INFO] [1775693802.125715657] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1775693802.125800041] [joint_trajectory_controller]: Accepted new action goal
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:42] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693802.817096135] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:43] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:43] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:44] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693804.824341725] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:45] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693805.710549638] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:46] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:46] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693806.821298925] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:47] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:48] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693808.817952860] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:49] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:49] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:50] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693810.831725372] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[wrist_camera_usb_publisher-8] [INFO] [1775693810.872420851] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:51] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:52] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:52] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693812.816897687] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:53] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:54] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693814.818902312] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:55] "GET /status_json HTTP/1.1" 200 -
+[joint_state_sanitizer-3] [WARN] [1775693815.677751830] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_3:+3.134->+3.132
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:55] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693816.027343068] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[ros2_control_node-1] [INFO] [1775693816.134368394] [joint_trajectory_controller]: Goal reached, success!
+[clear_table-13] [INFO] [1775693816.335589909] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1775693816.344569170] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[vision_apriltag-9] [INFO] [1775693816.417669151] [vision_apriltag_node]: Removed stale tag ID 3 from detected tags
+[clear_table-13] [ERROR] [1775693816.488485593] [clear_table_node]: Failed to clear object TV Remote (ID 3) on attempt 1/2.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:56] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693816.545647081] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[clear_table-13] [INFO] [1775693816.590770827] [clear_table_node]: go_retract: planning to RETRACT_JOINTS...
+[clear_table-13] [INFO] [1775693816.595867577] [clear_table_node]: _send_direct_joint_trajectory: sending fixed joint posture directly to /joint_trajectory_controller/follow_joint_trajectory over 4.00s.
+[ros2_control_node-1] [INFO] [1775693816.596793156] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1775693816.596875672] [joint_trajectory_controller]: Accepted new action goal
+[vision_apriltag-9] [INFO] [1775693816.815868238] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 35.1s.
+[vision_apriltag-9] [INFO] [1775693817.118650027] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:57] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:58] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:58] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693818.816354919] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 37.1s.
+[scene_from_vision-10] [INFO] [1775693819.034173632] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:16:59] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:00] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1775693820.614187236] [joint_trajectory_controller]: Goal reached, success!
+[joint_state_sanitizer-3] [WARN] [1775693820.695640773] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_3:+3.140->+3.132
+[clear_table-13] [INFO] [1775693820.808491276] [clear_table_node]: [TV Remote failed] transition reseed via retract: OK.
+[vision_apriltag-9] [INFO] [1775693820.815383606] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 39.1s.
+[clear_table-13] [WARN] [1775693820.910243808] [clear_table_node]: Reattempting TV Remote (ID 3) from square one after recovery (retry 1/1).
+[scene_from_vision-10] [INFO] [1775693821.033697614] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:01] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693821.187602114] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[clear_table-13] [INFO] [1775693821.661937342] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1775693821.663199158] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[clear_table-13] [INFO] [1775693821.812940518] [clear_table_node]: Attempting to clear object TV Remote (ID 3) attempt 2/2. 1 objects remaining.
+[clear_table-13] [INFO] [1775693821.814911113] [clear_table_node]: [TV Remote] Pre-attempt joints: joint_1=-0.000, joint_2=-0.350, joint_3=+3.132, joint_4=-2.540, joint_5=+0.000, joint_6=-0.870, joint_7=+1.570
+[clear_table-13] [INFO] [1775693821.821776591] [clear_table_node]: [TV Remote] Pre-attempt ee: pos=(0.125, 0.003, 0.331), ori=(0.703, 0.710, 0.028, 0.030)
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:01] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1775693821.836897027] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1775693821.841610427] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[clear_table-13] [INFO] [1775693821.999869490] [clear_table_node]: [TV Remote] [FLAG top-policy] stage1_ori_xy=0.300, stage1_ori_z=0.220, retry_ori_xy=0.400, retry_ori_z=0.300, stage1_live_ori=0.450, stage2_prealign=0.450, soft_fail=False, primary_pos_fallback=False, retry_pos_fallback=False, staged_pos_fallback=False, retry_table_reseed=False, ori_mode=full, plan_s=(12.0/14.0).
+[clear_table-13] [INFO] [1775693822.003719670] [clear_table_node]: [TV Remote] Stage 1: approach (0.718, 0.206, 0.402)
+[clear_table-13] [INFO] [1775693822.005241933] [clear_table_node]: Stage 1 Approach Target: pos=(0.718, 0.206, 0.402), ori=(0.713, 0.701, 0.000, 0.000)
+[clear_table-13] [INFO] [1775693822.005928864] [clear_table_node]: open_gripper(): opening gripper fully...
+[ros2_control_node-1] [INFO] [1775693822.006920618] [robotiq_gripper_controller]: Received & accepted new action goal
+[vision_apriltag-9] [INFO] [1775693822.150701441] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[clear_table-13] [INFO] [1775693822.264637615] [clear_table_node]: Gripper reached position=0.007 stalled=False reached_goal=True
+[clear_table-13] [INFO] [1775693822.265328576] [clear_table_node]: go_to_pose: planning to pose at 0.718,0.206, 0.402
+[move_group-20] [ERROR] [1775693822.266064984] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1775693822.273603031] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1775693822.276521368] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1775693822.276824071] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1775693822.278483483] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1775693822.278537872] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1775693822.278558645] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1775693822.278570716] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1775693822.280632124] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1775693822.280713178] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1775693822.280732111] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1775693822.280776865] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1775693822.281551621] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1775693822.281709221] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1775693822.377423482] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1775693822.393363873] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1775693822.396937037] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1775693822.397410042] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1775693822.398550764] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693822.398650679] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693822.398857857] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1775693822.417906045] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1775693822.417975776] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693822.418011676] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693822.418195287] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1775693822.418722912] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1775693822.418813429] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1775693822.418946231] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1775693822.418958187] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:02] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693822.825763535] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:03] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:04] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693824.819828539] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:04] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:05] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:06] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693826.357780203] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-9] [INFO] [1775693826.818326057] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:07] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:07] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:08] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693828.819940373] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:09] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:10] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693830.816806426] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:10] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693831.509397298] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:11] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:12] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693832.817020136] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:13] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:13] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:14] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693834.828027610] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:15] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1775693835.394423263] [joint_trajectory_controller]: Goal reached, success!
+[move_group-20] [INFO] [1775693835.421138060] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' successfully finished
+[move_group-20] [INFO] [1775693835.478341963] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-20] [INFO] [1775693835.488653433] [move_group.moveit.moveit.ros.move_group.move_action]: Solution was found and executed.
+[clear_table-13] [INFO] [1775693835.708828017] [clear_table_node]: go_to_pose: planning to pose at 0.718,0.206, 0.402
+[move_group-20] [ERROR] [1775693835.710811100] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1775693835.727319576] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1775693835.730351185] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1775693835.730752883] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1775693835.738308862] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1775693835.738437766] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1775693835.738506297] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1775693835.738548578] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1775693835.739204505] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1775693835.739326607] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1775693835.739365488] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1775693835.739469072] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1775693835.740797716] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1775693835.741067591] [move_group]: Calling Planner 'OMPL'
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:16] "GET /status_json HTTP/1.1" 200 -
+[move_group-20] [INFO] [1775693836.083075793] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1775693836.087020889] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1775693836.087942983] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1775693836.088148364] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1775693836.088641380] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693836.088751479] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693836.088882722] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1775693836.097831497] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1775693836.097914279] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693836.097940653] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693836.098081449] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1775693836.098417100] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1775693836.098487022] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1775693836.098696051] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1775693836.098706354] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[wrist_camera_usb_publisher-8] [INFO] [1775693836.668496170] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-9] [INFO] [1775693836.816574050] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:16] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:17] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:18] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693838.818528102] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:19] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:19] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:20] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1775693840.694427988] [joint_trajectory_controller]: Goal reached, success!
+[move_group-20] [INFO] [1775693840.700772668] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' successfully finished
+[move_group-20] [INFO] [1775693840.759037040] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-20] [INFO] [1775693840.768108880] [move_group.moveit.moveit.ros.move_group.move_action]: Solution was found and executed.
+[vision_apriltag-9] [INFO] [1775693840.822305140] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[clear_table-13] [INFO] [1775693840.886991628] [clear_table_node]: [TV Remote] Stage 1 primary settle: live pose error pos=0.040 m (dx=-0.029, dy=+0.005, dz=-0.027) (limit=0.040), ori=0.346 rad (limit=0.450, mode=full).
+[clear_table-13] [INFO] [1775693840.895213994] [clear_table_node]: [TV Remote] Stage 2: push to grasp (cartesian) (0.718, 0.206, 0.252)
+[clear_table-13] [INFO] [1775693840.912894908] [clear_table_node]: [TV Remote] Stage 2 top prealign orientation error=0.346 rad (limit=0.450, mode=full).
+[clear_table-13] [INFO] [1775693840.916168554] [clear_table_node]: Removed collision object obj_3 from planning scene.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:21] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1775693841.673357040] [clear_table_node]: [TV Remote] Stage 2 start (live/current): pos=(0.689, 0.211, 0.375), ori=(0.744, 0.648, 0.155, 0.045)
+[move_group-20] [INFO] [1775693841.674432218] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Received request to compute Cartesian path
+[move_group-20] [INFO] [1775693841.674670472] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Attempting to follow 1 waypoints for link 'end_effector_link' using a step of 0.010000 m and jump threshold 0.000000 (in global reference frame)
+[move_group-20] [INFO] [1775693841.725951584] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Computed Cartesian path with 8 points (followed 53.846154% of requested trajectory)
+[clear_table-13] [INFO] [1775693841.737964761] [clear_table_node]: Cartesian path computed with 53.8% success.
+[clear_table-13] [ERROR] [1775693841.745501523] [clear_table_node]: Cartesian path only 53.8% complete — aborting.Last waypoint was (0.718, 0.206, 0.252).
+[clear_table-13] [WARN] [1775693841.751816489] [clear_table_node]: [TV Remote] Stage 2 top Cartesian failed. Retrying with segmented descend.
+[clear_table-13] [INFO] [1775693841.769289987] [clear_table_node]: [TV Remote] Stage 2 top stepwise descend target: pos=(0.718, 0.206, 0.360), ori=(0.713, 0.701, 0.000, 0.000)
+[move_group-20] [INFO] [1775693841.770379291] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Received request to compute Cartesian path
+[move_group-20] [INFO] [1775693841.770603433] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Attempting to follow 1 waypoints for link 'end_effector_link' using a step of 0.005000 m and jump threshold 0.000000 (in global reference frame)
+[move_group-20] [INFO] [1775693841.824867267] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Computed Cartesian path with 7 points (followed 30.000000% of requested trajectory)
+[wrist_camera_usb_publisher-8] [INFO] [1775693841.831817713] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[clear_table-13] [INFO] [1775693841.833455753] [clear_table_node]: Cartesian path computed with 30.0% success.
+[clear_table-13] [ERROR] [1775693841.835550263] [clear_table_node]: Cartesian path only 30.0% complete — aborting.Last waypoint was (0.718, 0.206, 0.360).
+[clear_table-13] [INFO] [1775693841.836415058] [clear_table_node]: [TV Remote] Stage 2 top stepwise half-step target: pos=(0.718, 0.206, 0.368), ori=(0.713, 0.701, 0.000, 0.000)
+[move_group-20] [INFO] [1775693841.837163304] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Received request to compute Cartesian path
+[move_group-20] [INFO] [1775693841.837332933] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Attempting to follow 1 waypoints for link 'end_effector_link' using a step of 0.005000 m and jump threshold 0.000000 (in global reference frame)
+[move_group-20] [INFO] [1775693841.856114128] [move_group.moveit.moveit.ros.move_group.cartesian_path_service_capability]: Computed Cartesian path with 7 points (followed 30.000000% of requested trajectory)
+[clear_table-13] [INFO] [1775693841.861793907] [clear_table_node]: Cartesian path computed with 30.0% success.
+[clear_table-13] [ERROR] [1775693841.862663241] [clear_table_node]: Cartesian path only 30.0% complete — aborting.Last waypoint was (0.718, 0.206, 0.368).
+[clear_table-13] [ERROR] [1775693841.865364430] [clear_table_node]: Failed move to grasp pose for object TV Remote (ID 3). Retreating to approach and aborting.
+[clear_table-13] [INFO] [1775693841.866232675] [clear_table_node]: go_to_position: (0.718,0.206, 0.402) - orientation free
+[move_group-20] [ERROR] [1775693841.866988117] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1775693841.869371032] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1775693841.870304967] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1775693841.870505552] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1775693841.878430605] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1775693841.878557647] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1775693841.878586316] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1775693841.878619232] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1775693841.878982411] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1775693841.879048191] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1775693841.879065317] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1775693841.879092666] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1775693841.879400703] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1775693841.879479153] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1775693841.912802187] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1775693841.915358627] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1775693841.916298375] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1775693841.916474003] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1775693841.916724248] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693841.916758019] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693841.916850711] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1775693841.918529454] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1775693841.918599683] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693841.918634271] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1775693841.918815862] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1775693841.920494311] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1775693841.920601644] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1775693841.920782063] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1775693841.920798873] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:22] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693842.818030862] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:22] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:23] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:24] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1775693844.774432680] [joint_trajectory_controller]: Goal reached, success!
+[vision_apriltag-9] [INFO] [1775693844.818339197] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[move_group-20] [INFO] [1775693844.822639915] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' successfully finished
+[move_group-20] [INFO] [1775693844.878507934] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-20] [INFO] [1775693844.878933284] [move_group.moveit.moveit.ros.move_group.move_action]: Solution was found and executed.
+[clear_table-13] [WARN] [1775693844.988944147] [clear_table_node]: Recovering motion state. pick and place failure for TV Remote
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:25] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1775693845.091957475] [clear_table_node]: Parking arm to retract pose (recovery: pick and place failure for TV Remote).
+[clear_table-13] [INFO] [1775693845.193676642] [clear_table_node]: Parking prep: tucking gripper for travel at width=0.120rad.
+[clear_table-13] [INFO] [1775693845.194947947] [clear_table_node]: close_gripper(): closing gripper to width=0.120rad, force=10.0N
+[ros2_control_node-1] [INFO] [1775693845.196706649] [robotiq_gripper_controller]: Received & accepted new action goal
+[clear_table-13] [INFO] [1775693845.407706502] [clear_table_node]: Gripper reached position=0.117 stalled=False reached_goal=True
+[clear_table-13] [INFO] [1775693845.409442982] [clear_table_node]: go_retract: planning to RETRACT_JOINTS...
+[clear_table-13] [INFO] [1775693845.412746241] [clear_table_node]: _send_direct_joint_trajectory: sending fixed joint posture directly to /joint_trajectory_controller/follow_joint_trajectory over 14.00s.
+[ros2_control_node-1] [INFO] [1775693845.414573967] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1775693845.414688508] [joint_trajectory_controller]: Accepted new action goal
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:25] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:26] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693846.844002585] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[wrist_camera_usb_publisher-8] [INFO] [1775693846.991608677] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:27] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:28] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693848.819849027] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:28] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:29] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:30] "GET /status_json HTTP/1.1" 200 -
+[joint_state_sanitizer-3] [WARN] [1775693850.577541303] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_7:-3.136->-3.132
+[vision_apriltag-9] [INFO] [1775693850.821418018] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:31] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:31] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693852.154515787] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:32] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693852.828433771] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:33] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:34] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693854.831702023] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:34] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:35] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:36] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693856.830923786] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:37] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693857.154285154] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:37] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:38] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693858.831861334] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[joint_state_sanitizer-3] [WARN] [1775693859.058005128] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_3:+3.134->+3.132
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:39] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1775693859.434384575] [joint_trajectory_controller]: Goal reached, success!
+[clear_table-13] [INFO] [1775693859.625371937] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1775693859.642301203] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[clear_table-13] [ERROR] [1775693859.778932386] [clear_table_node]: Failed to clear object TV Remote (ID 3) on attempt 2/2.
+[clear_table-13] [INFO] [1775693859.887791580] [clear_table_node]: go_retract: planning to RETRACT_JOINTS...
+[clear_table-13] [INFO] [1775693859.891139636] [clear_table_node]: _send_direct_joint_trajectory: sending fixed joint posture directly to /joint_trajectory_controller/follow_joint_trajectory over 4.00s.
+[ros2_control_node-1] [INFO] [1775693859.892653329] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1775693859.892764983] [joint_trajectory_controller]: Accepted new action goal
+[scene_from_vision-10] [INFO] [1775693860.033752673] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:40] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693860.283431283] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-9] [INFO] [1775693860.817002484] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 79.1s.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:40] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:41] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693862.034274488] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[wrist_camera_usb_publisher-8] [INFO] [1775693862.307014912] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:42] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:43] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693863.487380589] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 81.7s.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:43] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1775693863.874506200] [joint_trajectory_controller]: Goal reached, success!
+[clear_table-13] [INFO] [1775693863.997124923] [clear_table_node]: [TV Remote failed] transition reseed via retract: OK.
+[scene_from_vision-10] [INFO] [1775693864.035303847] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[joint_state_sanitizer-3] [WARN] [1775693864.056933881] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_3:+3.140->+3.132
+[clear_table-13] [ERROR] [1775693864.105486282] [clear_table_node]: Failed to clear object TV Remote (ID 3). Retry budget exhausted; skipping and continuing with next object.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:44] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1775693864.711168238] [clear_table_node]: All objects processed. Waiting for shared controller to park to retract.
+[clear_table-13] [INFO] [1775693864.713015522] [clear_table_node]: Clear table task completed: 0/1 objects cleared.
+[clear_table-13] [WARN] [1775693864.718722155] [clear_table_node]: Objects skipped due to failures: [(3, 'TV Remote')]
+[vision_apriltag-9] [INFO] [1775693864.818774887] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 83.1s.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:45] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693865.350203157] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:46] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693866.534724088] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:46] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693867.045750192] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 85.3s.
+[wrist_camera_usb_publisher-8] [INFO] [1775693867.465172785] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:47] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:48] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693868.815474419] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 87.1s.
+[scene_from_vision-10] [INFO] [1775693869.033565934] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[joint_state_sanitizer-3] [WARN] [1775693869.075448284] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_3:+3.140->+3.132
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:49] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:49] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693870.578683782] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:50] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693870.815802495] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 89.1s.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:51] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693871.534582430] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:52] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693872.626376640] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:52] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693873.402200839] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 91.6s.
+[scene_from_vision-10] [INFO] [1775693873.535080448] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:53] "GET /status_json HTTP/1.1" 200 -
+[joint_state_sanitizer-3] [WARN] [1775693874.077097373] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_3:+3.140->+3.132
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:54] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:55] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693875.139664499] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 93.4s.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:55] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693875.855288396] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[scene_from_vision-10] [INFO] [1775693876.034512651] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:56] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693876.914062853] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 95.2s.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:57] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1775693877.786498725] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_from_vision-10] [INFO] [1775693878.033628122] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:58] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693878.815801532] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 97.1s.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:58] "GET /status_json HTTP/1.1" 200 -
+[joint_state_sanitizer-3] [WARN] [1775693879.095456555] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_3:+3.140->+3.132
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:17:59] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:18:00] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693880.534275169] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:18:01] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693881.260602962] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-9] [INFO] [1775693881.276916398] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 99.5s.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:18:01] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693882.534446234] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:18:02] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1775693882.815489493] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 101.1s.
+[wrist_camera_usb_publisher-8] [INFO] [1775693882.948803069] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:18:03] "GET /status_json HTTP/1.1" 200 -
+[joint_state_sanitizer-3] [WARN] [1775693884.098297459] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_3:+3.140->+3.132
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:18:04] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:18:04] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1775693885.033873404] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.718, y=0.206, z=0.099, yaw=+89.0deg
+[vision_apriltag-9] [INFO] [1775693885.409374672] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 103.7s.
+[adl_ui-15] 127.0.0.1 - - [08/Apr/2026 20:18:05] "GET /status_json HTTP/1.1" 200 -

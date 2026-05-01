@@ -1,0 +1,830 @@
+
+===== 2026-04-30T08:45:11-04:00 | T1_full =====
+cwd=/home/carrt-cse-project/workspace/ros2_kortex_ws
+cmd=ros2 launch adl_tasks adl_start.launch.py controller_update_rate:=1000 arm_use_fake_hardware:=false arm_robot_ip:=192.168.0.10 clear_table_cup_alignment_enable:=true launch_rviz:=true 
+
+[INFO] [launch]: All log files can be found below /home/carrt-cse-project/.ros/log/2026-04-30-08-45-12-432661-carrt-cse-project-OptiPlex-5050-10759
+[INFO] [launch]: Default logging verbosity is set to INFO
+[arm_start.launch] controller_update_rate was explicitly overridden above 125 Hz for real hardware (1000 Hz); honoring the override for operator tuning even though recent logs showed overruns at that rate.
+[INFO] [launch.user]: [arm_start.launch] MoveIt current state source: /joint_states_sanitized. Use use_joint_state_sanitizer:=false for raw-state viewer debugging.
+[INFO] [launch.user]: [arm_start.launch] Using ADL controller config (share/adl_tasks/config/ros2_controllers_vbox.yaml, update_rate:=1000 Hz).
+[INFO] [ros2_control_node-1]: process started with pid [10763]
+[INFO] [robot_state_publisher-2]: process started with pid [10764]
+[INFO] [joint_state_sanitizer-3]: process started with pid [10765]
+[INFO] [spawner-4]: process started with pid [10766]
+[INFO] [static_transform_publisher-5]: process started with pid [10767]
+[INFO] [static_transform_publisher-6]: process started with pid [10768]
+[INFO] [scene_static-7]: process started with pid [10769]
+[INFO] [wrist_camera_usb_publisher-8]: process started with pid [10770]
+[INFO] [vision_apriltag-9]: process started with pid [10771]
+[INFO] [scene_from_vision-10]: process started with pid [10772]
+[INFO] [adl_controller-11]: process started with pid [10773]
+[INFO] [pick_dropped_bottle-12]: process started with pid [10774]
+[INFO] [clear_table-13]: process started with pid [10775]
+[INFO] [give_medication-14]: process started with pid [10776]
+[INFO] [adl_ui-15]: process started with pid [10777]
+[robot_state_publisher-2] [INFO] [1777553112.866535911] [robot_state_publisher]: Robot initialized
+[static_transform_publisher-6] [INFO] [1777553112.890192632] [camera_color_optical_bridge_tf_pub]: Spinning until stopped - publishing transform
+[static_transform_publisher-6] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-6] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-6] from 'camera_color_frame' to 'wrist_mounted_camera_color_optical_frame'
+[static_transform_publisher-5] [INFO] [1777553112.954797035] [static_transform_publisher]: Spinning until stopped - publishing transform
+[static_transform_publisher-5] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-5] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-5] from 'world' to 'base_link'
+[ros2_control_node-1] [INFO] [1777553113.152722033] [controller_manager]: Using Steady (Monotonic) clock for triggering controller manager cycles.
+[ros2_control_node-1] [INFO] [1777553113.191537196] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
+[ros2_control_node-1] [INFO] [1777553113.211746009] [controller_manager]: update rate is 1000 Hz
+[ros2_control_node-1] [INFO] [1777553113.211782333] [controller_manager]: Overruns handling is : enabled
+[ros2_control_node-1] [INFO] [1777553113.211794977] [controller_manager]: Spawning controller_manager RT thread with scheduler priority: 50
+[ros2_control_node-1] [INFO] [1777553113.213398879] [controller_manager]: Successful set up FIFO RT scheduling policy with priority 50.
+[ros2_control_node-1] [INFO] [1777553113.316925703] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [INFO] [1777553113.316997303] [controller_manager]: Enforcing command limits is disabled. Command limits from URDF will be ignored.
+[ros2_control_node-1] [INFO] [1777553113.339801986] [controller_manager]: Loading hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1777553113.385584392] [KortexMultiInterfaceHardware]: Setting severity threshold to DEBUG
+[ros2_control_node-1] [INFO] [1777553113.389515306] [controller_manager]: Loaded hardware 'KortexMultiInterfaceHardware' from plugin 'kortex_driver/KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1777553113.393944193] [controller_manager]: Initialize hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1777553113.454625445] [KortexMultiInterfaceHardware]: Configuring Hardware Interface
+[ros2_control_node-1] [INFO] [1777553113.458851612] [KortexMultiInterfaceHardware]: Robot ip is '192.168.0.10'
+[ros2_control_node-1] [INFO] [1777553113.458875473] [KortexMultiInterfaceHardware]: Username is 'admin'
+[ros2_control_node-1] [INFO] [1777553113.458890410] [KortexMultiInterfaceHardware]: Port used '10000'
+[ros2_control_node-1] [INFO] [1777553113.458895999] [KortexMultiInterfaceHardware]: Realtime port used '10001'
+[ros2_control_node-1] [INFO] [1777553113.458900892] [KortexMultiInterfaceHardware]: Session inactivity timeout is '60000'
+[ros2_control_node-1] [INFO] [1777553113.458906127] [KortexMultiInterfaceHardware]: Connection inactivity timeout is '2000'
+[ros2_control_node-1] [INFO] [1777553113.458912586] [KortexMultiInterfaceHardware]: Gripper joint name is 'robotiq_85_left_knuckle_joint'
+[ros2_control_node-1] [INFO] [1777553113.458947830] [KortexMultiInterfaceHardware]: Connecting to robot at 192.168.0.10
+[ros2_control_node-1] [INFO] [1777553113.472586110] [KortexMultiInterfaceHardware]: Creating session for communication
+[ros2_control_node-1] [INFO] [1777553113.644881476] [KortexMultiInterfaceHardware]: Session created
+[spawner-4] [INFO] [1777553113.952845090] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[ros2_control_node-1] [INFO] [1777553114.442607556] [KortexMultiInterfaceHardware]: Actuator count reported by robot is '7'
+[ros2_control_node-1] [INFO] [1777553114.442829664] [KortexMultiInterfaceHardware]: Using internal bus communication for gripper!
+[ros2_control_node-1] [INFO] [1777553114.442839650] [KortexMultiInterfaceHardware]: Hardware Interface successfully configured
+[ros2_control_node-1] [INFO] [1777553114.442940059] [controller_manager]: Successful initialization of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [DEBUG] [1777553114.443013257] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_1
+[ros2_control_node-1] [DEBUG] [1777553114.443041098] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_2
+[ros2_control_node-1] [DEBUG] [1777553114.443048309] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_3
+[ros2_control_node-1] [DEBUG] [1777553114.443053071] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_4
+[ros2_control_node-1] [DEBUG] [1777553114.443056922] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_5
+[ros2_control_node-1] [DEBUG] [1777553114.443061334] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_6
+[ros2_control_node-1] [DEBUG] [1777553114.443065482] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_7
+[ros2_control_node-1] [DEBUG] [1777553114.443070322] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: robotiq_85_left_knuckle_joint
+[ros2_control_node-1] [INFO] [1777553114.445095293] [resource_manager]: 'configure' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1777553114.445137082] [resource_manager]: Successful 'configure' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1777553114.445237308] [resource_manager]: 'activate' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1777553114.445265353] [KortexMultiInterfaceHardware]: Activating KortexMultiInterfaceHardware...
+[ros2_control_node-1] [INFO] [1777553114.450641600] [KortexMultiInterfaceHardware]: Gripper initial position is '0.438597'.
+[ros2_control_node-1] [INFO] [1777553114.455877130] [KortexMultiInterfaceHardware]: KortexMultiInterfaceHardware successfully activated!
+[ros2_control_node-1] [INFO] [1777553114.455920601] [resource_manager]: Successful 'activate' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1777553114.456197609] [controller_manager]: Registering statistics for : KortexMultiInterfaceHardware
+[ros2_control_node-1] [INFO] [1777553114.456373254] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[ros2_control_node-1] [WARN] [1777553114.472758609] [controller_manager]: Overrun might occur, Total time : 16190.410 us (Expected < 1000.000 us) --> Read time : 11329.970 us, Update time : 30.860 us, Write time : 4829.580 us
+[ros2_control_node-1] [WARN] [1777553114.472855434] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 16.329266 ms (missed cycles : 17).
+[adl_ui-15] [INFO] [1777553114.503916790] [adl_ui_node]: ADL UI Node started.
+[adl_ui-15] [INFO] [1777553114.504684855] [adl_ui_node]: Automatic retract on UI load is disabled; startup sends no motion.
+[adl_ui-15]  * Serving Flask app 'adl_tasks.adl_ui'
+[adl_ui-15]  * Debug mode: off
+[adl_ui-15] [INFO] [1777553114.512425313] [adl_ui_node]: Web UI available at http://localhost:5000
+[adl_ui-15] WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+[adl_ui-15]  * Running on all addresses (0.0.0.0)
+[adl_ui-15]  * Running on http://127.0.0.1:5000
+[adl_ui-15]  * Running on http://192.168.0.231:5000
+[adl_ui-15] Press CTRL+C to quit
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:14] "GET /status_json HTTP/1.1" 200 -
+[scene_static-7] [INFO] [1777553114.634185614] [scene_static_node]: Static Scene Node started.
+[scene_static-7] [INFO] [1777553114.635254220] [scene_static_node]: WHEELCHAIR_BASE_HEIGHT = 0.36195m  |  Table surface at z = 0.098m | Table front-edge-from-base = 0.406m | Table center at x = 0.681m | table_edge_lip_margin=0.0127m | table_edge_lip_thickness=0.0127m | table_edge_lip_height=0.460m | include_wheelchair_wall=True | include_left_desk_wall=True | include_right_desk_wall=True | include_arm_base_under_block=True | include_arm_base_side_lips=True | include_arm_base_left_back_block=True | include_arm_base_right_back_half_block=True
+[scene_static-7] [INFO] [1777553114.636398083] [scene_static_node]: Wheelchair wall geometry: center=(-0.465, 0.000, 0.482) size=(0.450, 0.700, 1.688)
+[scene_static-7] [INFO] [1777553114.637487036] [scene_static_node]: Arm-base under-block geometry: center=(0.000, 0.000, -0.212) size=(0.302, 0.378, 0.300) | platform=(0.200, 0.200) | margins(front/back=0.051, left/right=0.089)
+[scene_static-7] [INFO] [1777553114.638733487] [scene_static_node]: Arm-base side-lip geometry: left_y=0.198, right_y=-0.198, center_z=-0.047, size=(0.314, 0.006, 0.030) | x_offset=-0.076, outset=0.006, front/back_margin=0.006
+[scene_static-7] [INFO] [1777553114.640054042] [scene_static_node]: Arm-base left-back block geometry: center=(-0.177, 0.312, 0.482) size=(0.100, 0.408, 1.688) | inner_faces(x=-0.127, y=0.108) | left_wall_inner_face_y=0.504 | into_left_wall=0.013
+[joint_state_sanitizer-3] [INFO] [1777553114.640865911] [joint_state_sanitizer_node]: joint_state_sanitizer started. raw=/joint_states -> sanitized=/joint_states_sanitized
+[scene_static-7] [INFO] [1777553114.651102761] [scene_static_node]: Arm-base right-back half block geometry: center=(-0.177, -0.312, 0.060) size=(0.100, 0.408, 0.844) | inner_faces(x=-0.127, y=-0.108) | right_wall_inner_face_y=-0.504 | into_right_wall=0.013
+[wrist_camera_usb_publisher-8] [INFO] [1777553114.668970541] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[adl_controller-11] [INFO] [1777553114.701680299] [adl_controller_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True) real_hardware_mode=True short_cartesian_mode=hybrid
+[adl_controller-11] [INFO] [1777553114.702719122] [adl_controller_node]: ADL_DIRECT_FIXED_JOINTS is unset; defaulting fixed-joint direct trajectories to disabled on real hardware (collision-aware MoveIt path first).
+[adl_controller-11] [INFO] [1777553114.726947679] [adl_controller_node]: ADL controller ready. Waiting for UI/system commands.
+[wrist_camera_usb_publisher-8] [INFO] [1777553114.774775162] [wrist_camera_usb_publisher_node]: USB camera publisher: opened camera source index 2.
+[wrist_camera_usb_publisher-8] [INFO] [1777553114.777507227] [wrist_camera_usb_publisher_node]: Wrist Camera USB Publisher started.
+[wrist_camera_usb_publisher-8] [INFO] [1777553114.779119855] [wrist_camera_usb_publisher_node]: Publishing USB camera frames on /wrist_mounted_camera/image with frame_id=wrist_mounted_camera_color_optical_frame.
+[wrist_camera_usb_publisher-8] [INFO] [1777553114.780239910] [wrist_camera_usb_publisher_node]: Publishing camera info on /wrist_mounted_camera/camera_info from reference intrinsics [554.25, 554.25, 320.0, 240.0] @ 640x480.
+[wrist_camera_usb_publisher-8] [INFO] [1777553114.783481039] [wrist_camera_usb_publisher_node]: Using explicit camera_matrix for CameraInfo. matrix_size=1280x720, K=[920.874267578125, 0.0, 644.7646484375, 0.0, 921.5654907226562, 343.1528625488281, 0.0, 0.0, 1.0], d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[wrist_camera_usb_publisher-8] [INFO] [1777553114.784707052] [wrist_camera_usb_publisher_node]: Requested source=2 size=1280x720 fps=10.0
+[pick_dropped_bottle-12] [INFO] [1777553114.947774792] [pick_dropped_bottle_node]: PickDroppedBottle starting...
+[pick_dropped_bottle-12] [INFO] [1777553115.046864768] [pick_dropped_bottle_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True) real_hardware_mode=True short_cartesian_mode=hybrid
+[pick_dropped_bottle-12] [INFO] [1777553115.047916116] [pick_dropped_bottle_node]: ADL_DIRECT_FIXED_JOINTS is unset; defaulting fixed-joint direct trajectories to disabled on real hardware (collision-aware MoveIt path first).
+[clear_table-13] [INFO] [1777553115.052377495] [clear_table_node]: Clear Table Node Started
+[pick_dropped_bottle-12] [INFO] [1777553115.066004526] [pick_dropped_bottle_node]: Vision Client initialized, waiting for service...
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:15] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777553115.413703673] [wrist_camera_usb_publisher_node]: USB camera info active intrinsics: size=1280x720, fx=920.87, fy=921.57, cx=644.76, cy=343.15, d=array('d', [0.0, 0.0, 0.0, 0.0, 0.0])
+[wrist_camera_usb_publisher-8] [INFO] [1777553115.414693834] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[give_medication-14] [INFO] [1777553115.452851961] [give_medication_node]: give_medication starting...
+[ros2_control_node-1] [WARN] [1777553115.474541923] [controller_manager]: Overrun might occur, Total time : 5986.843 us (Expected < 1000.000 us) --> Read time : 46.658 us, Update time : 22.280 us, Write time : 5917.905 us
+[ros2_control_node-1] [WARN] [1777553115.474617513] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 6.091943 ms (missed cycles : 7).
+[give_medication-14] [INFO] [1777553115.537559946] [give_medication_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True) real_hardware_mode=True short_cartesian_mode=hybrid
+[give_medication-14] [INFO] [1777553115.538591285] [give_medication_node]: ADL_DIRECT_FIXED_JOINTS is unset; defaulting fixed-joint direct trajectories to disabled on real hardware (collision-aware MoveIt path first).
+[give_medication-14] [INFO] [1777553115.550327767] [give_medication_node]: Vision Client initialized, waiting for service...
+[clear_table-13] [INFO] [1777553115.747164595] [clear_table_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True) real_hardware_mode=True short_cartesian_mode=hybrid
+[clear_table-13] [INFO] [1777553115.748477214] [clear_table_node]: ADL_DIRECT_FIXED_JOINTS is unset; defaulting fixed-joint direct trajectories to disabled on real hardware (collision-aware MoveIt path first).
+[clear_table-13] [INFO] [1777553115.762461170] [clear_table_node]: Vision Client initialized, waiting for service...
+[scene_from_vision-10] [INFO] [1777553115.767269436] [scene_from_vision_node]: Scene From Vision Node Started
+[pick_dropped_bottle-12] [INFO] [1777553115.817063250] [pick_dropped_bottle_node]: Vision service is ready.
+[vision_apriltag-9] [INFO] [1777553115.824261800] [vision_apriltag_node]: Vision AprilTag Node Started
+[pick_dropped_bottle-12] [INFO] [1777553115.824334626] [pick_dropped_bottle_node]: PickDroppedBottle ready. Waiting for command.
+[pick_dropped_bottle-12] [INFO] [1777553115.825112964] [pick_dropped_bottle_node]: Startup motion disabled at node load; motion begins only after pick_dropped_bottle command.
+[vision_apriltag-9] [INFO] [1777553115.826429823] [vision_apriltag_node]: Subscribing to camera topic: /wrist_mounted_camera/image
+[vision_apriltag-9] [INFO] [1777553115.828441394] [vision_apriltag_node]: Subscribing to camera info topic: /wrist_mounted_camera/camera_info
+[vision_apriltag-9] [INFO] [1777553115.830422679] [vision_apriltag_node]: Camera frame: wrist_mounted_camera_color_optical_frame | use_image_header_frame=True
+[vision_apriltag-9] [INFO] [1777553115.832563943] [vision_apriltag_node]: Tag size: 0.025m | pose_cache_retention_s=20.0 | get_pose_wait_timeout_s=5.0 | max_returned_pose_age_s=20.0 | camera_params=[554.25, 554.25, 320.0, 240.0] | families=tag36h11 | quad_decimate=1.0 | requested_backend=opencv | backend=cv2.aruco | opencv_pose_solver=ippe_square | use_image_timestamp_for_tf=False
+[vision_apriltag-9] [INFO] [1777553115.834682906] [vision_apriltag_node]: Top-tag known-plane projection: enabled=True, planes={3: 0.11995, 4: 0.154438}
+[vision_apriltag-9] [INFO] [1777553115.836579442] [vision_apriltag_node]: pupil_apriltags tuning: nthreads=1, quad_sigma=0.0, refine_edges=1, decode_sharpening=0.25, debug=0, preprocess_variants=['raw', 'clahe', 'adaptive', 'clahe_sharp', 'clahe_up2', 'sharp_up2'], tile_search_if_empty=True, tile_search_grid=3x2, tile_search_scale=2.0, tile_search_overlap=0.25
+[vision_apriltag-9] [WARN] [1777553115.839122506] [vision_apriltag_node]: pupil_apriltags is not importable by this node, so detection is using OpenCV fallback only. python=/usr/bin/python3, import_error=No module named 'pupil_apriltags'. If .venv contains pupil_apriltags, rebuild adl_tasks with that venv active or run the module with the venv Python.
+[vision_apriltag-9] [INFO] [1777553115.841410007] [vision_apriltag_node]: Publishing AprilTag debug images on /vision_apriltag/debug_image at up to 1.0 Hz.
+[scene_from_vision-10] [INFO] [1777553115.856054890] [scene_from_vision_node]: SceneFromVision: Updating planning scene. Tracking 5 object shape(s). memory_mode=True, scan_duration_s=5.0, scan_min_samples=3, scan_target_samples=8, scan_extend_step_s=1.5, scan_max_extensions=2, scan_prune_unseen_objects=False, continuous_scene_updates=False, latch_first_detection_updates=True, log_object_pose_debug=False, apply_planning_scene_service_updates=True, publish_monitored_planning_scene_updates=True, side_viewpoint=wrist_mounted_camera_color_optical_frame->base_link, reject_table_objects_outside_bounds=False.
+[scene_from_vision-10] [INFO] [1777553115.858717492] [scene_from_vision_node]: SceneFromVision calibration: xy_offset=(0.000, 0.000), z_offset=0.000, yaw_deg=0.00, xy_scale=1.0000, clamp_table_objects_to_table_bounds=False, table_bounds_margin_m=0.030.
+[scene_from_vision-10] [INFO] [1777553115.861894435] [scene_from_vision_node]: SceneFromVision object offsets: remote_axis=y, remote_tag_to_center_sign=-1.0, remote_tag_from_end_m=0.020, remote_world_offset=(-0.040, 0.000), cube_tag_to_center=(0.000, 0.000), cube_world_offset=(0.000, -0.006), cube_yaw_offset_deg=0.0, medication_world_offset=(-0.150, -0.030), medication_face_to_center_m=0.027, cup_world_offset=(-0.085, -0.040), cup_face_to_center_m=0.031.
+[vision_apriltag-9] [INFO] [1777553115.906561977] [vision_apriltag_node]: Vision AprilTag camera model updated from CameraInfo: size=1280x720, fx=920.87, fy=921.57, cx=644.76, cy=343.15, d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[give_medication-14] [INFO] [1777553116.051506932] [give_medication_node]: Vision service is ready.
+[give_medication-14] [INFO] [1777553116.060152090] [give_medication_node]: give_medication ready.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:16] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1777553116.264837502] [clear_table_node]: Vision service is ready.
+[clear_table-13] [INFO] [1777553116.281744293] [clear_table_node]: Clear Table Node ready. Waiting for command.
+[clear_table-13] [INFO] [1777553116.282444318] [clear_table_node]: Startup motion disabled at node load; motion begins only after clear_table command.
+[clear_table-13] [INFO] [1777553116.283303850] [clear_table_node]: clear_table scan flags: top_only_scan_mode=False (ADL_CLEAR_TABLE_TOP_ONLY_SCAN='false'), cup_stage1_alignment_enable=True (ADL_CLEAR_TABLE_CUP_ALIGNMENT_ENABLE='true'), two_phase_require_side_sweep_before_priority_exit=True (ADL_CLEAR_TABLE_REQUIRE_SIDE_SWEEP='true'), two_phase_top_full_sweep_before_priority_exit=True.
+[vision_apriltag-9] [INFO] [1777553116.302392415] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[ros2_control_node-1] [WARN] [1777553116.475029865] [controller_manager]: Overrun might occur, Total time : 3475.972 us (Expected < 1000.000 us) --> Read time : 47.893 us, Update time : 21.986 us, Write time : 3406.093 us
+[ros2_control_node-1] [WARN] [1777553116.475103060] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.577331 ms (missed cycles : 4).
+[ros2_control_node-1] [INFO] [1777553116.737210300] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[ros2_control_node-1] [INFO] [1777553116.737267509] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1777553116.750972379] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_bxzx2fm7 
+[spawner-4] [INFO] [1777553116.786765860] [spawner_joint_state_broadcaster]: Loaded joint_state_broadcaster
+[ros2_control_node-1] [INFO] [1777553116.789424363] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1777553116.789818931] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[scene_static-7] [WARN] [1777553116.805391533] [scene_static_node]: Planning scene service not available, waiting...
+[ros2_control_node-1] [INFO] [1777553116.817701731] [controller_manager]: Activating controllers: [ joint_state_broadcaster ]
+[ros2_control_node-1] [INFO] [1777553116.821145753] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1777553116.824005752] [controller_manager]: Overrun might occur, Total time : 4452.110 us (Expected < 1000.000 us) --> Read time : 42.612 us, Update time : 1534.941 us (Switch time : 1496.954 us (Switch chained mode time : 1.870 us, perform mode change time : 3.711 us, Activation time : 1481.506 us, Deactivation time : 1.762 us)), Write time : 2874.557 us
+[spawner-4] [INFO] [1777553116.828648920] [spawner_joint_state_broadcaster]: Configured and activated joint_state_broadcaster
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:16] "GET /status_json HTTP/1.1" 200 -
+[INFO] [spawner-4]: process has finished cleanly [pid 10766]
+[ros2_control_node-1] [WARN] [1777553117.475597063] [controller_manager]: Overrun might occur, Total time : 3049.658 us (Expected < 1000.000 us) --> Read time : 57.276 us, Update time : 69.174 us, Write time : 2923.208 us
+[ros2_control_node-1] [WARN] [1777553117.475670778] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.145508 ms (missed cycles : 4).
+[INFO] [spawner-16]: process started with pid [11033]
+[INFO] [spawner-17]: process started with pid [11034]
+[INFO] [spawner-18]: process started with pid [11035]
+[INFO] [spawner-19]: process started with pid [11036]
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:17] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553117.763702058] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[spawner-19] [INFO] [1777553118.347189659] [spawner_fault_controller]: waiting for service /controller_manager/list_controllers to become available...
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:18] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553118.475850080] [controller_manager]: Overrun might occur, Total time : 2297.939 us (Expected < 1000.000 us) --> Read time : 51.125 us, Update time : 108.921 us, Write time : 2137.893 us
+[ros2_control_node-1] [WARN] [1777553118.475950249] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.424022 ms (missed cycles : 3).
+[ros2_control_node-1] [INFO] [1777553118.602139426] [controller_manager]: Loading controller : 'fault_controller' of type 'picknik_reset_fault_controller/PicknikResetFaultController'
+[ros2_control_node-1] [INFO] [1777553118.602188496] [controller_manager]: Loading controller 'fault_controller'
+[ros2_control_node-1] [INFO] [1777553118.606394356] [controller_manager]: Controller 'fault_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_bxzx2fm7 
+[spawner-19] [INFO] [1777553118.633747129] [spawner_fault_controller]: Loaded fault_controller
+[ros2_control_node-1] [INFO] [1777553118.636345062] [controller_manager]: Configuring controller: 'fault_controller'
+[ros2_control_node-1] [INFO] [1777553118.639707572] [controller_manager]: Activating controllers: [ fault_controller ]
+[scene_static-7] [WARN] [1777553118.810947171] [scene_static_node]: Planning scene service not available, waiting...
+[ros2_control_node-1] [WARN] [1777553118.850583766] [controller_manager]: Overrun might occur, Total time : 8034.401 us (Expected < 1000.000 us) --> Read time : 34.263 us, Update time : 5192.081 us (Switch time : 5085.679 us (Switch chained mode time : 1.028 us, perform mode change time : 34.055 us, Activation time : 5039.862 us, Deactivation time : 0.627 us)), Write time : 2808.057 us
+[ros2_control_node-1] [INFO] [1777553118.850703265] [controller_manager]: Successfully switched controllers!
+[spawner-19] [INFO] [1777553118.856471140] [spawner_fault_controller]: Configured and activated fault_controller
+[spawner-18] [INFO] [1777553119.065120253] [spawner_robotiq_gripper_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-19]: process has finished cleanly [pid 11036]
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:19] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553119.478055586] [controller_manager]: Overrun might occur, Total time : 2503.418 us (Expected < 1000.000 us) --> Read time : 45.467 us, Update time : 170.367 us, Write time : 2287.584 us
+[ros2_control_node-1] [WARN] [1777553119.478129771] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.603876 ms (missed cycles : 3).
+[vision_apriltag-9] [INFO] [1777553119.762045996] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:19] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553120.482480456] [controller_manager]: Overrun might occur, Total time : 4931.381 us (Expected < 1000.000 us) --> Read time : 37.569 us, Update time : 108.562 us, Write time : 4785.250 us
+[ros2_control_node-1] [WARN] [1777553120.482558873] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 5.033219 ms (missed cycles : 6).
+[ros2_control_node-1] [INFO] [1777553120.572282523] [controller_manager]: Loading controller : 'robotiq_gripper_controller' of type 'position_controllers/GripperActionController'
+[ros2_control_node-1] [INFO] [1777553120.572324091] [controller_manager]: Loading controller 'robotiq_gripper_controller'
+[wrist_camera_usb_publisher-8] [INFO] [1777553120.574146323] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[ros2_control_node-1] [INFO] [1777553120.576187623] [controller_manager]: Controller 'robotiq_gripper_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_bxzx2fm7 
+[ros2_control_node-1] [WARN] [1777553120.608756760] [robotiq_gripper_controller]: [Deprecated]: the `position_controllers/GripperActionController` and `effort_controllers::GripperActionController` controllers are replaced by 'parallel_gripper_controllers/GripperActionController' controller
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:20] "GET /status_json HTTP/1.1" 200 -
+[spawner-18] [INFO] [1777553120.614292561] [spawner_robotiq_gripper_controller]: Loaded robotiq_gripper_controller
+[ros2_control_node-1] [INFO] [1777553120.619978707] [controller_manager]: Configuring controller: 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1777553120.620185421] [robotiq_gripper_controller]: Action status changes will be monitored at 20.000000 Hz.
+[ros2_control_node-1] [INFO] [1777553120.630739191] [controller_manager]: Activating controllers: [ robotiq_gripper_controller ]
+[scene_static-7] [WARN] [1777553120.819500964] [scene_static_node]: Planning scene service not available, waiting...
+[ros2_control_node-1] [INFO] [1777553120.840920820] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1777553120.843084714] [controller_manager]: Overrun might occur, Total time : 10536.963 us (Expected < 1000.000 us) --> Read time : 36.582 us, Update time : 8311.525 us (Switch time : 8177.764 us (Switch chained mode time : 1.564 us, perform mode change time : 17.149 us, Activation time : 8148.194 us, Deactivation time : 0.584 us)), Write time : 2188.856 us
+[spawner-18] [INFO] [1777553120.858732602] [spawner_robotiq_gripper_controller]: Configured and activated robotiq_gripper_controller
+[spawner-17] [INFO] [1777553121.052410815] [spawner_twist_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-18]: process has finished cleanly [pid 11035]
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:21] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553121.484912392] [controller_manager]: Overrun might occur, Total time : 5360.555 us (Expected < 1000.000 us) --> Read time : 41.938 us, Update time : 129.022 us, Write time : 5189.595 us
+[ros2_control_node-1] [WARN] [1777553121.485024251] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 5.498185 ms (missed cycles : 6).
+[vision_apriltag-9] [INFO] [1777553121.761689273] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[vision_apriltag-9] [INFO] [1777553121.889754346] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:22] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553122.491608294] [controller_manager]: Overrun might occur, Total time : 12058.583 us (Expected < 1000.000 us) --> Read time : 39.342 us, Update time : 148.874 us, Write time : 11870.367 us
+[ros2_control_node-1] [WARN] [1777553122.491694724] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 12.168370 ms (missed cycles : 13).
+[scene_static-7] [WARN] [1777553122.826776662] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:22] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1777553123.069850043] [controller_manager]: Loading controller : 'twist_controller' of type 'picknik_twist_controller/PicknikTwistController'
+[ros2_control_node-1] [INFO] [1777553123.069898471] [controller_manager]: Loading controller 'twist_controller'
+[ros2_control_node-1] [INFO] [1777553123.080821022] [controller_manager]: Controller 'twist_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_bxzx2fm7 
+[spawner-17] [INFO] [1777553123.131391174] [spawner_twist_controller]: Loaded twist_controller
+[ros2_control_node-1] [INFO] [1777553123.217139095] [controller_manager]: Configuring controller: 'twist_controller'
+[ros2_control_node-1] [INFO] [1777553123.223556402] [twist_controller]: configure successful
+[spawner-16] [INFO] [1777553123.396258725] [spawner_joint_trajectory_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-17]: process has finished cleanly [pid 11034]
+[ros2_control_node-1] [WARN] [1777553123.493713210] [controller_manager]: Overrun might occur, Total time : 3158.840 us (Expected < 1000.000 us) --> Read time : 40.140 us, Update time : 153.409 us, Write time : 2965.291 us
+[ros2_control_node-1] [WARN] [1777553123.493808404] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.282640 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:23] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553123.765839168] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:24] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553124.494055809] [controller_manager]: Overrun might occur, Total time : 2506.410 us (Expected < 1000.000 us) --> Read time : 38.493 us, Update time : 128.638 us, Write time : 2339.279 us
+[ros2_control_node-1] [WARN] [1777553124.494123227] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.597779 ms (missed cycles : 3).
+[scene_static-7] [WARN] [1777553124.833882956] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:25] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553125.495115821] [controller_manager]: Overrun might occur, Total time : 3560.841 us (Expected < 1000.000 us) --> Read time : 44.412 us, Update time : 145.766 us, Write time : 3370.663 us
+[ros2_control_node-1] [WARN] [1777553125.495192939] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.667577 ms (missed cycles : 4).
+[wrist_camera_usb_publisher-8] [INFO] [1777553125.726078437] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-9] [INFO] [1777553125.766414876] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:25] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1777553125.905125443] [controller_manager]: Loading controller : 'joint_trajectory_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[ros2_control_node-1] [INFO] [1777553125.905168615] [controller_manager]: Loading controller 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1777553125.910039995] [controller_manager]: Controller 'joint_trajectory_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_bxzx2fm7 
+[spawner-16] [INFO] [1777553125.953862791] [spawner_joint_trajectory_controller]: Loaded joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777553125.957597928] [controller_manager]: Configuring controller: 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1777553125.958475470] [joint_trajectory_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[ros2_control_node-1] [INFO] [1777553125.958830562] [joint_trajectory_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[ros2_control_node-1] [INFO] [1777553125.959066280] [joint_trajectory_controller]: Using 'splines' interpolation method.
+[ros2_control_node-1] [INFO] [1777553125.971114192] [joint_trajectory_controller]: Action status changes will be monitored at 10.00 Hz.
+[ros2_control_node-1] [INFO] [1777553125.995151349] [controller_manager]: Activating controllers: [ joint_trajectory_controller ]
+[ros2_control_node-1] [INFO] [1777553126.222989822] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1777553126.225897530] [controller_manager]: Overrun might occur, Total time : 28348.002 us (Expected < 1000.000 us) --> Read time : 38.762 us, Update time : 25263.244 us (Switch time : 25123.149 us (Switch chained mode time : 6.351 us, perform mode change time : 23456.830 us, Activation time : 1639.594 us, Deactivation time : 1.514 us)), Write time : 3045.996 us
+[spawner-16] [INFO] [1777553126.229954521] [spawner_joint_trajectory_controller]: Configured and activated joint_trajectory_controller
+[INFO] [spawner-16]: process has finished cleanly [pid 11033]
+[ros2_control_node-1] [WARN] [1777553126.495986644] [controller_manager]: Overrun might occur, Total time : 2434.601 us (Expected < 1000.000 us) --> Read time : 38.210 us, Update time : 217.954 us, Write time : 2178.437 us
+[ros2_control_node-1] [WARN] [1777553126.496071459] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.545794 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:26] "GET /status_json HTTP/1.1" 200 -
+[scene_static-7] [WARN] [1777553126.837970413] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:27] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553127.461047614] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[ros2_control_node-1] [WARN] [1777553127.500736743] [controller_manager]: Overrun might occur, Total time : 11181.495 us (Expected < 1000.000 us) --> Read time : 39.735 us, Update time : 251.082 us, Write time : 10890.678 us
+[ros2_control_node-1] [WARN] [1777553127.500867374] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 11.339874 ms (missed cycles : 12).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:28] "GET /status_json HTTP/1.1" 200 -
+[INFO] [move_group-20]: process started with pid [11137]
+[INFO] [rviz2-21]: process started with pid [11138]
+[vision_apriltag-9] [INFO] [1777553128.193883872] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[move_group-20] [INFO] [1777553128.308566209] [move_group.moveit.moveit.ros.rdf_loader]: Loaded robot model in 0.0106473 seconds
+[move_group-20] [INFO] [1777553128.309563144] [move_group.moveit.moveit.core.robot_model]: Loading robot model 'gen3'...
+[move_group-20] [INFO] [1777553128.310056134] [move_group.moveit.moveit.core.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[move_group-20] [INFO] [1777553128.468757772] [move_group.moveit.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'manipulator': 1 1 1 1 1 1 1
+[ros2_control_node-1] [WARN] [1777553128.503031805] [controller_manager]: Overrun might occur, Total time : 3476.869 us (Expected < 1000.000 us) --> Read time : 43.543 us, Update time : 236.299 us, Write time : 3197.027 us
+[ros2_control_node-1] [WARN] [1777553128.503117924] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.591324 ms (missed cycles : 4).
+[scene_static-7] [WARN] [1777553128.847219400] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:28] "GET /status_json HTTP/1.1" 200 -
+[rviz2-21] [INFO] [1777553129.042256045] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-21] [INFO] [1777553129.043513453] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-21] [INFO] [1777553129.082607392] [rviz2]: Stereo is NOT SUPPORTED
+[ros2_control_node-1] [INFO] [1777553129.251209595] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [WARN] [1777553129.251248325] [controller_manager]: ResourceManager has already loaded a urdf. Ignoring attempt to reload a robot description.
+[move_group-20] [INFO] [1777553129.258606050] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-20] [INFO] [1777553129.258860571] [move_group.moveit.moveit.ros.moveit_cpp]: Listening to 'joint_states' for joint states
+[move_group-20] [INFO] [1777553129.261113012] [move_group.moveit.moveit.ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
+[move_group-20] [INFO] [1777553129.261861600] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
+[move_group-20] [INFO] [1777553129.261893445] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopping existing planning scene publisher.
+[move_group-20] [INFO] [1777553129.262777381] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopped publishing maintained planning scene.
+[move_group-20] [INFO] [1777553129.264488820] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-20] [INFO] [1777553129.264614447] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[move_group-20] [INFO] [1777553129.265294331] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/planning_scene'
+[move_group-20] [INFO] [1777553129.265324425] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
+[move_group-20] [INFO] [1777553129.266096975] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'collision_object'
+[move_group-20] [INFO] [1777553129.266919364] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
+[move_group-20] [WARN] [1777553129.267889001] [move_group.moveit.moveit.ros.occupancy_map_monitor]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
+[move_group-20] [ERROR] [1777553129.267924895] [move_group.moveit.moveit.ros.occupancy_map_monitor]: No 3D sensor plugin(s) defined for octomap updates
+[rviz2-21] Warning: class_loader.impl: SEVERE WARNING!!! A namespace collision has occurred with plugin factory for class rviz_default_plugins::displays::InteractiveMarkerDisplay. New factory will OVERWRITE existing one. This situation occurs when libraries containing plugins are directly linked against an executable (the one running right now generating this message). Please separate plugins out into their own library or just don't link against the library and use either class_loader::ClassLoader/MultiLibraryClassLoader to open.
+[rviz2-21]          at line 321 in /opt/ros/jazzy/include/class_loader/class_loader/class_loader_core.hpp
+[rviz2-21] [WARN] [1777553129.291440704] [rcl.logging_rosout]: Publisher already registered for node name: 'rviz2_moveit'. If this is due to multiple nodes with the same name then all logs for the logger named 'rviz2_moveit' will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[ros2_control_node-1] [WARN] [1777553129.503456592] [controller_manager]: Overrun might occur, Total time : 6906.575 us (Expected < 1000.000 us) --> Read time : 36.993 us, Update time : 245.436 us, Write time : 6624.146 us
+[ros2_control_node-1] [WARN] [1777553129.503530480] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 7.004800 ms (missed cycles : 8).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:29] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553129.765877867] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[move_group-20] [INFO] [1777553129.892925775] [move_group.moveit.moveit.ros.planning_pipeline]: Successfully loaded planner 'OMPL'
+[move_group-20] [INFO] [1777553129.897951821] [move_group]: Try loading adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-20] [INFO] [1777553129.900546343] [move_group]: Loaded adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-20] [INFO] [1777553129.900583554] [move_group]: Try loading adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777553129.901461382] [move_group]: Loaded adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777553129.901484329] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-20] [INFO] [1777553129.901527360] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-20] [INFO] [1777553129.901536131] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-20] [INFO] [1777553129.901554693] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-20] [INFO] [1777553129.906876610] [move_group]: Try loading adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777553129.911760307] [move_group]: Loaded adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777553129.911791662] [move_group]: Try loading adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-20] [INFO] [1777553129.916219537] [move_group]: Loaded adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-20] [INFO] [1777553129.916247874] [move_group]: Try loading adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-20] [INFO] [1777553129.917291368] [move_group]: Loaded adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-20] [INFO] [1777553130.037754803] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added FollowJointTrajectory controller for joint_trajectory_controller
+[move_group-20] [INFO] [1777553130.037829008] [move_group.moveit.moveit.plugins.simple_controller_manager]: robotiq_gripper_controller will command a max effort of: 0
+[move_group-20] [INFO] [1777553130.049295953] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added GripperCommand controller for robotiq_gripper_controller
+[move_group-20] [INFO] [1777553130.049545855] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777553130.049589564] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777553130.050329949] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Trajectory execution is managing controllers
+[move_group-20] [INFO] [1777553130.050374372] [move_group]: MoveGroup debug mode is ON
+[scene_static-7] [INFO] [1777553130.102605661] [scene_static_node]: Planning scene service available. Building static scene...
+[move_group-20] [INFO] [1777553130.141651104] [move_group.moveit.moveit.ros.move_group.executable]: 
+[move_group-20] 
+[move_group-20] ********************************************************
+[move_group-20] * MoveGroup using: 
+[move_group-20] *     - apply_planning_scene_service
+[move_group-20] *     - clear_octomap_service
+[move_group-20] *     - get_group_urdf
+[move_group-20] *     - load_geometry_from_file
+[move_group-20] *     - CartesianPathService
+[move_group-20] *     - execute_trajectory_action
+[move_group-20] *     - get_planning_scene_service
+[move_group-20] *     - kinematics_service
+[move_group-20] *     - move_action
+[move_group-20] *     - motion_plan_service
+[move_group-20] *     - query_planners_service
+[move_group-20] *     - state_validation_service
+[move_group-20] *     - save_geometry_to_file
+[move_group-20] ********************************************************
+[move_group-20] 
+[move_group-20] [INFO] [1777553130.141722919] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context using pipeline ompl
+[move_group-20] [INFO] [1777553130.141739282] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context initialization complete
+[move_group-20] [96mLoading 'move_group/ApplyPlanningSceneService'...[0m
+[move_group-20] [96mLoading 'move_group/ClearOctomapService'...[0m
+[move_group-20] [96mLoading 'move_group/GetUrdfService'...[0m
+[move_group-20] [96mLoading 'move_group/LoadGeometryFromFileService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupCartesianPathService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupExecuteTrajectoryAction'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupGetPlanningSceneService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupKinematicsService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupMoveAction'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupPlanService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupQueryPlannersService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupStateValidationService'...[0m
+[move_group-20] [96mLoading 'move_group/SaveGeometryToFileService'...[0m
+[move_group-20] 
+[move_group-20] [92mYou can start planning now![0m
+[move_group-20] 
+[scene_static-7] [INFO] [1777553130.147174437] [scene_static_node]: Static scene built: 25 objects added to MoveIt planning scene.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:30] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553130.505319614] [controller_manager]: Overrun might occur, Total time : 2762.223 us (Expected < 1000.000 us) --> Read time : 61.252 us, Update time : 255.626 us, Write time : 2445.345 us
+[ros2_control_node-1] [WARN] [1777553130.505418602] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.892372 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [INFO] [1777553130.887094788] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:31] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553131.509573185] [controller_manager]: Overrun might occur, Total time : 4019.367 us (Expected < 1000.000 us) --> Read time : 41.629 us, Update time : 227.753 us, Write time : 3749.985 us
+[ros2_control_node-1] [WARN] [1777553131.509652018] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 4.126189 ms (missed cycles : 5).
+[vision_apriltag-9] [INFO] [1777553131.762124808] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:31] "GET /status_json HTTP/1.1" 200 -
+[rviz2-21] [ERROR] [1777553132.364290274] [rviz2_moveit.moveit.ros.motion_planning_frame]: Action server: /recognize_objects not available
+[rviz2-21] [INFO] [1777553132.409744459] [rviz2_moveit.moveit.ros.motion_planning_frame]: MoveGroup namespace changed: / -> . Reloading params.
+[rviz2-21] [INFO] [1777553132.496605474] [rviz2_moveit.moveit.ros.rdf_loader]: Loaded robot model in 0.021464 seconds
+[rviz2-21] [INFO] [1777553132.496721194] [rviz2_moveit.moveit.core.robot_model]: Loading robot model 'gen3'...
+[rviz2-21] [INFO] [1777553132.496750199] [rviz2_moveit.moveit.core.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[ros2_control_node-1] [WARN] [1777553132.514098395] [controller_manager]: Overrun might occur, Total time : 9547.206 us (Expected < 1000.000 us) --> Read time : 38.523 us, Update time : 254.336 us, Write time : 9254.347 us
+[ros2_control_node-1] [WARN] [1777553132.514186509] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 9.660438 ms (missed cycles : 10).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:32] "GET /status_json HTTP/1.1" 200 -
+[rviz2-21] [INFO] [1777553132.739187024] [rviz2_moveit.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'manipulator': 1 1 1 1 1 1 1
+[vision_apriltag-9] [INFO] [1777553132.804582742] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[rviz2-21] [INFO] [1777553133.158914408] [rviz2_moveit.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[rviz2-21] [INFO] [1777553133.165588429] [rviz2_moveit.moveit.ros.planning_scene_monitor]: Listening to '/monitored_planning_scene'
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:33] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553133.514120945] [controller_manager]: Overrun might occur, Total time : 3569.741 us (Expected < 1000.000 us) --> Read time : 37.586 us, Update time : 266.073 us, Write time : 3266.082 us
+[ros2_control_node-1] [WARN] [1777553133.514193813] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.667612 ms (missed cycles : 4).
+[rviz2-21] [INFO] [1777553133.553336992] [interactive_marker_display_103780643614176]: Connected on namespace: /rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic
+[rviz2-21] [INFO] [1777553133.564199228] [rviz2_moveit.moveit.ros.robot_interaction]: No active joints or end effectors found for group 'gripper'. Make sure that kinematics.yaml is loaded in this node's namespace.
+[rviz2-21] [INFO] [1777553133.565169404] [rviz2_moveit.moveit.ros.robot_interaction]: No active joints or end effectors found for group 'gripper'. Make sure that kinematics.yaml is loaded in this node's namespace.
+[rviz2-21] [INFO] [1777553133.579019207] [rviz2_moveit.moveit.ros.motion_planning_frame]: group gripper
+[rviz2-21] [INFO] [1777553133.579059628] [rviz2_moveit.moveit.ros.motion_planning_frame]: Constructing new MoveGroup connection for group 'gripper' in namespace ''
+[rviz2-21] [INFO] [1777553133.597739849] [interactive_marker_display_103780643614176]: Sending request for interactive markers
+[rviz2-21] [INFO] [1777553133.619564607] [rviz2_moveit.moveit.ros.move_group_interface]: Ready to take commands for planning group gripper.
+[rviz2-21] [INFO] [1777553133.621224064] [rviz2_moveit.moveit.ros.motion_planning_frame]: group gripper
+[rviz2-21] [INFO] [1777553133.631453619] [interactive_marker_display_103780643614176]: Service response received for initialization
+[vision_apriltag-9] [INFO] [1777553133.765414558] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:34] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553134.517551060] [controller_manager]: Overrun might occur, Total time : 4000.450 us (Expected < 1000.000 us) --> Read time : 45.158 us, Update time : 252.361 us, Write time : 3702.931 us
+[ros2_control_node-1] [WARN] [1777553134.517625384] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 4.099770 ms (missed cycles : 5).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:34] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553135.517885285] [controller_manager]: Overrun might occur, Total time : 2332.712 us (Expected < 1000.000 us) --> Read time : 54.091 us, Update time : 274.679 us, Write time : 2003.942 us
+[ros2_control_node-1] [WARN] [1777553135.517978441] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.452148 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:35] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553135.762892598] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[wrist_camera_usb_publisher-8] [INFO] [1777553136.049173432] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:36] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553136.520544725] [controller_manager]: Overrun might occur, Total time : 3974.484 us (Expected < 1000.000 us) --> Read time : 85.727 us, Update time : 347.302 us, Write time : 3541.455 us
+[ros2_control_node-1] [WARN] [1777553136.520659221] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 4.131793 ms (missed cycles : 5).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:37] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553137.522470415] [controller_manager]: Overrun might occur, Total time : 5920.750 us (Expected < 1000.000 us) --> Read time : 35.308 us, Update time : 219.352 us, Write time : 5666.090 us
+[ros2_control_node-1] [WARN] [1777553137.522553113] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 6.027000 ms (missed cycles : 7).
+[vision_apriltag-9] [INFO] [1777553137.763407839] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:37] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553137.898744732] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[ros2_control_node-1] [WARN] [1777553138.523400783] [controller_manager]: Overrun might occur, Total time : 2853.489 us (Expected < 1000.000 us) --> Read time : 40.786 us, Update time : 232.585 us, Write time : 2580.118 us
+[ros2_control_node-1] [WARN] [1777553138.523460702] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.935759 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:38] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:39] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553139.524596586] [controller_manager]: Overrun might occur, Total time : 6028.218 us (Expected < 1000.000 us) --> Read time : 60.217 us, Update time : 260.885 us, Write time : 5707.116 us
+[ros2_control_node-1] [WARN] [1777553139.524745010] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 6.217446 ms (missed cycles : 7).
+[vision_apriltag-9] [INFO] [1777553139.765835997] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:40] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553140.528366278] [controller_manager]: Overrun might occur, Total time : 2806.210 us (Expected < 1000.000 us) --> Read time : 47.717 us, Update time : 196.637 us, Write time : 2561.856 us
+[ros2_control_node-1] [WARN] [1777553140.528433326] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.907923 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:40] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777553141.209207866] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] [INFO] [1777553141.253334901] [adl_ui_node]: UI command published: give_medication
+[scene_from_vision-10] [INFO] [1777553141.267076313] [scene_from_vision_node]: Scene memory cleared. Removed remembered IDs: []
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:41] "POST /command HTTP/1.1" 200 -
+[give_medication-14] [INFO] [1777553141.310498471] [give_medication_node]: Scene memory cleared. Removed remembered IDs: []
+[give_medication-14] [INFO] [1777553141.313542171] [give_medication_node]: look_at_table_horizontal_side_scan: using deterministic joint pose from ADL_HORIZONTAL_SIDE_SCAN_JOINT_*.
+[give_medication-14] [INFO] [1777553141.316605031] [give_medication_node]: look_at_table_horizontal_side_scan: current arm is not at target (worst=joint_6:2.278 rad > 0.080).
+[give_medication-14] [INFO] [1777553141.317595936] [give_medication_node]: look_at_table_horizontal_side_scan: moving with deterministic fixed joint pose.
+[give_medication-14] [INFO] [1777553141.318751664] [give_medication_node]: _send_goal: dispatching MoveGroup request group=manipulator, attempts=10, allowed_time=18.00s, vel_scale=0.250, accel_scale=0.250, gc1:joints(joint_1=+1.523+/-0.030, joint_2=+1.460+/-0.030, joint_3=-3.129+/-0.030, joint_4=-2.404+/-0.030, joint_5=+1.744+/-0.030, joint_6=+1.432+/-0.030, joint_7=+2.304+/-0.030)
+[move_group-20] [ERROR] [1777553141.320749357] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[INFO] [launch.user]: [arm_start.launch] move_group reported an empty JointState while sanitizer mode is active. Keeping the launch alive, but this still indicates a planning-state problem. move_group output: [ERROR] [1777553141.320749357] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[give_medication-14] [INFO] [1777553141.328633998] [give_medication_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777553141.333081070] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777553141.334805989] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:41] "GET /status_json HTTP/1.1" 200 -
+[give_medication-14] [INFO] [1777553141.339823210] [give_medication_node]: _send_goal: MoveGroup goal accepted.
+[move_group-20] [INFO] [1777553141.342023813] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777553141.342089107] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777553141.342118859] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777553141.342143286] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777553141.343630485] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777553141.343736593] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777553141.343765801] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777553141.343820402] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777553141.345510803] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777553141.345799938] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1777553141.400215561] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777553141.416425489] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1777553141.419504280] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1777553141.419849338] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1777553141.420247159] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777553141.420280089] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777553141.420457403] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1777553141.439641688] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1777553141.439722872] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777553141.439757624] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777553141.440046562] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777553141.443902757] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1777553141.444036683] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1777553141.444984480] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1777553141.445019759] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[ros2_control_node-1] [WARN] [1777553141.534204307] [controller_manager]: Overrun might occur, Total time : 6650.030 us (Expected < 1000.000 us) --> Read time : 45.010 us, Update time : 284.391 us, Write time : 6320.629 us
+[ros2_control_node-1] [WARN] [1777553141.534274679] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 6.749486 ms (missed cycles : 7).
+[vision_apriltag-9] [INFO] [1777553141.766811178] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:42] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553142.535597978] [controller_manager]: Overrun might occur, Total time : 5046.918 us (Expected < 1000.000 us) --> Read time : 42.384 us, Update time : 279.598 us, Write time : 4724.936 us
+[ros2_control_node-1] [WARN] [1777553142.535694093] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 5.167527 ms (missed cycles : 6).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:42] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553143.168466927] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[ros2_control_node-1] [WARN] [1777553143.540612425] [controller_manager]: Overrun might occur, Total time : 9051.075 us (Expected < 1000.000 us) --> Read time : 47.142 us, Update time : 325.589 us, Write time : 8678.344 us
+[ros2_control_node-1] [WARN] [1777553143.540694883] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 9.168534 ms (missed cycles : 10).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:43] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553143.762951788] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:44] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553144.541644395] [controller_manager]: Overrun might occur, Total time : 8084.838 us (Expected < 1000.000 us) --> Read time : 73.636 us, Update time : 328.036 us, Write time : 7683.166 us
+[ros2_control_node-1] [WARN] [1777553144.541712741] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 8.187174 ms (missed cycles : 9).
+[joint_state_sanitizer-3] [WARN] [1777553144.591316458] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_3:+3.134->+3.132
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:45] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553145.545515960] [controller_manager]: Overrun might occur, Total time : 5956.706 us (Expected < 1000.000 us) --> Read time : 51.551 us, Update time : 348.315 us, Write time : 5556.840 us
+[ros2_control_node-1] [WARN] [1777553145.545620050] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 6.093822 ms (missed cycles : 7).
+[vision_apriltag-9] [INFO] [1777553145.761697566] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:45] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777553146.367738336] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[ros2_control_node-1] [WARN] [1777553146.546916305] [controller_manager]: Overrun might occur, Total time : 2363.907 us (Expected < 1000.000 us) --> Read time : 40.986 us, Update time : 272.199 us, Write time : 2050.722 us
+[ros2_control_node-1] [WARN] [1777553146.546982152] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.456344 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:46] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553147.405301701] [vision_apriltag_node]: Vision AprilTag visible IDs: [0]
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:47] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553147.547586927] [controller_manager]: Overrun might occur, Total time : 3035.229 us (Expected < 1000.000 us) --> Read time : 50.470 us, Update time : 274.633 us, Write time : 2710.126 us
+[ros2_control_node-1] [WARN] [1777553147.547656725] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.130915 ms (missed cycles : 4).
+[vision_apriltag-9] [INFO] [1777553147.860722376] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:48] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553148.265527419] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[ros2_control_node-1] [WARN] [1777553148.549479352] [controller_manager]: Overrun might occur, Total time : 3929.669 us (Expected < 1000.000 us) --> Read time : 30.275 us, Update time : 249.003 us, Write time : 3650.391 us
+[ros2_control_node-1] [WARN] [1777553148.549585989] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 4.060099 ms (missed cycles : 5).
+[vision_apriltag-9] [INFO] [1777553148.876118601] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:48] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1777553148.993821175] [joint_trajectory_controller]: Goal reached, success!
+[move_group-20] [INFO] [1777553149.046654377] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' successfully finished
+[move_group-20] [INFO] [1777553149.099755442] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-20] [INFO] [1777553149.109896514] [move_group.moveit.moveit.ros.move_group.move_action]: Solution was found and executed.
+[give_medication-14] [INFO] [1777553149.118719116] [give_medication_node]: _send_goal: MoveGroup execution completed successfully.
+[give_medication-14] [INFO] [1777553149.234695534] [give_medication_node]: _send_goal: settled live EE pose pos=(0.165, -0.170, 0.098), ori=(0.416, 0.577, 0.542, 0.447)
+[give_medication-14] [INFO] [1777553149.235495816] [give_medication_node]: [CAL] horizontal side scan joint snapshot: ADL_HORIZONTAL_SIDE_SCAN_JOINT_1=+1.550020 ADL_HORIZONTAL_SIDE_SCAN_JOINT_2=+1.441915 ADL_HORIZONTAL_SIDE_SCAN_JOINT_3=-3.131593 ADL_HORIZONTAL_SIDE_SCAN_JOINT_4=-2.406747 ADL_HORIZONTAL_SIDE_SCAN_JOINT_5=+1.750899 ADL_HORIZONTAL_SIDE_SCAN_JOINT_6=+1.416394 ADL_HORIZONTAL_SIDE_SCAN_JOINT_7=+2.331484
+[give_medication-14] [INFO] [1777553149.236190823] [give_medication_node]: Vision ENABLED.
+[scene_from_vision-10] [INFO] [1777553149.239120682] [scene_from_vision_node]: Scene scan started for 5.0s. Visible detections will be sampled, filtered, and committed at scan end.
+[vision_apriltag-9] [INFO] [1777553149.246035489] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553149.342988141] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553149.444044595] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553149.548609474] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[ros2_control_node-1] [WARN] [1777553149.551674226] [controller_manager]: Overrun might occur, Total time : 3121.207 us (Expected < 1000.000 us) --> Read time : 46.336 us, Update time : 249.974 us, Write time : 2824.897 us
+[ros2_control_node-1] [WARN] [1777553149.551749655] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.223434 ms (missed cycles : 4).
+[joint_state_sanitizer-3] [WARN] [1777553149.591946879] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_3:-3.136->-3.132
+[vision_apriltag-9] [INFO] [1777553149.622950927] [vision_apriltag_node]: Vision AprilTag visible IDs: [2]
+[vision_apriltag-9] [INFO] [1777553149.647259125] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:49] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553149.749414963] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553149.750345917] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553149.849910894] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553149.852253210] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553149.859746134] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553149.950723944] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553149.951951194] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.057788384] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.059998954] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.158676522] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.162223057] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.259329859] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.262775420] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.359851365] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.360947584] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:50] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553150.480040576] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.485551746] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[ros2_control_node-1] [WARN] [1777553150.554499317] [controller_manager]: Overrun might occur, Total time : 3952.365 us (Expected < 1000.000 us) --> Read time : 35.533 us, Update time : 213.460 us, Write time : 3703.372 us
+[ros2_control_node-1] [WARN] [1777553150.554567403] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 4.041665 ms (missed cycles : 5).
+[vision_apriltag-9] [INFO] [1777553150.574067195] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.576460371] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.675607745] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.677143399] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.776785198] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.777050588] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.858862617] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.859985614] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.876964084] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.879466338] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.986144162] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553150.988018022] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.081368773] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.084746137] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:51] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553151.184332229] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.185260052] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.307945759] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.312117978] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.390186593] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.399490940] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.486182563] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.487137161] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[wrist_camera_usb_publisher-8] [INFO] [1777553151.530560692] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[ros2_control_node-1] [WARN] [1777553151.557147815] [controller_manager]: Overrun might occur, Total time : 3591.083 us (Expected < 1000.000 us) --> Read time : 42.863 us, Update time : 229.162 us, Write time : 3319.058 us
+[ros2_control_node-1] [WARN] [1777553151.557264656] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.737903 ms (missed cycles : 4).
+[vision_apriltag-9] [INFO] [1777553151.587485494] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.589217332] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.697256226] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.707165115] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.791776320] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.793108202] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.858038774] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.864301986] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.893872375] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.898738513] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:51] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553151.994217994] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553151.995290586] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.103751581] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.105166340] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.202384100] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.209203398] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.302199001] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.302947854] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.400109265] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.401094063] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.503180258] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.505582165] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[ros2_control_node-1] [WARN] [1777553152.559210317] [controller_manager]: Overrun might occur, Total time : 2663.537 us (Expected < 1000.000 us) --> Read time : 61.467 us, Update time : 256.526 us, Write time : 2345.544 us
+[ros2_control_node-1] [WARN] [1777553152.559267598] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.742534 ms (missed cycles : 3).
+[vision_apriltag-9] [INFO] [1777553152.601597092] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.602828835] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:52] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553152.703198790] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.704517915] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.815039548] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.824625957] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.877677637] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.880339551] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.910239267] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553152.913988779] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.011725529] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.014681820] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.112790157] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.114054602] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.212596409] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.219702333] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.314624262] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.317013044] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.415510884] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.416656241] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:53] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553153.516563705] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.517538319] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[ros2_control_node-1] [WARN] [1777553153.559449134] [controller_manager]: Overrun might occur, Total time : 2890.305 us (Expected < 1000.000 us) --> Read time : 65.096 us, Update time : 259.772 us, Write time : 2565.437 us
+[ros2_control_node-1] [WARN] [1777553153.559534931] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.008517 ms (missed cycles : 4).
+[vision_apriltag-9] [INFO] [1777553153.619056298] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.619356460] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.721214382] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.722855286] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.747222488] [vision_apriltag_node]: Vision AprilTag detection debug: 2:cv2.solvePnP_ippe_square:adaptive@(714,304)
+[vision_apriltag-9] [INFO] [1777553153.821665059] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.828468768] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.861059775] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.871753891] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.921600865] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553153.922551971] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553154.019503711] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553154.022629269] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553154.125035821] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553154.129573745] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:54] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553154.222167820] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553154.223981111] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[scene_from_vision-10] [INFO] [1777553154.321907380] [scene_from_vision_node]: Scan committed tag 0: raw=55, accepted=55, rejected=0, median tag pose x=0.463, y=0.098, z=-0.463. object center x=0.463, y=0.098, z=-0.332, yaw=+0.0deg.
+[scene_from_vision-10] [INFO] [1777553154.325462877] [scene_from_vision_node]: Scan committed tag 2: raw=49, accepted=49, rejected=0, median tag pose x=0.828, y=-0.043, z=0.183. object center x=0.773, y=-0.075, z=0.151, yaw=-164.6deg. table_delta x=+0.091, y=-0.075.
+[scene_from_vision-10] [INFO] [1777553154.327369800] [scene_from_vision_node]: Published obj_0 (new) at x=0.463, y=0.098, z=-0.332, yaw=+0.0deg
+[scene_from_vision-10] [INFO] [1777553154.329221043] [scene_from_vision_node]: Published obj_2 (new) at x=0.773, y=-0.075, z=0.151, yaw=-164.6deg
+[scene_from_vision-10] [INFO] [1777553154.332691120] [scene_from_vision_node]: Scene scan complete. Remembered object IDs: [0, 2]
+[scene_from_vision-10] [INFO] [1777553154.334544086] [scene_from_vision_node]: /apply_planning_scene accepted dynamic scene updates; MoveIt should mirror these objects to RViz.
+[give_medication-14] [INFO] [1777553154.356429038] [give_medication_node]: Scene scan complete. Remembered object IDs: [0, 2]
+[give_medication-14] [INFO] [1777553154.457837757] [give_medication_node]: Medication startup scene scan remembered IDs: [0, 2]
+[give_medication-14] [WARN] [1777553154.459164664] [give_medication_node]: Medication startup scene scan did not latch tag ID 1. Pose lookup will continue with live-vision fallback.
+[give_medication-14] [WARN] [1777553154.470983600] [give_medication_node]: Scene memory pose for tag ID 1 unavailable. Response: Tag ID 1 is not in scene memory.. Falling back to live vision.
+[ros2_control_node-1] [WARN] [1777553154.560025631] [controller_manager]: Overrun might occur, Total time : 3472.945 us (Expected < 1000.000 us) --> Read time : 62.844 us, Update time : 377.115 us, Write time : 3032.986 us
+[ros2_control_node-1] [WARN] [1777553154.560107541] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.581586 ms (missed cycles : 4).
+[joint_state_sanitizer-3] [WARN] [1777553154.592150186] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_3:-3.136->-3.132
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:54] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553155.561501399] [controller_manager]: Overrun might occur, Total time : 2948.947 us (Expected < 1000.000 us) --> Read time : 37.492 us, Update time : 242.449 us, Write time : 2669.006 us
+[ros2_control_node-1] [WARN] [1777553155.561594139] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.067326 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:55] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1777553156.368715478] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.463, y=0.098, z=-0.332, yaw=+0.0deg
+[scene_from_vision-10] [INFO] [1777553156.370654686] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.773, y=-0.075, z=0.151, yaw=-164.6deg
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:56] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553156.564438535] [controller_manager]: Overrun might occur, Total time : 2883.301 us (Expected < 1000.000 us) --> Read time : 58.526 us, Update time : 298.898 us, Write time : 2525.877 us
+[ros2_control_node-1] [WARN] [1777553156.564514231] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.988321 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [INFO] [1777553156.697134533] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:57] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553157.565306680] [controller_manager]: Overrun might occur, Total time : 2758.441 us (Expected < 1000.000 us) --> Read time : 43.850 us, Update time : 232.816 us, Write time : 2481.775 us
+[ros2_control_node-1] [WARN] [1777553157.565385495] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.859359 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:57] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] [INFO] [1777553158.387832748] [adl_ui_node]: UI command published: emergency_stop_retract
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:58] "POST /command HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:58] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553158.567195929] [controller_manager]: Overrun might occur, Total time : 2632.447 us (Expected < 1000.000 us) --> Read time : 43.661 us, Update time : 262.998 us, Write time : 2325.788 us
+[ros2_control_node-1] [WARN] [1777553158.567283452] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.756964 ms (missed cycles : 3).
+[adl_controller-11] [INFO] [1777553158.613564557] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_6:2.286 rad > 0.100).
+[adl_controller-11] [INFO] [1777553158.614201611] [adl_controller_node]: go_retract: planning to RETRACT_JOINTS...
+[adl_controller-11] [INFO] [1777553158.615205493] [adl_controller_node]: _send_goal: dispatching MoveGroup request group=manipulator, attempts=10, allowed_time=15.00s, vel_scale=0.250, accel_scale=0.250, gc1:joints(joint_1=+0.000+/-0.030, joint_2=-0.350+/-0.030, joint_3=+3.140+/-0.030, joint_4=-2.540+/-0.030, joint_5=+0.000+/-0.030, joint_6=-0.870+/-0.030, joint_7=+1.570+/-0.030)
+[move_group-20] [ERROR] [1777553158.618684520] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[adl_controller-11] [INFO] [1777553158.622381808] [adl_controller_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777553158.624526153] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777553158.625343651] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[adl_controller-11] [INFO] [1777553158.633592357] [adl_controller_node]: _send_goal: MoveGroup goal accepted.
+[move_group-20] [INFO] [1777553158.640497071] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777553158.640558352] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777553158.640582403] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777553158.640595536] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777553158.640945822] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777553158.641013671] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777553158.641034841] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777553158.641072360] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777553158.641742478] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777553158.641837527] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1777553158.690827841] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777553158.703253693] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1777553158.706849445] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1777553158.707120796] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1777553158.707578168] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777553158.707614114] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777553158.707719458] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1777553158.721543333] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1777553158.721617821] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777553158.721649798] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777553158.721844923] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777553158.723007681] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1777553158.723076635] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1777553158.726698561] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1777553158.726739316] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[vision_apriltag-9] [INFO] [1777553158.764371571] [vision_apriltag_node]: Vision AprilTag detection debug: 2:cv2.solvePnP_ippe_square:adaptive@(714,304)
+[scene_from_vision-10] [INFO] [1777553158.876090671] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.463, y=0.098, z=-0.332, yaw=+0.0deg
+[scene_from_vision-10] [INFO] [1777553158.878423844] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.773, y=-0.075, z=0.151, yaw=-164.6deg
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:59] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [WARN] [1777553159.505207056] [vision_apriltag_node]: Tag ID 1 did not produce a fresh base_link pose within 5.0s.
+[give_medication-14] [WARN] [1777553159.527661619] [give_medication_node]: Failed to get pose for tag ID 1. Response: Tag ID 1 did not produce a fresh base_link pose within 5.0s.
+[ros2_control_node-1] [WARN] [1777553159.570591478] [controller_manager]: Overrun might occur, Total time : 4042.855 us (Expected < 1000.000 us) --> Read time : 51.338 us, Update time : 269.554 us, Write time : 3721.963 us
+[ros2_control_node-1] [WARN] [1777553159.570672076] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 4.146090 ms (missed cycles : 5).
+[joint_state_sanitizer-3] [WARN] [1777553159.592667518] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_3:-3.135->-3.132
+[give_medication-14] [WARN] [1777553159.728802539] [give_medication_node]: give_medication cancelled at pose wait.
+[give_medication-14] [INFO] [1777553159.729660015] [give_medication_node]: Medication startup recovery sweep offsets: [('right', {'joint_1': -0.24, 'joint_6': -0.0}), ('right_outer', {'joint_1': -0.4, 'joint_6': -0.0}), ('left', {'joint_1': 0.14, 'joint_6': 0.0})]
+[give_medication-14] [WARN] [1777553159.730315895] [give_medication_node]: give_medication cancelled at medication recovery sweep before 'right'.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:45:59] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553160.572328260] [controller_manager]: Overrun might occur, Total time : 2786.509 us (Expected < 1000.000 us) --> Read time : 26.250 us, Update time : 234.039 us, Write time : 2526.220 us
+[ros2_control_node-1] [WARN] [1777553160.572417125] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.878838 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:00] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1777553161.358267768] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.463, y=0.098, z=-0.332, yaw=+0.0deg
+[scene_from_vision-10] [INFO] [1777553161.361084775] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.773, y=-0.075, z=0.151, yaw=-164.6deg
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:01] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553161.572523315] [controller_manager]: Overrun might occur, Total time : 2944.858 us (Expected < 1000.000 us) --> Read time : 56.717 us, Update time : 339.005 us, Write time : 2549.136 us
+[ros2_control_node-1] [WARN] [1777553161.572640504] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.114096 ms (missed cycles : 4).
+[vision_apriltag-9] [INFO] [1777553161.765889543] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 2.5s.
+[wrist_camera_usb_publisher-8] [INFO] [1777553161.851459941] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:02] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553162.575696441] [controller_manager]: Overrun might occur, Total time : 3129.375 us (Expected < 1000.000 us) --> Read time : 51.381 us, Update time : 320.884 us, Write time : 2757.110 us
+[ros2_control_node-1] [WARN] [1777553162.575780721] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.254717 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:02] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553163.578151719] [controller_manager]: Overrun might occur, Total time : 2606.934 us (Expected < 1000.000 us) --> Read time : 31.114 us, Update time : 241.768 us, Write time : 2334.052 us
+[ros2_control_node-1] [WARN] [1777553163.578224767] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.699292 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:03] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553163.767399231] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 4.5s.
+[vision_apriltag-9] [INFO] [1777553163.816237909] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[scene_from_vision-10] [INFO] [1777553163.857756641] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.463, y=0.098, z=-0.332, yaw=+0.0deg
+[scene_from_vision-10] [INFO] [1777553163.859448294] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.773, y=-0.075, z=0.151, yaw=-164.6deg
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:04] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553164.579272473] [controller_manager]: Overrun might occur, Total time : 2714.361 us (Expected < 1000.000 us) --> Read time : 49.589 us, Update time : 284.172 us, Write time : 2380.600 us
+[ros2_control_node-1] [WARN] [1777553164.579454236] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.926292 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:05] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553165.579311274] [controller_manager]: Overrun might occur, Total time : 2763.160 us (Expected < 1000.000 us) --> Read time : 35.792 us, Update time : 264.895 us, Write time : 2462.473 us
+[ros2_control_node-1] [WARN] [1777553165.582346070] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.820248 ms (missed cycles : 3).
+[vision_apriltag-9] [INFO] [1777553165.763847043] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 6.5s.
+[scene_from_vision-10] [INFO] [1777553165.858506028] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.463, y=0.098, z=-0.332, yaw=+0.0deg
+[scene_from_vision-10] [INFO] [1777553165.861172421] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.773, y=-0.075, z=0.151, yaw=-164.6deg
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:05] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1777553166.273711355] [joint_trajectory_controller]: Goal reached, success!
+[move_group-20] [INFO] [1777553166.327573451] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' successfully finished
+[move_group-20] [INFO] [1777553166.379593094] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-20] [INFO] [1777553166.379909619] [move_group.moveit.moveit.ros.move_group.move_action]: Solution was found and executed.
+[adl_controller-11] [INFO] [1777553166.385561513] [adl_controller_node]: _send_goal: MoveGroup execution completed successfully.
+[adl_controller-11] [INFO] [1777553166.490659674] [adl_controller_node]: _send_goal: settled live EE pose pos=(0.128, 0.004, 0.326), ori=(0.691, 0.722, 0.024, 0.028)
+[ros2_control_node-1] [WARN] [1777553166.581503241] [controller_manager]: Overrun might occur, Total time : 2944.860 us (Expected < 1000.000 us) --> Read time : 43.025 us, Update time : 231.641 us, Write time : 2670.194 us
+[ros2_control_node-1] [WARN] [1777553166.585576644] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.050278 ms (missed cycles : 4).
+[move_group-20] [WARN] [1777553166.595532002] [move_group.moveit.moveit.core.planning_scene]: Tried to remove world object 'obj_0', but it does not exist in this scene.
+[move_group-20] [WARN] [1777553166.595610399] [move_group.moveit.moveit.core.planning_scene]: Tried to remove world object 'obj_2', but it does not exist in this scene.
+[scene_from_vision-10] [INFO] [1777553166.595931869] [scene_from_vision_node]: Scene memory cleared. Removed remembered IDs: [0, 2]
+[scene_from_vision-10] [WARN] [1777553166.601276817] [scene_from_vision_node]: /apply_planning_scene rejected scene clear.
+[rviz2-21] [WARN] [1777553166.690411447] [rviz2_moveit.moveit.core.planning_scene]: Tried to remove world object 'obj_0', but it does not exist in this scene.
+[rviz2-21] [WARN] [1777553166.690498340] [rviz2_moveit.moveit.core.planning_scene]: Tried to remove world object 'obj_2', but it does not exist in this scene.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:06] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553166.860119790] [vision_apriltag_node]: Service: Tag 0 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553166.863408748] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[wrist_camera_usb_publisher-8] [INFO] [1777553167.012567219] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-9] [INFO] [1777553167.464713584] [vision_apriltag_node]: Removed stale tag ID 0 from detected tags
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:07] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553167.583740522] [controller_manager]: Overrun might occur, Total time : 3191.948 us (Expected < 1000.000 us) --> Read time : 41.035 us, Update time : 238.785 us, Write time : 2912.128 us
+[ros2_control_node-1] [WARN] [1777553167.587282445] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.756414 ms (missed cycles : 3).
+[vision_apriltag-9] [INFO] [1777553167.762635952] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 8.5s.
+[vision_apriltag-9] [INFO] [1777553167.856924884] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:08] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553168.584386399] [controller_manager]: Overrun might occur, Total time : 2821.430 us (Expected < 1000.000 us) --> Read time : 57.138 us, Update time : 289.547 us, Write time : 2474.745 us
+[ros2_control_node-1] [WARN] [1777553168.587324618] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.798985 ms (missed cycles : 3).
+[vision_apriltag-9] [INFO] [1777553168.857881441] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:08] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553169.587404488] [controller_manager]: Overrun might occur, Total time : 2852.024 us (Expected < 1000.000 us) --> Read time : 51.456 us, Update time : 241.500 us, Write time : 2559.068 us
+[ros2_control_node-1] [WARN] [1777553169.587485125] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.958960 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:09] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553169.765226718] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 10.5s.
+[vision_apriltag-9] [INFO] [1777553169.860034177] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777553170.451806061] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:10] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553170.590103222] [controller_manager]: Overrun might occur, Total time : 4547.676 us (Expected < 1000.000 us) --> Read time : 55.245 us, Update time : 275.824 us, Write time : 4216.607 us
+[ros2_control_node-1] [WARN] [1777553170.590207964] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 4.679464 ms (missed cycles : 5).
+[vision_apriltag-9] [INFO] [1777553170.867571980] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:11] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553171.590325941] [controller_manager]: Overrun might occur, Total time : 2773.441 us (Expected < 1000.000 us) --> Read time : 49.645 us, Update time : 244.564 us, Write time : 2479.232 us
+[ros2_control_node-1] [WARN] [1777553171.590412162] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.886145 ms (missed cycles : 3).
+[adl_controller-11] [WARN] [1777553171.602537476] [adl_controller_node]: Scene clear timed out after give_medication terminal transition.
+[scene_from_vision-10] [INFO] [1777553171.759684796] [scene_from_vision_node]: Scene memory cleared. Removed remembered IDs: []
+[vision_apriltag-9] [INFO] [1777553171.766338852] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 12.5s.
+[vision_apriltag-9] [INFO] [1777553171.858088593] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:11] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777553172.014375427] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[ros2_control_node-1] [WARN] [1777553172.592526760] [controller_manager]: Overrun might occur, Total time : 2940.222 us (Expected < 1000.000 us) --> Read time : 165.018 us, Update time : 592.027 us, Write time : 2183.177 us
+[ros2_control_node-1] [WARN] [1777553172.592609893] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.083978 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:12] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553172.866172298] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:13] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553173.594553234] [controller_manager]: Overrun might occur, Total time : 2988.311 us (Expected < 1000.000 us) --> Read time : 63.655 us, Update time : 269.781 us, Write time : 2654.875 us
+[ros2_control_node-1] [WARN] [1777553173.594639616] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.113276 ms (missed cycles : 4).
+[vision_apriltag-9] [INFO] [1777553173.766901815] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 14.5s.
+[vision_apriltag-9] [INFO] [1777553173.860255172] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:14] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553174.595742319] [controller_manager]: Overrun might occur, Total time : 3162.416 us (Expected < 1000.000 us) --> Read time : 55.164 us, Update time : 256.589 us, Write time : 2850.663 us
+[ros2_control_node-1] [WARN] [1777553174.595946304] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.418142 ms (missed cycles : 4).
+[vision_apriltag-9] [INFO] [1777553174.859215353] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:15] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553175.598500465] [controller_manager]: Overrun might occur, Total time : 2942.515 us (Expected < 1000.000 us) --> Read time : 45.424 us, Update time : 262.144 us, Write time : 2634.947 us
+[ros2_control_node-1] [WARN] [1777553175.598586123] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.060114 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:15] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777553175.765460185] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 16.5s.
+[vision_apriltag-9] [INFO] [1777553175.787206465] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-9] [INFO] [1777553175.857956327] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:16] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553176.601455399] [controller_manager]: Overrun might occur, Total time : 2908.922 us (Expected < 1000.000 us) --> Read time : 32.206 us, Update time : 218.582 us, Write time : 2658.134 us
+[ros2_control_node-1] [WARN] [1777553176.601534902] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.008911 ms (missed cycles : 4).
+[adl_controller-11] [WARN] [1777553176.786100897] [adl_controller_node]: Scene clear timed out after give_medication terminal transition.
+[vision_apriltag-9] [INFO] [1777553176.857492520] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[wrist_camera_usb_publisher-8] [INFO] [1777553177.169324075] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:17] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777553177.604480601] [controller_manager]: Overrun might occur, Total time : 2922.679 us (Expected < 1000.000 us) --> Read time : 56.729 us, Update time : 369.961 us, Write time : 2495.989 us
+[ros2_control_node-1] [WARN] [1777553177.604586111] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.059620 ms (missed cycles : 4).
+[vision_apriltag-9] [INFO] [1777553177.762934381] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 18.5s.
+[vision_apriltag-9] [INFO] [1777553177.866654700] [vision_apriltag_node]: Service: Tag 2 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [30/Apr/2026 08:46:18] "GET /status_json HTTP/1.1" 200 -

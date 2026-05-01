@@ -1,0 +1,339 @@
+
+===== 2026-04-08T13:53:12-04:00 | T2_adl_start_ui =====
+cwd=/home/carrt-cse-project/workspace/ros2_kortex_ws
+cmd=ros2 launch adl_tasks adl_start.launch.py start_arm:=false use_stub:=false launch_ui:=true 
+
+[INFO] [launch]: All log files can be found below /home/carrt-cse-project/.ros/log/2026-04-08-13-53-12-983027-carrt-cse-project-OptiPlex-5050-33328
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [scene_static-1]: process started with pid [33332]
+[INFO] [joint_state_sanitizer-2]: process started with pid [33333]
+[INFO] [static_transform_publisher-3]: process started with pid [33334]
+[INFO] [wrist_camera_usb_publisher-4]: process started with pid [33335]
+[INFO] [vision_apriltag-5]: process started with pid [33336]
+[INFO] [scene_from_vision-6]: process started with pid [33337]
+[INFO] [adl_controller-7]: process started with pid [33338]
+[INFO] [pick_dropped_bottle-8]: process started with pid [33339]
+[INFO] [clear_table-9]: process started with pid [33340]
+[INFO] [give_medication-10]: process started with pid [33341]
+[INFO] [adl_ui-11]: process started with pid [33342]
+[static_transform_publisher-3] [INFO] [1775670793.237795489] [camera_color_optical_bridge_tf_pub]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'camera_color_frame' to 'wrist_mounted_camera_color_optical_frame'
+[joint_state_sanitizer-2] [INFO] [1775670794.084049075] [joint_state_sanitizer_node]: joint_state_sanitizer started. raw=/joint_states -> sanitized=/joint_states_sanitized
+[scene_static-1] [INFO] [1775670794.288615863] [scene_static_node]: Static Scene Node started.
+[scene_static-1] [INFO] [1775670794.293731009] [scene_static_node]: WHEELCHAIR_BASE_HEIGHT = 0.36195m  |  Table surface at z = 0.088m | Table center at x = 0.681m | include_wheelchair_wall=True | include_left_desk_wall=True
+[wrist_camera_usb_publisher-4] [INFO] [1775670794.689233653] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-4] [INFO] [1775670794.703371225] [wrist_camera_usb_publisher_node]: USB camera publisher: opened camera source index 2.
+[wrist_camera_usb_publisher-4] [INFO] [1775670794.704443625] [wrist_camera_usb_publisher_node]: Wrist Camera USB Publisher started.
+[wrist_camera_usb_publisher-4] [INFO] [1775670794.708532038] [wrist_camera_usb_publisher_node]: Publishing USB camera frames on /wrist_mounted_camera/image with frame_id=wrist_mounted_camera_color_optical_frame.
+[wrist_camera_usb_publisher-4] [INFO] [1775670794.709721845] [wrist_camera_usb_publisher_node]: Publishing camera info on /wrist_mounted_camera/camera_info from reference intrinsics [554.25, 554.25, 320.0, 240.0] @ 640x480.
+[wrist_camera_usb_publisher-4] [INFO] [1775670794.710854961] [wrist_camera_usb_publisher_node]: Using explicit camera_matrix for CameraInfo. matrix_size=1280x720, K=[920.874267578125, 0.0, 644.7646484375, 0.0, 921.5654907226562, 343.1528625488281, 0.0, 0.0, 1.0], d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[wrist_camera_usb_publisher-4] [INFO] [1775670794.717105588] [wrist_camera_usb_publisher_node]: Requested source=2 size=1280x720 fps=10.0
+[adl_ui-11] [INFO] [1775670794.720935984] [adl_ui_node]: ADL UI Node started.
+[adl_ui-11] [INFO] [1775670794.721774290] [adl_ui_node]: Automatic retract on UI load is disabled; startup sends no motion.
+[adl_ui-11] [INFO] [1775670794.722808300] [adl_ui_node]: Web UI available at http://localhost:5000
+[adl_ui-11]  * Serving Flask app 'adl_tasks.adl_ui'
+[adl_ui-11]  * Debug mode: off
+[adl_ui-11] WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+[adl_ui-11]  * Running on all addresses (0.0.0.0)
+[adl_ui-11]  * Running on http://127.0.0.1:5000
+[adl_ui-11]  * Running on http://192.168.0.231:5000
+[adl_ui-11] Press CTRL+C to quit
+[pick_dropped_bottle-8] [INFO] [1775670794.886211086] [pick_dropped_bottle_node]: PickDroppedBottle starting...
+[pick_dropped_bottle-8] [INFO] [1775670794.959758053] [pick_dropped_bottle_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[pick_dropped_bottle-8] [INFO] [1775670794.970996465] [pick_dropped_bottle_node]: Vision Client initialized, waiting for service...
+[give_medication-10] [INFO] [1775670795.031005602] [give_medication_node]: give_medication starting...
+[vision_apriltag-5] [INFO] [1775670795.051343048] [vision_apriltag_node]: Vision AprilTag Node Started
+[vision_apriltag-5] [INFO] [1775670795.053510135] [vision_apriltag_node]: Subscribing to camera topic: /wrist_mounted_camera/image
+[vision_apriltag-5] [INFO] [1775670795.055685358] [vision_apriltag_node]: Subscribing to camera info topic: /wrist_mounted_camera/camera_info
+[vision_apriltag-5] [INFO] [1775670795.058078923] [vision_apriltag_node]: Camera frame: wrist_mounted_camera_color_optical_frame | use_image_header_frame=True
+[vision_apriltag-5] [INFO] [1775670795.060391798] [vision_apriltag_node]: Tag size: 0.025m | pose_cache_retention_s=20.0 | get_pose_wait_timeout_s=5.0 | max_returned_pose_age_s=20.0 | camera_params=[554.25, 554.25, 320.0, 240.0] | families=tag36h11 | quad_decimate=1.0 | requested_backend=opencv | backend=cv2.aruco | opencv_pose_solver=ippe_square | use_image_timestamp_for_tf=False
+[adl_controller-7] [INFO] [1775670795.061996086] [adl_controller_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[vision_apriltag-5] [INFO] [1775670795.062617116] [vision_apriltag_node]: Top-tag known-plane projection: enabled=True, planes={3: 0.10995, 4: 0.14505}
+[vision_apriltag-5] [INFO] [1775670795.065044860] [vision_apriltag_node]: pupil_apriltags tuning: nthreads=1, quad_sigma=0.0, refine_edges=1, decode_sharpening=0.25, debug=0, preprocess_variants=['raw', 'clahe', 'adaptive', 'clahe_sharp', 'clahe_up2', 'sharp_up2'], tile_search_if_empty=True, tile_search_grid=3x2, tile_search_scale=2.0, tile_search_overlap=0.25
+[vision_apriltag-5] [WARN] [1775670795.067564999] [vision_apriltag_node]: pupil_apriltags is not importable by this node, so detection is using OpenCV fallback only. python=/usr/bin/python3, import_error=No module named 'pupil_apriltags'. If .venv contains pupil_apriltags, rebuild adl_tasks with that venv active or run the module with the venv Python.
+[vision_apriltag-5] [INFO] [1775670795.069806930] [vision_apriltag_node]: Publishing AprilTag debug images on /vision_apriltag/debug_image at up to 1.0 Hz.
+[adl_controller-7] [INFO] [1775670795.071686976] [adl_controller_node]: ADL controller ready. Waiting for UI/system commands.
+[give_medication-10] [INFO] [1775670795.115307324] [give_medication_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[scene_from_vision-6] [INFO] [1775670795.117284919] [scene_from_vision_node]: Scene From Vision Node Started
+[give_medication-10] [INFO] [1775670795.127746622] [give_medication_node]: Vision Client initialized, waiting for service...
+[scene_from_vision-6] [INFO] [1775670795.186587047] [scene_from_vision_node]: SceneFromVision: Updating planning scene. Tracking 5 object shape(s). memory_mode=True, scan_duration_s=3.0, scan_min_samples=3, scan_prune_unseen_objects=False, continuous_scene_updates=False, latch_first_detection_updates=True, log_object_pose_debug=False, apply_planning_scene_service_updates=True, publish_monitored_planning_scene_updates=True, side_viewpoint=wrist_mounted_camera_color_optical_frame->base_link, reject_table_objects_outside_bounds=False.
+[scene_from_vision-6] [INFO] [1775670795.188394367] [scene_from_vision_node]: SceneFromVision calibration: xy_offset=(-0.228, 0.004), z_offset=0.000, yaw_deg=4.00, xy_scale=1.3370, clamp_table_objects_to_table_bounds=False, table_bounds_margin_m=0.030.
+[scene_from_vision-6] [INFO] [1775670795.191079000] [scene_from_vision_node]: SceneFromVision object offsets: remote_axis=y, remote_tag_to_center_sign=-1.0, remote_tag_from_end_m=0.020, cube_tag_to_center=(0.000, 0.000), cube_world_offset=(0.000, -0.022), cube_yaw_offset_deg=0.0, medication_face_to_center_m=0.030, cup_face_to_center_m=0.037.
+[pick_dropped_bottle-8] [INFO] [1775670795.221664250] [pick_dropped_bottle_node]: Vision service is ready.
+[pick_dropped_bottle-8] [INFO] [1775670795.226336270] [pick_dropped_bottle_node]: PickDroppedBottle ready. Waiting for command.
+[pick_dropped_bottle-8] [INFO] [1775670795.226907484] [pick_dropped_bottle_node]: Startup motion disabled at node load; motion begins only after pick_dropped_bottle command.
+[clear_table-9] [INFO] [1775670795.235127569] [clear_table_node]: Clear Table Node Started
+[clear_table-9] [INFO] [1775670795.295248144] [clear_table_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[clear_table-9] [INFO] [1775670795.302792525] [clear_table_node]: Vision Client initialized, waiting for service...
+[clear_table-9] [INFO] [1775670795.303304343] [clear_table_node]: Vision service is ready.
+[clear_table-9] [INFO] [1775670795.309663511] [clear_table_node]: Clear Table Node ready. Waiting for command.
+[clear_table-9] [INFO] [1775670795.310144701] [clear_table_node]: Startup motion disabled at node load; motion begins only after clear_table command.
+[wrist_camera_usb_publisher-4] [INFO] [1775670795.347555234] [wrist_camera_usb_publisher_node]: USB camera info active intrinsics: size=1280x720, fx=920.87, fy=921.57, cx=644.76, cy=343.15, d=array('d', [0.0, 0.0, 0.0, 0.0, 0.0])
+[wrist_camera_usb_publisher-4] [INFO] [1775670795.348534922] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775670795.351466393] [vision_apriltag_node]: Vision AprilTag camera model updated from CameraInfo: size=1280x720, fx=920.87, fy=921.57, cx=644.76, cy=343.15, d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[give_medication-10] [INFO] [1775670795.378774877] [give_medication_node]: Vision service is ready.
+[give_medication-10] [INFO] [1775670795.385740368] [give_medication_node]: give_medication ready.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:15] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670795.646792745] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[scene_static-1] [WARN] [1775670796.434937980] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:16] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670796.993354355] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:17] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670798.441635553] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:18] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670798.992898655] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:19] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670800.445306634] [scene_static_node]: Planning scene service not available, waiting...
+[wrist_camera_usb_publisher-4] [INFO] [1775670800.504622696] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:20] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670801.001348164] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775670801.034881943] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:21] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:22] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670802.449642855] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:23] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670803.161494290] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:23] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670804.452737164] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:24] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:25] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670805.350649941] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[wrist_camera_usb_publisher-4] [INFO] [1775670805.661870956] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:26] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670806.168758793] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[scene_static-1] [WARN] [1775670806.457698026] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:26] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670807.225357097] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:27] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:28] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670808.459647186] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:29] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:29] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670809.981902302] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[scene_static-1] [WARN] [1775670810.461370303] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:30] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775670810.820127926] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775670811.108276650] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:31] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670811.464172592] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:32] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670812.465544486] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:32] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670813.602199791] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:33] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:34] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670814.467318220] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:35] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670815.655664980] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:35] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775670815.984370157] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_static-1] [WARN] [1775670816.473131579] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:36] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670816.741259927] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:37] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:38] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670818.149285778] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[scene_static-1] [WARN] [1775670818.478631586] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:38] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670819.248371647] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:39] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:40] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670820.480821018] [scene_static_node]: Planning scene service not available, waiting...
+[wrist_camera_usb_publisher-4] [INFO] [1775670821.141703909] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:41] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670821.220123585] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:41] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670821.961479433] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[scene_static-1] [WARN] [1775670822.483126176] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:42] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670823.305388768] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:43] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:44] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670824.484785744] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:44] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670825.621131542] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:45] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775670826.302441582] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:46] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670826.487367188] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:47] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670827.199588784] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775670827.567075994] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:47] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670828.489203814] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:48] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:49] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:50] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670830.219906552] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[scene_static-1] [WARN] [1775670830.492505462] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:50] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775670831.462050949] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:51] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670831.773987412] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:52] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670832.497332235] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-5] [INFO] [1775670832.536762239] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:53] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670833.773120788] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:53] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670834.499247255] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:54] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:55] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670835.947240962] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:56] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670836.506048097] [scene_static_node]: Planning scene service not available, waiting...
+[wrist_camera_usb_publisher-4] [INFO] [1775670836.624658741] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:57] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670837.564676443] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775670837.567014562] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:58] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670838.508379311] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:53:59] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670839.577165455] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:00] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670840.514954999] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:01] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670841.596784606] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[wrist_camera_usb_publisher-4] [INFO] [1775670841.785247859] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:02] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670842.520336926] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-5] [INFO] [1775670842.736429367] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:03] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670844.230427140] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:04] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670844.522410903] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-5] [INFO] [1775670845.341048877] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:05] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:06] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670846.524960694] [scene_static_node]: Planning scene service not available, waiting...
+[wrist_camera_usb_publisher-4] [INFO] [1775670846.802977471] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775670847.359387527] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:07] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670848.339128721] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:08] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670848.528372533] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-5] [INFO] [1775670849.307127464] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:09] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:10] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670850.530934669] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-5] [INFO] [1775670851.006771900] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:11] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775670851.941370217] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:12] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670852.533624400] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:13] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670853.737820955] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775670853.744025316] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:14] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670854.540653395] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-5] [INFO] [1775670854.992876315] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:15] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:16] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670856.543233149] [scene_static_node]: Planning scene service not available, waiting...
+[wrist_camera_usb_publisher-4] [INFO] [1775670857.099547601] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775670857.308709401] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:17] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:18] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670858.545296004] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-5] [INFO] [1775670858.981831628] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775670859.049002914] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:19] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:20] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670860.548323662] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-5] [INFO] [1775670861.088874360] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:21] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775670862.262150958] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:22] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670862.556034635] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:23] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670863.564574291] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:24] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670864.508008403] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[scene_static-1] [WARN] [1775670864.558254800] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:25] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670865.655096740] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:26] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670866.561523433] [scene_static_node]: Planning scene service not available, waiting...
+[wrist_camera_usb_publisher-4] [INFO] [1775670867.422782068] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:27] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670867.527081004] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:28] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670868.566191582] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:29] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670869.673960372] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775670870.084763408] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:30] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670870.570054866] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-5] [INFO] [1775670871.210107879] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:31] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:32] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670872.573470505] [scene_static_node]: Planning scene service not available, waiting...
+[wrist_camera_usb_publisher-4] [INFO] [1775670872.582320232] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775670873.111156713] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:33] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:34] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670874.583426849] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-5] [INFO] [1775670875.019588204] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775670875.031018938] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:35] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:36] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670876.587449660] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-5] [INFO] [1775670877.228431370] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:37] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775670877.744667935] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:38] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670878.590423463] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-5] [INFO] [1775670879.367433599] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:39] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670880.344362207] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:40] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670880.594640414] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:41] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670881.835575073] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:42] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670882.596662442] [scene_static_node]: Planning scene service not available, waiting...
+[wrist_camera_usb_publisher-4] [INFO] [1775670882.911110916] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:43] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670884.363531134] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:44] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670884.603446594] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:45] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670885.665683270] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775670885.720569346] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:46] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670886.605311517] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:47] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775670888.065157768] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775670888.204421301] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:48] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670888.607326210] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-5] [INFO] [1775670889.543439446] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:49] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:50] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670890.610085619] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-5] [INFO] [1775670890.869246850] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:51] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670892.033228741] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:52] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670892.612945814] [scene_static_node]: Planning scene service not available, waiting...
+[wrist_camera_usb_publisher-4] [INFO] [1775670893.226915331] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775670893.517381119] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:53] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:54] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775670894.616584959] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:55] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670895.662083134] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[vision_apriltag-5] [INFO] [1775670896.491854970] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[scene_static-1] [WARN] [1775670896.618688659] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:56] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:57] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670897.747107992] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[wrist_camera_usb_publisher-4] [INFO] [1775670898.388444070] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_static-1] [WARN] [1775670898.622347485] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:58] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:54:59] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775670899.742453305] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[scene_static-1] [WARN] [1775670900.627365197] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 13:55:00] "GET /status_json HTTP/1.1" 200 -

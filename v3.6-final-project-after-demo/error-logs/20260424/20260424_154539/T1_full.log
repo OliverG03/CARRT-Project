@@ -1,0 +1,1395 @@
+
+===== 2026-04-24T15:45:39-04:00 | T1_full =====
+cwd=/home/carrt-cse-project/workspace/ros2_kortex_ws
+cmd=ros2 launch adl_tasks adl_start.launch.py controller_update_rate:=1000 arm_use_fake_hardware:=false arm_robot_ip:=192.168.0.10 launch_rviz:=true 
+
+[INFO] [launch]: All log files can be found below /home/carrt-cse-project/.ros/log/2026-04-24-15-45-39-606253-carrt-cse-project-OptiPlex-5050-13734
+[INFO] [launch]: Default logging verbosity is set to INFO
+[arm_start.launch] controller_update_rate above 125 Hz on real hardware has been causing repeated startup/control aborts; clamping to 50 Hz for this launch.
+[INFO] [launch.user]: [arm_start.launch] MoveIt current state source: /joint_states_sanitized. Use use_joint_state_sanitizer:=false for raw-state viewer debugging.
+[INFO] [launch.user]: [arm_start.launch] Using ADL controller config (share/adl_tasks/config/ros2_controllers_vbox.yaml, update_rate:=50 Hz).
+[INFO] [ros2_control_node-1]: process started with pid [13738]
+[INFO] [robot_state_publisher-2]: process started with pid [13739]
+[INFO] [joint_state_sanitizer-3]: process started with pid [13740]
+[INFO] [spawner-4]: process started with pid [13741]
+[INFO] [static_transform_publisher-5]: process started with pid [13742]
+[INFO] [static_transform_publisher-6]: process started with pid [13743]
+[INFO] [scene_static-7]: process started with pid [13744]
+[INFO] [wrist_camera_usb_publisher-8]: process started with pid [13745]
+[INFO] [vision_apriltag-9]: process started with pid [13746]
+[INFO] [scene_from_vision-10]: process started with pid [13747]
+[INFO] [adl_controller-11]: process started with pid [13748]
+[INFO] [pick_dropped_bottle-12]: process started with pid [13749]
+[INFO] [clear_table-13]: process started with pid [13750]
+[INFO] [give_medication-14]: process started with pid [13751]
+[INFO] [adl_ui-15]: process started with pid [13752]
+[static_transform_publisher-5] [INFO] [1777059940.102637929] [static_transform_publisher]: Spinning until stopped - publishing transform
+[static_transform_publisher-5] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-5] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-5] from 'world' to 'base_link'
+[robot_state_publisher-2] [INFO] [1777059940.166671138] [robot_state_publisher]: Robot initialized
+[static_transform_publisher-6] [INFO] [1777059940.210951972] [camera_color_optical_bridge_tf_pub]: Spinning until stopped - publishing transform
+[static_transform_publisher-6] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-6] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-6] from 'camera_color_frame' to 'wrist_mounted_camera_color_optical_frame'
+[ros2_control_node-1] [INFO] [1777059940.346151009] [controller_manager]: Using Steady (Monotonic) clock for triggering controller manager cycles.
+[ros2_control_node-1] [INFO] [1777059940.384375089] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
+[ros2_control_node-1] [INFO] [1777059940.401360467] [controller_manager]: update rate is 50 Hz
+[ros2_control_node-1] [INFO] [1777059940.401396275] [controller_manager]: Overruns handling is : enabled
+[ros2_control_node-1] [INFO] [1777059940.401407816] [controller_manager]: Spawning controller_manager RT thread with scheduler priority: 50
+[ros2_control_node-1] [INFO] [1777059940.404303183] [controller_manager]: Successful set up FIFO RT scheduling policy with priority 50.
+[ros2_control_node-1] [INFO] [1777059940.548806747] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [INFO] [1777059940.548876634] [controller_manager]: Enforcing command limits is disabled. Command limits from URDF will be ignored.
+[ros2_control_node-1] [INFO] [1777059940.575927010] [controller_manager]: Loading hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1777059940.623491326] [KortexMultiInterfaceHardware]: Setting severity threshold to DEBUG
+[ros2_control_node-1] [INFO] [1777059940.629351480] [controller_manager]: Loaded hardware 'KortexMultiInterfaceHardware' from plugin 'kortex_driver/KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1777059940.630035739] [controller_manager]: Initialize hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1777059940.670062463] [KortexMultiInterfaceHardware]: Configuring Hardware Interface
+[ros2_control_node-1] [INFO] [1777059940.671273405] [KortexMultiInterfaceHardware]: Robot ip is '192.168.0.10'
+[ros2_control_node-1] [INFO] [1777059940.671297260] [KortexMultiInterfaceHardware]: Username is 'admin'
+[ros2_control_node-1] [INFO] [1777059940.671312563] [KortexMultiInterfaceHardware]: Port used '10000'
+[ros2_control_node-1] [INFO] [1777059940.671317908] [KortexMultiInterfaceHardware]: Realtime port used '10001'
+[ros2_control_node-1] [INFO] [1777059940.671323608] [KortexMultiInterfaceHardware]: Session inactivity timeout is '60000'
+[ros2_control_node-1] [INFO] [1777059940.671329903] [KortexMultiInterfaceHardware]: Connection inactivity timeout is '2000'
+[ros2_control_node-1] [INFO] [1777059940.671336631] [KortexMultiInterfaceHardware]: Gripper joint name is 'robotiq_85_left_knuckle_joint'
+[ros2_control_node-1] [INFO] [1777059940.671377085] [KortexMultiInterfaceHardware]: Connecting to robot at 192.168.0.10
+[ros2_control_node-1] [INFO] [1777059940.679474815] [KortexMultiInterfaceHardware]: Creating session for communication
+[ros2_control_node-1] [INFO] [1777059941.096942638] [KortexMultiInterfaceHardware]: Session created
+[adl_ui-15] [INFO] [1777059941.148932065] [adl_ui_node]: ADL UI Node started.
+[adl_ui-15] [INFO] [1777059941.149692734] [adl_ui_node]: Automatic retract on UI load is disabled; startup sends no motion.
+[adl_ui-15]  * Serving Flask app 'adl_tasks.adl_ui'
+[adl_ui-15]  * Debug mode: off
+[adl_ui-15] [INFO] [1777059941.156321519] [adl_ui_node]: Web UI available at http://localhost:5000
+[adl_ui-15] WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+[adl_ui-15]  * Running on all addresses (0.0.0.0)
+[adl_ui-15]  * Running on http://127.0.0.1:5000
+[adl_ui-15]  * Running on http://192.168.0.231:5000
+[adl_ui-15] Press CTRL+C to quit
+[spawner-4] [INFO] [1777059941.322877856] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[ros2_control_node-1] [INFO] [1777059941.798005239] [KortexMultiInterfaceHardware]: Actuator count reported by robot is '7'
+[ros2_control_node-1] [INFO] [1777059941.798216286] [KortexMultiInterfaceHardware]: Using internal bus communication for gripper!
+[ros2_control_node-1] [INFO] [1777059941.798225550] [KortexMultiInterfaceHardware]: Hardware Interface successfully configured
+[ros2_control_node-1] [INFO] [1777059941.798323959] [controller_manager]: Successful initialization of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [DEBUG] [1777059941.798402018] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_1
+[ros2_control_node-1] [DEBUG] [1777059941.798431504] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_2
+[ros2_control_node-1] [DEBUG] [1777059941.798440410] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_3
+[ros2_control_node-1] [DEBUG] [1777059941.798447200] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_4
+[ros2_control_node-1] [DEBUG] [1777059941.798452733] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_5
+[ros2_control_node-1] [DEBUG] [1777059941.798457236] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_6
+[ros2_control_node-1] [DEBUG] [1777059941.798460882] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_7
+[ros2_control_node-1] [DEBUG] [1777059941.798464238] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: robotiq_85_left_knuckle_joint
+[ros2_control_node-1] [INFO] [1777059941.800699950] [resource_manager]: 'configure' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1777059941.800741706] [resource_manager]: Successful 'configure' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1777059941.800811869] [resource_manager]: 'activate' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1777059941.800839568] [KortexMultiInterfaceHardware]: Activating KortexMultiInterfaceHardware...
+[ros2_control_node-1] [INFO] [1777059941.807324945] [KortexMultiInterfaceHardware]: Gripper initial position is '0.873365'.
+[ros2_control_node-1] [INFO] [1777059941.811999628] [KortexMultiInterfaceHardware]: KortexMultiInterfaceHardware successfully activated!
+[ros2_control_node-1] [INFO] [1777059941.812039898] [resource_manager]: Successful 'activate' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1777059941.812369173] [controller_manager]: Registering statistics for : KortexMultiInterfaceHardware
+[ros2_control_node-1] [INFO] [1777059941.812585428] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[vision_apriltag-9] [INFO] [1777059941.938184369] [vision_apriltag_node]: Vision AprilTag Node Started
+[vision_apriltag-9] [INFO] [1777059941.940543891] [vision_apriltag_node]: Subscribing to camera topic: /wrist_mounted_camera/image
+[vision_apriltag-9] [INFO] [1777059941.942742872] [vision_apriltag_node]: Subscribing to camera info topic: /wrist_mounted_camera/camera_info
+[vision_apriltag-9] [INFO] [1777059941.945064107] [vision_apriltag_node]: Camera frame: wrist_mounted_camera_color_optical_frame | use_image_header_frame=True
+[vision_apriltag-9] [INFO] [1777059941.947510390] [vision_apriltag_node]: Tag size: 0.025m | pose_cache_retention_s=20.0 | get_pose_wait_timeout_s=5.0 | max_returned_pose_age_s=20.0 | camera_params=[554.25, 554.25, 320.0, 240.0] | families=tag36h11 | quad_decimate=1.0 | requested_backend=opencv | backend=cv2.aruco | opencv_pose_solver=ippe_square | use_image_timestamp_for_tf=False
+[vision_apriltag-9] [INFO] [1777059941.949910135] [vision_apriltag_node]: Top-tag known-plane projection: enabled=True, planes={3: 0.13995, 4: 0.174438}
+[vision_apriltag-9] [INFO] [1777059941.952612860] [vision_apriltag_node]: pupil_apriltags tuning: nthreads=1, quad_sigma=0.0, refine_edges=1, decode_sharpening=0.25, debug=0, preprocess_variants=['raw', 'clahe', 'adaptive', 'clahe_sharp', 'clahe_up2', 'sharp_up2'], tile_search_if_empty=True, tile_search_grid=3x2, tile_search_scale=2.0, tile_search_overlap=0.25
+[vision_apriltag-9] [WARN] [1777059941.955409793] [vision_apriltag_node]: pupil_apriltags is not importable by this node, so detection is using OpenCV fallback only. python=/usr/bin/python3, import_error=No module named 'pupil_apriltags'. If .venv contains pupil_apriltags, rebuild adl_tasks with that venv active or run the module with the venv Python.
+[vision_apriltag-9] [INFO] [1777059941.957998871] [vision_apriltag_node]: Publishing AprilTag debug images on /vision_apriltag/debug_image at up to 1.0 Hz.
+[scene_from_vision-10] [INFO] [1777059941.977328825] [scene_from_vision_node]: Scene From Vision Node Started
+[joint_state_sanitizer-3] [INFO] [1777059942.048797013] [joint_state_sanitizer_node]: joint_state_sanitizer started. raw=/joint_states -> sanitized=/joint_states_sanitized
+[scene_from_vision-10] [INFO] [1777059942.089908482] [scene_from_vision_node]: SceneFromVision: Updating planning scene. Tracking 5 object shape(s). memory_mode=True, scan_duration_s=5.0, scan_min_samples=3, scan_target_samples=8, scan_extend_step_s=1.5, scan_max_extensions=2, scan_prune_unseen_objects=False, continuous_scene_updates=False, latch_first_detection_updates=True, log_object_pose_debug=False, apply_planning_scene_service_updates=True, publish_monitored_planning_scene_updates=True, side_viewpoint=wrist_mounted_camera_color_optical_frame->base_link, reject_table_objects_outside_bounds=False.
+[scene_from_vision-10] [INFO] [1777059942.092294019] [scene_from_vision_node]: SceneFromVision calibration: xy_offset=(0.000, 0.000), z_offset=0.000, yaw_deg=0.00, xy_scale=1.0000, clamp_table_objects_to_table_bounds=False, table_bounds_margin_m=0.030.
+[scene_from_vision-10] [INFO] [1777059942.094861920] [scene_from_vision_node]: SceneFromVision object offsets: remote_axis=y, remote_tag_to_center_sign=-1.0, remote_tag_from_end_m=0.020, remote_world_offset=(-0.040, 0.000), cube_tag_to_center=(0.000, 0.000), cube_world_offset=(0.000, -0.006), cube_yaw_offset_deg=0.0, medication_world_offset=(-0.090, -0.030), medication_face_to_center_m=0.030, cup_world_offset=(-0.085, -0.040), cup_face_to_center_m=0.031.
+[pick_dropped_bottle-12] [INFO] [1777059942.314061492] [pick_dropped_bottle_node]: PickDroppedBottle starting...
+[scene_static-7] [INFO] [1777059942.354811536] [scene_static_node]: Static Scene Node started.
+[scene_static-7] [INFO] [1777059942.355725075] [scene_static_node]: WHEELCHAIR_BASE_HEIGHT = 0.36195m  |  Table surface at z = 0.118m | Table front-edge-from-base = 0.406m | Table center at x = 0.681m | table_edge_lip_margin=0.0127m | table_edge_lip_thickness=0.0127m | table_edge_lip_height=0.480m | include_wheelchair_wall=True | include_left_desk_wall=True | include_right_desk_wall=True | include_arm_base_under_block=True | include_arm_base_side_lips=True | include_arm_base_left_back_block=True | include_arm_base_right_back_half_block=True
+[scene_static-7] [INFO] [1777059942.356576639] [scene_static_node]: Wheelchair wall geometry: center=(-0.465, 0.000, 0.482) size=(0.450, 0.700, 1.688)
+[scene_static-7] [INFO] [1777059942.357679425] [scene_static_node]: Arm-base under-block geometry: center=(0.000, 0.000, -0.212) size=(0.302, 0.378, 0.300) | platform=(0.200, 0.200) | margins(front/back=0.051, left/right=0.089)
+[scene_static-7] [INFO] [1777059942.359064189] [scene_static_node]: Arm-base side-lip geometry: left_y=0.198, right_y=-0.198, center_z=-0.047, size=(0.314, 0.006, 0.030) | x_offset=-0.076, outset=0.006, front/back_margin=0.006
+[scene_static-7] [INFO] [1777059942.360477426] [scene_static_node]: Arm-base left-back block geometry: center=(-0.177, 0.312, 0.482) size=(0.100, 0.408, 1.688) | inner_faces(x=-0.127, y=0.108) | left_wall_inner_face_y=0.504 | into_left_wall=0.013
+[scene_static-7] [INFO] [1777059942.361997235] [scene_static_node]: Arm-base right-back half block geometry: center=(-0.177, -0.312, 0.060) size=(0.100, 0.408, 0.844) | inner_faces(x=-0.127, y=-0.108) | right_wall_inner_face_y=-0.504 | into_right_wall=0.013
+[pick_dropped_bottle-12] [INFO] [1777059942.453314071] [pick_dropped_bottle_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True) real_hardware_mode=True short_cartesian_mode=hybrid
+[pick_dropped_bottle-12] [INFO] [1777059942.454394251] [pick_dropped_bottle_node]: ADL_DIRECT_FIXED_JOINTS is unset; defaulting fixed-joint direct trajectories to disabled on real hardware (collision-aware MoveIt path first).
+[pick_dropped_bottle-12] [INFO] [1777059942.474613625] [pick_dropped_bottle_node]: Vision Client initialized, waiting for service...
+[pick_dropped_bottle-12] [INFO] [1777059942.475770321] [pick_dropped_bottle_node]: Vision service is ready.
+[pick_dropped_bottle-12] [INFO] [1777059942.488446186] [pick_dropped_bottle_node]: PickDroppedBottle ready. Waiting for command.
+[pick_dropped_bottle-12] [INFO] [1777059942.489421316] [pick_dropped_bottle_node]: Startup motion disabled at node load; motion begins only after pick_dropped_bottle command.
+[give_medication-14] [INFO] [1777059942.504810005] [give_medication_node]: give_medication starting...
+[adl_controller-11] [INFO] [1777059942.603074588] [adl_controller_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True) real_hardware_mode=True short_cartesian_mode=hybrid
+[adl_controller-11] [INFO] [1777059942.604588271] [adl_controller_node]: ADL_DIRECT_FIXED_JOINTS is unset; defaulting fixed-joint direct trajectories to disabled on real hardware (collision-aware MoveIt path first).
+[adl_controller-11] [INFO] [1777059942.618823944] [adl_controller_node]: ADL controller ready. Waiting for UI/system commands.
+[clear_table-13] [INFO] [1777059942.817659847] [clear_table_node]: Clear Table Node Started
+[give_medication-14] [INFO] [1777059942.839482353] [give_medication_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True) real_hardware_mode=True short_cartesian_mode=hybrid
+[give_medication-14] [INFO] [1777059942.840499051] [give_medication_node]: ADL_DIRECT_FIXED_JOINTS is unset; defaulting fixed-joint direct trajectories to disabled on real hardware (collision-aware MoveIt path first).
+[give_medication-14] [INFO] [1777059942.862865146] [give_medication_node]: Vision Client initialized, waiting for service...
+[give_medication-14] [INFO] [1777059942.863728152] [give_medication_node]: Vision service is ready.
+[give_medication-14] [INFO] [1777059942.880877157] [give_medication_node]: give_medication ready.
+[wrist_camera_usb_publisher-8] [INFO] [1777059942.929020829] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[clear_table-13] [INFO] [1777059942.991272756] [clear_table_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True) real_hardware_mode=True short_cartesian_mode=hybrid
+[clear_table-13] [INFO] [1777059942.993724220] [clear_table_node]: ADL_DIRECT_FIXED_JOINTS is unset; defaulting fixed-joint direct trajectories to disabled on real hardware (collision-aware MoveIt path first).
+[clear_table-13] [INFO] [1777059943.021876808] [clear_table_node]: Vision Client initialized, waiting for service...
+[wrist_camera_usb_publisher-8] [INFO] [1777059943.034887881] [wrist_camera_usb_publisher_node]: USB camera publisher: opened camera source index 2.
+[wrist_camera_usb_publisher-8] [INFO] [1777059943.036648671] [wrist_camera_usb_publisher_node]: Wrist Camera USB Publisher started.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:43] "GET / HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777059943.037454856] [wrist_camera_usb_publisher_node]: Publishing USB camera frames on /wrist_mounted_camera/image with frame_id=wrist_mounted_camera_color_optical_frame.
+[wrist_camera_usb_publisher-8] [INFO] [1777059943.038534291] [wrist_camera_usb_publisher_node]: Publishing camera info on /wrist_mounted_camera/camera_info from reference intrinsics [554.25, 554.25, 320.0, 240.0] @ 640x480.
+[wrist_camera_usb_publisher-8] [INFO] [1777059943.039720474] [wrist_camera_usb_publisher_node]: Using explicit camera_matrix for CameraInfo. matrix_size=1280x720, K=[920.874267578125, 0.0, 644.7646484375, 0.0, 921.5654907226562, 343.1528625488281, 0.0, 0.0, 1.0], d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[wrist_camera_usb_publisher-8] [INFO] [1777059943.040900626] [wrist_camera_usb_publisher_node]: Requested source=2 size=1280x720 fps=10.0
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:43] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777059943.672827290] [wrist_camera_usb_publisher_node]: USB camera info active intrinsics: size=1280x720, fx=920.87, fy=921.57, cx=644.76, cy=343.15, d=array('d', [0.0, 0.0, 0.0, 0.0, 0.0])
+[wrist_camera_usb_publisher-8] [INFO] [1777059943.673800568] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-9] [INFO] [1777059943.686180232] [vision_apriltag_node]: Vision AprilTag camera model updated from CameraInfo: size=1280x720, fx=920.87, fy=921.57, cx=644.76, cy=343.15, d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:43] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [WARN] [1777059943.880038223] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[clear_table-13] [INFO] [1777059944.023704236] [clear_table_node]: Vision service is ready.
+[clear_table-13] [INFO] [1777059944.047886056] [clear_table_node]: Clear Table Node ready. Waiting for command.
+[clear_table-13] [INFO] [1777059944.048674709] [clear_table_node]: Startup motion disabled at node load; motion begins only after clear_table command.
+[clear_table-13] [INFO] [1777059944.049628344] [clear_table_node]: clear_table scan flags: top_only_scan_mode=False (ADL_CLEAR_TABLE_TOP_ONLY_SCAN='false'), two_phase_require_side_sweep_before_priority_exit=True (ADL_CLEAR_TABLE_REQUIRE_SIDE_SWEEP='true'), two_phase_top_full_sweep_before_priority_exit=True.
+[vision_apriltag-9] [INFO] [1777059944.168204728] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[ros2_control_node-1] [INFO] [1777059944.170453634] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[ros2_control_node-1] [INFO] [1777059944.170518372] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1777059944.177816514] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_5xmnokq0 
+[spawner-4] [INFO] [1777059944.206949582] [spawner_joint_state_broadcaster]: Loaded joint_state_broadcaster
+[ros2_control_node-1] [INFO] [1777059944.209407494] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1777059944.209663371] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[ros2_control_node-1] [INFO] [1777059944.227499235] [controller_manager]: Activating controllers: [ joint_state_broadcaster ]
+[ros2_control_node-1] [INFO] [1777059944.246148463] [controller_manager]: Successfully switched controllers!
+[spawner-4] [INFO] [1777059944.269893782] [spawner_joint_state_broadcaster]: Configured and activated joint_state_broadcaster
+[INFO] [spawner-4]: process has finished cleanly [pid 13741]
+[scene_static-7] [WARN] [1777059944.524563151] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:44] "GET /status_json HTTP/1.1" 200 -
+[INFO] [spawner-16]: process started with pid [14074]
+[INFO] [spawner-17]: process started with pid [14075]
+[INFO] [spawner-18]: process started with pid [14076]
+[INFO] [spawner-19]: process started with pid [14077]
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:45] "GET /status_json HTTP/1.1" 200 -
+[spawner-19] [INFO] [1777059945.736991408] [spawner_fault_controller]: waiting for service /controller_manager/list_controllers to become available...
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:46] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059946.128922025] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[scene_static-7] [WARN] [1777059946.530112734] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:46] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1777059947.249231220] [controller_manager]: Loading controller : 'fault_controller' of type 'picknik_reset_fault_controller/PicknikResetFaultController'
+[ros2_control_node-1] [INFO] [1777059947.249319903] [controller_manager]: Loading controller 'fault_controller'
+[ros2_control_node-1] [INFO] [1777059947.257176090] [controller_manager]: Controller 'fault_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_5xmnokq0 
+[spawner-19] [INFO] [1777059947.326968720] [spawner_fault_controller]: Loaded fault_controller
+[ros2_control_node-1] [INFO] [1777059947.333941220] [controller_manager]: Configuring controller: 'fault_controller'
+[ros2_control_node-1] [INFO] [1777059947.437567982] [controller_manager]: Activating controllers: [ fault_controller ]
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:47] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1777059947.650068727] [controller_manager]: Successfully switched controllers!
+[spawner-19] [INFO] [1777059947.667304522] [spawner_fault_controller]: Configured and activated fault_controller
+[INFO] [spawner-19]: process has finished cleanly [pid 14077]
+[vision_apriltag-9] [INFO] [1777059948.105854613] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[spawner-17] [INFO] [1777059948.338098999] [spawner_twist_controller]: waiting for service /controller_manager/list_controllers to become available...
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:48] "GET /status_json HTTP/1.1" 200 -
+[scene_static-7] [WARN] [1777059948.539866013] [scene_static_node]: Planning scene service not available, waiting...
+[wrist_camera_usb_publisher-8] [INFO] [1777059948.823015679] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[ros2_control_node-1] [INFO] [1777059949.097925628] [controller_manager]: Loading controller : 'twist_controller' of type 'picknik_twist_controller/PicknikTwistController'
+[ros2_control_node-1] [INFO] [1777059949.097978807] [controller_manager]: Loading controller 'twist_controller'
+[ros2_control_node-1] [INFO] [1777059949.103849824] [controller_manager]: Controller 'twist_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_5xmnokq0 
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:49] "GET /status_json HTTP/1.1" 200 -
+[spawner-17] [INFO] [1777059949.171513793] [spawner_twist_controller]: Loaded twist_controller
+[ros2_control_node-1] [INFO] [1777059949.174361644] [controller_manager]: Configuring controller: 'twist_controller'
+[ros2_control_node-1] [INFO] [1777059949.180745827] [twist_controller]: configure successful
+[spawner-18] [INFO] [1777059949.380774038] [spawner_robotiq_gripper_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-17]: process has finished cleanly [pid 14075]
+[vision_apriltag-9] [INFO] [1777059949.632396157] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:49] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059949.881568134] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[ros2_control_node-1] [INFO] [1777059950.386788024] [controller_manager]: Loading controller : 'robotiq_gripper_controller' of type 'position_controllers/GripperActionController'
+[ros2_control_node-1] [INFO] [1777059950.386833519] [controller_manager]: Loading controller 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1777059950.390176787] [controller_manager]: Controller 'robotiq_gripper_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_5xmnokq0 
+[ros2_control_node-1] [WARN] [1777059950.423667674] [robotiq_gripper_controller]: [Deprecated]: the `position_controllers/GripperActionController` and `effort_controllers::GripperActionController` controllers are replaced by 'parallel_gripper_controllers/GripperActionController' controller
+[spawner-18] [INFO] [1777059950.430946404] [spawner_robotiq_gripper_controller]: Loaded robotiq_gripper_controller
+[ros2_control_node-1] [INFO] [1777059950.433339924] [controller_manager]: Configuring controller: 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1777059950.433494290] [robotiq_gripper_controller]: Action status changes will be monitored at 20.000000 Hz.
+[ros2_control_node-1] [INFO] [1777059950.448690507] [controller_manager]: Activating controllers: [ robotiq_gripper_controller ]
+[scene_static-7] [WARN] [1777059950.549930755] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:50] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1777059950.674297695] [controller_manager]: Successfully switched controllers!
+[spawner-18] [INFO] [1777059950.687402829] [spawner_robotiq_gripper_controller]: Configured and activated robotiq_gripper_controller
+[spawner-16] [INFO] [1777059950.892773912] [spawner_joint_trajectory_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-18]: process has finished cleanly [pid 14076]
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:51] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:52] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059952.164318043] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[ros2_control_node-1] [INFO] [1777059952.414365310] [controller_manager]: Loading controller : 'joint_trajectory_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[ros2_control_node-1] [INFO] [1777059952.414422446] [controller_manager]: Loading controller 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1777059952.433807218] [controller_manager]: Controller 'joint_trajectory_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_5xmnokq0 
+[spawner-16] [INFO] [1777059952.547624372] [spawner_joint_trajectory_controller]: Loaded joint_trajectory_controller
+[scene_static-7] [WARN] [1777059952.562743543] [scene_static_node]: Planning scene service not available, waiting...
+[ros2_control_node-1] [INFO] [1777059952.640481689] [controller_manager]: Configuring controller: 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1777059952.641234820] [joint_trajectory_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[ros2_control_node-1] [INFO] [1777059952.641554135] [joint_trajectory_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[ros2_control_node-1] [INFO] [1777059952.641766568] [joint_trajectory_controller]: Using 'splines' interpolation method.
+[ros2_control_node-1] [INFO] [1777059952.655669468] [joint_trajectory_controller]: Action status changes will be monitored at 10.00 Hz.
+[ros2_control_node-1] [INFO] [1777059952.697281039] [controller_manager]: Activating controllers: [ joint_trajectory_controller ]
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:52] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1777059952.927995574] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1777059952.931109549] [controller_manager]: Overrun might occur, Total time : 26633.200 us (Expected < 20000.000 us) --> Read time : 68.019 us, Update time : 22872.771 us (Switch time : 22702.524 us (Switch chained mode time : 4.129 us, perform mode change time : 21464.124 us, Activation time : 1222.732 us, Deactivation time : 1.317 us)), Write time : 3692.410 us
+[ros2_control_node-1] [WARN] [1777059952.931195975] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 50 Hz. The loop took 26.762746 ms (missed cycles : 2).
+[spawner-16] [INFO] [1777059952.948930515] [spawner_joint_trajectory_controller]: Configured and activated joint_trajectory_controller
+[INFO] [spawner-16]: process has finished cleanly [pid 14074]
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:53] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777059953.988310871] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-9] [INFO] [1777059954.069420211] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:54] "GET /status_json HTTP/1.1" 200 -
+[scene_static-7] [WARN] [1777059954.569320830] [scene_static_node]: Planning scene service not available, waiting...
+[INFO] [move_group-20]: process started with pid [14172]
+[INFO] [rviz2-21]: process started with pid [14173]
+[vision_apriltag-9] [INFO] [1777059955.086202834] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:55] "GET /status_json HTTP/1.1" 200 -
+[move_group-20] [INFO] [1777059955.226416094] [move_group.moveit.moveit.ros.rdf_loader]: Loaded robot model in 0.0205819 seconds
+[move_group-20] [INFO] [1777059955.226592528] [move_group.moveit.moveit.core.robot_model]: Loading robot model 'gen3'...
+[move_group-20] [INFO] [1777059955.226618035] [move_group.moveit.moveit.core.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[move_group-20] [INFO] [1777059955.452762141] [move_group.moveit.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'manipulator': 1 1 1 1 1 1 1
+[rviz2-21] [INFO] [1777059955.872820145] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-21] [INFO] [1777059955.872919039] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:55] "GET /status_json HTTP/1.1" 200 -
+[rviz2-21] [INFO] [1777059955.932229159] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-21] Warning: class_loader.impl: SEVERE WARNING!!! A namespace collision has occurred with plugin factory for class rviz_default_plugins::displays::InteractiveMarkerDisplay. New factory will OVERWRITE existing one. This situation occurs when libraries containing plugins are directly linked against an executable (the one running right now generating this message). Please separate plugins out into their own library or just don't link against the library and use either class_loader::ClassLoader/MultiLibraryClassLoader to open.
+[rviz2-21]          at line 321 in /opt/ros/jazzy/include/class_loader/class_loader/class_loader_core.hpp
+[rviz2-21] [WARN] [1777059956.122895654] [rcl.logging_rosout]: Publisher already registered for node name: 'rviz2_moveit'. If this is due to multiple nodes with the same name then all logs for the logger named 'rviz2_moveit' will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[ros2_control_node-1] [INFO] [1777059956.515816087] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [WARN] [1777059956.515884213] [controller_manager]: ResourceManager has already loaded a urdf. Ignoring attempt to reload a robot description.
+[scene_static-7] [WARN] [1777059956.578712150] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:56] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059956.658455379] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[move_group-20] [INFO] [1777059957.108202152] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-20] [INFO] [1777059957.108434978] [move_group.moveit.moveit.ros.moveit_cpp]: Listening to 'joint_states' for joint states
+[move_group-20] [INFO] [1777059957.111743466] [move_group.moveit.moveit.ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
+[move_group-20] [INFO] [1777059957.114870149] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
+[move_group-20] [INFO] [1777059957.114917341] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopping existing planning scene publisher.
+[move_group-20] [INFO] [1777059957.115124723] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopped publishing maintained planning scene.
+[move_group-20] [INFO] [1777059957.118732519] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-20] [INFO] [1777059957.119000820] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[move_group-20] [INFO] [1777059957.123777282] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/planning_scene'
+[move_group-20] [INFO] [1777059957.123816617] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
+[move_group-20] [INFO] [1777059957.124436020] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'collision_object'
+[move_group-20] [INFO] [1777059957.124962718] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
+[move_group-20] [WARN] [1777059957.131216177] [move_group.moveit.moveit.ros.occupancy_map_monitor]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
+[move_group-20] [ERROR] [1777059957.131291087] [move_group.moveit.moveit.ros.occupancy_map_monitor]: No 3D sensor plugin(s) defined for octomap updates
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:57] "GET /status_json HTTP/1.1" 200 -
+[move_group-20] [INFO] [1777059957.630496984] [move_group.moveit.moveit.ros.planning_pipeline]: Successfully loaded planner 'OMPL'
+[move_group-20] [INFO] [1777059957.635896575] [move_group]: Try loading adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-20] [INFO] [1777059957.638136695] [move_group]: Loaded adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-20] [INFO] [1777059957.638187705] [move_group]: Try loading adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777059957.640271884] [move_group]: Loaded adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777059957.640308273] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-20] [INFO] [1777059957.640358371] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-20] [INFO] [1777059957.640372422] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-20] [INFO] [1777059957.640393497] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-20] [INFO] [1777059957.648920245] [move_group]: Try loading adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777059957.653119892] [move_group]: Loaded adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777059957.653154129] [move_group]: Try loading adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-20] [INFO] [1777059957.658934004] [move_group]: Loaded adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-20] [INFO] [1777059957.658989885] [move_group]: Try loading adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-20] [INFO] [1777059957.660930732] [move_group]: Loaded adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-20] [INFO] [1777059957.841522661] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added FollowJointTrajectory controller for joint_trajectory_controller
+[move_group-20] [INFO] [1777059957.841592709] [move_group.moveit.moveit.plugins.simple_controller_manager]: robotiq_gripper_controller will command a max effort of: 0
+[move_group-20] [INFO] [1777059957.853650375] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added GripperCommand controller for robotiq_gripper_controller
+[move_group-20] [INFO] [1777059957.853895288] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059957.853936477] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059957.854612956] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Trajectory execution is managing controllers
+[move_group-20] [INFO] [1777059957.854637908] [move_group]: MoveGroup debug mode is ON
+[move_group-20] [INFO] [1777059957.914227810] [move_group.moveit.moveit.ros.move_group.executable]: 
+[move_group-20] 
+[move_group-20] ********************************************************
+[move_group-20] * MoveGroup using: 
+[move_group-20] *     - apply_planning_scene_service
+[move_group-20] *     - clear_octomap_service
+[move_group-20] *     - get_group_urdf
+[move_group-20] *     - load_geometry_from_file
+[move_group-20] *     - CartesianPathService
+[move_group-20] *     - execute_trajectory_action
+[move_group-20] *     - get_planning_scene_service
+[move_group-20] *     - kinematics_service
+[move_group-20] *     - move_action
+[move_group-20] *     - motion_plan_service
+[move_group-20] *     - query_planners_service
+[move_group-20] *     - state_validation_service
+[move_group-20] *     - save_geometry_to_file
+[move_group-20] ********************************************************
+[move_group-20] 
+[move_group-20] [INFO] [1777059957.914319390] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context using pipeline ompl
+[move_group-20] [INFO] [1777059957.914338539] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context initialization complete
+[move_group-20] [96mLoading 'move_group/ApplyPlanningSceneService'...[0m
+[move_group-20] [96mLoading 'move_group/ClearOctomapService'...[0m
+[move_group-20] [96mLoading 'move_group/GetUrdfService'...[0m
+[move_group-20] [96mLoading 'move_group/LoadGeometryFromFileService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupCartesianPathService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupExecuteTrajectoryAction'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupGetPlanningSceneService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupKinematicsService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupMoveAction'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupPlanService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupQueryPlannersService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupStateValidationService'...[0m
+[move_group-20] [96mLoading 'move_group/SaveGeometryToFileService'...[0m
+[move_group-20] 
+[move_group-20] [92mYou can start planning now![0m
+[move_group-20] 
+[scene_static-7] [INFO] [1777059958.088408403] [scene_static_node]: Planning scene service available. Building static scene...
+[scene_static-7] [INFO] [1777059958.111553423] [scene_static_node]: Static scene built: 25 objects added to MoveIt planning scene.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:58] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059958.476584737] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:58] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777059959.160246011] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[rviz2-21] [ERROR] [1777059959.193355973] [rviz2_moveit.moveit.ros.motion_planning_frame]: Action server: /recognize_objects not available
+[rviz2-21] [INFO] [1777059959.260691566] [rviz2_moveit.moveit.ros.motion_planning_frame]: MoveGroup namespace changed: / -> . Reloading params.
+[rviz2-21] [INFO] [1777059959.349122815] [rviz2_moveit.moveit.ros.rdf_loader]: Loaded robot model in 0.015438 seconds
+[rviz2-21] [INFO] [1777059959.349227431] [rviz2_moveit.moveit.core.robot_model]: Loading robot model 'gen3'...
+[rviz2-21] [INFO] [1777059959.349275347] [rviz2_moveit.moveit.core.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[rviz2-21] [INFO] [1777059959.582535866] [rviz2_moveit.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'manipulator': 1 1 1 1 1 1 1
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:45:59] "GET /status_json HTTP/1.1" 200 -
+[rviz2-21] [INFO] [1777059960.028489196] [rviz2_moveit.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[rviz2-21] [INFO] [1777059960.032232882] [rviz2_moveit.moveit.ros.planning_scene_monitor]: Listening to '/monitored_planning_scene'
+[vision_apriltag-9] [INFO] [1777059960.332251596] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:00] "GET /status_json HTTP/1.1" 200 -
+[rviz2-21] [INFO] [1777059960.443532372] [interactive_marker_display_108968039429424]: Connected on namespace: /rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic
+[rviz2-21] [INFO] [1777059960.451270513] [rviz2_moveit.moveit.ros.robot_interaction]: No active joints or end effectors found for group 'gripper'. Make sure that kinematics.yaml is loaded in this node's namespace.
+[rviz2-21] [INFO] [1777059960.452085367] [rviz2_moveit.moveit.ros.robot_interaction]: No active joints or end effectors found for group 'gripper'. Make sure that kinematics.yaml is loaded in this node's namespace.
+[rviz2-21] [INFO] [1777059960.476903488] [interactive_marker_display_108968039429424]: Sending request for interactive markers
+[rviz2-21] [INFO] [1777059960.509692721] [interactive_marker_display_108968039429424]: Service response received for initialization
+[rviz2-21] [INFO] [1777059960.543252388] [rviz2_moveit.moveit.ros.motion_planning_frame]: group gripper
+[rviz2-21] [INFO] [1777059960.543304957] [rviz2_moveit.moveit.ros.motion_planning_frame]: Constructing new MoveGroup connection for group 'gripper' in namespace ''
+[rviz2-21] [INFO] [1777059960.614399341] [rviz2_moveit.moveit.ros.move_group_interface]: Ready to take commands for planning group gripper.
+[rviz2-21] [INFO] [1777059960.615434431] [rviz2_moveit.moveit.ros.motion_planning_frame]: group gripper
+[vision_apriltag-9] [INFO] [1777059960.616705790] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:01] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059961.879403853] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:01] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:02] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:03] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:04] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059964.209096320] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[wrist_camera_usb_publisher-8] [INFO] [1777059964.309137005] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:04] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059965.605177573] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:05] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059965.969928937] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:06] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:07] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059967.923261813] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:07] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:08] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777059969.466906961] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:09] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059969.878230625] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:10] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059970.664652494] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:10] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:11] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059972.334175579] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:12] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:13] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059973.880084491] [vision_apriltag_node]: Vision AprilTag: images are arriving on /wrist_mounted_camera/image, but no AprilTags have been detected yet.
+[adl_ui-15] [INFO] [1777059973.895053416] [adl_ui_node]: UI command published: clear_table
+[clear_table-13] [INFO] [1777059973.897328913] [clear_table_node]: Received clear_table command. Starting task execution.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:13] "POST /command HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1777059973.903386378] [clear_table_node]: Starting Clear Table Task...
+[scene_from_vision-10] [INFO] [1777059973.907297385] [scene_from_vision_node]: Scene memory cleared. Removed remembered IDs: []
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:13] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1777059973.955400642] [clear_table_node]: Scene memory cleared. Removed remembered IDs: []
+[clear_table-13] [INFO] [1777059973.956949684] [clear_table_node]: [Layout] BIN preset alignment: preset=(0.891, 0.000) vs center=(0.891, 0.000) (dx_center=+0.000, dy=+0.000), dx_from_drop_target=+0.000.
+[clear_table-13] [INFO] [1777059973.958371025] [clear_table_node]: [Layout] SHELF preset alignment: left=(0.760, 0.115), right=(0.760, 0.235), shelf_center_x=0.881, shelf_drop_x=0.760, dx_center(left/right)=(-0.121/-0.121), dx_drop(left/right)=(+0.000/+0.000).
+[clear_table-13] [INFO] [1777059973.977306433] [clear_table_node]: Added temporary table guard ring 'clear_table_startup_guard' (margin=0.0127m, height=0.200m, thickness=0.0127m).
+[clear_table-13] [INFO] [1777059974.178920920] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1777059974.197955084] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[clear_table-13] [INFO] [1777059974.329734309] [clear_table_node]: Moving to perform the initial scene scan for clear table task...
+[clear_table-13] [INFO] [1777059974.330891072] [clear_table_node]: is_near_look_at_table: current arm is not at target (worst=joint_4:0.408 rad > 0.080).
+[clear_table-13] [INFO] [1777059974.331661460] [clear_table_node]: look_at_table: planning to LOOK_AT_TABLE_JOINTS.
+[move_group-20] [ERROR] [1777059974.333765085] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[INFO] [launch.user]: [arm_start.launch] move_group reported an empty JointState while sanitizer mode is active. Keeping the launch alive, but this still indicates a planning-state problem. move_group output: [ERROR] [1777059974.333765085] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1777059974.338788941] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777059974.343289519] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777059974.349039297] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1777059974.366152983] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777059974.366223466] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777059974.366250448] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777059974.366283794] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777059974.367463390] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777059974.367534791] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777059974.367554610] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777059974.367595295] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777059974.368551422] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777059974.368805397] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1777059974.395911291] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777059974.397616198] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1777059974.398305476] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1777059974.398495070] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1777059974.399112349] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059974.399153305] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059974.399239599] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1777059974.421277833] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1777059974.421372253] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059974.421418084] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059974.421679323] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777059974.424408065] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1777059974.424497907] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1777059974.425929986] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1777059974.425959698] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[wrist_camera_usb_publisher-8] [INFO] [1777059974.625683246] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:14] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:15] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1777059975.684720280] [joint_trajectory_controller]: Goal reached, success!
+[move_group-20] [INFO] [1777059975.731772361] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' successfully finished
+[move_group-20] [INFO] [1777059975.782621447] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-20] [INFO] [1777059975.790646245] [move_group.moveit.moveit.ros.move_group.move_action]: Solution was found and executed.
+[vision_apriltag-9] [INFO] [1777059975.880340010] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[clear_table-13] [INFO] [1777059975.897964081] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1777059975.900641038] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:16] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059976.203507835] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:sharp_up2@(602,305)
+[vision_apriltag-9] [INFO] [1777059976.213299962] [vision_apriltag_node]: Vision AprilTag visible IDs: [3]
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:16] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059977.090650365] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[clear_table-13] [INFO] [1777059977.300796861] [clear_table_node]: Initial top scan pose reached. Deterministic two-phase scan will collect top then side targets.
+[clear_table-13] [INFO] [1777059977.301600171] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1777059977.305565434] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[clear_table-13] [INFO] [1777059977.452600251] [clear_table_node]: Vision ENABLED.
+[clear_table-13] [INFO] [1777059977.453835378] [clear_table_node]: Running deterministic two-phase clear_table scan: top sweep first, then one left/right side sweep.
+[clear_table-13] [INFO] [1777059977.455832087] [clear_table_node]: Two-phase scan is configured to run at least one side sweep before returning priority top-ID detections because side-grasp targets are in scope.
+[clear_table-13] [INFO] [1777059977.456813165] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1777059977.466224254] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[clear_table-13] [INFO] [1777059977.607807343] [clear_table_node]: look_at_table: already near fixed lab scan joint pose; skipping motion.
+[clear_table-13] [INFO] [1777059977.608588837] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1777059977.610760744] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:17] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1777059978.112741531] [clear_table_node]: Two-phase top scan 'top_center': using per-pose scan timeout 3.00s.
+[scene_from_vision-10] [INFO] [1777059978.118395747] [scene_from_vision_node]: Scene scan started for 5.0s. Visible detections will be sampled, filtered, and committed at scan end.
+[vision_apriltag-9] [INFO] [1777059978.123877201] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059978.221042129] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059978.326456851] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059978.423062490] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:18] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059978.523213645] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059978.624092107] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059978.728427715] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059978.832411154] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059978.930001285] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059979.029847151] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059979.090469298] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059979.133821070] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:19] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059979.238206697] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059979.336628163] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059979.436958161] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059979.550210067] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059979.654928001] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059979.749167913] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[wrist_camera_usb_publisher-8] [INFO] [1777059979.789824395] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-9] [INFO] [1777059979.849487339] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:19] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059979.950922192] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059980.051673279] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059980.090521662] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059980.152398335] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059980.264422562] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059980.364524557] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059980.461206444] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059980.563145456] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059980.662974104] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:20] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059980.769740298] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059980.869967241] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059980.974217975] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059981.083955381] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[clear_table-13] [WARN] [1777059981.153448483] [clear_table_node]: scan_scene timed out after 3.0s; using current remembered IDs.
+[vision_apriltag-9] [INFO] [1777059981.158544390] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[clear_table-13] [INFO] [1777059981.169607297] [clear_table_node]: Two-phase top-pose freeze latched ID 3 from two-phase top scan 'top_center'.
+[clear_table-13] [INFO] [1777059981.170924501] [clear_table_node]: Two-phase top scan 'top_center' detected top-grasp IDs [3].
+[clear_table-13] [INFO] [1777059981.171675861] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1777059981.176734099] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[vision_apriltag-9] [INFO] [1777059981.256620438] [vision_apriltag_node]: Vision AprilTag detection debug: 3:cv2.solvePnP_ippe_square:raw@(602,304)
+[clear_table-13] [INFO] [1777059981.322319128] [clear_table_node]: look_at_table_retry_scan: moving to inward recovery scan pose.
+[move_group-20] [ERROR] [1777059981.365434961] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1777059981.374606033] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777059981.375689925] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777059981.375880167] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1777059981.379368239] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777059981.379437064] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777059981.379460370] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777059981.379474250] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777059981.379832480] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777059981.379875687] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777059981.379892395] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777059981.379923336] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777059981.380626843] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777059981.380724499] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1777059981.402318445] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777059981.402907857] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1777059981.403218962] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1777059981.403356238] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1777059981.403490626] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059981.403523395] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059981.403591542] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1777059981.419938889] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1777059981.420028869] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059981.420065498] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059981.421009977] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777059981.422242334] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1777059981.422316153] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1777059981.423091965] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1777059981.423112027] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:21] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059981.878589159] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[ros2_control_node-1] [INFO] [1777059981.884664286] [joint_trajectory_controller]: Goal reached, success!
+[move_group-20] [INFO] [1777059981.923156060] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' successfully finished
+[move_group-20] [INFO] [1777059981.978833347] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status SUCCEEDED ...
+[move_group-20] [INFO] [1777059981.980479676] [move_group.moveit.moveit.ros.move_group.move_action]: Solution was found and executed.
+[clear_table-13] [INFO] [1777059982.085960292] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1777059982.089738707] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[vision_apriltag-9] [INFO] [1777059982.090823917] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059982.185044292] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:22] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059982.288097196] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059982.386051675] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059982.488625617] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[clear_table-13] [INFO] [1777059982.588492148] [clear_table_node]: Two-phase top scan 'top_retry': using per-pose scan timeout 3.00s.
+[vision_apriltag-9] [INFO] [1777059982.591514621] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[scene_from_vision-10] [INFO] [1777059982.593033283] [scene_from_vision_node]: Scene scan started for 5.0s. Visible detections will be sampled, filtered, and committed at scan end.
+[vision_apriltag-9] [INFO] [1777059982.687663668] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059982.696445680] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059982.790401191] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059982.798316492] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059982.893991666] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059982.899729069] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:22] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059982.991271022] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059983.000659262] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059983.098113771] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[vision_apriltag-9] [INFO] [1777059983.204586523] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[scene_from_vision-10] [INFO] [1777059983.214871248] [scene_from_vision_node]: Scan committed tag 3: raw=10, accepted=10, rejected=0, median tag pose x=0.667, y=-0.003, z=0.140. object center x=0.599, y=-0.064, z=0.129, yaw=-24.8deg. table_delta x=-0.082, y=-0.064.
+[scene_from_vision-10] [INFO] [1777059983.216927387] [scene_from_vision_node]: Published obj_3 (new) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[scene_from_vision-10] [INFO] [1777059983.225970561] [scene_from_vision_node]: Scene scan complete. Remembered object IDs: [3]
+[scene_from_vision-10] [INFO] [1777059983.228351965] [scene_from_vision_node]: /apply_planning_scene accepted dynamic scene updates; MoveIt should mirror these objects to RViz.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:23] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:24] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777059984.951606711] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:25] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1777059985.247997625] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[clear_table-13] [WARN] [1777059985.604267119] [clear_table_node]: scan_scene timed out after 3.0s; using current remembered IDs.
+[vision_apriltag-9] [INFO] [1777059985.872540556] [vision_apriltag_node]: Service: Tag 3 found and base-frame pose returned.
+[clear_table-13] [INFO] [1777059985.876893474] [clear_table_node]: Two-phase top-pose freeze updated ID 3 from two-phase top scan 'top_retry'.
+[clear_table-13] [INFO] [1777059985.886371339] [clear_table_node]: Two-phase top scan 'top_retry' detected top-grasp IDs [3].
+[clear_table-13] [INFO] [1777059985.899120449] [clear_table_node]: Two-phase scan: priority top target(s) detected [3] after completing the configured top sweep. A side sweep is required, so continuing to side scan passes before target selection.
+[clear_table-13] [INFO] [1777059985.903743712] [clear_table_node]: Removing startup table guard ring before two-phase side sweeps.
+[clear_table-13] [INFO] [1777059985.913150985] [clear_table_node]: Removed temporary table guard ring 'clear_table_startup_guard'.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:25] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1777059986.014571616] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1777059986.015926464] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[clear_table-13] [INFO] [1777059986.179192883] [clear_table_node]: look_at_table_horizontal_side_scan_with_offsets: moving to horizontal side scan with joint offsets (joint_1=-0.280, joint_6=-0.000).
+[clear_table-13] [INFO] [1777059986.180736826] [clear_table_node]: look_at_table_horizontal_side_scan: current arm is not at target (worst=joint_6:2.252 rad > 0.080).
+[clear_table-13] [INFO] [1777059986.196930717] [clear_table_node]: look_at_table_horizontal_side_scan: moving with deterministic fixed joint pose.
+[move_group-20] [ERROR] [1777059986.199929458] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1777059986.218385851] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777059986.237629040] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777059986.239311905] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1777059986.261195870] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777059986.261279131] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777059986.261310447] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777059986.261322893] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777059986.261624532] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777059986.261656294] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777059986.261671566] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777059986.261701006] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777059986.262146140] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777059986.262223526] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1777059986.330634598] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777059986.356747379] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1777059986.362222300] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1777059986.362681685] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1777059986.363199188] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059986.363239702] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059986.363758674] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1777059986.378892004] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1777059986.378970692] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059986.379006876] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059986.379189821] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777059986.379875275] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1777059986.380003766] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1777059986.380919464] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1777059986.380957316] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:26] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:27] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [WARN] [1777059987.674825305] [scene_from_vision_node]: Scene scan extending by 1.5s (1/2) because no pose samples collected yet.
+[vision_apriltag-9] [INFO] [1777059987.879144023] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:28] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:28] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [WARN] [1777059989.178339322] [scene_from_vision_node]: Scene scan extending by 1.5s (2/2) because no pose samples collected yet.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:29] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059989.878987722] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[wrist_camera_usb_publisher-8] [INFO] [1777059990.108007204] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[ros2_control_node-1] [ERROR] [1777059990.286712517] [KortexMultiInterfaceHardware]: Kortex exception: Device error, Error sub type=WRONG_SERVOING_MODE => <srv: 3, fct: 1, msgType: 3>
+[ros2_control_node-1] description: Wrong servoing mode, must be low level servoing mode
+[ros2_control_node-1] [ERROR] [1777059990.286782570] [KortexMultiInterfaceHardware]: Error sub-code: WRONG_SERVOING_MODE
+[ros2_control_node-1] [WARN] [1777059990.286826155] [controller_manager]: Overrun might occur, Total time : 82349.840 us (Expected < 20000.000 us) --> Read time : 48.183 us, Update time : 248.931 us, Write time : 82052.726 us
+[ros2_control_node-1] [WARN] [1777059990.286887554] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 50 Hz. The loop took 82.454435 ms (missed cycles : 5).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:30] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [WARN] [1777059990.684716290] [scene_from_vision_node]: Scene scan collected no pose samples. Check that vision_apriltag is running, /detected_tag_ids is changing, and the selected detector backend is stable.
+[scene_from_vision-10] [INFO] [1777059990.685792933] [scene_from_vision_node]: Scene scan kept remembered IDs not reacquired in this scan: [3]. This is expected for ADL memory mode; use scan_prune_unseen_objects:=true for calibration runs after manually moving objects.
+[scene_from_vision-10] [INFO] [1777059990.690222645] [scene_from_vision_node]: Scene scan complete. Remembered object IDs: [3]
+[ros2_control_node-1] [ERROR] [1777059990.704620152] [tolerances]: State tolerances failed for joint 4:
+[ros2_control_node-1] [ERROR] [1777059990.704672628] [tolerances]: Position Error: -0.152167, Position Tolerance: 0.150000
+[ros2_control_node-1] [WARN] [1777059990.704744661] [joint_trajectory_controller]: Aborted due to state tolerance violation
+[move_group-20] [WARN] [1777059990.780944848] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' failed with error PATH_TOLERANCE_VIOLATED: Aborted due to path tolerance violation
+[move_group-20] [WARN] [1777059990.781108614] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Controller handle joint_trajectory_controller reports status ABORTED
+[move_group-20] [INFO] [1777059990.781137835] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status ABORTED ...
+[move_group-20] [INFO] [1777059990.789127114] [move_group.moveit.moveit.ros.move_group.move_action]: CONTROL_FAILED
+[clear_table-13] [ERROR] [1777059990.800827003] [clear_table_node]: MoveGroup execution failed.
+[clear_table-13]   error_code.val = -4
+[clear_table-13]   group_name      = manipulator
+[clear_table-13]   num_attempts    = 10
+[clear_table-13]   allowed_time    = 18.0
+[clear_table-13]   vel_scale       = 0.25
+[clear_table-13]   accel_scale     = 0.25
+[clear_table-13] If this persists, check move_group / controller logs for the meaning of this code (often control abort, invalid start state, or planning pipeline failure).
+[clear_table-13] [WARN] [1777059990.803644947] [clear_table_node]: _recover_after_failure(): MoveGroup error_code=-4
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:31] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059991.886997972] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:31] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1777059992.031693085] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1777059992.033385437] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[scene_from_vision-10] [INFO] [1777059992.091152200] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[clear_table-13] [WARN] [1777059992.186579514] [clear_table_node]: Two-phase side scan 'side_right' failed to reach its scan pose. Retrying up to 1 time(s).
+[clear_table-13] [INFO] [1777059992.187023801] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1777059992.189451898] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[clear_table-13] [INFO] [1777059992.338084600] [clear_table_node]: look_at_table_horizontal_side_scan_with_offsets: moving to horizontal side scan with joint offsets (joint_1=-0.280, joint_6=-0.000).
+[clear_table-13] [INFO] [1777059992.339051224] [clear_table_node]: look_at_table_horizontal_side_scan: current arm is not at target (worst=joint_5:2.780 rad > 0.080).
+[clear_table-13] [INFO] [1777059992.345144541] [clear_table_node]: look_at_table_horizontal_side_scan: moving with deterministic fixed joint pose.
+[move_group-20] [ERROR] [1777059992.345963577] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1777059992.350496549] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777059992.351665890] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777059992.352500221] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1777059992.359976646] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777059992.363293961] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777059992.363327191] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777059992.363341374] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777059992.363658423] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777059992.363691757] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777059992.363709463] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777059992.363744060] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777059992.364222312] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777059992.364320424] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1777059992.437955298] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777059992.458503149] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [ERROR] [1777059992.462169588] [move_group.moveit.moveit.ros.validate_solution]: Computed path is not valid. Invalid states at index locations: [ 34 ] out of 117. Explanations follow in command line. Contacts are published on /display_contacts
+[move_group-20] [INFO] [1777059992.462368484] [move_group.moveit.moveit.core.moveit_collision_detection_fcl]: Found a contact between 'table_edge_lip_left' (type 'Object') and 'robotiq_85_right_finger_tip_link' (type 'Robot link'), which constitutes a collision. Contact information is not stored.
+[move_group-20] [INFO] [1777059992.462408253] [move_group.moveit.moveit.core.moveit_collision_detection_fcl]: Collision checking is considered complete (collision was found and 0 contacts are stored)
+[move_group-20] [ERROR] [1777059992.462629608] [move_group.moveit.moveit.ros.validate_solution]: Completed listing of explanations for invalid states.
+[move_group-20] [ERROR] [1777059992.462984975] [move_group]: PlanningResponseAdapter 'ValidateSolution' failed with error code INVALID_MOTION_PLAN
+[move_group-20] [INFO] [1777059992.463221338] [move_group.moveit.moveit.ros.move_group.move_action]: Motion plan was found but it seems to be invalid (possibly due to postprocessing). Not executing.
+[clear_table-13] [ERROR] [1777059992.474806852] [clear_table_node]: MoveGroup execution failed.
+[clear_table-13]   error_code.val = -2
+[clear_table-13]   group_name      = manipulator
+[clear_table-13]   num_attempts    = 10
+[clear_table-13]   allowed_time    = 18.0
+[clear_table-13]   vel_scale       = 0.25
+[clear_table-13]   accel_scale     = 0.25
+[clear_table-13] If this persists, check move_group / controller logs for the meaning of this code (often control abort, invalid start state, or planning pipeline failure).
+[clear_table-13] [WARN] [1777059992.475673998] [clear_table_node]: _recover_after_failure(): MoveGroup error_code=-2
+[vision_apriltag-9] [INFO] [1777059992.630048732] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:32] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:33] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1777059993.684459120] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1777059993.685931907] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[clear_table-13] [WARN] [1777059993.845471845] [clear_table_node]: Two-phase side scan 'side_right' retry 1/1 failed.
+[clear_table-13] [WARN] [1777059993.851430048] [clear_table_node]: Two-phase side scan 'side_right' failed to reach its scan pose.
+[clear_table-13] [INFO] [1777059993.858953841] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1777059993.868667184] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[vision_apriltag-9] [INFO] [1777059993.889582382] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[clear_table-13] [INFO] [1777059994.010356558] [clear_table_node]: look_at_table_horizontal_side_scan_with_offsets: moving to horizontal side scan with joint offsets (joint_1=+0.160, joint_6=+0.000).
+[clear_table-13] [INFO] [1777059994.014296506] [clear_table_node]: look_at_table_horizontal_side_scan: current arm is not at target (worst=joint_5:2.780 rad > 0.080).
+[clear_table-13] [INFO] [1777059994.015075090] [clear_table_node]: look_at_table_horizontal_side_scan: moving with deterministic fixed joint pose.
+[move_group-20] [ERROR] [1777059994.017798265] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1777059994.022476695] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777059994.024583712] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777059994.025424904] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1777059994.039576470] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777059994.039649687] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777059994.039673733] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777059994.039685952] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777059994.040086719] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777059994.040120697] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777059994.040137503] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777059994.040169147] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777059994.040572306] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777059994.040649241] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1777059994.089982600] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777059994.103627248] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1777059994.107391381] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1777059994.107626044] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1777059994.107981114] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059994.108017658] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059994.108122708] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1777059994.119923840] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1777059994.120015156] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059994.120054543] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059994.121157266] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777059994.123061365] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1777059994.123165573] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1777059994.123691489] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1777059994.123714501] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:34] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [ERROR] [1777059994.704566572] [tolerances]: State tolerances failed for joint 4:
+[ros2_control_node-1] [ERROR] [1777059994.704612635] [tolerances]: Position Error: 0.155455, Position Tolerance: 0.150000
+[ros2_control_node-1] [WARN] [1777059994.704665462] [joint_trajectory_controller]: Aborted due to state tolerance violation
+[move_group-20] [WARN] [1777059994.724066810] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' failed with error PATH_TOLERANCE_VIOLATED: Aborted due to path tolerance violation
+[move_group-20] [WARN] [1777059994.724125481] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Controller handle joint_trajectory_controller reports status ABORTED
+[move_group-20] [INFO] [1777059994.724165154] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status ABORTED ...
+[move_group-20] [INFO] [1777059994.730211178] [move_group.moveit.moveit.ros.move_group.move_action]: CONTROL_FAILED
+[clear_table-13] [ERROR] [1777059994.737779143] [clear_table_node]: MoveGroup execution failed.
+[clear_table-13]   error_code.val = -4
+[clear_table-13]   group_name      = manipulator
+[clear_table-13]   num_attempts    = 10
+[clear_table-13]   allowed_time    = 18.0
+[clear_table-13]   vel_scale       = 0.25
+[clear_table-13]   accel_scale     = 0.25
+[clear_table-13] If this persists, check move_group / controller logs for the meaning of this code (often control abort, invalid start state, or planning pipeline failure).
+[clear_table-13] [WARN] [1777059994.738536624] [clear_table_node]: _recover_after_failure(): MoveGroup error_code=-4
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:34] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777059995.269489198] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:35] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059995.878586261] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[clear_table-13] [INFO] [1777059995.944319017] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1777059995.946285754] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[scene_from_vision-10] [INFO] [1777059996.091090058] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[clear_table-13] [WARN] [1777059996.097408855] [clear_table_node]: Two-phase side scan 'side_left' failed to reach its scan pose.
+[clear_table-13] [WARN] [1777059996.101901068] [clear_table_node]: Two-phase scan required at least one side sweep, but both configured side offset scan poses failed. Center-side fallback is disabled so the next configured action is the deterministic full-pass retry.
+[clear_table-13] [INFO] [1777059996.107501066] [clear_table_node]: Two-phase scan merged clear-table IDs: [3].
+[clear_table-13] [INFO] [1777059996.108694445] [clear_table_node]: Detected 1 objects to clear (IDs, sorted by distance): [3]
+[clear_table-13] [INFO] [1777059996.109882259] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1777059996.111536588] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[clear_table-13] [INFO] [1777059996.262856066] [clear_table_node]: Attempting to clear object TV Remote (ID 3) attempt 1/1. 1 objects remaining.
+[clear_table-13] [INFO] [1777059996.264996362] [clear_table_node]: [TV Remote] Pre-attempt joints: joint_1=+0.076, joint_2=-0.084, joint_3=-3.133, joint_4=-1.751, joint_5=-1.036, joint_6=+0.000, joint_7=+1.551
+[clear_table-13] [INFO] [1777059996.270046965] [clear_table_node]: [TV Remote] Pre-attempt ee: pos=(0.443, -0.037, 0.658), ori=(0.723, 0.157, 0.642, 0.198)
+[clear_table-13] [INFO] [1777059996.271181481] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-10] [INFO] [1777059996.273165856] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[clear_table-13] [WARN] [1777059996.430944508] [clear_table_node]: [TV Remote] Initial target: top grasp Z 0.246 is below the tool-clearance floor 0.276; raising grasp and approach by 0.030m.
+[clear_table-13] [INFO] [1777059996.432707702] [clear_table_node]: [TV Remote] Initial target: remote horizontal/slanted pose detected (|length_axis.x|=0.451 >= 0.300). Applying dY=-0.006m dZ=+0.000m before grasp descend.
+[clear_table-13] [INFO] [1777059996.435850828] [clear_table_node]: [TV Remote] stage1_ori_xy=0.300, stage1_ori_z=0.220, retry_ori_xy=0.400, retry_ori_z=0.300, stage1_live_ori=0.450, stage2_prealign=0.450, soft_fail=False, primary_pos_fallback=False, retry_pos_fallback=False, staged_pos_fallback=False, retry_table_reseed=False, ori_mode=full, plan_s=(12.0/14.0).
+[clear_table-13] [INFO] [1777059996.439842569] [clear_table_node]: [TV Remote] Stage 1: approach (0.623, -0.095, 0.426)
+[clear_table-13] [INFO] [1777059996.442664814] [clear_table_node]: Stage 1 Approach Target: pos=(0.623, -0.095, 0.426), ori=(0.232, 0.973, 0.000, 0.000)
+[clear_table-13] [INFO] [1777059996.443005461] [clear_table_node]: open_gripper(): opening gripper fully...
+[ros2_control_node-1] [INFO] [1777059996.444532841] [robotiq_gripper_controller]: Received & accepted new action goal
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:36] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1777059996.502769078] [clear_table_node]: Gripper reached position=0.007 stalled=False reached_goal=True
+[clear_table-13] [INFO] [1777059996.504272912] [clear_table_node]: Added temporary table-top keepout 'clear_table_approach_table_top_keepout' (size=(0.575,0.575,0.080)m, base_z=0.118m, top_z=0.198m).
+[clear_table-13] [INFO] [1777059996.656271736] [clear_table_node]: go_to_pose: planning to pose at 0.623,-0.095, 0.426
+[move_group-20] [ERROR] [1777059996.659538429] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1777059996.671115490] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777059996.672662636] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777059996.674927292] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1777059996.679296525] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777059996.679385293] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777059996.679413285] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777059996.679427307] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777059996.680782452] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777059996.680850719] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777059996.680870624] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777059996.680905300] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777059996.683234506] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777059996.683440459] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1777059996.769405839] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777059996.778676764] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1777059996.780893094] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1777059996.781109340] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1777059996.781406693] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059996.781438972] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059996.781530598] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1777059996.799265670] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1777059996.799381851] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059996.799425313] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059996.799811862] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777059996.800985560] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1777059996.801091473] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1777059996.801326180] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1777059996.801348504] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:37] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [ERROR] [1777059997.384764376] [tolerances]: State tolerances failed for joint 6:
+[ros2_control_node-1] [ERROR] [1777059997.384877964] [tolerances]: Position Error: -0.155491, Position Tolerance: 0.150000
+[ros2_control_node-1] [WARN] [1777059997.384973102] [joint_trajectory_controller]: Aborted due to state tolerance violation
+[move_group-20] [WARN] [1777059997.404922108] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' failed with error PATH_TOLERANCE_VIOLATED: Aborted due to path tolerance violation
+[move_group-20] [WARN] [1777059997.405859155] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Controller handle joint_trajectory_controller reports status ABORTED
+[move_group-20] [INFO] [1777059997.405928124] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status ABORTED ...
+[move_group-20] [INFO] [1777059997.409517037] [move_group.moveit.moveit.ros.move_group.move_action]: CONTROL_FAILED
+[clear_table-13] [ERROR] [1777059997.426459593] [clear_table_node]: MoveGroup execution failed.
+[clear_table-13]   error_code.val = -4
+[clear_table-13]   group_name      = manipulator
+[clear_table-13]   num_attempts    = 10
+[clear_table-13]   allowed_time    = 12.0
+[clear_table-13]   vel_scale       = 0.25
+[clear_table-13]   accel_scale     = 0.25
+[clear_table-13] If this persists, check move_group / controller logs for the meaning of this code (often control abort, invalid start state, or planning pipeline failure).
+[clear_table-13] [WARN] [1777059997.427223630] [clear_table_node]: _recover_after_failure(): MoveGroup error_code=-4
+[vision_apriltag-9] [INFO] [1777059997.878745607] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:37] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [WARN] [1777059998.637423421] [clear_table_node]: [TV Remote] Stage 1 primary: trying top staged fallback approach before retry.
+[clear_table-13] [INFO] [1777059998.640043611] [clear_table_node]: [TV Remote] Stage 1 top staged fallback target: pos=(0.623, -0.095, 0.526), ori=(0.232, 0.973, 0.000, 0.000)
+[clear_table-13] [INFO] [1777059998.644960336] [clear_table_node]: go_to_pose: planning to pose at 0.623,-0.095, 0.526
+[move_group-20] [ERROR] [1777059998.646514890] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1777059998.651520328] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777059998.652951928] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777059998.654480508] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1777059998.659579136] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777059998.660280829] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777059998.660316133] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777059998.660331191] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777059998.660650153] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777059998.660686151] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777059998.660703454] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777059998.660736003] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777059998.662443685] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777059998.662586794] [move_group]: Calling Planner 'OMPL'
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:38] "GET /status_json HTTP/1.1" 200 -
+[move_group-20] [INFO] [1777059998.715136612] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777059998.732454567] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1777059998.735330632] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1777059998.735712414] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1777059998.736068830] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059998.736110122] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059998.736210273] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1777059998.740009189] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1777059998.740089328] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059998.740127616] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777059998.740372535] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777059998.740861977] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1777059998.740943793] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1777059998.741218581] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1777059998.741236426] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[ros2_control_node-1] [ERROR] [1777059999.264616708] [tolerances]: State tolerances failed for joint 0:
+[ros2_control_node-1] [ERROR] [1777059999.264659481] [tolerances]: Position Error: -0.153180, Position Tolerance: 0.150000
+[ros2_control_node-1] [WARN] [1777059999.264720045] [joint_trajectory_controller]: Aborted due to state tolerance violation
+[move_group-20] [WARN] [1777059999.342568108] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' failed with error PATH_TOLERANCE_VIOLATED: Aborted due to path tolerance violation
+[move_group-20] [WARN] [1777059999.344962371] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Controller handle joint_trajectory_controller reports status ABORTED
+[move_group-20] [INFO] [1777059999.345018209] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status ABORTED ...
+[move_group-20] [INFO] [1777059999.350375811] [move_group.moveit.moveit.ros.move_group.move_action]: CONTROL_FAILED
+[clear_table-13] [ERROR] [1777059999.363383457] [clear_table_node]: MoveGroup execution failed.
+[clear_table-13]   error_code.val = -4
+[clear_table-13]   group_name      = manipulator
+[clear_table-13]   num_attempts    = 10
+[clear_table-13]   allowed_time    = 12.0
+[clear_table-13]   vel_scale       = 0.25
+[clear_table-13]   accel_scale     = 0.25
+[clear_table-13] If this persists, check move_group / controller logs for the meaning of this code (often control abort, invalid start state, or planning pipeline failure).
+[clear_table-13] [WARN] [1777059999.364086364] [clear_table_node]: _recover_after_failure(): MoveGroup error_code=-4
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:39] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777059999.879656721] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:40] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777060000.437282886] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[clear_table-13] [ERROR] [1777060000.577326146] [clear_table_node]: Stage 1 primary approach failed for object TV Remote (ID 3). Retrying with relaxed tolerances.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:40] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1777060001.021208903] [clear_table_node]: [TV Remote] Stage 1 retry: reseeding with look_at_table before top approach.
+[clear_table-13] [INFO] [1777060001.023832009] [clear_table_node]: is_near_look_at_table: current arm is not at target (worst=joint_5:1.031 rad > 0.080).
+[clear_table-13] [INFO] [1777060001.024583314] [clear_table_node]: look_at_table: planning to LOOK_AT_TABLE_JOINTS.
+[move_group-20] [ERROR] [1777060001.025494440] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1777060001.031834502] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777060001.033379157] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777060001.035023438] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1777060001.042692140] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777060001.042766402] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777060001.042791075] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777060001.042808970] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777060001.044038655] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777060001.044095654] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777060001.044113217] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777060001.044147800] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777060001.044620561] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777060001.044699340] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1777060001.095615641] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777060001.103918694] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1777060001.105845977] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1777060001.106017858] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1777060001.107053186] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060001.107103859] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060001.107202381] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1777060001.119659447] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1777060001.120168729] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060001.120224405] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060001.122117601] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777060001.122665803] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1777060001.122743043] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1777060001.123741925] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1777060001.123763229] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:41] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [ERROR] [1777060001.704745729] [tolerances]: State tolerances failed for joint 4:
+[ros2_control_node-1] [ERROR] [1777060001.704829288] [tolerances]: Position Error: 0.155490, Position Tolerance: 0.150000
+[ros2_control_node-1] [WARN] [1777060001.704943817] [joint_trajectory_controller]: Aborted due to state tolerance violation
+[move_group-20] [WARN] [1777060001.729440669] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' failed with error PATH_TOLERANCE_VIOLATED: Aborted due to path tolerance violation
+[move_group-20] [WARN] [1777060001.729517178] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Controller handle joint_trajectory_controller reports status ABORTED
+[move_group-20] [INFO] [1777060001.729543029] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status ABORTED ...
+[move_group-20] [INFO] [1777060001.729829249] [move_group.moveit.moveit.ros.move_group.move_action]: CONTROL_FAILED
+[clear_table-13] [ERROR] [1777060001.748705345] [clear_table_node]: MoveGroup execution failed.
+[clear_table-13]   error_code.val = -4
+[clear_table-13]   group_name      = manipulator
+[clear_table-13]   num_attempts    = 10
+[clear_table-13]   allowed_time    = 15.0
+[clear_table-13]   vel_scale       = 0.25
+[clear_table-13]   accel_scale     = 0.25
+[clear_table-13] If this persists, check move_group / controller logs for the meaning of this code (often control abort, invalid start state, or planning pipeline failure).
+[clear_table-13] [WARN] [1777060001.753162706] [clear_table_node]: _recover_after_failure(): MoveGroup error_code=-4
+[vision_apriltag-9] [INFO] [1777060001.878777035] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:42] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [WARN] [1777060002.968381072] [clear_table_node]: [TV Remote] Stage 1 retry: look_at_table reseed failed; trying go_home fallback.
+[clear_table-13] [INFO] [1777060002.969053190] [clear_table_node]: go_home: planning to HOME_JOINTS...
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:43] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777060003.879323647] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:43] "GET /status_json HTTP/1.1" 200 -
+[move_group-20] [ERROR] [1777060004.127955842] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1777060004.145112175] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777060004.152232131] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777060004.155606555] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1777060004.159424568] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777060004.159490979] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777060004.159516521] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777060004.159528845] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777060004.159828267] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777060004.160337304] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777060004.160371420] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777060004.160421647] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777060004.160832506] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777060004.160907876] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1777060004.194225426] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777060004.198521065] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1777060004.200109513] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1777060004.204062115] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1777060004.204433500] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060004.204472311] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060004.204574871] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1777060004.224149205] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1777060004.224795197] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060004.224842727] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060004.225060235] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777060004.228114919] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1777060004.228195971] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1777060004.229585048] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1777060004.229606222] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:44] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [ERROR] [1777060004.824635793] [tolerances]: State tolerances failed for joint 4:
+[ros2_control_node-1] [ERROR] [1777060004.824684735] [tolerances]: Position Error: 0.155466, Position Tolerance: 0.150000
+[ros2_control_node-1] [WARN] [1777060004.824755108] [joint_trajectory_controller]: Aborted due to state tolerance violation
+[move_group-20] [WARN] [1777060004.829314130] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' failed with error PATH_TOLERANCE_VIOLATED: Aborted due to path tolerance violation
+[move_group-20] [WARN] [1777060004.829421410] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Controller handle joint_trajectory_controller reports status ABORTED
+[move_group-20] [INFO] [1777060004.829451901] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status ABORTED ...
+[move_group-20] [INFO] [1777060004.834352219] [move_group.moveit.moveit.ros.move_group.move_action]: CONTROL_FAILED
+[clear_table-13] [ERROR] [1777060004.840614962] [clear_table_node]: MoveGroup execution failed.
+[clear_table-13]   error_code.val = -4
+[clear_table-13]   group_name      = manipulator
+[clear_table-13]   num_attempts    = 10
+[clear_table-13]   allowed_time    = 20.0
+[clear_table-13]   vel_scale       = 0.25
+[clear_table-13]   accel_scale     = 0.25
+[clear_table-13] If this persists, check move_group / controller logs for the meaning of this code (often control abort, invalid start state, or planning pipeline failure).
+[clear_table-13] [WARN] [1777060004.849521434] [clear_table_node]: _recover_after_failure(): MoveGroup error_code=-4
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:45] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777060005.603149915] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-9] [INFO] [1777060005.882739978] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[clear_table-13] [ERROR] [1777060006.069172946] [clear_table_node]: go_home: failed. Not attempting automatic collision-disabled recovery on hardware.
+[clear_table-13] [WARN] [1777060006.072976791] [clear_table_node]: [TV Remote] Stage 1 retry: top reseed failed; retrying from current state.
+[clear_table-13] [INFO] [1777060006.073548185] [clear_table_node]: go_to_pose: planning to pose at 0.623,-0.095, 0.426
+[move_group-20] [ERROR] [1777060006.074306195] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1777060006.076727411] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777060006.077982440] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777060006.078307827] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1777060006.079976344] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777060006.080037736] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777060006.080060445] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777060006.080072819] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777060006.081383948] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777060006.081434667] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777060006.081453668] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777060006.081487408] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777060006.081904189] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777060006.081982998] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1777060006.118875135] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777060006.132689146] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1777060006.134971592] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1777060006.135371597] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1777060006.135708537] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060006.135742942] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060006.135838899] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1777060006.140281833] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1777060006.140374994] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060006.140413293] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060006.140622507] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777060006.141665832] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1777060006.141753660] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1777060006.141944984] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1777060006.141961237] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:46] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [ERROR] [1777060006.664773408] [tolerances]: State tolerances failed for joint 3:
+[ros2_control_node-1] [ERROR] [1777060006.664869808] [tolerances]: Position Error: 0.153221, Position Tolerance: 0.150000
+[ros2_control_node-1] [WARN] [1777060006.664959229] [joint_trajectory_controller]: Aborted due to state tolerance violation
+[move_group-20] [WARN] [1777060006.742609284] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' failed with error PATH_TOLERANCE_VIOLATED: Aborted due to path tolerance violation
+[move_group-20] [WARN] [1777060006.742648200] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Controller handle joint_trajectory_controller reports status ABORTED
+[move_group-20] [INFO] [1777060006.742675310] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status ABORTED ...
+[move_group-20] [INFO] [1777060006.750395322] [move_group.moveit.moveit.ros.move_group.move_action]: CONTROL_FAILED
+[clear_table-13] [ERROR] [1777060006.763900334] [clear_table_node]: MoveGroup execution failed.
+[clear_table-13]   error_code.val = -4
+[clear_table-13]   group_name      = manipulator
+[clear_table-13]   num_attempts    = 10
+[clear_table-13]   allowed_time    = 14.0
+[clear_table-13]   vel_scale       = 0.25
+[clear_table-13]   accel_scale     = 0.25
+[clear_table-13] If this persists, check move_group / controller logs for the meaning of this code (often control abort, invalid start state, or planning pipeline failure).
+[clear_table-13] [WARN] [1777060006.764695031] [clear_table_node]: _recover_after_failure(): MoveGroup error_code=-4
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:46] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:47] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777060007.878818998] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[clear_table-13] [WARN] [1777060007.972749553] [clear_table_node]: [TV Remote] Stage 1 retry: trying top staged fallback approach.
+[clear_table-13] [INFO] [1777060007.973930478] [clear_table_node]: [TV Remote] Stage 1 top staged fallback target: pos=(0.623, -0.095, 0.556), ori=(0.232, 0.973, 0.000, 0.000)
+[clear_table-13] [INFO] [1777060007.975082751] [clear_table_node]: go_to_pose: planning to pose at 0.623,-0.095, 0.556
+[move_group-20] [ERROR] [1777060007.976721411] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[clear_table-13] [INFO] [1777060007.982310718] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777060007.983595859] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777060007.983771975] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1777060007.999072389] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777060007.999130730] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777060007.999152765] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777060007.999165254] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777060007.999469551] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777060007.999505993] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777060007.999523689] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777060007.999556728] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777060008.001130440] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777060008.001226003] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1777060008.060228727] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777060008.077400649] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1777060008.080032795] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1777060008.080858064] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1777060008.081264199] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060008.081301881] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060008.081413179] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1777060008.099872474] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1777060008.099960819] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060008.099992457] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060008.100206462] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777060008.102088389] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1777060008.102209095] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1777060008.103756697] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1777060008.103783179] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:48] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [ERROR] [1777060008.624653149] [tolerances]: State tolerances failed for joint 0:
+[ros2_control_node-1] [ERROR] [1777060008.624703969] [tolerances]: Position Error: -0.153184, Position Tolerance: 0.150000
+[ros2_control_node-1] [WARN] [1777060008.624780573] [joint_trajectory_controller]: Aborted due to state tolerance violation
+[move_group-20] [WARN] [1777060008.703444332] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' failed with error PATH_TOLERANCE_VIOLATED: Aborted due to path tolerance violation
+[move_group-20] [WARN] [1777060008.705890320] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Controller handle joint_trajectory_controller reports status ABORTED
+[move_group-20] [INFO] [1777060008.705943812] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status ABORTED ...
+[move_group-20] [INFO] [1777060008.713478781] [move_group.moveit.moveit.ros.move_group.move_action]: CONTROL_FAILED
+[clear_table-13] [ERROR] [1777060008.727557774] [clear_table_node]: MoveGroup execution failed.
+[clear_table-13]   error_code.val = -4
+[clear_table-13]   group_name      = manipulator
+[clear_table-13]   num_attempts    = 10
+[clear_table-13]   allowed_time    = 14.0
+[clear_table-13]   vel_scale       = 0.25
+[clear_table-13]   accel_scale     = 0.25
+[clear_table-13] If this persists, check move_group / controller logs for the meaning of this code (often control abort, invalid start state, or planning pipeline failure).
+[clear_table-13] [WARN] [1777060008.733217222] [clear_table_node]: _recover_after_failure(): MoveGroup error_code=-4
+[adl_ui-15] [INFO] [1777060008.760831723] [adl_ui_node]: UI command published: emergency_stop_retract
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:48] "POST /command HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:48] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060009.003476533] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060009.004418595] [adl_controller_node]: go_retract: planning to RETRACT_JOINTS...
+[move_group-20] [ERROR] [1777060009.005571938] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[adl_controller-11] [INFO] [1777060009.008053729] [adl_controller_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777060009.009779465] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777060009.010024392] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1777060009.019195245] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777060009.019252461] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777060009.019285157] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777060009.019298594] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777060009.019585374] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777060009.019618982] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777060009.019635915] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777060009.019668134] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777060009.020069702] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777060009.020143736] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1777060009.045312357] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777060009.049611992] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1777060009.051044303] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1777060009.051217543] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1777060009.051469301] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060009.051509398] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060009.051612879] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1777060009.059161198] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1777060009.059236742] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060009.059281676] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060009.059479706] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777060009.060985298] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1777060009.061113894] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1777060009.063410982] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1777060009.063452774] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:49] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [ERROR] [1777060009.644620954] [tolerances]: State tolerances failed for joint 4:
+[ros2_control_node-1] [ERROR] [1777060009.644676340] [tolerances]: Position Error: 0.155456, Position Tolerance: 0.150000
+[ros2_control_node-1] [WARN] [1777060009.644759152] [joint_trajectory_controller]: Aborted due to state tolerance violation
+[move_group-20] [WARN] [1777060009.662984268] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' failed with error PATH_TOLERANCE_VIOLATED: Aborted due to path tolerance violation
+[move_group-20] [WARN] [1777060009.663041167] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Controller handle joint_trajectory_controller reports status ABORTED
+[move_group-20] [INFO] [1777060009.663071569] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status ABORTED ...
+[move_group-20] [INFO] [1777060009.669582961] [move_group.moveit.moveit.ros.move_group.move_action]: CONTROL_FAILED
+[adl_controller-11] [ERROR] [1777060009.677315643] [adl_controller_node]: MoveGroup execution failed.
+[adl_controller-11]   error_code.val = -4
+[adl_controller-11]   group_name      = manipulator
+[adl_controller-11]   num_attempts    = 10
+[adl_controller-11]   allowed_time    = 15.0
+[adl_controller-11]   vel_scale       = 0.25
+[adl_controller-11]   accel_scale     = 0.25
+[adl_controller-11] If this persists, check move_group / controller logs for the meaning of this code (often control abort, invalid start state, or planning pipeline failure).
+[adl_controller-11] [WARN] [1777060009.678113942] [adl_controller_node]: _recover_after_failure(): MoveGroup error_code=-4
+[vision_apriltag-9] [INFO] [1777060009.878478475] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[clear_table-13] [WARN] [1777060009.959872339] [clear_table_node]: [TV Remote] Stage 1 retry cancelled before reaching approach pose.
+[clear_table-13] [INFO] [1777060009.963664464] [clear_table_node]: Removed temporary table-top keepout 'clear_table_approach_table_top_keepout'.
+[clear_table-13] [INFO] [1777060010.065166089] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1777060010.065879691] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[vision_apriltag-9] [INFO] [1777060010.078207637] [vision_apriltag_node]: Removed stale tag ID 3 from detected tags
+[scene_from_vision-10] [INFO] [1777060010.093097179] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[clear_table-13] [WARN] [1777060010.216532980] [clear_table_node]: Cancellation detected after TV Remote pipeline. Ending Clear Table task without retrying other objects.
+[clear_table-13] [INFO] [1777060010.217341640] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-10] [INFO] [1777060010.218646951] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:50] "GET /status_json HTTP/1.1" 200 -
+[clear_table-13] [INFO] [1777060010.369249134] [clear_table_node]: Parking arm to retract pose (cancel: After TV Remote pipeline).
+[clear_table-13] [INFO] [1777060010.524518705] [clear_table_node]: Parking prep: tucking gripper for travel at width=0.120rad.
+[clear_table-13] [INFO] [1777060010.525400953] [clear_table_node]: close_gripper(): closing gripper to width=0.120rad, force=10.0N
+[ros2_control_node-1] [INFO] [1777060010.526542829] [robotiq_gripper_controller]: Received & accepted new action goal
+[wrist_camera_usb_publisher-8] [INFO] [1777060010.752281253] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-9] [INFO] [1777060010.969475209] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_controller-11] [INFO] [1777060010.984347085] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060010.988643991] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:51] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060011.247859379] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060011.499380885] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[clear_table-13] [INFO] [1777060011.592794448] [clear_table_node]: Gripper reached position=0.007 stalled=True reached_goal=False
+[clear_table-13] [INFO] [1777060011.593386694] [clear_table_node]: go_retract: planning to RETRACT_JOINTS...
+[clear_table-13] [WARN] [1777060011.594162425] [clear_table_node]: _send_goal: cancel requested before planning; skipping motion goal.
+[clear_table-13] [WARN] [1777060011.595005610] [clear_table_node]: go_retract failed; leaving final/idle park at retract-only as requested.
+[clear_table-13] [WARN] [1777060011.596824387] [clear_table_node]: After TV Remote pipeline: retract-only cancel park did not complete cleanly.
+[adl_controller-11] [INFO] [1777060011.751091907] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:51] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777060012.002035471] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 26.1s.
+[adl_controller-11] [INFO] [1777060012.007934403] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[scene_from_vision-10] [INFO] [1777060012.093611903] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_controller-11] [INFO] [1777060012.273386441] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060012.530203017] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:52] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060012.783735890] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060013.035367133] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060013.294973900] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:53] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060013.546250353] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060013.807675013] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:54] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060014.059007185] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[scene_from_vision-10] [INFO] [1777060014.093955565] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_controller-11] [INFO] [1777060014.310094084] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[vision_apriltag-9] [INFO] [1777060014.331468109] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 28.5s.
+[adl_controller-11] [INFO] [1777060014.562142690] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:54] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060014.813373688] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060015.064584707] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060015.315953680] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:55] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060015.571571935] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[wrist_camera_usb_publisher-8] [INFO] [1777060015.760488610] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_controller-11] [INFO] [1777060015.822781883] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[vision_apriltag-9] [INFO] [1777060015.879431800] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 30.0s.
+[adl_controller-11] [INFO] [1777060016.075604579] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[scene_from_vision-10] [INFO] [1777060016.095644930] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:56] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060016.335609503] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[vision_apriltag-9] [INFO] [1777060016.374041589] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_controller-11] [INFO] [1777060016.587136897] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060016.838296467] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:57] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060017.090117364] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060017.343233451] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060017.594363166] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:57] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060017.850797403] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[vision_apriltag-9] [INFO] [1777060017.878626738] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 32.0s.
+[adl_controller-11] [INFO] [1777060018.102129721] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060018.359180583] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:58] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1777060018.601395269] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_controller-11] [INFO] [1777060018.610787583] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060018.863229229] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060019.114066036] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:46:59] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060019.370247976] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060019.621233695] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060019.871906267] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[vision_apriltag-9] [INFO] [1777060019.879381594] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 34.0s.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:00] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060020.127560406] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060020.379081185] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060020.630235305] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:00] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060020.881780473] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[wrist_camera_usb_publisher-8] [INFO] [1777060020.920206456] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_from_vision-10] [INFO] [1777060021.092546428] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_controller-11] [INFO] [1777060021.286631651] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060021.291013601] [adl_controller_node]: go_retract: planning to RETRACT_JOINTS...
+[move_group-20] [ERROR] [1777060021.291780020] [move_group.moveit.moveit.core.conversions]: Found empty JointState message
+[adl_controller-11] [INFO] [1777060021.299170290] [adl_controller_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[move_group-20] [INFO] [1777060021.305415472] [move_group.moveit.moveit.ros.move_group.move_action]: MoveGroupMoveAction: Received request
+[move_group-20] [INFO] [1777060021.306286352] [move_group.moveit.moveit.ros.move_group.move_action]: executing..
+[move_group-20] [INFO] [1777060021.323540879] [move_group.moveit.moveit.ros.move_group.move_action]: Combined planning and execution request received for MoveGroup action. Forwarding to planning and execution pipeline.
+[move_group-20] [WARN] [1777060021.323616150] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as start state in the motion planning request
+[move_group-20] [WARN] [1777060021.323641294] [move_group.moveit.moveit.ros.move_group.capability]: Execution of motions should always start at the robot's current state. Ignoring the state supplied as difference in the planning scene diff
+[move_group-20] [INFO] [1777060021.323654067] [move_group.moveit.moveit.ros.plan_execution]: Planning attempt 1 of at most 1
+[move_group-20] [INFO] [1777060021.327523307] [move_group]: Calling PlanningRequestAdapter 'ResolveConstraintFrames'
+[move_group-20] [INFO] [1777060021.328523542] [move_group]: Calling PlanningRequestAdapter 'ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777060021.328560635] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateBounds'
+[move_group-20] [INFO] [1777060021.328611273] [move_group]: Calling PlanningRequestAdapter 'CheckStartStateCollision'
+[move_group-20] [INFO] [1777060021.329030986] [move_group.moveit.moveit.planners.ompl.model_based_planning_context]: Planner configuration 'manipulator' will use planner 'geometric::RRTConnect'. Additional configuration parameters will be set when the planner is constructed.
+[move_group-20] [INFO] [1777060021.329102904] [move_group]: Calling Planner 'OMPL'
+[move_group-20] [INFO] [1777060021.359764027] [move_group]: Calling PlanningResponseAdapter 'AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777060021.365701926] [move_group]: Calling PlanningResponseAdapter 'ValidateSolution'
+[move_group-20] [INFO] [1777060021.367988256] [move_group]: Calling PlanningResponseAdapter 'DisplayMotionPath'
+[move_group-20] [WARN] [1777060021.369250167] [move_group.moveit.moveit.ros.planning_pipeline]: The planner plugin did not fill out the 'planner_id' field of the MotionPlanResponse. Setting it to the planner ID name of the MotionPlanRequest assuming that the planner plugin does warn you if it does not use the requested planner.
+[move_group-20] [INFO] [1777060021.370465424] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060021.370516080] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060021.370607410] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Validating trajectory with allowed_start_tolerance 0.01
+[move_group-20] [INFO] [1777060021.382717217] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Starting trajectory execution ...
+[move_group-20] [INFO] [1777060021.382793078] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060021.382834109] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777060021.383032917] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: sending trajectory to joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777060021.386396800] [joint_trajectory_controller]: Received new action goal
+[ros2_control_node-1] [INFO] [1777060021.386515323] [joint_trajectory_controller]: Accepted new action goal
+[move_group-20] [INFO] [1777060021.386740761] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: joint_trajectory_controller started execution
+[move_group-20] [INFO] [1777060021.386759170] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Goal request accepted!
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:01] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777060021.737047278] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-9] [INFO] [1777060021.879934013] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 36.0s.
+[ros2_control_node-1] [ERROR] [1777060021.984607912] [tolerances]: State tolerances failed for joint 4:
+[ros2_control_node-1] [ERROR] [1777060021.984651365] [tolerances]: Position Error: 0.155454, Position Tolerance: 0.150000
+[ros2_control_node-1] [WARN] [1777060021.984741540] [joint_trajectory_controller]: Aborted due to state tolerance violation
+[move_group-20] [WARN] [1777060021.987281473] [moveit.simple_controller_manager.follow_joint_trajectory_controller_handle]: Controller 'joint_trajectory_controller' failed with error PATH_TOLERANCE_VIOLATED: Aborted due to path tolerance violation
+[move_group-20] [WARN] [1777060021.987554376] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Controller handle joint_trajectory_controller reports status ABORTED
+[move_group-20] [INFO] [1777060021.987587747] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Completed trajectory execution with status ABORTED ...
+[move_group-20] [INFO] [1777060021.992872092] [move_group.moveit.moveit.ros.move_group.move_action]: CONTROL_FAILED
+[adl_controller-11] [ERROR] [1777060021.999398553] [adl_controller_node]: MoveGroup execution failed.
+[adl_controller-11]   error_code.val = -4
+[adl_controller-11]   group_name      = manipulator
+[adl_controller-11]   num_attempts    = 10
+[adl_controller-11]   allowed_time    = 15.0
+[adl_controller-11]   vel_scale       = 0.25
+[adl_controller-11]   accel_scale     = 0.25
+[adl_controller-11] If this persists, check move_group / controller logs for the meaning of this code (often control abort, invalid start state, or planning pipeline failure).
+[adl_controller-11] [WARN] [1777060022.001482817] [adl_controller_node]: _recover_after_failure(): MoveGroup error_code=-4
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:02] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:03] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060023.312963607] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060023.314950014] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060023.569642687] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[scene_from_vision-10] [INFO] [1777060023.591319957] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_controller-11] [INFO] [1777060023.824480033] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:03] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777060023.907854551] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 38.0s.
+[adl_controller-11] [INFO] [1777060024.075500687] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060024.334394970] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060024.586071416] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:04] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060024.837441949] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060025.088946646] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060025.341185250] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:05] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060025.594197199] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[scene_from_vision-10] [INFO] [1777060025.597670208] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_controller-11] [INFO] [1777060025.845308393] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[vision_apriltag-9] [INFO] [1777060025.883473291] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 40.0s.
+[wrist_camera_usb_publisher-8] [INFO] [1777060026.077650433] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_controller-11] [INFO] [1777060026.103071981] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:06] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060026.354238127] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060026.606200220] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060026.859235269] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:06] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777060027.000207804] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_controller-11] [INFO] [1777060027.110288588] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060027.361467404] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[scene_from_vision-10] [INFO] [1777060027.597957652] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_controller-11] [INFO] [1777060027.613196873] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:07] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060027.865699818] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[vision_apriltag-9] [INFO] [1777060027.878212290] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 42.0s.
+[adl_controller-11] [INFO] [1777060028.116499767] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060028.367398073] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:08] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060028.619594613] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060028.870548545] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060029.122000382] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:09] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060029.373046710] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060029.627813024] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060029.879395547] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:09] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1777060030.101131062] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_controller-11] [INFO] [1777060030.131912386] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[vision_apriltag-9] [INFO] [1777060030.200683656] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 44.3s.
+[adl_controller-11] [INFO] [1777060030.390299876] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060030.641452992] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:10] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060030.893111602] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060031.146409097] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[wrist_camera_usb_publisher-8] [INFO] [1777060031.232211531] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:11] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060031.398104706] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060031.648832939] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[vision_apriltag-9] [INFO] [1777060031.878810545] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 46.0s.
+[adl_controller-11] [INFO] [1777060031.900645121] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:12] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060032.153302813] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060032.407593841] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[vision_apriltag-9] [INFO] [1777060032.516156517] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[scene_from_vision-10] [INFO] [1777060032.590530382] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_controller-11] [INFO] [1777060032.658609758] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:12] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-11] [INFO] [1777060032.909708905] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_controller-11] [INFO] [1777060033.161355397] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_5:1.036 rad > 0.100).
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:13] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777060033.890872214] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 48.0s.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:14] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1777060034.592125661] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:15] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777060035.883060678] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 50.0s.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:15] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777060036.392557515] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:16] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1777060037.092983232] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:17] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777060037.960943345] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-9] [INFO] [1777060037.962974085] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 52.1s.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:18] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:18] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1777060039.591757324] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:19] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777060039.926204322] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 54.1s.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:20] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:21] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777060041.558461287] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_from_vision-10] [INFO] [1777060041.601703658] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[vision_apriltag-9] [INFO] [1777060041.878719673] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 56.0s.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:21] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:22] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777060043.382782370] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:23] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1777060043.599810854] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:24] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777060044.348330275] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 58.5s.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:24] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:25] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1777060046.090222691] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:26] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777060046.564488001] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 60.7s.
+[wrist_camera_usb_publisher-8] [INFO] [1777060046.715084097] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:27] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-9] [INFO] [1777060047.879606787] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 62.0s.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:27] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] [INFO] [1777060048.096204841] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.599, y=-0.064, z=0.129, yaw=-24.8deg
+[vision_apriltag-9] [INFO] [1777060048.574628135] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:28] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:29] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [24/Apr/2026 15:47:30] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777060050.399594279] [controller_manager]: Overrun might occur, Total time : 35118.256 us (Expected < 20000.000 us) --> Read time : 56.492 us, Update time : 232.461 us, Write time : 34829.303 us
+[ros2_control_node-1] [WARN] [1777060050.399706022] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 50 Hz. The loop took 35.272671 ms (missed cycles : 2).

@@ -1,0 +1,549 @@
+
+===== 2026-04-08T14:29:08-04:00 | T2_adl_start_ui =====
+cwd=/home/carrt-cse-project/workspace/ros2_kortex_ws
+cmd=ros2 launch adl_tasks adl_start.launch.py start_arm:=false use_stub:=false launch_ui:=true 
+
+[INFO] [launch]: All log files can be found below /home/carrt-cse-project/.ros/log/2026-04-08-14-29-09-138304-carrt-cse-project-OptiPlex-5050-42236
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [scene_static-1]: process started with pid [42240]
+[INFO] [joint_state_sanitizer-2]: process started with pid [42241]
+[INFO] [static_transform_publisher-3]: process started with pid [42242]
+[INFO] [wrist_camera_usb_publisher-4]: process started with pid [42243]
+[INFO] [vision_apriltag-5]: process started with pid [42244]
+[INFO] [scene_from_vision-6]: process started with pid [42245]
+[INFO] [adl_controller-7]: process started with pid [42246]
+[INFO] [pick_dropped_bottle-8]: process started with pid [42247]
+[INFO] [clear_table-9]: process started with pid [42248]
+[INFO] [give_medication-10]: process started with pid [42249]
+[INFO] [adl_ui-11]: process started with pid [42250]
+[static_transform_publisher-3] [INFO] [1775672949.459459450] [camera_color_optical_bridge_tf_pub]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'camera_color_frame' to 'wrist_mounted_camera_color_optical_frame'
+[joint_state_sanitizer-2] [INFO] [1775672950.160152069] [joint_state_sanitizer_node]: joint_state_sanitizer started. raw=/joint_states -> sanitized=/joint_states_sanitized
+[wrist_camera_usb_publisher-4] [INFO] [1775672950.687186337] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-4] [INFO] [1775672950.714285685] [wrist_camera_usb_publisher_node]: USB camera publisher: opened camera source index 2.
+[wrist_camera_usb_publisher-4] [INFO] [1775672950.718229488] [wrist_camera_usb_publisher_node]: Wrist Camera USB Publisher started.
+[wrist_camera_usb_publisher-4] [INFO] [1775672950.720502660] [wrist_camera_usb_publisher_node]: Publishing USB camera frames on /wrist_mounted_camera/image with frame_id=wrist_mounted_camera_color_optical_frame.
+[wrist_camera_usb_publisher-4] [INFO] [1775672950.723279176] [wrist_camera_usb_publisher_node]: Publishing camera info on /wrist_mounted_camera/camera_info from reference intrinsics [554.25, 554.25, 320.0, 240.0] @ 640x480.
+[wrist_camera_usb_publisher-4] [INFO] [1775672950.726262231] [wrist_camera_usb_publisher_node]: Using explicit camera_matrix for CameraInfo. matrix_size=1280x720, K=[920.874267578125, 0.0, 644.7646484375, 0.0, 921.5654907226562, 343.1528625488281, 0.0, 0.0, 1.0], d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[wrist_camera_usb_publisher-4] [INFO] [1775672950.729268049] [wrist_camera_usb_publisher_node]: Requested source=2 size=1280x720 fps=10.0
+[adl_ui-11] [INFO] [1775672950.769646056] [adl_ui_node]: ADL UI Node started.
+[adl_ui-11] [INFO] [1775672950.770446437] [adl_ui_node]: Automatic retract on UI load is disabled; startup sends no motion.
+[adl_ui-11]  * Serving Flask app 'adl_tasks.adl_ui'
+[adl_ui-11]  * Debug mode: off
+[adl_ui-11] [INFO] [1775672950.774899104] [adl_ui_node]: Web UI available at http://localhost:5000
+[adl_ui-11] WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+[adl_ui-11]  * Running on all addresses (0.0.0.0)
+[adl_ui-11]  * Running on http://127.0.0.1:5000
+[adl_ui-11]  * Running on http://192.168.0.231:5000
+[adl_ui-11] Press CTRL+C to quit
+[scene_static-1] [INFO] [1775672950.830100501] [scene_static_node]: Static Scene Node started.
+[scene_static-1] [INFO] [1775672950.831502967] [scene_static_node]: WHEELCHAIR_BASE_HEIGHT = 0.36195m  |  Table surface at z = 0.088m | Table center at x = 0.681m | include_wheelchair_wall=True | include_left_desk_wall=True
+[adl_controller-7] [INFO] [1775672951.069983479] [adl_controller_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:11] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775672951.125120938] [scene_from_vision_node]: Scene From Vision Node Started
+[scene_from_vision-6] [INFO] [1775672951.223524379] [scene_from_vision_node]: SceneFromVision: Updating planning scene. Tracking 5 object shape(s). memory_mode=True, scan_duration_s=3.0, scan_min_samples=3, scan_prune_unseen_objects=False, continuous_scene_updates=False, latch_first_detection_updates=True, log_object_pose_debug=False, apply_planning_scene_service_updates=True, publish_monitored_planning_scene_updates=True, side_viewpoint=wrist_mounted_camera_color_optical_frame->base_link, reject_table_objects_outside_bounds=False.
+[scene_from_vision-6] [INFO] [1775672951.225568513] [scene_from_vision_node]: SceneFromVision calibration: xy_offset=(-0.228, 0.004), z_offset=0.000, yaw_deg=4.00, xy_scale=1.3370, clamp_table_objects_to_table_bounds=False, table_bounds_margin_m=0.030.
+[scene_from_vision-6] [INFO] [1775672951.227542162] [scene_from_vision_node]: SceneFromVision object offsets: remote_axis=y, remote_tag_to_center_sign=-1.0, remote_tag_from_end_m=0.020, cube_tag_to_center=(0.000, 0.000), cube_world_offset=(0.000, -0.022), cube_yaw_offset_deg=0.0, medication_face_to_center_m=0.030, cup_face_to_center_m=0.037.
+[give_medication-10] [INFO] [1775672951.264596556] [give_medication_node]: give_medication starting...
+[wrist_camera_usb_publisher-4] [INFO] [1775672951.360659437] [wrist_camera_usb_publisher_node]: USB camera info active intrinsics: size=1280x720, fx=920.87, fy=921.57, cx=644.76, cy=343.15, d=array('d', [0.0, 0.0, 0.0, 0.0, 0.0])
+[wrist_camera_usb_publisher-4] [INFO] [1775672951.361399459] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_controller-7] [INFO] [1775672951.422587560] [adl_controller_node]: ADL controller ready. Waiting for UI/system commands.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:12] "GET /status_json HTTP/1.1" 200 -
+[clear_table-9] [INFO] [1775672952.261190227] [clear_table_node]: Clear Table Node Started
+[clear_table-9] [INFO] [1775672952.354352127] [clear_table_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[clear_table-9] [INFO] [1775672952.363864046] [clear_table_node]: Vision Client initialized, waiting for service...
+[give_medication-10] [INFO] [1775672952.572531507] [give_medication_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[give_medication-10] [INFO] [1775672952.613713658] [give_medication_node]: Vision Client initialized, waiting for service...
+[pick_dropped_bottle-8] [INFO] [1775672952.679171413] [pick_dropped_bottle_node]: PickDroppedBottle starting...
+[vision_apriltag-5] [INFO] [1775672952.707720629] [vision_apriltag_node]: Vision AprilTag Node Started
+[vision_apriltag-5] [INFO] [1775672952.709666720] [vision_apriltag_node]: Subscribing to camera topic: /wrist_mounted_camera/image
+[vision_apriltag-5] [INFO] [1775672952.712856143] [vision_apriltag_node]: Subscribing to camera info topic: /wrist_mounted_camera/camera_info
+[vision_apriltag-5] [INFO] [1775672952.715124722] [vision_apriltag_node]: Camera frame: wrist_mounted_camera_color_optical_frame | use_image_header_frame=True
+[vision_apriltag-5] [INFO] [1775672952.717694224] [vision_apriltag_node]: Tag size: 0.025m | pose_cache_retention_s=20.0 | get_pose_wait_timeout_s=5.0 | max_returned_pose_age_s=20.0 | camera_params=[554.25, 554.25, 320.0, 240.0] | families=tag36h11 | quad_decimate=1.0 | requested_backend=opencv | backend=cv2.aruco | opencv_pose_solver=ippe_square | use_image_timestamp_for_tf=False
+[vision_apriltag-5] [INFO] [1775672952.720050275] [vision_apriltag_node]: Top-tag known-plane projection: enabled=True, planes={3: 0.10995, 4: 0.14505}
+[vision_apriltag-5] [INFO] [1775672952.722663394] [vision_apriltag_node]: pupil_apriltags tuning: nthreads=1, quad_sigma=0.0, refine_edges=1, decode_sharpening=0.25, debug=0, preprocess_variants=['raw', 'clahe', 'adaptive', 'clahe_sharp', 'clahe_up2', 'sharp_up2'], tile_search_if_empty=True, tile_search_grid=3x2, tile_search_scale=2.0, tile_search_overlap=0.25
+[vision_apriltag-5] [WARN] [1775672952.725087455] [vision_apriltag_node]: pupil_apriltags is not importable by this node, so detection is using OpenCV fallback only. python=/usr/bin/python3, import_error=No module named 'pupil_apriltags'. If .venv contains pupil_apriltags, rebuild adl_tasks with that venv active or run the module with the venv Python.
+[vision_apriltag-5] [INFO] [1775672952.727619322] [vision_apriltag_node]: Publishing AprilTag debug images on /vision_apriltag/debug_image at up to 1.0 Hz.
+[vision_apriltag-5] [INFO] [1775672952.732333278] [vision_apriltag_node]: Vision AprilTag camera model updated from CameraInfo: size=1280x720, fx=920.87, fy=921.57, cx=644.76, cy=343.15, d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[pick_dropped_bottle-8] [INFO] [1775672952.802738904] [pick_dropped_bottle_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[pick_dropped_bottle-8] [INFO] [1775672952.822266078] [pick_dropped_bottle_node]: Vision Client initialized, waiting for service...
+[pick_dropped_bottle-8] [INFO] [1775672952.823433666] [pick_dropped_bottle_node]: Vision service is ready.
+[pick_dropped_bottle-8] [INFO] [1775672952.832372982] [pick_dropped_bottle_node]: PickDroppedBottle ready. Waiting for command.
+[pick_dropped_bottle-8] [INFO] [1775672952.833088502] [pick_dropped_bottle_node]: Startup motion disabled at node load; motion begins only after pick_dropped_bottle command.
+[clear_table-9] [INFO] [1775672952.869367896] [clear_table_node]: Vision service is ready.
+[clear_table-9] [INFO] [1775672952.883490558] [clear_table_node]: Clear Table Node ready. Waiting for command.
+[clear_table-9] [INFO] [1775672952.887444170] [clear_table_node]: Startup motion disabled at node load; motion begins only after clear_table command.
+[scene_static-1] [WARN] [1775672952.982704494] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:13] "GET /status_json HTTP/1.1" 200 -
+[give_medication-10] [INFO] [1775672953.366751378] [give_medication_node]: Vision service is ready.
+[give_medication-10] [INFO] [1775672953.394659137] [give_medication_node]: give_medication ready.
+[vision_apriltag-5] [INFO] [1775672953.432155762] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775672953.612755849] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:14] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672954.223917915] [vision_apriltag_node]: Service: Tag 4 found and base-frame pose returned.
+[scene_from_vision-6] [INFO] [1775672954.226443978] [scene_from_vision_node]: Latched first detection for tag ID 4 into scene memory.
+[scene_from_vision-6] [INFO] [1775672954.727344692] [scene_from_vision_node]: Published obj_4 (new) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[scene_static-1] [INFO] [1775672954.738004173] [scene_static_node]: Planning scene service available. Building static scene...
+[scene_from_vision-6] [INFO] [1775672954.755538823] [scene_from_vision_node]: /apply_planning_scene accepted dynamic scene updates; MoveIt should mirror these objects to RViz.
+[scene_static-1] [INFO] [1775672954.756786045] [scene_static_node]: Static scene built: 15 objects added to MoveIt planning scene.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:15] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:16] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775672956.515870195] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775672956.622813953] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 3.0s.
+[scene_from_vision-6] [INFO] [1775672956.730884356] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:17] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:18] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672958.616648973] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775672958.623327859] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 5.0s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:19] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775672959.227876237] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:20] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672960.623390488] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 7.0s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:21] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775672961.672755227] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_from_vision-6] [INFO] [1775672961.727529158] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:22] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672963.027686145] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 9.4s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:23] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672963.897357378] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:24] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775672964.236730448] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775672964.780330441] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 11.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:25] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:26] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672966.622078981] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 13.0s.
+[scene_from_vision-6] [INFO] [1775672966.725219536] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[wrist_camera_usb_publisher-4] [INFO] [1775672966.835988591] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:27] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:27] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672968.623822501] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 15.0s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:28] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775672968.729007521] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775672969.378783666] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:29] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:30] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] [INFO] [1775672970.339180667] [adl_ui_node]: UI command published: clear_table
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:30] "POST /command HTTP/1.1" 200 -
+[clear_table-9] [INFO] [1775672970.349547278] [clear_table_node]: Received clear_table command. Starting task execution.
+[clear_table-9] [INFO] [1775672970.352318010] [clear_table_node]: Starting Clear Table Task...
+[clear_table-9] [INFO] [1775672970.353435740] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-6] [INFO] [1775672970.356114645] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:30] "GET /status_json HTTP/1.1" 200 -
+[clear_table-9] [INFO] [1775672970.505200800] [clear_table_node]: Moving to perform the initial scene scan for clear table task...
+[clear_table-9] [INFO] [1775672970.506009183] [clear_table_node]: look_at_table: already near fixed lab scan joint pose; skipping motion.
+[clear_table-9] [INFO] [1775672970.506643922] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-6] [INFO] [1775672970.510656956] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[vision_apriltag-5] [INFO] [1775672970.621712208] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 17.0s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:31] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775672971.224986146] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[wrist_camera_usb_publisher-4] [INFO] [1775672971.843785893] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:31] "GET /status_json HTTP/1.1" 200 -
+[clear_table-9] [INFO] [1775672972.161254790] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-6] [INFO] [1775672972.168611377] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[clear_table-9] [INFO] [1775672972.312381219] [clear_table_node]: look_at_table_side_tags: moving to oblique side-tag scan pose.
+[clear_table-9] [INFO] [1775672972.419582225] [clear_table_node]: Start state: collision-valid — no collisions (not a joint-bounds check).
+[vision_apriltag-5] [INFO] [1775672972.624894529] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:32] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:33] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:34] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672974.623502880] [vision_apriltag_node]: Vision AprilTag: scene is locked; detection publishing is paused.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:34] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] [INFO] [1775672975.298126549] [adl_ui_node]: UI command published: emergency_stop_retract
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:35] "POST /command HTTP/1.1" 200 -
+[clear_table-9] [WARN] [1775672975.337963104] [clear_table_node]: _send_goal get_result_async: cancel requested while waiting on a ROS future.
+[clear_table-9] [WARN] [1775672975.339335983] [clear_table_node]: _send_goal: cancel requested while waiting for MoveGroup execution result.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:35] "GET /status_json HTTP/1.1" 200 -
+[clear_table-9] [INFO] [1775672975.391506156] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-6] [INFO] [1775672975.393710554] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[adl_controller-7] [INFO] [1775672975.403795833] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775672975.404854018] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775672975.405992144] [adl_controller_node]: go_retract: planning to RETRACT_JOINTS...
+[vision_apriltag-5] [INFO] [1775672975.420851277] [vision_apriltag_node]: Removed stale tag ID 4 from detected tags
+[clear_table-9] [WARN] [1775672975.545586649] [clear_table_node]: Side-tag scan pose failed; continuing with normal table scan data.
+[clear_table-9] [INFO] [1775672975.546295375] [clear_table_node]: Scene LOCKED.
+[scene_from_vision-6] [INFO] [1775672975.546936462] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[clear_table-9] [WARN] [1775672975.697208339] [clear_table_node]: look_at_table: cancel requested before motion; skipping.
+[clear_table-9] [INFO] [1775672975.698110796] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-6] [INFO] [1775672975.699738700] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[scene_from_vision-6] [INFO] [1775672975.728004390] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[clear_table-9] [ERROR] [1775672975.849153728] [clear_table_node]: Failed to return from side-tag scan pose to the normal table scan pose.
+[clear_table-9] [INFO] [1775672975.852870978] [clear_table_node]: Scene UNLOCKED.
+[scene_from_vision-6] [INFO] [1775672975.854657165] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[vision_apriltag-5] [INFO] [1775672975.946780445] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[clear_table-9] [WARN] [1775672976.003732541] [clear_table_node]: After startup move: cancellation/emergency stop detected. Halting current task flow.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:36] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672976.622397133] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 23.0s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:36] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775672976.987801384] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:37] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775672978.231124048] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:38] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672978.624334710] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 25.0s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:39] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775672980.225583210] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:40] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672980.623448963] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 27.0s.
+[vision_apriltag-5] [INFO] [1775672980.974323641] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:41] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775672982.159526319] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775672982.622284771] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 29.0s.
+[scene_from_vision-6] [INFO] [1775672982.729670380] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:42] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672983.445994685] [vision_apriltag_node]: Vision AprilTag visible IDs: [4]
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:43] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:44] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775672985.224579015] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[joint_state_sanitizer-2] [WARN] [1775672985.372672922] [joint_state_sanitizer_node]: [joint_state_sanitizer] Published sanitized joint state: joint_3:-3.134->-3.132
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:45] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672986.618194451] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775672986.623289725] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 3.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:46] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775672987.231365300] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[wrist_camera_usb_publisher-4] [INFO] [1775672987.313114023] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:47] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672988.621166093] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 5.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:48] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775672989.724995769] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:49] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672990.621334036] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 7.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:50] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775672991.724753713] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:51] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672991.867826567] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[wrist_camera_usb_publisher-4] [INFO] [1775672992.477966258] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775672992.621701689] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 9.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:52] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775672993.728265233] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:53] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672994.623579692] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 11.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:54] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:55] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775672996.231158217] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775672996.627109215] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 13.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:56] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775672997.189740986] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[wrist_camera_usb_publisher-4] [INFO] [1775672997.636779781] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:57] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775672998.722711600] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775672998.742380825] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 15.3s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:58] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:29:59] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673000.623660664] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 17.2s.
+[scene_from_vision-6] [INFO] [1775673000.733229369] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:00] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:01] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673002.408214324] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[wrist_camera_usb_publisher-4] [INFO] [1775673002.795964376] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775673002.896522122] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 19.4s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:02] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673003.225516711] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775673003.520773381] [vision_apriltag_node]: Removed stale tag ID 4 from detected tags
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:03] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673004.624466907] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 21.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:04] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673005.224307344] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:05] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673006.626261849] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 23.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:06] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673007.234347212] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775673007.678630562] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[wrist_camera_usb_publisher-4] [INFO] [1775673007.958838046] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:07] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673008.624263873] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 25.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:08] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673009.723915042] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:09] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673010.625180894] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 27.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:10] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:11] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673012.228932973] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775673012.622353104] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 29.2s.
+[vision_apriltag-5] [INFO] [1775673012.864867930] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:12] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775673013.113618001] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:13] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673014.725963851] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:14] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673015.156191501] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 31.7s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:16] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673016.623958499] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 33.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:17] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673017.233362163] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:18] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673018.113983815] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[wrist_camera_usb_publisher-4] [INFO] [1775673018.275036553] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775673018.840059275] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 35.4s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:19] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673019.728802883] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:20] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673020.684030803] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 37.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:21] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:22] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673022.228265785] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775673022.622352707] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 39.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:23] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673023.396168691] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[wrist_camera_usb_publisher-4] [INFO] [1775673023.440844606] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:24] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673024.225759476] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775673024.621632877] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 41.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:25] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:26] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673026.724111154] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:27] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673027.240186721] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 43.8s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:28] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775673028.600298856] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_from_vision-6] [INFO] [1775673028.724621498] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:29] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673029.110959685] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775673029.234969611] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 45.8s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:30] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673030.623160673] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 47.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:31] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673031.226457865] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:32] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673032.677929128] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 49.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:33] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673033.226374587] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[wrist_camera_usb_publisher-4] [INFO] [1775673033.757470516] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:34] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673034.287724762] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:35] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673035.336437534] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 51.9s.
+[scene_from_vision-6] [INFO] [1775673035.724195934] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:36] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673037.035338338] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 53.6s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:37] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:38] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673038.231085985] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775673038.622108789] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 55.2s.
+[wrist_camera_usb_publisher-4] [INFO] [1775673038.917608298] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:39] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673039.490279286] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:40] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-7] [ERROR] [1775673040.463591403] [adl_controller_node]: MoveGroup goal send timed out.
+[adl_controller-7] [WARN] [1775673040.464417600] [adl_controller_node]: _recover_after_failure(): send_goal_async timed out
+[scene_from_vision-6] [INFO] [1775673040.726399329] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775673040.786390772] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 57.3s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:41] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-7] [INFO] [1775673041.769966374] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673041.770768235] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [WARN] [1775673041.771500555] [adl_controller_node]: Retract park did not complete cleanly; trying go_home fallback.
+[adl_controller-7] [INFO] [1775673041.773985570] [adl_controller_node]: go_home: planning to HOME_JOINTS...
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:42] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-7] [WARN] [1775673042.876047937] [adl_controller_node]: _is_joint_state_fresh: joint state is stale (age 67.577>0.35s).
+[adl_controller-7] [ERROR] [1775673042.876642849] [adl_controller_node]: Refusing to plan: joint state is stale or incomplete. This commonly causes MoveIt Error -26.
+[adl_controller-7] [ERROR] [1775673042.877402097] [adl_controller_node]: go_home: failed. Not attempting automatic collision-disabled recovery on hardware.
+[adl_controller-7] [INFO] [1775673042.978549895] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673042.979579390] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673042.980319604] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673042.981050354] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[vision_apriltag-5] [INFO] [1775673043.111603128] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 59.7s.
+[scene_from_vision-6] [INFO] [1775673043.228745736] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_controller-7] [INFO] [1775673043.232896890] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673043.233655962] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:43] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-7] [INFO] [1775673043.484619058] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673043.485152770] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673043.736128332] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673043.736772769] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673043.987800350] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673043.988771780] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[wrist_camera_usb_publisher-4] [INFO] [1775673044.079989671] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_controller-7] [INFO] [1775673044.240984969] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673044.241779947] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:44] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-7] [INFO] [1775673044.493213586] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673044.493970699] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[vision_apriltag-5] [INFO] [1775673044.690729263] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_controller-7] [INFO] [1775673044.745549471] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673044.746200781] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[vision_apriltag-5] [INFO] [1775673044.959837533] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 61.5s.
+[adl_controller-7] [INFO] [1775673044.998384209] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673044.999218432] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673045.250410065] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673045.252039172] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:45] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-7] [INFO] [1775673045.504368514] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673045.505156497] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[scene_from_vision-6] [INFO] [1775673045.724437642] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_controller-7] [INFO] [1775673045.757282604] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673045.758019901] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673046.009033458] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673046.010716378] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673046.262224383] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673046.263461213] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:46] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-7] [INFO] [1775673046.516432367] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673046.517268223] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[vision_apriltag-5] [INFO] [1775673046.621602555] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 63.2s.
+[adl_controller-7] [INFO] [1775673046.768341733] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673046.769842587] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673047.022732129] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673047.024215510] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673047.275454028] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673047.276273069] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:47] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-7] [INFO] [1775673047.527303557] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673047.528044727] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673047.778986956] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673047.779726221] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673048.030353205] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673048.031231691] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[scene_from_vision-6] [INFO] [1775673048.227363542] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_controller-7] [INFO] [1775673048.282438191] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673048.283114007] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:48] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-7] [INFO] [1775673048.534626391] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673048.535440965] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[vision_apriltag-5] [INFO] [1775673048.621010998] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 65.2s.
+[adl_controller-7] [INFO] [1775673048.786564008] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673048.787531774] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673049.038807453] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673049.039758898] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[wrist_camera_usb_publisher-4] [INFO] [1775673049.080535173] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_controller-7] [INFO] [1775673049.292711811] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673049.293327666] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:49] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-7] [INFO] [1775673049.544220308] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673049.545045809] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673049.795990131] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673049.796645265] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[vision_apriltag-5] [INFO] [1775673049.942321722] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_controller-7] [INFO] [1775673050.049800964] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673050.050280442] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673050.301139171] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673050.301818767] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:50] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-7] [INFO] [1775673050.552900276] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673050.553779408] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[vision_apriltag-5] [INFO] [1775673050.621590647] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 67.2s.
+[scene_from_vision-6] [INFO] [1775673050.723450456] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_controller-7] [INFO] [1775673050.805030753] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673050.806007460] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673051.058432352] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673051.059108427] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673051.311352609] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673051.312343665] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:51] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-7] [INFO] [1775673051.563347886] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673051.564197014] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673051.815074026] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673051.815755265] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673052.067027143] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673052.068505511] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:52] "GET /status_json HTTP/1.1" 200 -
+[adl_controller-7] [INFO] [1775673052.320301482] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673052.321083515] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_controller-7] [INFO] [1775673052.576538811] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673052.577356386] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[vision_apriltag-5] [INFO] [1775673052.627047924] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 69.2s.
+[scene_from_vision-6] [INFO] [1775673052.727791386] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_controller-7] [INFO] [1775673052.827957217] [adl_controller_node]: is_near_retract: current arm is not at target (worst=joint_4:0.724 rad > 0.100).
+[adl_controller-7] [INFO] [1775673052.828463639] [adl_controller_node]: is_near_home: current arm is not at target (worst=joint_6:1.847 rad > 0.100).
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:53] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775673054.240210474] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:54] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673054.727604068] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775673055.120365980] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775673055.136011311] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 71.7s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:55] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:56] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673056.729417258] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775673056.812186542] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 73.4s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:57] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:58] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673058.622383072] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 75.2s.
+[scene_from_vision-6] [INFO] [1775673059.236152600] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[wrist_camera_usb_publisher-4] [INFO] [1775673059.236019870] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:30:59] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673060.121900569] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:00] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673060.699480721] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 77.3s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:01] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673061.723274967] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:02] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673063.097248327] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 79.7s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:03] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673063.725132615] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[wrist_camera_usb_publisher-4] [INFO] [1775673064.387561397] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:04] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673064.621551009] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 81.2s.
+[vision_apriltag-5] [INFO] [1775673065.350823686] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:05] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673065.726367469] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:06] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673067.141065276] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 83.7s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:07] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673067.729055841] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:08] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673068.624514764] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 85.2s.
+[wrist_camera_usb_publisher-4] [INFO] [1775673069.387886712] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:09] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673070.223916842] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:10] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673070.423080553] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[vision_apriltag-5] [INFO] [1775673070.623131262] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 87.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:11] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673072.224059640] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:12] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673072.945690458] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 89.5s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:13] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:14] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775673074.546775687] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_from_vision-6] [INFO] [1775673074.728762046] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775673075.100055573] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 91.7s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:15] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673075.856127223] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:16] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673076.622521324] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 93.2s.
+[scene_from_vision-6] [INFO] [1775673077.225288189] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:17] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:18] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673078.622262489] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 95.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:19] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775673079.706098460] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_from_vision-6] [INFO] [1775673079.727908890] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:20] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673080.621407340] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 97.2s.
+[vision_apriltag-5] [INFO] [1775673081.462532331] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:21] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673082.228404138] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:22] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673082.621828460] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 99.2s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:23] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:24] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-6] [INFO] [1775673084.725354001] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[wrist_camera_usb_publisher-4] [INFO] [1775673084.865942972] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[vision_apriltag-5] [INFO] [1775673085.230643662] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 101.8s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:25] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:26] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673086.589382809] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[scene_from_vision-6] [INFO] [1775673086.724805123] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[vision_apriltag-5] [INFO] [1775673086.742364070] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 103.3s.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:27] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:28] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673088.723184977] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 105.3s.
+[scene_from_vision-6] [INFO] [1775673088.727637858] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:29] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-4] [INFO] [1775673090.031691583] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:30] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673090.624292105] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 107.2s.
+[scene_from_vision-6] [INFO] [1775673090.731381951] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:31] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673091.895360666] [vision_apriltag_node]: Vision AprilTag detection debug: no tags found after raw/CLAHE/sharp/adaptive/upscaled/tiled passes.
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:32] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673092.715652658] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 109.3s.
+[scene_from_vision-6] [INFO] [1775673092.729064798] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:33] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:34] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673094.624365221] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 111.2s.
+[wrist_camera_usb_publisher-4] [INFO] [1775673095.186611190] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_from_vision-6] [INFO] [1775673095.223839473] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:35] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-11] 127.0.0.1 - - [08/Apr/2026 14:31:36] "GET /status_json HTTP/1.1" 200 -
+[vision_apriltag-5] [INFO] [1775673096.624207455] [vision_apriltag_node]: Vision AprilTag: images are arriving, but no AprilTag has been seen for 113.2s.
+[scene_from_vision-6] [INFO] [1775673097.234475877] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.644, y=0.001, z=0.117, yaw=-2.4deg

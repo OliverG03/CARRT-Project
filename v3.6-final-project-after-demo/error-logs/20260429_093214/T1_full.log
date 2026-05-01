@@ -1,0 +1,823 @@
+
+===== 2026-04-29T09:32:14-04:00 | T1_full =====
+cwd=/home/carrt-cse-project/workspace/ros2_kortex_ws
+cmd=ros2 launch adl_tasks adl_start.launch.py controller_update_rate:=1000 arm_use_fake_hardware:=false arm_robot_ip:=192.168.0.10 clear_table_top_only_scan:=true launch_rviz:=true 
+
+[INFO] [launch]: All log files can be found below /home/carrt-cse-project/.ros/log/2026-04-29-09-32-15-251187-carrt-cse-project-OptiPlex-5050-32036
+[INFO] [launch]: Default logging verbosity is set to INFO
+[arm_start.launch] controller_update_rate was explicitly overridden above 125 Hz for real hardware (1000 Hz); honoring the override for operator tuning even though recent logs showed overruns at that rate.
+[INFO] [launch.user]: [arm_start.launch] MoveIt current state source: /joint_states_sanitized. Use use_joint_state_sanitizer:=false for raw-state viewer debugging.
+[INFO] [launch.user]: [arm_start.launch] Using ADL controller config (share/adl_tasks/config/ros2_controllers_vbox.yaml, update_rate:=1000 Hz).
+[INFO] [ros2_control_node-1]: process started with pid [32040]
+[INFO] [robot_state_publisher-2]: process started with pid [32041]
+[INFO] [joint_state_sanitizer-3]: process started with pid [32042]
+[INFO] [spawner-4]: process started with pid [32043]
+[INFO] [static_transform_publisher-5]: process started with pid [32044]
+[INFO] [static_transform_publisher-6]: process started with pid [32045]
+[INFO] [scene_static-7]: process started with pid [32046]
+[INFO] [wrist_camera_usb_publisher-8]: process started with pid [32047]
+[INFO] [vision_apriltag-9]: process started with pid [32048]
+[INFO] [scene_from_vision-10]: process started with pid [32049]
+[INFO] [adl_controller-11]: process started with pid [32050]
+[INFO] [pick_dropped_bottle-12]: process started with pid [32051]
+[INFO] [clear_table-13]: process started with pid [32052]
+[INFO] [give_medication-14]: process started with pid [32053]
+[INFO] [adl_ui-15]: process started with pid [32054]
+[static_transform_publisher-5] [INFO] [1777469535.531634659] [static_transform_publisher]: Spinning until stopped - publishing transform
+[static_transform_publisher-5] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-5] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-5] from 'world' to 'base_link'
+[robot_state_publisher-2] [INFO] [1777469535.578211153] [robot_state_publisher]: Robot initialized
+[static_transform_publisher-6] [INFO] [1777469535.593871346] [camera_color_optical_bridge_tf_pub]: Spinning until stopped - publishing transform
+[static_transform_publisher-6] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-6] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-6] from 'camera_color_frame' to 'wrist_mounted_camera_color_optical_frame'
+[ros2_control_node-1] [INFO] [1777469535.680724240] [controller_manager]: Using Steady (Monotonic) clock for triggering controller manager cycles.
+[ros2_control_node-1] [INFO] [1777469535.699624988] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
+[ros2_control_node-1] [INFO] [1777469535.705962355] [controller_manager]: update rate is 1000 Hz
+[ros2_control_node-1] [INFO] [1777469535.706537117] [controller_manager]: Overruns handling is : enabled
+[ros2_control_node-1] [INFO] [1777469535.706553538] [controller_manager]: Spawning controller_manager RT thread with scheduler priority: 50
+[ros2_control_node-1] [INFO] [1777469535.708407047] [controller_manager]: Successful set up FIFO RT scheduling policy with priority 50.
+[ros2_control_node-1] [INFO] [1777469535.806498870] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [INFO] [1777469535.806571835] [controller_manager]: Enforcing command limits is disabled. Command limits from URDF will be ignored.
+[ros2_control_node-1] [INFO] [1777469535.826125692] [controller_manager]: Loading hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1777469535.855974691] [KortexMultiInterfaceHardware]: Setting severity threshold to DEBUG
+[ros2_control_node-1] [INFO] [1777469535.856038667] [controller_manager]: Loaded hardware 'KortexMultiInterfaceHardware' from plugin 'kortex_driver/KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1777469535.859668727] [controller_manager]: Initialize hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1777469535.877514994] [KortexMultiInterfaceHardware]: Configuring Hardware Interface
+[ros2_control_node-1] [INFO] [1777469535.877931478] [KortexMultiInterfaceHardware]: Robot ip is '192.168.0.10'
+[ros2_control_node-1] [INFO] [1777469535.877944320] [KortexMultiInterfaceHardware]: Username is 'admin'
+[ros2_control_node-1] [INFO] [1777469535.877957795] [KortexMultiInterfaceHardware]: Port used '10000'
+[ros2_control_node-1] [INFO] [1777469535.877963098] [KortexMultiInterfaceHardware]: Realtime port used '10001'
+[ros2_control_node-1] [INFO] [1777469535.877968221] [KortexMultiInterfaceHardware]: Session inactivity timeout is '60000'
+[ros2_control_node-1] [INFO] [1777469535.877973597] [KortexMultiInterfaceHardware]: Connection inactivity timeout is '2000'
+[ros2_control_node-1] [INFO] [1777469535.877980542] [KortexMultiInterfaceHardware]: Gripper joint name is 'robotiq_85_left_knuckle_joint'
+[ros2_control_node-1] [INFO] [1777469535.878014108] [KortexMultiInterfaceHardware]: Connecting to robot at 192.168.0.10
+[ros2_control_node-1] [INFO] [1777469535.887275854] [KortexMultiInterfaceHardware]: Creating session for communication
+[ros2_control_node-1] [INFO] [1777469536.240460071] [KortexMultiInterfaceHardware]: Session created
+[joint_state_sanitizer-3] [INFO] [1777469536.305213578] [joint_state_sanitizer_node]: joint_state_sanitizer started. raw=/joint_states -> sanitized=/joint_states_sanitized
+[spawner-4] [INFO] [1777469536.698950275] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[adl_ui-15] [INFO] [1777469536.745914883] [adl_ui_node]: ADL UI Node started.
+[adl_ui-15] [INFO] [1777469536.751788403] [adl_ui_node]: Automatic retract on UI load is disabled; startup sends no motion.
+[adl_ui-15]  * Serving Flask app 'adl_tasks.adl_ui'
+[adl_ui-15]  * Debug mode: off
+[adl_ui-15] [INFO] [1777469536.756790777] [adl_ui_node]: Web UI available at http://localhost:5000
+[adl_ui-15] WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+[adl_ui-15]  * Running on all addresses (0.0.0.0)
+[adl_ui-15]  * Running on http://127.0.0.1:5000
+[adl_ui-15]  * Running on http://192.168.0.231:5000
+[adl_ui-15] Press CTRL+C to quit
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:16] "GET /status_json HTTP/1.1" 200 -
+[pick_dropped_bottle-12] Traceback (most recent call last):
+[pick_dropped_bottle-12]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/pick_dropped_bottle", line 33, in <module>
+[pick_dropped_bottle-12]     sys.exit(load_entry_point('adl-tasks', 'console_scripts', 'pick_dropped_bottle')())
+[pick_dropped_bottle-12]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[pick_dropped_bottle-12]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/pick_dropped_bottle", line 25, in importlib_load_entry_point
+[pick_dropped_bottle-12]     return next(matches).load()
+[pick_dropped_bottle-12]            ^^^^^^^^^^^^^^^^^^^^
+[pick_dropped_bottle-12]   File "/usr/lib/python3.12/importlib/metadata/__init__.py", line 205, in load
+[pick_dropped_bottle-12]     module = import_module(match.group('module'))
+[pick_dropped_bottle-12]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[pick_dropped_bottle-12]   File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+[pick_dropped_bottle-12]     return _bootstrap._gcd_import(name[level:], package, level)
+[pick_dropped_bottle-12]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[pick_dropped_bottle-12]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+[pick_dropped_bottle-12]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+[pick_dropped_bottle-12]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+[pick_dropped_bottle-12]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+[pick_dropped_bottle-12]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+[pick_dropped_bottle-12]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+[pick_dropped_bottle-12]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/pick_dropped_bottle.py", line 15, in <module>
+[pick_dropped_bottle-12]     from adl_tasks.apriltag_key import OBJECTS
+[pick_dropped_bottle-12]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/apriltag_key.py", line 15, in <module>
+[pick_dropped_bottle-12]     from adl_tasks.adl_config import (
+[pick_dropped_bottle-12] ImportError: cannot import name 'BIN_DROP_Y' from 'adl_tasks.adl_config' (/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/adl_config.py). Did you mean: 'BIN_DROP_X'?
+[adl_controller-11] Traceback (most recent call last):
+[adl_controller-11]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/adl_controller", line 33, in <module>
+[adl_controller-11]     sys.exit(load_entry_point('adl-tasks', 'console_scripts', 'adl_controller')())
+[adl_controller-11]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[adl_controller-11]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/adl_controller", line 25, in importlib_load_entry_point
+[adl_controller-11]     return next(matches).load()
+[adl_controller-11]            ^^^^^^^^^^^^^^^^^^^^
+[adl_controller-11]   File "/usr/lib/python3.12/importlib/metadata/__init__.py", line 205, in load
+[adl_controller-11]     module = import_module(match.group('module'))
+[adl_controller-11]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[adl_controller-11]   File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+[adl_controller-11]     return _bootstrap._gcd_import(name[level:], package, level)
+[adl_controller-11]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[adl_controller-11]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+[adl_controller-11]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+[adl_controller-11]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+[adl_controller-11]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+[adl_controller-11]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+[adl_controller-11]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+[adl_controller-11]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/adl_controller.py", line 16, in <module>
+[adl_controller-11]     from adl_tasks.grasp_and_place import FLOW_CONFIG
+[adl_controller-11]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/grasp_and_place.py", line 15, in <module>
+[adl_controller-11]     from adl_tasks.adl_config import (
+[adl_controller-11] ImportError: cannot import name 'BIN_DROP_Y' from 'adl_tasks.adl_config' (/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/adl_config.py). Did you mean: 'BIN_DROP_X'?
+[ros2_control_node-1] [INFO] [1777469537.043656182] [KortexMultiInterfaceHardware]: Actuator count reported by robot is '7'
+[ros2_control_node-1] [INFO] [1777469537.043881262] [KortexMultiInterfaceHardware]: Using internal bus communication for gripper!
+[ros2_control_node-1] [INFO] [1777469537.043890736] [KortexMultiInterfaceHardware]: Hardware Interface successfully configured
+[ros2_control_node-1] [INFO] [1777469537.043978940] [controller_manager]: Successful initialization of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [DEBUG] [1777469537.044042986] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_1
+[ros2_control_node-1] [DEBUG] [1777469537.044068291] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_2
+[ros2_control_node-1] [DEBUG] [1777469537.044074282] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_3
+[ros2_control_node-1] [DEBUG] [1777469537.044078538] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_4
+[ros2_control_node-1] [DEBUG] [1777469537.044082299] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_5
+[ros2_control_node-1] [DEBUG] [1777469537.044105832] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_6
+[ros2_control_node-1] [DEBUG] [1777469537.044110175] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_7
+[ros2_control_node-1] [DEBUG] [1777469537.044114252] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: robotiq_85_left_knuckle_joint
+[ros2_control_node-1] [INFO] [1777469537.045974286] [resource_manager]: 'configure' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1777469537.046015050] [resource_manager]: Successful 'configure' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1777469537.046076746] [resource_manager]: 'activate' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1777469537.046100745] [KortexMultiInterfaceHardware]: Activating KortexMultiInterfaceHardware...
+[ros2_control_node-1] [INFO] [1777469537.051691357] [KortexMultiInterfaceHardware]: Gripper initial position is '0.873365'.
+[ros2_control_node-1] [INFO] [1777469537.057652974] [KortexMultiInterfaceHardware]: KortexMultiInterfaceHardware successfully activated!
+[ros2_control_node-1] [INFO] [1777469537.057699364] [resource_manager]: Successful 'activate' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1777469537.057974909] [controller_manager]: Registering statistics for : KortexMultiInterfaceHardware
+[ros2_control_node-1] [INFO] [1777469537.058145588] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[ros2_control_node-1] [WARN] [1777469537.067869693] [controller_manager]: Overrun might occur, Total time : 9316.965 us (Expected < 1000.000 us) --> Read time : 4727.551 us, Update time : 34.602 us, Write time : 4554.812 us
+[ros2_control_node-1] [WARN] [1777469537.067976178] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 9.460576 ms (missed cycles : 10).
+[ERROR] [pick_dropped_bottle-12]: process has died [pid 32051, exit code 1, cmd '/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/pick_dropped_bottle --ros-args -r __node:=pick_dropped_bottle_node'].
+[ERROR] [adl_controller-11]: process has died [pid 32050, exit code 1, cmd '/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/adl_controller --ros-args -r __node:=adl_controller_node'].
+[scene_static-7] [INFO] [1777469537.115257395] [scene_static_node]: Static Scene Node started.
+[scene_static-7] [INFO] [1777469537.116585511] [scene_static_node]: WHEELCHAIR_BASE_HEIGHT = 0.36195m  |  Table surface at z = 0.118m | Table front-edge-from-base = 0.406m | Table center at x = 0.681m | table_edge_lip_margin=0.0127m | table_edge_lip_thickness=0.0127m | table_edge_lip_height=0.480m | include_wheelchair_wall=True | include_left_desk_wall=True | include_right_desk_wall=True | include_arm_base_under_block=True | include_arm_base_side_lips=True | include_arm_base_left_back_block=True | include_arm_base_right_back_half_block=True
+[scene_static-7] [INFO] [1777469537.117582212] [scene_static_node]: Wheelchair wall geometry: center=(-0.465, 0.000, 0.482) size=(0.450, 0.700, 1.688)
+[scene_static-7] [INFO] [1777469537.118628206] [scene_static_node]: Arm-base under-block geometry: center=(0.000, 0.000, -0.212) size=(0.302, 0.378, 0.300) | platform=(0.200, 0.200) | margins(front/back=0.051, left/right=0.089)
+[scene_static-7] [INFO] [1777469537.120043220] [scene_static_node]: Arm-base side-lip geometry: left_y=0.198, right_y=-0.198, center_z=-0.047, size=(0.314, 0.006, 0.030) | x_offset=-0.076, outset=0.006, front/back_margin=0.006
+[scene_static-7] [INFO] [1777469537.121291487] [scene_static_node]: Arm-base left-back block geometry: center=(-0.177, 0.312, 0.482) size=(0.100, 0.408, 1.688) | inner_faces(x=-0.127, y=0.108) | left_wall_inner_face_y=0.504 | into_left_wall=0.013
+[scene_static-7] [INFO] [1777469537.122824373] [scene_static_node]: Arm-base right-back half block geometry: center=(-0.177, -0.312, 0.060) size=(0.100, 0.408, 0.844) | inner_faces(x=-0.127, y=-0.108) | right_wall_inner_face_y=-0.504 | into_right_wall=0.013
+[ros2_control_node-1] [INFO] [1777469537.208339352] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[ros2_control_node-1] [INFO] [1777469537.208396365] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1777469537.217627962] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_qiemrxzi 
+[spawner-4] [INFO] [1777469537.293733278] [spawner_joint_state_broadcaster]: Loaded joint_state_broadcaster
+[ros2_control_node-1] [INFO] [1777469537.298040193] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1777469537.298328045] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[clear_table-13] Traceback (most recent call last):
+[clear_table-13]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/clear_table", line 33, in <module>
+[clear_table-13]     sys.exit(load_entry_point('adl-tasks', 'console_scripts', 'clear_table')())
+[clear_table-13]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[clear_table-13]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/clear_table", line 25, in importlib_load_entry_point
+[clear_table-13]     return next(matches).load()
+[clear_table-13]            ^^^^^^^^^^^^^^^^^^^^
+[clear_table-13]   File "/usr/lib/python3.12/importlib/metadata/__init__.py", line 205, in load
+[clear_table-13]     module = import_module(match.group('module'))
+[clear_table-13]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[clear_table-13]   File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+[clear_table-13]     return _bootstrap._gcd_import(name[level:], package, level)
+[clear_table-13]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[clear_table-13]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+[clear_table-13]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+[clear_table-13]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+[clear_table-13]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+[clear_table-13]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+[clear_table-13]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+[clear_table-13]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/clear_table.py", line 54, in <module>
+[clear_table-13]     from adl_tasks.apriltag_key import OBJECTS
+[clear_table-13]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/apriltag_key.py", line 15, in <module>
+[clear_table-13]     from adl_tasks.adl_config import (
+[clear_table-13] ImportError: cannot import name 'BIN_DROP_Y' from 'adl_tasks.adl_config' (/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/adl_config.py). Did you mean: 'BIN_DROP_X'?
+[wrist_camera_usb_publisher-8] [INFO] [1777469537.355536977] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[vision_apriltag-9] Traceback (most recent call last):
+[vision_apriltag-9]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/vision_apriltag", line 33, in <module>
+[vision_apriltag-9]     sys.exit(load_entry_point('adl-tasks', 'console_scripts', 'vision_apriltag')())
+[vision_apriltag-9]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[vision_apriltag-9]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/vision_apriltag", line 25, in importlib_load_entry_point
+[vision_apriltag-9]     return next(matches).load()
+[vision_apriltag-9]            ^^^^^^^^^^^^^^^^^^^^
+[vision_apriltag-9]   File "/usr/lib/python3.12/importlib/metadata/__init__.py", line 205, in load
+[vision_apriltag-9]     module = import_module(match.group('module'))
+[vision_apriltag-9]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[vision_apriltag-9]   File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+[vision_apriltag-9]     return _bootstrap._gcd_import(name[level:], package, level)
+[vision_apriltag-9]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[vision_apriltag-9]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+[vision_apriltag-9]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+[vision_apriltag-9]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+[vision_apriltag-9]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+[vision_apriltag-9]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+[vision_apriltag-9]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+[vision_apriltag-9]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/vision_apriltag.py", line 45, in <module>
+[vision_apriltag-9]     from adl_tasks.apriltag_key import OBJECTS, LOCATIONS
+[vision_apriltag-9]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/apriltag_key.py", line 15, in <module>
+[vision_apriltag-9]     from adl_tasks.adl_config import (
+[vision_apriltag-9] ImportError: cannot import name 'BIN_DROP_Y' from 'adl_tasks.adl_config' (/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/adl_config.py). Did you mean: 'BIN_DROP_X'?
+[ros2_control_node-1] [INFO] [1777469537.401245111] [controller_manager]: Activating controllers: [ joint_state_broadcaster ]
+[ros2_control_node-1] [INFO] [1777469537.408322914] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1777469537.412712208] [controller_manager]: Overrun might occur, Total time : 6170.300 us (Expected < 1000.000 us) --> Read time : 37.052 us, Update time : 1724.358 us (Switch time : 1682.632 us (Switch chained mode time : 2.110 us, perform mode change time : 3.220 us, Activation time : 1666.838 us, Deactivation time : 1.933 us)), Write time : 4408.890 us
+[spawner-4] [INFO] [1777469537.415190719] [spawner_joint_state_broadcaster]: Configured and activated joint_state_broadcaster
+[ERROR] [clear_table-13]: process has died [pid 32052, exit code 1, cmd '/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/clear_table --ros-args -r __node:=clear_table_node'].
+[give_medication-14] Traceback (most recent call last):
+[give_medication-14]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/give_medication", line 33, in <module>
+[give_medication-14]     sys.exit(load_entry_point('adl-tasks', 'console_scripts', 'give_medication')())
+[give_medication-14]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[give_medication-14]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/give_medication", line 25, in importlib_load_entry_point
+[give_medication-14]     return next(matches).load()
+[give_medication-14]            ^^^^^^^^^^^^^^^^^^^^
+[give_medication-14]   File "/usr/lib/python3.12/importlib/metadata/__init__.py", line 205, in load
+[give_medication-14]     module = import_module(match.group('module'))
+[give_medication-14]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[give_medication-14]   File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+[give_medication-14]     return _bootstrap._gcd_import(name[level:], package, level)
+[give_medication-14]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[give_medication-14]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+[give_medication-14]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+[give_medication-14]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+[give_medication-14]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+[give_medication-14]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+[give_medication-14]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+[give_medication-14]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/give_medication.py", line 20, in <module>
+[give_medication-14]     from adl_tasks.apriltag_key import OBJECTS
+[give_medication-14]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/apriltag_key.py", line 15, in <module>
+[give_medication-14]     from adl_tasks.adl_config import (
+[give_medication-14] ImportError: cannot import name 'BIN_DROP_Y' from 'adl_tasks.adl_config' (/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/adl_config.py). Did you mean: 'BIN_DROP_X'?
+[wrist_camera_usb_publisher-8] [INFO] [1777469537.456782116] [wrist_camera_usb_publisher_node]: USB camera publisher: opened camera source index 2.
+[wrist_camera_usb_publisher-8] [INFO] [1777469537.457766501] [wrist_camera_usb_publisher_node]: Wrist Camera USB Publisher started.
+[wrist_camera_usb_publisher-8] [INFO] [1777469537.458709360] [wrist_camera_usb_publisher_node]: Publishing USB camera frames on /wrist_mounted_camera/image with frame_id=wrist_mounted_camera_color_optical_frame.
+[wrist_camera_usb_publisher-8] [INFO] [1777469537.459680396] [wrist_camera_usb_publisher_node]: Publishing camera info on /wrist_mounted_camera/camera_info from reference intrinsics [554.25, 554.25, 320.0, 240.0] @ 640x480.
+[wrist_camera_usb_publisher-8] [INFO] [1777469537.460791371] [wrist_camera_usb_publisher_node]: Using explicit camera_matrix for CameraInfo. matrix_size=1280x720, K=[920.874267578125, 0.0, 644.7646484375, 0.0, 921.5654907226562, 343.1528625488281, 0.0, 0.0, 1.0], d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[wrist_camera_usb_publisher-8] [INFO] [1777469537.461947187] [wrist_camera_usb_publisher_node]: Requested source=2 size=1280x720 fps=10.0
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:17] "GET /status_json HTTP/1.1" 200 -
+[ERROR] [vision_apriltag-9]: process has died [pid 32048, exit code 1, cmd '/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/vision_apriltag --ros-args -r __node:=vision_apriltag_node'].
+[ERROR] [give_medication-14]: process has died [pid 32053, exit code 1, cmd '/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/give_medication --ros-args -r __node:=give_medication_node'].
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:17] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-10] Traceback (most recent call last):
+[scene_from_vision-10]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/scene_from_vision", line 33, in <module>
+[scene_from_vision-10]     sys.exit(load_entry_point('adl-tasks', 'console_scripts', 'scene_from_vision')())
+[scene_from_vision-10]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[scene_from_vision-10]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/scene_from_vision", line 25, in importlib_load_entry_point
+[scene_from_vision-10]     return next(matches).load()
+[scene_from_vision-10]            ^^^^^^^^^^^^^^^^^^^^
+[scene_from_vision-10]   File "/usr/lib/python3.12/importlib/metadata/__init__.py", line 205, in load
+[scene_from_vision-10]     module = import_module(match.group('module'))
+[scene_from_vision-10]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[scene_from_vision-10]   File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+[scene_from_vision-10]     return _bootstrap._gcd_import(name[level:], package, level)
+[scene_from_vision-10]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[scene_from_vision-10]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+[scene_from_vision-10]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+[scene_from_vision-10]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+[scene_from_vision-10]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+[scene_from_vision-10]   File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+[scene_from_vision-10]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+[scene_from_vision-10]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/scene_from_vision.py", line 33, in <module>
+[scene_from_vision-10]     from adl_tasks.apriltag_key import OBJECTS
+[scene_from_vision-10]   File "/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/apriltag_key.py", line 15, in <module>
+[scene_from_vision-10]     from adl_tasks.adl_config import (
+[scene_from_vision-10] ImportError: cannot import name 'BIN_DROP_Y' from 'adl_tasks.adl_config' (/home/carrt-cse-project/workspace/ros2_kortex_ws/build/adl_tasks/adl_tasks/adl_config.py). Did you mean: 'BIN_DROP_X'?
+[INFO] [spawner-4]: process has finished cleanly [pid 32043]
+[ERROR] [scene_from_vision-10]: process has died [pid 32049, exit code 1, cmd '/home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/lib/adl_tasks/scene_from_vision --ros-args -r __node:=scene_from_vision_node --params-file /tmp/launch_params_vx8x9jre'].
+[ros2_control_node-1] [WARN] [1777469538.071557555] [controller_manager]: Overrun might occur, Total time : 3995.038 us (Expected < 1000.000 us) --> Read time : 54.154 us, Update time : 112.004 us, Write time : 3828.880 us
+[ros2_control_node-1] [WARN] [1777469538.071680199] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 4.163514 ms (missed cycles : 5).
+[wrist_camera_usb_publisher-8] [INFO] [1777469538.122439169] [wrist_camera_usb_publisher_node]: USB camera info active intrinsics: size=1280x720, fx=920.87, fy=921.57, cx=644.76, cy=343.15, d=array('d', [0.0, 0.0, 0.0, 0.0, 0.0])
+[wrist_camera_usb_publisher-8] [INFO] [1777469538.124356378] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[INFO] [spawner-16]: process started with pid [32247]
+[INFO] [spawner-17]: process started with pid [32248]
+[INFO] [spawner-18]: process started with pid [32249]
+[INFO] [spawner-19]: process started with pid [32250]
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:18] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:18] "GET /status_json HTTP/1.1" 200 -
+[spawner-18] [INFO] [1777469538.596405895] [spawner_robotiq_gripper_controller]: waiting for service /controller_manager/list_controllers to become available...
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:18] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469539.071869455] [controller_manager]: Overrun might occur, Total time : 4305.996 us (Expected < 1000.000 us) --> Read time : 71.619 us, Update time : 252.708 us, Write time : 3981.669 us
+[ros2_control_node-1] [WARN] [1777469539.072003532] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 4.486568 ms (missed cycles : 5).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:19] "GET /status_json HTTP/1.1" 200 -
+[scene_static-7] [WARN] [1777469539.272088015] [scene_static_node]: Planning scene service not available, waiting...
+[ros2_control_node-1] [INFO] [1777469539.569687903] [controller_manager]: Loading controller : 'robotiq_gripper_controller' of type 'position_controllers/GripperActionController'
+[ros2_control_node-1] [INFO] [1777469539.569808104] [controller_manager]: Loading controller 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1777469539.580507996] [controller_manager]: Controller 'robotiq_gripper_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_qiemrxzi 
+[ros2_control_node-1] [WARN] [1777469539.598404952] [robotiq_gripper_controller]: [Deprecated]: the `position_controllers/GripperActionController` and `effort_controllers::GripperActionController` controllers are replaced by 'parallel_gripper_controllers/GripperActionController' controller
+[spawner-18] [INFO] [1777469539.602894117] [spawner_robotiq_gripper_controller]: Loaded robotiq_gripper_controller
+[ros2_control_node-1] [INFO] [1777469539.604083741] [controller_manager]: Configuring controller: 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1777469539.604217834] [robotiq_gripper_controller]: Action status changes will be monitored at 20.000000 Hz.
+[ros2_control_node-1] [INFO] [1777469539.606337053] [controller_manager]: Activating controllers: [ robotiq_gripper_controller ]
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:19] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1777469539.816103601] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1777469539.819716296] [controller_manager]: Overrun might occur, Total time : 10178.679 us (Expected < 1000.000 us) --> Read time : 21.373 us, Update time : 6524.852 us (Switch time : 6447.896 us (Switch chained mode time : 1.576 us, perform mode change time : 26.004 us, Activation time : 6412.078 us, Deactivation time : 0.697 us)), Write time : 3632.454 us
+[spawner-18] [INFO] [1777469539.822715985] [spawner_robotiq_gripper_controller]: Configured and activated robotiq_gripper_controller
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:19] "GET /status_json HTTP/1.1" 200 -
+[spawner-17] [INFO] [1777469539.941843338] [spawner_twist_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-18]: process has finished cleanly [pid 32249]
+[ros2_control_node-1] [WARN] [1777469540.072552318] [controller_manager]: Overrun might occur, Total time : 2968.444 us (Expected < 1000.000 us) --> Read time : 78.890 us, Update time : 229.934 us, Write time : 2659.620 us
+[ros2_control_node-1] [WARN] [1777469540.072691259] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.174448 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:20] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:20] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469541.075030253] [controller_manager]: Overrun might occur, Total time : 2490.854 us (Expected < 1000.000 us) --> Read time : 28.216 us, Update time : 83.564 us, Write time : 2379.074 us
+[ros2_control_node-1] [WARN] [1777469541.075120356] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.604383 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:21] "GET /status_json HTTP/1.1" 200 -
+[scene_static-7] [WARN] [1777469541.278130989] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:21] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:21] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469542.077601717] [controller_manager]: Overrun might occur, Total time : 3036.371 us (Expected < 1000.000 us) --> Read time : 55.648 us, Update time : 182.378 us, Write time : 2798.345 us
+[ros2_control_node-1] [WARN] [1777469542.077752036] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.234107 ms (missed cycles : 4).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:22] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:22] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:22] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469543.078301660] [controller_manager]: Overrun might occur, Total time : 2743.782 us (Expected < 1000.000 us) --> Read time : 63.422 us, Update time : 185.058 us, Write time : 2495.302 us
+[ros2_control_node-1] [WARN] [1777469543.078428964] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.912013 ms (missed cycles : 3).
+[ros2_control_node-1] [INFO] [1777469543.197828668] [controller_manager]: Loading controller : 'twist_controller' of type 'picknik_twist_controller/PicknikTwistController'
+[ros2_control_node-1] [INFO] [1777469543.197927217] [controller_manager]: Loading controller 'twist_controller'
+[ros2_control_node-1] [INFO] [1777469543.204803091] [controller_manager]: Controller 'twist_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_qiemrxzi 
+[spawner-17] [INFO] [1777469543.231825721] [spawner_twist_controller]: Loaded twist_controller
+[ros2_control_node-1] [INFO] [1777469543.233414469] [controller_manager]: Configuring controller: 'twist_controller'
+[ros2_control_node-1] [INFO] [1777469543.235537157] [twist_controller]: configure successful
+[wrist_camera_usb_publisher-8] [INFO] [1777469543.243694527] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[scene_static-7] [WARN] [1777469543.280469900] [scene_static_node]: Planning scene service not available, waiting...
+[spawner-19] [INFO] [1777469543.363779890] [spawner_fault_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-17]: process has finished cleanly [pid 32248]
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:23] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:23] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1777469543.617900429] [controller_manager]: Loading controller : 'fault_controller' of type 'picknik_reset_fault_controller/PicknikResetFaultController'
+[ros2_control_node-1] [INFO] [1777469543.618030233] [controller_manager]: Loading controller 'fault_controller'
+[ros2_control_node-1] [INFO] [1777469543.623888657] [controller_manager]: Controller 'fault_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_qiemrxzi 
+[spawner-19] [INFO] [1777469543.650492503] [spawner_fault_controller]: Loaded fault_controller
+[ros2_control_node-1] [INFO] [1777469543.652058225] [controller_manager]: Configuring controller: 'fault_controller'
+[ros2_control_node-1] [INFO] [1777469543.657674964] [controller_manager]: Activating controllers: [ fault_controller ]
+[ros2_control_node-1] [INFO] [1777469543.868515315] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1777469543.871218598] [controller_manager]: Overrun might occur, Total time : 12669.645 us (Expected < 1000.000 us) --> Read time : 43.864 us, Update time : 9821.165 us (Switch time : 9680.609 us (Switch chained mode time : 2.213 us, perform mode change time : 25.702 us, Activation time : 9642.637 us, Deactivation time : 0.977 us)), Write time : 2804.616 us
+[spawner-19] [INFO] [1777469543.874478074] [spawner_fault_controller]: Configured and activated fault_controller
+[spawner-16] [INFO] [1777469544.014848624] [spawner_joint_trajectory_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-19]: process has finished cleanly [pid 32250]
+[ros2_control_node-1] [WARN] [1777469544.079687338] [controller_manager]: Overrun might occur, Total time : 2160.934 us (Expected < 1000.000 us) --> Read time : 14.465 us, Update time : 59.171 us, Write time : 2087.298 us
+[ros2_control_node-1] [WARN] [1777469544.079724736] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.210778 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:24] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1777469544.268829160] [controller_manager]: Loading controller : 'joint_trajectory_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[ros2_control_node-1] [INFO] [1777469544.268884431] [controller_manager]: Loading controller 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1777469544.276521836] [controller_manager]: Controller 'joint_trajectory_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_qiemrxzi 
+[spawner-16] [INFO] [1777469544.319031387] [spawner_joint_trajectory_controller]: Loaded joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1777469544.320042812] [controller_manager]: Configuring controller: 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1777469544.320757798] [joint_trajectory_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[ros2_control_node-1] [INFO] [1777469544.321081757] [joint_trajectory_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[ros2_control_node-1] [INFO] [1777469544.321294175] [joint_trajectory_controller]: Using 'splines' interpolation method.
+[ros2_control_node-1] [INFO] [1777469544.325881192] [joint_trajectory_controller]: Action status changes will be monitored at 10.00 Hz.
+[ros2_control_node-1] [INFO] [1777469544.338298392] [controller_manager]: Activating controllers: [ joint_trajectory_controller ]
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:24] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [INFO] [1777469544.575491626] [controller_manager]: Successfully switched controllers!
+[spawner-16] [INFO] [1777469544.585818611] [spawner_joint_trajectory_controller]: Configured and activated joint_trajectory_controller
+[INFO] [spawner-16]: process has finished cleanly [pid 32247]
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:24] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:25] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469545.082416003] [controller_manager]: Overrun might occur, Total time : 2869.096 us (Expected < 1000.000 us) --> Read time : 48.430 us, Update time : 358.831 us, Write time : 2461.835 us
+[ros2_control_node-1] [WARN] [1777469545.082523354] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.007093 ms (missed cycles : 4).
+[scene_static-7] [WARN] [1777469545.284672532] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:25] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:25] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469546.083561289] [controller_manager]: Overrun might occur, Total time : 3018.512 us (Expected < 1000.000 us) --> Read time : 38.426 us, Update time : 250.846 us, Write time : 2729.240 us
+[ros2_control_node-1] [WARN] [1777469546.083647406] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.131916 ms (missed cycles : 4).
+[INFO] [move_group-20]: process started with pid [32332]
+[INFO] [rviz2-21]: process started with pid [32333]
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:26] "GET /status_json HTTP/1.1" 200 -
+[move_group-20] [INFO] [1777469546.526166575] [move_group.moveit.moveit.ros.rdf_loader]: Loaded robot model in 0.0102727 seconds
+[move_group-20] [INFO] [1777469546.526291452] [move_group.moveit.moveit.core.robot_model]: Loading robot model 'gen3'...
+[move_group-20] [INFO] [1777469546.526310216] [move_group.moveit.moveit.core.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:26] "GET /status_json HTTP/1.1" 200 -
+[move_group-20] [INFO] [1777469546.657886611] [move_group.moveit.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'manipulator': 1 1 1 1 1 1 1
+[ros2_control_node-1] [WARN] [1777469547.083811820] [controller_manager]: Overrun might occur, Total time : 2288.510 us (Expected < 1000.000 us) --> Read time : 13.324 us, Update time : 114.697 us, Write time : 2160.489 us
+[ros2_control_node-1] [WARN] [1777469547.083884966] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.370689 ms (missed cycles : 3).
+[rviz2-21] [INFO] [1777469547.105134569] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-21] [INFO] [1777469547.105186303] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-21] [INFO] [1777469547.128025443] [rviz2]: Stereo is NOT SUPPORTED
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:27] "GET /status_json HTTP/1.1" 200 -
+[rviz2-21] Warning: class_loader.impl: SEVERE WARNING!!! A namespace collision has occurred with plugin factory for class rviz_default_plugins::displays::InteractiveMarkerDisplay. New factory will OVERWRITE existing one. This situation occurs when libraries containing plugins are directly linked against an executable (the one running right now generating this message). Please separate plugins out into their own library or just don't link against the library and use either class_loader::ClassLoader/MultiLibraryClassLoader to open.
+[rviz2-21]          at line 321 in /opt/ros/jazzy/include/class_loader/class_loader/class_loader_core.hpp
+[rviz2-21] [WARN] [1777469547.268170805] [rcl.logging_rosout]: Publisher already registered for node name: 'rviz2_moveit'. If this is due to multiple nodes with the same name then all logs for the logger named 'rviz2_moveit' will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[scene_static-7] [WARN] [1777469547.286929331] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:27] "GET /status_json HTTP/1.1" 200 -
+[move_group-20] [INFO] [1777469547.538301751] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-20] [INFO] [1777469547.538482022] [move_group.moveit.moveit.ros.moveit_cpp]: Listening to 'joint_states' for joint states
+[move_group-20] [INFO] [1777469547.539784891] [move_group.moveit.moveit.ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
+[move_group-20] [INFO] [1777469547.540585336] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
+[move_group-20] [INFO] [1777469547.540625434] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopping existing planning scene publisher.
+[move_group-20] [INFO] [1777469547.540819949] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopped publishing maintained planning scene.
+[move_group-20] [INFO] [1777469547.541363260] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-20] [INFO] [1777469547.541484971] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[move_group-20] [INFO] [1777469547.541995995] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/planning_scene'
+[move_group-20] [INFO] [1777469547.542021209] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
+[move_group-20] [INFO] [1777469547.543533745] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'collision_object'
+[move_group-20] [INFO] [1777469547.544317483] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
+[move_group-20] [WARN] [1777469547.545343442] [move_group.moveit.moveit.ros.occupancy_map_monitor]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
+[move_group-20] [ERROR] [1777469547.545385437] [move_group.moveit.moveit.ros.occupancy_map_monitor]: No 3D sensor plugin(s) defined for octomap updates
+[move_group-20] [INFO] [1777469547.736301322] [move_group.moveit.moveit.ros.planning_pipeline]: Successfully loaded planner 'OMPL'
+[move_group-20] [INFO] [1777469547.740063482] [move_group]: Try loading adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-20] [INFO] [1777469547.741366360] [move_group]: Loaded adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-20] [INFO] [1777469547.741446681] [move_group]: Try loading adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777469547.741662730] [move_group]: Loaded adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1777469547.741677463] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-20] [INFO] [1777469547.741720754] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-20] [INFO] [1777469547.741733094] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-20] [INFO] [1777469547.741747954] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-20] [INFO] [1777469547.745112023] [move_group]: Try loading adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777469547.747861375] [move_group]: Loaded adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1777469547.747880062] [move_group]: Try loading adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-20] [INFO] [1777469547.750411077] [move_group]: Loaded adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-20] [INFO] [1777469547.750433205] [move_group]: Try loading adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-20] [INFO] [1777469547.751025315] [move_group]: Loaded adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-20] [INFO] [1777469547.794313304] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added FollowJointTrajectory controller for joint_trajectory_controller
+[move_group-20] [INFO] [1777469547.794374206] [move_group.moveit.moveit.plugins.simple_controller_manager]: robotiq_gripper_controller will command a max effort of: 0
+[move_group-20] [INFO] [1777469547.797964257] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added GripperCommand controller for robotiq_gripper_controller
+[move_group-20] [INFO] [1777469547.798222100] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777469547.798279634] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1777469547.798947253] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Trajectory execution is managing controllers
+[move_group-20] [INFO] [1777469547.798976008] [move_group]: MoveGroup debug mode is ON
+[move_group-20] [INFO] [1777469547.822115183] [move_group.moveit.moveit.ros.move_group.executable]: 
+[move_group-20] 
+[move_group-20] ********************************************************
+[move_group-20] * MoveGroup using: 
+[move_group-20] *     - apply_planning_scene_service
+[move_group-20] *     - clear_octomap_service
+[move_group-20] *     - get_group_urdf
+[move_group-20] *     - load_geometry_from_file
+[move_group-20] *     - CartesianPathService
+[move_group-20] *     - execute_trajectory_action
+[move_group-20] *     - get_planning_scene_service
+[move_group-20] *     - kinematics_service
+[move_group-20] *     - move_action
+[move_group-20] *     - motion_plan_service
+[move_group-20] *     - query_planners_service
+[move_group-20] *     - state_validation_service
+[move_group-20] *     - save_geometry_to_file
+[move_group-20] ********************************************************
+[move_group-20] 
+[move_group-20] [INFO] [1777469547.822163635] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context using pipeline ompl
+[move_group-20] [INFO] [1777469547.822174072] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context initialization complete
+[move_group-20] [96mLoading 'move_group/ApplyPlanningSceneService'...[0m
+[move_group-20] [96mLoading 'move_group/ClearOctomapService'...[0m
+[move_group-20] [96mLoading 'move_group/GetUrdfService'...[0m
+[move_group-20] [96mLoading 'move_group/LoadGeometryFromFileService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupCartesianPathService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupExecuteTrajectoryAction'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupGetPlanningSceneService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupKinematicsService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupMoveAction'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupPlanService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupQueryPlannersService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupStateValidationService'...[0m
+[move_group-20] [96mLoading 'move_group/SaveGeometryToFileService'...[0m
+[move_group-20] 
+[move_group-20] [92mYou can start planning now![0m
+[move_group-20] 
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:27] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:28] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469548.086637526] [controller_manager]: Overrun might occur, Total time : 3071.469 us (Expected < 1000.000 us) --> Read time : 60.433 us, Update time : 435.527 us, Write time : 2575.509 us
+[ros2_control_node-1] [WARN] [1777469548.086781353] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.263240 ms (missed cycles : 4).
+[ros2_control_node-1] [INFO] [1777469548.305539753] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [WARN] [1777469548.305583188] [controller_manager]: ResourceManager has already loaded a urdf. Ignoring attempt to reload a robot description.
+[wrist_camera_usb_publisher-8] [INFO] [1777469548.404903556] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:28] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:28] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469549.089980893] [controller_manager]: Overrun might occur, Total time : 2438.315 us (Expected < 1000.000 us) --> Read time : 38.614 us, Update time : 246.345 us, Write time : 2153.356 us
+[ros2_control_node-1] [WARN] [1777469549.090067849] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.552268 ms (missed cycles : 3).
+[scene_static-7] [WARN] [1777469549.292497519] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:29] "GET /status_json HTTP/1.1" 200 -
+[scene_static-7] [INFO] [1777469549.544061390] [scene_static_node]: Planning scene service available. Building static scene...
+[scene_static-7] [INFO] [1777469549.549651819] [scene_static_node]: Static scene built: 25 objects added to MoveIt planning scene.
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:29] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469550.090760862] [controller_manager]: Overrun might occur, Total time : 3195.737 us (Expected < 1000.000 us) --> Read time : 50.859 us, Update time : 395.207 us, Write time : 2749.671 us
+[ros2_control_node-1] [WARN] [1777469550.090905791] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.386749 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:30] "GET /status_json HTTP/1.1" 200 -
+[rviz2-21] [ERROR] [1777469550.308016606] [rviz2_moveit.moveit.ros.motion_planning_frame]: Action server: /recognize_objects not available
+[rviz2-21] [INFO] [1777469550.340816252] [rviz2_moveit.moveit.ros.motion_planning_frame]: MoveGroup namespace changed: / -> . Reloading params.
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:30] "GET /status_json HTTP/1.1" 200 -
+[rviz2-21] [INFO] [1777469550.403220477] [rviz2_moveit.moveit.ros.rdf_loader]: Loaded robot model in 0.00772697 seconds
+[rviz2-21] [INFO] [1777469550.403329803] [rviz2_moveit.moveit.core.robot_model]: Loading robot model 'gen3'...
+[rviz2-21] [INFO] [1777469550.403362669] [rviz2_moveit.moveit.core.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[rviz2-21] [INFO] [1777469550.540621924] [rviz2_moveit.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'manipulator': 1 1 1 1 1 1 1
+[rviz2-21] [INFO] [1777469550.864172670] [rviz2_moveit.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[rviz2-21] [INFO] [1777469550.864956174] [rviz2_moveit.moveit.ros.planning_scene_monitor]: Listening to '/monitored_planning_scene'
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:30] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:31] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469551.092165822] [controller_manager]: Overrun might occur, Total time : 2634.341 us (Expected < 1000.000 us) --> Read time : 24.408 us, Update time : 202.724 us, Write time : 2407.209 us
+[ros2_control_node-1] [WARN] [1777469551.092240064] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.725246 ms (missed cycles : 3).
+[rviz2-21] [INFO] [1777469551.099186855] [interactive_marker_display_100218618668560]: Connected on namespace: /rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic
+[rviz2-21] [INFO] [1777469551.104045581] [rviz2_moveit.moveit.ros.robot_interaction]: No active joints or end effectors found for group 'gripper'. Make sure that kinematics.yaml is loaded in this node's namespace.
+[rviz2-21] [INFO] [1777469551.104651106] [rviz2_moveit.moveit.ros.robot_interaction]: No active joints or end effectors found for group 'gripper'. Make sure that kinematics.yaml is loaded in this node's namespace.
+[rviz2-21] [INFO] [1777469551.110619200] [rviz2_moveit.moveit.ros.motion_planning_frame]: group gripper
+[rviz2-21] [INFO] [1777469551.110643048] [rviz2_moveit.moveit.ros.motion_planning_frame]: Constructing new MoveGroup connection for group 'gripper' in namespace ''
+[rviz2-21] [INFO] [1777469551.121766064] [interactive_marker_display_100218618668560]: Sending request for interactive markers
+[rviz2-21] [INFO] [1777469551.131512235] [rviz2_moveit.moveit.ros.move_group_interface]: Ready to take commands for planning group gripper.
+[rviz2-21] [INFO] [1777469551.132247420] [rviz2_moveit.moveit.ros.motion_planning_frame]: group gripper
+[rviz2-21] [INFO] [1777469551.154438839] [interactive_marker_display_100218618668560]: Service response received for initialization
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:31] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:31] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469552.092903830] [controller_manager]: Overrun might occur, Total time : 3355.963 us (Expected < 1000.000 us) --> Read time : 54.796 us, Update time : 395.914 us, Write time : 2905.253 us
+[ros2_control_node-1] [WARN] [1777469552.092987795] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.472964 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:32] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:32] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469553.095260157] [controller_manager]: Overrun might occur, Total time : 2704.124 us (Expected < 1000.000 us) --> Read time : 47.668 us, Update time : 304.373 us, Write time : 2352.083 us
+[ros2_control_node-1] [WARN] [1777469553.095356113] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.840584 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:33] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:33] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777469553.565969073] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:33] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469554.097267976] [controller_manager]: Overrun might occur, Total time : 2728.352 us (Expected < 1000.000 us) --> Read time : 26.618 us, Update time : 164.811 us, Write time : 2536.923 us
+[ros2_control_node-1] [WARN] [1777469554.097342259] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.826931 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:34] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:34] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:34] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469555.100792680] [controller_manager]: Overrun might occur, Total time : 3237.883 us (Expected < 1000.000 us) --> Read time : 67.730 us, Update time : 447.527 us, Write time : 2722.626 us
+[ros2_control_node-1] [WARN] [1777469555.100875356] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.360258 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:35] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:35] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469556.102344320] [controller_manager]: Overrun might occur, Total time : 2805.508 us (Expected < 1000.000 us) --> Read time : 35.618 us, Update time : 358.168 us, Write time : 2411.722 us
+[ros2_control_node-1] [WARN] [1777469556.102436401] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.920896 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:36] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:36] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:36] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:37] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469557.102864016] [controller_manager]: Overrun might occur, Total time : 2331.832 us (Expected < 1000.000 us) --> Read time : 32.937 us, Update time : 210.020 us, Write time : 2088.875 us
+[ros2_control_node-1] [WARN] [1777469557.102921271] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.406752 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:37] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:37] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469558.103597232] [controller_manager]: Overrun might occur, Total time : 3052.286 us (Expected < 1000.000 us) --> Read time : 40.641 us, Update time : 357.749 us, Write time : 2653.896 us
+[ros2_control_node-1] [WARN] [1777469558.103688114] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.172751 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:38] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:38] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777469558.726569780] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[ros2_control_node-1] [WARN] [1777469559.105521263] [controller_manager]: Overrun might occur, Total time : 2959.299 us (Expected < 1000.000 us) --> Read time : 63.352 us, Update time : 370.326 us, Write time : 2525.621 us
+[ros2_control_node-1] [WARN] [1777469559.105646333] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.129764 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:39] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:39] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:39] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:40] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469560.106558606] [controller_manager]: Overrun might occur, Total time : 3012.441 us (Expected < 1000.000 us) --> Read time : 48.640 us, Update time : 320.913 us, Write time : 2642.888 us
+[ros2_control_node-1] [WARN] [1777469560.106634931] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.119724 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:40] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:40] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469561.108233576] [controller_manager]: Overrun might occur, Total time : 2686.810 us (Expected < 1000.000 us) --> Read time : 35.870 us, Update time : 240.737 us, Write time : 2410.203 us
+[ros2_control_node-1] [WARN] [1777469561.108310594] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.795518 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:41] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:41] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469562.108727956] [controller_manager]: Overrun might occur, Total time : 3188.570 us (Expected < 1000.000 us) --> Read time : 37.534 us, Update time : 387.028 us, Write time : 2764.008 us
+[ros2_control_node-1] [WARN] [1777469562.108802315] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.286984 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:42] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:42] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:42] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469563.111262238] [controller_manager]: Overrun might occur, Total time : 2729.728 us (Expected < 1000.000 us) --> Read time : 23.365 us, Update time : 236.953 us, Write time : 2469.410 us
+[ros2_control_node-1] [WARN] [1777469563.111349054] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.833876 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:43] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:43] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777469563.888699408] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[ros2_control_node-1] [WARN] [1777469564.111411714] [controller_manager]: Overrun might occur, Total time : 2873.354 us (Expected < 1000.000 us) --> Read time : 28.221 us, Update time : 305.431 us, Write time : 2539.702 us
+[ros2_control_node-1] [WARN] [1777469564.111484252] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.969255 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:44] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469565.113187122] [controller_manager]: Overrun might occur, Total time : 2643.289 us (Expected < 1000.000 us) --> Read time : 38.519 us, Update time : 379.396 us, Write time : 2225.374 us
+[ros2_control_node-1] [WARN] [1777469565.113287610] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.772637 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:45] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:45] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469566.113327381] [controller_manager]: Overrun might occur, Total time : 2790.633 us (Expected < 1000.000 us) --> Read time : 36.470 us, Update time : 212.548 us, Write time : 2541.615 us
+[ros2_control_node-1] [WARN] [1777469566.113402303] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.887404 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:46] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:46] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469567.115388754] [controller_manager]: Overrun might occur, Total time : 2841.958 us (Expected < 1000.000 us) --> Read time : 39.569 us, Update time : 249.757 us, Write time : 2552.632 us
+[ros2_control_node-1] [WARN] [1777469567.115466540] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.951048 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:47] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469568.117510596] [controller_manager]: Overrun might occur, Total time : 2969.643 us (Expected < 1000.000 us) --> Read time : 28.659 us, Update time : 340.724 us, Write time : 2600.260 us
+[ros2_control_node-1] [WARN] [1777469568.117595088] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.078314 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:48] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:48] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777469569.052199920] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[ros2_control_node-1] [WARN] [1777469569.117576056] [controller_manager]: Overrun might occur, Total time : 3030.673 us (Expected < 1000.000 us) --> Read time : 49.638 us, Update time : 379.561 us, Write time : 2601.474 us
+[ros2_control_node-1] [WARN] [1777469569.117695478] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.179173 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:49] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469570.120573511] [controller_manager]: Overrun might occur, Total time : 3024.599 us (Expected < 1000.000 us) --> Read time : 46.379 us, Update time : 296.255 us, Write time : 2681.965 us
+[ros2_control_node-1] [WARN] [1777469570.120647495] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.132451 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:50] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469571.121070605] [controller_manager]: Overrun might occur, Total time : 2538.320 us (Expected < 1000.000 us) --> Read time : 24.815 us, Update time : 202.154 us, Write time : 2311.351 us
+[ros2_control_node-1] [WARN] [1777469571.121131917] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.617257 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:51] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:51] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469572.122806770] [controller_manager]: Overrun might occur, Total time : 3252.296 us (Expected < 1000.000 us) --> Read time : 42.487 us, Update time : 322.753 us, Write time : 2887.056 us
+[ros2_control_node-1] [WARN] [1777469572.122928355] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.412368 ms (missed cycles : 4).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:52] "GET / HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:52] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:52] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469573.124232730] [controller_manager]: Overrun might occur, Total time : 2699.173 us (Expected < 1000.000 us) --> Read time : 31.382 us, Update time : 234.515 us, Write time : 2433.276 us
+[ros2_control_node-1] [WARN] [1777469573.124296430] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.781037 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:53] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:53] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:53] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469574.126452648] [controller_manager]: Overrun might occur, Total time : 2907.685 us (Expected < 1000.000 us) --> Read time : 33.313 us, Update time : 203.853 us, Write time : 2670.519 us
+[ros2_control_node-1] [WARN] [1777469574.126525636] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.010702 ms (missed cycles : 4).
+[wrist_camera_usb_publisher-8] [INFO] [1777469574.211871961] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:54] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:54] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:54] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469575.127074459] [controller_manager]: Overrun might occur, Total time : 2531.397 us (Expected < 1000.000 us) --> Read time : 26.913 us, Update time : 233.449 us, Write time : 2271.035 us
+[ros2_control_node-1] [WARN] [1777469575.127192164] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.674842 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:55] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:55] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:56] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469576.128563412] [controller_manager]: Overrun might occur, Total time : 3021.042 us (Expected < 1000.000 us) --> Read time : 45.775 us, Update time : 268.693 us, Write time : 2706.574 us
+[ros2_control_node-1] [WARN] [1777469576.128647921] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.131357 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:56] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:56] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469577.129218782] [controller_manager]: Overrun might occur, Total time : 2686.771 us (Expected < 1000.000 us) --> Read time : 24.344 us, Update time : 251.476 us, Write time : 2410.951 us
+[ros2_control_node-1] [WARN] [1777469577.129288635] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.773446 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:57] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:57] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:57] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469578.129685192] [controller_manager]: Overrun might occur, Total time : 3141.174 us (Expected < 1000.000 us) --> Read time : 36.171 us, Update time : 327.082 us, Write time : 2777.921 us
+[ros2_control_node-1] [WARN] [1777469578.129753433] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.238368 ms (missed cycles : 4).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:58] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:58] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:59] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469579.133522643] [controller_manager]: Overrun might occur, Total time : 2973.830 us (Expected < 1000.000 us) --> Read time : 60.120 us, Update time : 323.604 us, Write time : 2590.106 us
+[ros2_control_node-1] [WARN] [1777469579.133597537] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.082471 ms (missed cycles : 4).
+[wrist_camera_usb_publisher-8] [INFO] [1777469579.372632565] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:32:59] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:32:59] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469580.136139575] [controller_manager]: Overrun might occur, Total time : 2605.107 us (Expected < 1000.000 us) --> Read time : 22.005 us, Update time : 179.351 us, Write time : 2403.751 us
+[ros2_control_node-1] [WARN] [1777469580.136213388] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.697598 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:00] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:00] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:00] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469581.137110476] [controller_manager]: Overrun might occur, Total time : 2572.944 us (Expected < 1000.000 us) --> Read time : 36.000 us, Update time : 274.976 us, Write time : 2261.968 us
+[ros2_control_node-1] [WARN] [1777469581.137182629] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.667254 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:01] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:01] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:02] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469582.139257416] [controller_manager]: Overrun might occur, Total time : 2712.529 us (Expected < 1000.000 us) --> Read time : 42.142 us, Update time : 278.799 us, Write time : 2391.588 us
+[ros2_control_node-1] [WARN] [1777469582.139345643] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.830318 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:02] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:02] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469583.140135947] [controller_manager]: Overrun might occur, Total time : 3596.183 us (Expected < 1000.000 us) --> Read time : 27.753 us, Update time : 166.695 us, Write time : 3401.735 us
+[ros2_control_node-1] [WARN] [1777469583.140202729] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.688029 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:03] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:03] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:04] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469584.143251030] [controller_manager]: Overrun might occur, Total time : 2706.210 us (Expected < 1000.000 us) --> Read time : 44.598 us, Update time : 212.669 us, Write time : 2448.943 us
+[ros2_control_node-1] [WARN] [1777469584.143351233] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.834011 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:04] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777469584.533644737] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:04] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:05] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469585.144008542] [controller_manager]: Overrun might occur, Total time : 2468.188 us (Expected < 1000.000 us) --> Read time : 28.563 us, Update time : 215.877 us, Write time : 2223.748 us
+[ros2_control_node-1] [WARN] [1777469585.144111507] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.594451 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:05] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:05] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469586.144172776] [controller_manager]: Overrun might occur, Total time : 2629.025 us (Expected < 1000.000 us) --> Read time : 52.736 us, Update time : 332.989 us, Write time : 2243.300 us
+[ros2_control_node-1] [WARN] [1777469586.144268374] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.751515 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:06] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:06] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:07] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469587.146187484] [controller_manager]: Overrun might occur, Total time : 2648.623 us (Expected < 1000.000 us) --> Read time : 43.789 us, Update time : 277.426 us, Write time : 2327.408 us
+[ros2_control_node-1] [WARN] [1777469587.146262167] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.746533 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:07] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:07] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:08] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469588.146876604] [controller_manager]: Overrun might occur, Total time : 2339.189 us (Expected < 1000.000 us) --> Read time : 33.543 us, Update time : 248.494 us, Write time : 2057.152 us
+[ros2_control_node-1] [WARN] [1777469588.146952553] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.437457 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:08] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:08] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469589.148431444] [controller_manager]: Overrun might occur, Total time : 2865.471 us (Expected < 1000.000 us) --> Read time : 79.401 us, Update time : 451.110 us, Write time : 2334.960 us
+[ros2_control_node-1] [WARN] [1777469589.148532460] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.017431 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:09] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:09] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777469589.695799791] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:10] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469590.150204117] [controller_manager]: Overrun might occur, Total time : 2663.530 us (Expected < 1000.000 us) --> Read time : 62.013 us, Update time : 220.361 us, Write time : 2381.156 us
+[ros2_control_node-1] [WARN] [1777469590.150282246] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.766808 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:10] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:10] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:11] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469591.152127237] [controller_manager]: Overrun might occur, Total time : 2585.919 us (Expected < 1000.000 us) --> Read time : 29.979 us, Update time : 218.407 us, Write time : 2337.533 us
+[ros2_control_node-1] [WARN] [1777469591.152208369] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.693256 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:11] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:11] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469592.155729810] [controller_manager]: Overrun might occur, Total time : 3173.709 us (Expected < 1000.000 us) --> Read time : 94.489 us, Update time : 328.163 us, Write time : 2751.057 us
+[ros2_control_node-1] [WARN] [1777469592.155822668] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.307642 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:12] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:12] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:13] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469593.157949751] [controller_manager]: Overrun might occur, Total time : 2406.336 us (Expected < 1000.000 us) --> Read time : 37.155 us, Update time : 289.619 us, Write time : 2079.562 us
+[ros2_control_node-1] [WARN] [1777469593.158052018] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.528412 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:13] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:13] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:14] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469594.159921207] [controller_manager]: Overrun might occur, Total time : 2383.683 us (Expected < 1000.000 us) --> Read time : 27.414 us, Update time : 192.728 us, Write time : 2163.541 us
+[ros2_control_node-1] [WARN] [1777469594.159973353] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.458957 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:14] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:14] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777469594.856632714] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[ros2_control_node-1] [WARN] [1777469595.162338443] [controller_manager]: Overrun might occur, Total time : 2793.015 us (Expected < 1000.000 us) --> Read time : 27.399 us, Update time : 206.761 us, Write time : 2558.855 us
+[ros2_control_node-1] [WARN] [1777469595.162480443] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.965188 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:15] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:15] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:16] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469596.164443772] [controller_manager]: Overrun might occur, Total time : 2904.948 us (Expected < 1000.000 us) --> Read time : 38.721 us, Update time : 244.281 us, Write time : 2621.946 us
+[ros2_control_node-1] [WARN] [1777469596.164511975] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.997029 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:16] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:16] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:17] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469597.166750590] [controller_manager]: Overrun might occur, Total time : 2221.235 us (Expected < 1000.000 us) --> Read time : 25.012 us, Update time : 162.807 us, Write time : 2033.416 us
+[ros2_control_node-1] [WARN] [1777469597.166807999] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.293347 ms (missed cycles : 3).
+[adl_ui-15] [INFO] [1777469597.214751276] [adl_ui_node]: UI command published: clear_table
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:17] "POST /command HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:17] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:17] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:17] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469598.169566523] [controller_manager]: Overrun might occur, Total time : 3016.166 us (Expected < 1000.000 us) --> Read time : 51.060 us, Update time : 422.170 us, Write time : 2542.936 us
+[ros2_control_node-1] [WARN] [1777469598.169668413] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.153121 ms (missed cycles : 4).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:18] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:18] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469599.170236602] [controller_manager]: Overrun might occur, Total time : 2687.481 us (Expected < 1000.000 us) --> Read time : 40.851 us, Update time : 256.671 us, Write time : 2389.959 us
+[ros2_control_node-1] [WARN] [1777469599.170317368] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.802025 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:19] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:19] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777469600.017387116] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:20] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469600.170384325] [controller_manager]: Overrun might occur, Total time : 2827.525 us (Expected < 1000.000 us) --> Read time : 28.431 us, Update time : 217.924 us, Write time : 2581.170 us
+[ros2_control_node-1] [WARN] [1777469600.170463348] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.947684 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:20] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:20] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] [INFO] [1777469600.934201849] [adl_ui_node]: UI command published: give_medication
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:20] "POST /command HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:20] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469601.171287937] [controller_manager]: Overrun might occur, Total time : 2746.558 us (Expected < 1000.000 us) --> Read time : 27.592 us, Update time : 176.753 us, Write time : 2542.213 us
+[ros2_control_node-1] [WARN] [1777469601.171381318] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.864834 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:21] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:21] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469602.173787961] [controller_manager]: Overrun might occur, Total time : 3223.859 us (Expected < 1000.000 us) --> Read time : 73.523 us, Update time : 386.471 us, Write time : 2763.865 us
+[ros2_control_node-1] [WARN] [1777469602.173888380] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.372569 ms (missed cycles : 4).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:22] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:22] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:23] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] [INFO] [1777469603.146050746] [adl_ui_node]: UI command published: emergency_stop_retract
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:23] "POST /command HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469603.177397468] [controller_manager]: Overrun might occur, Total time : 2840.249 us (Expected < 1000.000 us) --> Read time : 57.582 us, Update time : 424.090 us, Write time : 2358.577 us
+[ros2_control_node-1] [WARN] [1777469603.177517858] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.001506 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:23] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:23] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:23] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469604.177618659] [controller_manager]: Overrun might occur, Total time : 3060.310 us (Expected < 1000.000 us) --> Read time : 70.425 us, Update time : 370.318 us, Write time : 2619.567 us
+[ros2_control_node-1] [WARN] [1777469604.177716347] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.199976 ms (missed cycles : 4).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:24] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:24] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777469605.176494043] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[ros2_control_node-1] [WARN] [1777469605.181558937] [controller_manager]: Overrun might occur, Total time : 2982.935 us (Expected < 1000.000 us) --> Read time : 98.597 us, Update time : 456.934 us, Write time : 2427.404 us
+[ros2_control_node-1] [WARN] [1777469605.181646440] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.131389 ms (missed cycles : 4).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:25] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:25] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] [INFO] [1777469605.681286395] [adl_ui_node]: UI command published: give_medication
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:25] "POST /command HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:25] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:26] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469606.182331495] [controller_manager]: Overrun might occur, Total time : 2794.518 us (Expected < 1000.000 us) --> Read time : 34.110 us, Update time : 257.277 us, Write time : 2503.131 us
+[ros2_control_node-1] [WARN] [1777469606.182428737] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.912296 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:26] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:26] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469607.184317497] [controller_manager]: Overrun might occur, Total time : 2793.350 us (Expected < 1000.000 us) --> Read time : 11.460 us, Update time : 95.136 us, Write time : 2686.754 us
+[ros2_control_node-1] [WARN] [1777469607.184359306] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.844961 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:27] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:27] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:27] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469608.186149373] [controller_manager]: Overrun might occur, Total time : 2618.714 us (Expected < 1000.000 us) --> Read time : 28.224 us, Update time : 181.132 us, Write time : 2409.358 us
+[ros2_control_node-1] [WARN] [1777469608.186209105] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.694967 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:28] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:28] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:29] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469609.186445301] [controller_manager]: Overrun might occur, Total time : 2889.899 us (Expected < 1000.000 us) --> Read time : 51.637 us, Update time : 313.176 us, Write time : 2525.086 us
+[ros2_control_node-1] [WARN] [1777469609.186542215] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.026486 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:29] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469610.186972692] [controller_manager]: Overrun might occur, Total time : 2437.984 us (Expected < 1000.000 us) --> Read time : 23.664 us, Update time : 193.969 us, Write time : 2220.351 us
+[ros2_control_node-1] [WARN] [1777469610.187040480] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.525518 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:30] "GET /status_json HTTP/1.1" 200 -
+[wrist_camera_usb_publisher-8] [INFO] [1777469610.336406922] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:30] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:30] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:31] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469611.189201193] [controller_manager]: Overrun might occur, Total time : 2666.758 us (Expected < 1000.000 us) --> Read time : 23.585 us, Update time : 184.504 us, Write time : 2458.669 us
+[ros2_control_node-1] [WARN] [1777469611.189269019] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.754079 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:31] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:31] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:32] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469612.189291670] [controller_manager]: Overrun might occur, Total time : 2739.809 us (Expected < 1000.000 us) --> Read time : 68.109 us, Update time : 355.295 us, Write time : 2316.405 us
+[ros2_control_node-1] [WARN] [1777469612.189415972] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.900013 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:32] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:32] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] [INFO] [1777469613.142806099] [adl_ui_node]: UI command published: emergency_stop_retract
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:33] "POST /command HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469613.192655216] [controller_manager]: Overrun might occur, Total time : 3084.421 us (Expected < 1000.000 us) --> Read time : 77.311 us, Update time : 486.898 us, Write time : 2520.212 us
+[ros2_control_node-1] [WARN] [1777469613.192762975] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.246546 ms (missed cycles : 4).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:33] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:33] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:33] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] [INFO] [1777469614.038146991] [adl_ui_node]: UI command published: emergency_stop_retract
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:34] "POST /command HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:34] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469614.194963683] [controller_manager]: Overrun might occur, Total time : 2436.108 us (Expected < 1000.000 us) --> Read time : 13.106 us, Update time : 106.177 us, Write time : 2316.825 us
+[ros2_control_node-1] [WARN] [1777469614.195024204] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.509502 ms (missed cycles : 3).
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:34] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:34] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:35] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469615.195426671] [controller_manager]: Overrun might occur, Total time : 2888.073 us (Expected < 1000.000 us) --> Read time : 60.513 us, Update time : 215.360 us, Write time : 2612.200 us
+[ros2_control_node-1] [WARN] [1777469615.195501177] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.986609 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [INFO] [1777469615.499981936] [wrist_camera_usb_publisher_node]: USB camera publisher heartbeat: publishing 1280x720 frames on /wrist_mounted_camera/image; camera_info fx=920.87, fy=921.57, cx=644.76, cy=343.15.
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:35] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:35] "GET /status_json HTTP/1.1" 200 -
+[ros2_control_node-1] [WARN] [1777469616.196400339] [controller_manager]: Overrun might occur, Total time : 2861.937 us (Expected < 1000.000 us) --> Read time : 37.806 us, Update time : 294.021 us, Write time : 2530.110 us
+[ros2_control_node-1] [WARN] [1777469616.196481239] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.965537 ms (missed cycles : 3).
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:36] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 192.168.0.78 - - [29/Apr/2026 09:33:36] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-15] 127.0.0.1 - - [29/Apr/2026 09:33:37] "GET /status_json HTTP/1.1" 200 -

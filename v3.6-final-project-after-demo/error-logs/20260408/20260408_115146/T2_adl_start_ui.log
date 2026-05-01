@@ -1,0 +1,400 @@
+
+===== 2026-04-08T11:51:50-04:00 | T2_adl_start_ui =====
+cwd=/home/carrt-cse-project/workspace/ros2_kortex_ws
+cmd=ros2 launch adl_tasks adl_start.launch.py start_arm:=false use_stub:=true launch_ui:=true 
+
+[INFO] [launch]: All log files can be found below /home/carrt-cse-project/.ros/log/2026-04-08-11-51-51-304189-carrt-cse-project-OptiPlex-5050-10105
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [launch.user]: [adl_start.launch] arm_use_fake_hardware:=true, so RViz/MoveIt will show fake arm state instead of the physical Kinova.
+[INFO] [scene_static-1]: process started with pid [10109]
+[INFO] [joint_state_sanitizer-2]: process started with pid [10110]
+[INFO] [vision_stub-3]: process started with pid [10111]
+[INFO] [scene_from_vision-4]: process started with pid [10112]
+[INFO] [adl_controller-5]: process started with pid [10113]
+[INFO] [pick_dropped_bottle-6]: process started with pid [10114]
+[INFO] [clear_table-7]: process started with pid [10115]
+[INFO] [give_medication-8]: process started with pid [10116]
+[INFO] [adl_ui-9]: process started with pid [10117]
+[joint_state_sanitizer-2] [INFO] [1775663512.235184086] [joint_state_sanitizer_node]: joint_state_sanitizer started. raw=/joint_states -> sanitized=/joint_states_sanitized
+[adl_ui-9] [INFO] [1775663512.270453960] [adl_ui_node]: ADL UI Node started.
+[adl_ui-9] [INFO] [1775663512.271874777] [adl_ui_node]: Automatic retract on UI load is disabled; startup sends no motion.
+[adl_ui-9]  * Serving Flask app 'adl_tasks.adl_ui'
+[adl_ui-9]  * Debug mode: off
+[adl_ui-9] [INFO] [1775663512.279237352] [adl_ui_node]: Web UI available at http://localhost:5000
+[adl_ui-9] WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+[adl_ui-9]  * Running on all addresses (0.0.0.0)
+[adl_ui-9]  * Running on http://127.0.0.1:5000
+[adl_ui-9]  * Running on http://192.168.0.231:5000
+[adl_ui-9] Press CTRL+C to quit
+[vision_stub-3] [INFO] [1775663512.346458801] [vision_stub_node]: Vision Stub Node started.
+[vision_stub-3] [INFO] [1775663512.347189841] [vision_stub_node]: Serving stub poses for tag IDs: [0, 2, 3, 4]
+[vision_stub-3] [WARN] [1775663512.347957968] [vision_stub_node]: STUB MODE: returning hardcoded values / poses.Replace with actual vision node for real hardware testing.
+[scene_static-1] [INFO] [1775663512.368955010] [scene_static_node]: Static Scene Node started.
+[scene_static-1] [INFO] [1775663512.369656680] [scene_static_node]: WHEELCHAIR_BASE_HEIGHT = 0.36195m  |  Table surface at z = 0.088m | Table center at x = 0.681m | include_wheelchair_wall=True
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:51:52] "GET /status_json HTTP/1.1" 200 -
+[clear_table-7] [INFO] [1775663512.685836367] [clear_table_node]: Clear Table Node Started
+[clear_table-7] [INFO] [1775663512.745276181] [clear_table_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[clear_table-7] [INFO] [1775663512.751858275] [clear_table_node]: Vision Client initialized, waiting for service...
+[clear_table-7] [INFO] [1775663512.752646546] [clear_table_node]: Vision service is ready.
+[clear_table-7] [INFO] [1775663512.761285707] [clear_table_node]: Clear Table Node ready. Waiting for command.
+[clear_table-7] [INFO] [1775663512.762580614] [clear_table_node]: Startup motion disabled at node load; motion begins only after clear_table command.
+[give_medication-8] [INFO] [1775663512.835022489] [give_medication_node]: give_medication starting...
+[pick_dropped_bottle-6] [INFO] [1775663512.867695738] [pick_dropped_bottle_node]: PickDroppedBottle starting...
+[scene_from_vision-4] [INFO] [1775663512.890179551] [scene_from_vision_node]: Scene From Vision Node Started
+[give_medication-8] [INFO] [1775663512.894265207] [give_medication_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[give_medication-8] [INFO] [1775663512.902965686] [give_medication_node]: Vision Client initialized, waiting for service...
+[pick_dropped_bottle-6] [INFO] [1775663512.947897543] [pick_dropped_bottle_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[pick_dropped_bottle-6] [INFO] [1775663512.957924582] [pick_dropped_bottle_node]: Vision Client initialized, waiting for service...
+[pick_dropped_bottle-6] [INFO] [1775663512.958659805] [pick_dropped_bottle_node]: Vision service is ready.
+[pick_dropped_bottle-6] [INFO] [1775663512.963869379] [pick_dropped_bottle_node]: PickDroppedBottle ready. Waiting for command.
+[adl_controller-5] [INFO] [1775663512.968015836] [adl_controller_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True)
+[scene_from_vision-4] [INFO] [1775663512.968969319] [scene_from_vision_node]: SceneFromVision: Updating planning scene. Tracking 5 object shape(s). memory_mode=True, scan_duration_s=3.0, scan_min_samples=3, scan_prune_unseen_objects=False, continuous_scene_updates=False, latch_first_detection_updates=True, apply_planning_scene_service_updates=True, publish_monitored_planning_scene_updates=True, side_viewpoint=wrist_mounted_camera_color_optical_frame->base_link, reject_table_objects_outside_bounds=False.
+[scene_from_vision-4] [INFO] [1775663512.970054324] [scene_from_vision_node]: SceneFromVision calibration: xy_offset=(0.000, 0.060), z_offset=0.000, yaw_deg=0.00, xy_scale=1.0000, clamp_table_objects_to_table_bounds=False, table_bounds_margin_m=0.030.
+[scene_from_vision-4] [INFO] [1775663512.972236434] [scene_from_vision_node]: SceneFromVision object offsets: remote_axis=y, remote_tag_to_center_sign=-1.0, remote_tag_from_end_m=0.020, cube_tag_to_center=(0.000, 0.000), cube_world_offset=(0.000, -0.022), cube_yaw_offset_deg=0.0, medication_face_to_center_m=0.030, cup_face_to_center_m=0.037.
+[adl_controller-5] [INFO] [1775663512.974006197] [adl_controller_node]: ADL controller ready. Waiting for UI/system commands.
+[pick_dropped_bottle-6] [WARN] [1775663513.168904581] [pick_dropped_bottle_node]: Timed out waiting for complete arm joint state from /joint_states_sanitized.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:51:53] "GET /status_json HTTP/1.1" 200 -
+[pick_dropped_bottle-6] [WARN] [1775663513.427104421] [pick_dropped_bottle_node]: Timed out waiting for complete arm joint state from /joint_states_sanitized.
+[pick_dropped_bottle-6] [WARN] [1775663513.696657679] [pick_dropped_bottle_node]: Timed out waiting for complete arm joint state from /joint_states_sanitized.
+[pick_dropped_bottle-6] [WARN] [1775663513.985604916] [pick_dropped_bottle_node]: Timed out waiting for complete arm joint state from /joint_states_sanitized.
+[pick_dropped_bottle-6] [WARN] [1775663514.311795897] [pick_dropped_bottle_node]: Timed out waiting for complete arm joint state from /joint_states_sanitized.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:51:54] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663514.464200813] [scene_static_node]: Planning scene service not available, waiting...
+[pick_dropped_bottle-6] [WARN] [1775663514.566436151] [pick_dropped_bottle_node]: Timed out waiting for complete arm joint state from /joint_states_sanitized.
+[pick_dropped_bottle-6] [WARN] [1775663514.854065635] [pick_dropped_bottle_node]: Timed out waiting for complete arm joint state from /joint_states_sanitized.
+[give_medication-8] [INFO] [1775663514.906850145] [give_medication_node]: Vision service is not available, waiting...
+[pick_dropped_bottle-6] [WARN] [1775663515.117359614] [pick_dropped_bottle_node]: Timed out waiting for complete arm joint state from /joint_states_sanitized.
+[pick_dropped_bottle-6] [WARN] [1775663515.378010392] [pick_dropped_bottle_node]: Timed out waiting for complete arm joint state from /joint_states_sanitized.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:51:55] "GET /status_json HTTP/1.1" 200 -
+[pick_dropped_bottle-6] [WARN] [1775663515.635413368] [pick_dropped_bottle_node]: Timed out waiting for complete arm joint state from /joint_states_sanitized.
+[pick_dropped_bottle-6] [WARN] [1775663515.890231646] [pick_dropped_bottle_node]: Timed out waiting for complete arm joint state from /joint_states_sanitized.
+[pick_dropped_bottle-6] [WARN] [1775663516.143011784] [pick_dropped_bottle_node]: Timed out waiting for complete arm joint state from /joint_states_sanitized.
+[give_medication-8] [INFO] [1775663516.158858389] [give_medication_node]: Vision service is ready.
+[give_medication-8] [INFO] [1775663516.165854456] [give_medication_node]: give_medication ready.
+[pick_dropped_bottle-6] [INFO] [1775663516.194866199] [pick_dropped_bottle_node]: Scene LOCKED.
+[vision_stub-3] [INFO] [1775663516.195893935] [vision_stub_node]: Stub: Scene LOCKED.
+[scene_from_vision-4] [INFO] [1775663516.227615798] [scene_from_vision_node]: Scene LOCKED - updates paused.
+[pick_dropped_bottle-6] [INFO] [1775663516.347009452] [pick_dropped_bottle_node]: Startup: moving to retract posture.
+[pick_dropped_bottle-6] [INFO] [1775663516.348797379] [pick_dropped_bottle_node]: go_retract: planning to RETRACT_JOINTS...
+[pick_dropped_bottle-6] [WARN] [1775663516.352248613] [pick_dropped_bottle_node]: _is_joint_state_fresh: no joint state received yet.
+[pick_dropped_bottle-6] [ERROR] [1775663516.353737162] [pick_dropped_bottle_node]: Refusing to plan: joint state is stale or incomplete. This commonly causes MoveIt Error -26.
+[pick_dropped_bottle-6] [WARN] [1775663516.355836803] [pick_dropped_bottle_node]: Startup go_retract failed.
+[pick_dropped_bottle-6] [INFO] [1775663516.358833932] [pick_dropped_bottle_node]: Scene UNLOCKED.
+[vision_stub-3] [INFO] [1775663516.358911920] [vision_stub_node]: Stub: Scene UNLOCKED.
+[scene_from_vision-4] [INFO] [1775663516.361685067] [scene_from_vision_node]: Scene UNLOCKED - updates resuming.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:51:56] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663516.466926012] [scene_static_node]: Planning scene service not available, waiting...
+[pick_dropped_bottle-6] [INFO] [1775663516.511734650] [pick_dropped_bottle_node]: Startup complete. Node is ready for commands.
+[vision_stub-3] [INFO] [1775663516.970810123] [vision_stub_node]: Stub: served pose for tag 0 - 0.300, 0.000, -0.302
+[vision_stub-3] [INFO] [1775663516.973748600] [vision_stub_node]: Stub: served pose for tag 2 - 0.619, -0.200, 0.141
+[vision_stub-3] [INFO] [1775663516.976036882] [vision_stub_node]: Stub: served pose for tag 3 - 0.681, -0.150, 0.110
+[scene_from_vision-4] [INFO] [1775663516.977086795] [scene_from_vision_node]: Latched first detection for tag ID 0 into scene memory.
+[vision_stub-3] [INFO] [1775663516.977398781] [vision_stub_node]: Stub: served pose for tag 4 - 0.501, -0.150, 0.145
+[scene_from_vision-4] [INFO] [1775663516.982817740] [scene_from_vision_node]: Latched first detection for tag ID 3 into scene memory.
+[scene_from_vision-4] [INFO] [1775663516.983126519] [scene_from_vision_node]: Latched first detection for tag ID 2 into scene memory.
+[scene_from_vision-4] [INFO] [1775663516.983502124] [scene_from_vision_node]: Latched first detection for tag ID 4 into scene memory.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:51:57] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663517.476298246] [scene_from_vision_node]: Published obj_0 (new) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663517.546728982] [scene_from_vision_node]: Could not lookup current camera viewpoint wrist_mounted_camera_color_optical_frame->base_link; falling back to robot-origin side-tag sign. "base_link" passed to lookupTransform argument target_frame does not exist. 
+[scene_from_vision-4] [INFO] [1775663517.548963714] [scene_from_vision_node]: Published obj_2 (new) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663517.550945631] [scene_from_vision_node]: Published obj_3 (new) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663517.553311888] [scene_from_vision_node]: Published obj_4 (new) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663517.556219908] [scene_from_vision_node]: /apply_planning_scene is not ready; published vision object update on /planning_scene only.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:51:58] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663518.471928763] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:51:59] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663519.976178258] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663520.041118624] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663520.044667402] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663520.047274960] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:00] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663520.474685440] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:01] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:02] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663522.475127099] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_static-1] [WARN] [1775663522.478918757] [scene_static_node]: Planning scene service not available, waiting...
+[scene_from_vision-4] [WARN] [1775663522.539750912] [scene_from_vision_node]: Could not lookup current camera viewpoint wrist_mounted_camera_color_optical_frame->base_link; falling back to robot-origin side-tag sign. "base_link" passed to lookupTransform argument target_frame does not exist. 
+[scene_from_vision-4] [INFO] [1775663522.543331903] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663522.547274776] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663522.552692730] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:03] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:04] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663524.482011748] [scene_static_node]: Planning scene service not available, waiting...
+[scene_from_vision-4] [INFO] [1775663524.974814676] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663525.037243863] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663525.038662393] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663525.039994445] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663525.041411012] [scene_from_vision_node]: /apply_planning_scene is not ready; published vision object update on /planning_scene only.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:05] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:06] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663526.486203002] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:07] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663527.470274240] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663527.535678638] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663527.539198594] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663527.542716670] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:08] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663528.490720411] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:09] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663529.970453477] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663530.032023504] [scene_from_vision_node]: Could not lookup current camera viewpoint wrist_mounted_camera_color_optical_frame->base_link; falling back to robot-origin side-tag sign. "base_link" passed to lookupTransform argument target_frame does not exist. 
+[scene_from_vision-4] [INFO] [1775663530.033060682] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663530.034152715] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663530.035271657] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:10] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663530.495365661] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:11] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663531.976551106] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663532.041745442] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663532.044668999] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663532.046788117] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663532.048798449] [scene_from_vision_node]: /apply_planning_scene is not ready; published vision object update on /planning_scene only.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:12] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663532.498134734] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:13] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:14] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663534.471682763] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_static-1] [WARN] [1775663534.500342737] [scene_static_node]: Planning scene service not available, waiting...
+[scene_from_vision-4] [INFO] [1775663534.533525741] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663534.534403180] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663534.535225124] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:15] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:16] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663536.471727877] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_static-1] [WARN] [1775663536.504288713] [scene_static_node]: Planning scene service not available, waiting...
+[scene_from_vision-4] [WARN] [1775663536.568155023] [scene_from_vision_node]: Could not lookup current camera viewpoint wrist_mounted_camera_color_optical_frame->base_link; falling back to robot-origin side-tag sign. "base_link" passed to lookupTransform argument target_frame does not exist. 
+[scene_from_vision-4] [INFO] [1775663536.568976741] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663536.569872856] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663536.571323827] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:17] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:18] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663538.507211803] [scene_static_node]: Planning scene service not available, waiting...
+[scene_from_vision-4] [INFO] [1775663538.976836117] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663539.089937494] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663539.090831179] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663539.091699994] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663539.092627553] [scene_from_vision_node]: /apply_planning_scene is not ready; published vision object update on /planning_scene only.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:19] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:20] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663540.512155621] [scene_static_node]: Planning scene service not available, waiting...
+[scene_from_vision-4] [INFO] [1775663541.475651299] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:21] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663541.540253901] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663541.542298395] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663541.544151964] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:22] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663542.516039964] [scene_static_node]: Planning scene service not available, waiting...
+[scene_from_vision-4] [INFO] [1775663543.474963394] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:23] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [WARN] [1775663543.539844944] [scene_from_vision_node]: Could not lookup current camera viewpoint wrist_mounted_camera_color_optical_frame->base_link; falling back to robot-origin side-tag sign. "base_link" passed to lookupTransform argument target_frame does not exist. 
+[scene_from_vision-4] [INFO] [1775663543.545152258] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663543.550578164] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663543.556628167] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:24] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663544.518637398] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:25] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663545.970549649] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663546.032824190] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663546.033814475] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663546.034749701] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663546.035708377] [scene_from_vision_node]: /apply_planning_scene is not ready; published vision object update on /planning_scene only.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:26] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663546.522047928] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:27] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663547.970603331] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663548.032601802] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663548.033850431] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663548.035090072] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:28] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663548.524900164] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:29] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663549.976364608] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663550.045074269] [scene_from_vision_node]: Could not lookup current camera viewpoint wrist_mounted_camera_color_optical_frame->base_link; falling back to robot-origin side-tag sign. "base_link" passed to lookupTransform argument target_frame does not exist. 
+[scene_from_vision-4] [INFO] [1775663550.048005681] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663550.050853295] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663550.052862225] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:30] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663550.527277855] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:31] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663552.469777047] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:32] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663552.529825296] [scene_static_node]: Planning scene service not available, waiting...
+[scene_from_vision-4] [INFO] [1775663552.531455945] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663552.532307423] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663552.533215238] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663552.534073143] [scene_from_vision_node]: /apply_planning_scene is not ready; published vision object update on /planning_scene only.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:33] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663554.470343050] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:34] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663554.532686991] [scene_static_node]: Planning scene service not available, waiting...
+[scene_from_vision-4] [INFO] [1775663554.532886264] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663554.534919959] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663554.536422729] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:35] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:36] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663556.535801783] [scene_static_node]: Planning scene service not available, waiting...
+[scene_from_vision-4] [INFO] [1775663556.974114463] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663557.070475801] [scene_from_vision_node]: Could not lookup current camera viewpoint wrist_mounted_camera_color_optical_frame->base_link; falling back to robot-origin side-tag sign. "base_link" passed to lookupTransform argument target_frame does not exist. 
+[scene_from_vision-4] [INFO] [1775663557.071300381] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663557.072173606] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663557.073038341] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:37] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:38] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663558.538996816] [scene_static_node]: Planning scene service not available, waiting...
+[scene_from_vision-4] [INFO] [1775663559.470185689] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:39] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663559.533173908] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663559.534337750] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663559.535458857] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663559.536524336] [scene_from_vision_node]: /apply_planning_scene is not ready; published vision object update on /planning_scene only.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:40] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663560.542768053] [scene_static_node]: Planning scene service not available, waiting...
+[scene_from_vision-4] [INFO] [1775663561.475966911] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:41] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663561.541182363] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663561.543937694] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663561.546272419] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:42] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663562.545957973] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:43] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663563.970879623] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663564.034804404] [scene_from_vision_node]: Could not lookup current camera viewpoint wrist_mounted_camera_color_optical_frame->base_link; falling back to robot-origin side-tag sign. "base_link" passed to lookupTransform argument target_frame does not exist. 
+[scene_from_vision-4] [INFO] [1775663564.040194060] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663564.045166812] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663564.051850064] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:44] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663564.549123530] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:45] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663565.970801525] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663566.032895791] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663566.034087559] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663566.035208021] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663566.036397380] [scene_from_vision_node]: /apply_planning_scene is not ready; published vision object update on /planning_scene only.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:46] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663566.553084237] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:47] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663567.976193903] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663568.034292363] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663568.036181170] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663568.037756784] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:48] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663568.557100913] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:49] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663570.470577687] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663570.533338014] [scene_from_vision_node]: Could not lookup current camera viewpoint wrist_mounted_camera_color_optical_frame->base_link; falling back to robot-origin side-tag sign. "base_link" passed to lookupTransform argument target_frame does not exist. 
+[scene_from_vision-4] [INFO] [1775663570.535869070] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663570.537850823] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663570.539465991] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_static-1] [WARN] [1775663570.559612782] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:50] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:51] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663572.470512534] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663572.534097712] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663572.538916961] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663572.543384540] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663572.549258619] [scene_from_vision_node]: /apply_planning_scene is not ready; published vision object update on /planning_scene only.
+[scene_static-1] [WARN] [1775663572.563156957] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:52] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:53] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663574.474274493] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663574.536675360] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663574.538345519] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663574.539977370] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_static-1] [WARN] [1775663574.566179052] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:54] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:55] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663576.568407289] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:56] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663576.970255174] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663577.034018570] [scene_from_vision_node]: Could not lookup current camera viewpoint wrist_mounted_camera_color_optical_frame->base_link; falling back to robot-origin side-tag sign. "base_link" passed to lookupTransform argument target_frame does not exist. 
+[scene_from_vision-4] [INFO] [1775663577.035249284] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663577.036701575] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663577.038361514] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:57] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663578.570230493] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:58] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663579.469949575] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663579.531506915] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663579.532752020] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663579.534187610] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663579.535292862] [scene_from_vision_node]: /apply_planning_scene is not ready; published vision object update on /planning_scene only.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:52:59] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663580.572198827] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:00] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663581.470554398] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663581.534837276] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663581.537540792] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663581.539638923] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:01] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663582.577691620] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:02] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663583.473317440] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663583.567220524] [scene_from_vision_node]: Could not lookup current camera viewpoint wrist_mounted_camera_color_optical_frame->base_link; falling back to robot-origin side-tag sign. "base_link" passed to lookupTransform argument target_frame does not exist. 
+[scene_from_vision-4] [INFO] [1775663583.568111366] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663583.569216972] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663583.570354239] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:03] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663584.580209510] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:04] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663585.476026370] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663585.529557034] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663585.530818470] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663585.531876198] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663585.532910204] [scene_from_vision_node]: /apply_planning_scene is not ready; published vision object update on /planning_scene only.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:05] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663586.582542824] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:06] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:07] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663587.977007793] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663588.054750209] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663588.056211685] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663588.057506806] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_static-1] [WARN] [1775663588.586905245] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:08] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:09] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663589.976765173] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663590.061051909] [scene_from_vision_node]: Could not lookup current camera viewpoint wrist_mounted_camera_color_optical_frame->base_link; falling back to robot-origin side-tag sign. "base_link" passed to lookupTransform argument target_frame does not exist. 
+[scene_from_vision-4] [INFO] [1775663590.061949880] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663590.062894761] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663590.063862939] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_static-1] [WARN] [1775663590.589337004] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:10] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:11] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663592.470060801] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663592.532458623] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663592.533983043] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663592.535448887] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663592.536872096] [scene_from_vision_node]: /apply_planning_scene is not ready; published vision object update on /planning_scene only.
+[scene_static-1] [WARN] [1775663592.591805643] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:12] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:13] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663594.470454880] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663594.534081645] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663594.536634393] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663594.540445941] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_static-1] [WARN] [1775663594.595895247] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:14] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:15] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663596.471956820] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663596.534535356] [scene_from_vision_node]: Could not lookup current camera viewpoint wrist_mounted_camera_color_optical_frame->base_link; falling back to robot-origin side-tag sign. "base_link" passed to lookupTransform argument target_frame does not exist. 
+[scene_from_vision-4] [INFO] [1775663596.536513021] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663596.538646647] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663596.541303389] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_static-1] [WARN] [1775663596.601774511] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:16] "GET /status_json HTTP/1.1" 200 -
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:17] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663598.606311605] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:18] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663598.977455364] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663599.046285797] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663599.051664036] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663599.056403349] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663599.059761930] [scene_from_vision_node]: /apply_planning_scene is not ready; published vision object update on /planning_scene only.
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:19] "GET /status_json HTTP/1.1" 200 -
+[scene_static-1] [WARN] [1775663600.608903701] [scene_static_node]: Planning scene service not available, waiting...
+[adl_ui-9] 127.0.0.1 - - [08/Apr/2026 11:53:20] "GET /status_json HTTP/1.1" 200 -
+[scene_from_vision-4] [INFO] [1775663601.475393356] [scene_from_vision_node]: Published obj_0 (heartbeat) at x=0.300, y=0.060, z=-0.332, yaw=+0.0deg
+[scene_from_vision-4] [WARN] [1775663601.563389361] [scene_from_vision_node]: Could not lookup current camera viewpoint wrist_mounted_camera_color_optical_frame->base_link; falling back to robot-origin side-tag sign. "base_link" passed to lookupTransform argument target_frame does not exist. 
+[scene_from_vision-4] [INFO] [1775663601.564234634] [scene_from_vision_node]: Published obj_2 (heartbeat) at x=0.656, y=-0.140, z=0.141, yaw=+180.0deg
+[scene_from_vision-4] [INFO] [1775663601.565059562] [scene_from_vision_node]: Published obj_3 (heartbeat) at x=0.681, y=-0.156, z=0.099, yaw=+0.0deg
+[scene_from_vision-4] [INFO] [1775663601.565890987] [scene_from_vision_node]: Published obj_4 (heartbeat) at x=0.501, y=-0.112, z=0.117, yaw=+0.0deg

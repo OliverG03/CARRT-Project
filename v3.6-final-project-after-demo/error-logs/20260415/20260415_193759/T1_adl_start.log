@@ -1,0 +1,854 @@
+
+===== 2026-04-15T19:37:59-04:00 | T1_adl_start =====
+cwd=/home/carrt-cse-project/workspace/ros2_kortex_ws
+cmd=ros2 launch adl_tasks adl_start.launch.py start_arm:=true arm_robot_ip:=192.168.0.10 arm_use_fake_hardware:=false arm_use_joint_state_sanitizer:=true use_stub:=false start_usb_camera_publisher:=true clear_table_top_only_scan:=true launch_ui:=true 
+
+[INFO] [launch]: All log files can be found below /home/carrt-cse-project/.ros/log/2026-04-15-19-37-59-785529-carrt-cse-project-OptiPlex-5050-86565
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [launch.user]: [arm_start.launch] MoveIt current state source: /joint_states_sanitized. Use use_joint_state_sanitizer:=false for raw-state viewer debugging.
+[INFO] [launch.user]: [arm_start.launch] Using ADL controller config (share/adl_tasks/config/ros2_controllers_vbox.yaml, update_rate:=1000 Hz).
+[INFO] [ros2_control_node-1]: process started with pid [86569]
+[INFO] [robot_state_publisher-2]: process started with pid [86570]
+[INFO] [joint_state_sanitizer-3]: process started with pid [86571]
+[INFO] [spawner-4]: process started with pid [86572]
+[INFO] [static_transform_publisher-5]: process started with pid [86573]
+[INFO] [static_transform_publisher-6]: process started with pid [86574]
+[INFO] [scene_static-7]: process started with pid [86575]
+[INFO] [wrist_camera_usb_publisher-8]: process started with pid [86576]
+[INFO] [vision_apriltag-9]: process started with pid [86577]
+[INFO] [scene_from_vision-10]: process started with pid [86578]
+[INFO] [adl_controller-11]: process started with pid [86579]
+[INFO] [pick_dropped_bottle-12]: process started with pid [86580]
+[INFO] [clear_table-13]: process started with pid [86581]
+[INFO] [give_medication-14]: process started with pid [86584]
+[INFO] [adl_ui-15]: process started with pid [86585]
+[robot_state_publisher-2] [INFO] [1776296280.232641684] [robot_state_publisher]: Robot initialized
+[static_transform_publisher-6] [INFO] [1776296280.280904154] [camera_color_optical_bridge_tf_pub]: Spinning until stopped - publishing transform
+[static_transform_publisher-6] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-6] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-6] from 'camera_color_frame' to 'wrist_mounted_camera_color_optical_frame'
+[static_transform_publisher-5] [INFO] [1776296280.285118836] [static_transform_publisher]: Spinning until stopped - publishing transform
+[static_transform_publisher-5] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-5] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-5] from 'world' to 'base_link'
+[ros2_control_node-1] [INFO] [1776296280.336344689] [controller_manager]: Using Steady (Monotonic) clock for triggering controller manager cycles.
+[ros2_control_node-1] [INFO] [1776296280.355351166] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
+[ros2_control_node-1] [INFO] [1776296280.364278400] [controller_manager]: update rate is 1000 Hz
+[ros2_control_node-1] [INFO] [1776296280.365856524] [controller_manager]: Overruns handling is : enabled
+[ros2_control_node-1] [INFO] [1776296280.365888299] [controller_manager]: Spawning controller_manager RT thread with scheduler priority: 50
+[ros2_control_node-1] [INFO] [1776296280.367629469] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [INFO] [1776296280.367838621] [controller_manager]: Successful set up FIFO RT scheduling policy with priority 50.
+[ros2_control_node-1] [INFO] [1776296280.370010117] [controller_manager]: Enforcing command limits is disabled. Command limits from URDF will be ignored.
+[ros2_control_node-1] [INFO] [1776296280.391062339] [controller_manager]: Loading hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1776296280.430333108] [KortexMultiInterfaceHardware]: Setting severity threshold to DEBUG
+[ros2_control_node-1] [INFO] [1776296280.430397767] [controller_manager]: Loaded hardware 'KortexMultiInterfaceHardware' from plugin 'kortex_driver/KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1776296280.431850344] [controller_manager]: Initialize hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1776296280.461645810] [KortexMultiInterfaceHardware]: Configuring Hardware Interface
+[ros2_control_node-1] [INFO] [1776296280.462470148] [KortexMultiInterfaceHardware]: Robot ip is '192.168.0.10'
+[ros2_control_node-1] [INFO] [1776296280.462483792] [KortexMultiInterfaceHardware]: Username is 'admin'
+[ros2_control_node-1] [INFO] [1776296280.462497350] [KortexMultiInterfaceHardware]: Port used '10000'
+[ros2_control_node-1] [INFO] [1776296280.462503286] [KortexMultiInterfaceHardware]: Realtime port used '10001'
+[ros2_control_node-1] [INFO] [1776296280.462508518] [KortexMultiInterfaceHardware]: Session inactivity timeout is '60000'
+[ros2_control_node-1] [INFO] [1776296280.462514250] [KortexMultiInterfaceHardware]: Connection inactivity timeout is '2000'
+[ros2_control_node-1] [INFO] [1776296280.462521178] [KortexMultiInterfaceHardware]: Gripper joint name is 'robotiq_85_left_knuckle_joint'
+[ros2_control_node-1] [INFO] [1776296280.462554580] [KortexMultiInterfaceHardware]: Connecting to robot at 192.168.0.10
+[ros2_control_node-1] [INFO] [1776296280.471920983] [KortexMultiInterfaceHardware]: Creating session for communication
+[ros2_control_node-1] [INFO] [1776296280.948204874] [KortexMultiInterfaceHardware]: Session created
+[spawner-4] [INFO] [1776296281.134677570] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[joint_state_sanitizer-3] [INFO] [1776296281.615116491] [joint_state_sanitizer_node]: joint_state_sanitizer started. raw=/joint_states -> sanitized=/joint_states_sanitized
+[ros2_control_node-1] [INFO] [1776296281.748102305] [KortexMultiInterfaceHardware]: Actuator count reported by robot is '7'
+[ros2_control_node-1] [INFO] [1776296281.748343591] [KortexMultiInterfaceHardware]: Using internal bus communication for gripper!
+[ros2_control_node-1] [INFO] [1776296281.748353626] [KortexMultiInterfaceHardware]: Hardware Interface successfully configured
+[ros2_control_node-1] [INFO] [1776296281.748444642] [controller_manager]: Successful initialization of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [DEBUG] [1776296281.748513490] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_1
+[ros2_control_node-1] [DEBUG] [1776296281.748542380] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_2
+[ros2_control_node-1] [DEBUG] [1776296281.748548220] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_3
+[ros2_control_node-1] [DEBUG] [1776296281.748552720] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_4
+[ros2_control_node-1] [DEBUG] [1776296281.748556790] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_5
+[ros2_control_node-1] [DEBUG] [1776296281.748561094] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_6
+[ros2_control_node-1] [DEBUG] [1776296281.748564735] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: joint_7
+[ros2_control_node-1] [DEBUG] [1776296281.748568023] [KortexMultiInterfaceHardware]: export_state_interfaces for joint: robotiq_85_left_knuckle_joint
+[ros2_control_node-1] [INFO] [1776296281.750477983] [resource_manager]: 'configure' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1776296281.750521626] [resource_manager]: Successful 'configure' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1776296281.750912325] [resource_manager]: 'activate' hardware 'KortexMultiInterfaceHardware' 
+[ros2_control_node-1] [INFO] [1776296281.750945024] [KortexMultiInterfaceHardware]: Activating KortexMultiInterfaceHardware...
+[ros2_control_node-1] [INFO] [1776296281.757189913] [KortexMultiInterfaceHardware]: Gripper initial position is '14.410482'.
+[ros2_control_node-1] [INFO] [1776296281.761899286] [KortexMultiInterfaceHardware]: KortexMultiInterfaceHardware successfully activated!
+[ros2_control_node-1] [INFO] [1776296281.761958972] [resource_manager]: Successful 'activate' of hardware 'KortexMultiInterfaceHardware'
+[ros2_control_node-1] [INFO] [1776296281.762242471] [controller_manager]: Registering statistics for : KortexMultiInterfaceHardware
+[ros2_control_node-1] [INFO] [1776296281.762444098] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[ros2_control_node-1] [WARN] [1776296281.777459120] [controller_manager]: Overrun might occur, Total time : 14342.843 us (Expected < 1000.000 us) --> Read time : 7670.640 us, Update time : 36.875 us, Write time : 6635.328 us
+[ros2_control_node-1] [WARN] [1776296281.777548804] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 14.466563 ms (missed cycles : 15).
+[adl_ui-15] [INFO] [1776296281.898582113] [adl_ui_node]: ADL UI Node started.
+[adl_ui-15] [INFO] [1776296281.899314295] [adl_ui_node]: Automatic retract on UI load is disabled; startup sends no motion.
+[adl_ui-15]  * Serving Flask app 'adl_tasks.adl_ui'
+[adl_ui-15]  * Debug mode: off
+[scene_static-7] [INFO] [1776296281.902581156] [scene_static_node]: Static Scene Node started.
+[adl_ui-15] [INFO] [1776296281.904352994] [adl_ui_node]: Web UI available at http://localhost:5000
+[adl_ui-15] Address already in use
+[adl_ui-15] Port 5000 is in use by another program. Either identify and stop that program, or start the server with a different port.
+[scene_static-7] [INFO] [1776296281.905835837] [scene_static_node]: WHEELCHAIR_BASE_HEIGHT = 0.36195m  |  Table surface at z = 0.088m | Table front-edge-from-base = 0.406m | Table center at x = 0.681m | table_edge_lip_margin=0.0127m | table_edge_lip_thickness=0.0127m | table_edge_lip_height=0.450m | include_wheelchair_wall=True | include_left_desk_wall=True | include_right_desk_wall=True | include_arm_base_under_block=True
+[scene_static-7] [INFO] [1776296281.909015149] [scene_static_node]: Wheelchair wall geometry: center=(-0.465, 0.000, 0.482) size=(0.450, 0.700, 1.688)
+[scene_static-7] [INFO] [1776296281.910160632] [scene_static_node]: Arm-base under-block geometry: center=(0.000, 0.000, -0.212) size=(0.302, 0.378, 0.300) | platform=(0.200, 0.200) | margins(front/back=0.051, left/right=0.089)
+[vision_apriltag-9] [INFO] [1776296282.146500296] [vision_apriltag_node]: Vision AprilTag Node Started
+[vision_apriltag-9] [INFO] [1776296282.147698294] [vision_apriltag_node]: Subscribing to camera topic: /wrist_mounted_camera/image
+[vision_apriltag-9] [INFO] [1776296282.148840490] [vision_apriltag_node]: Subscribing to camera info topic: /wrist_mounted_camera/camera_info
+[vision_apriltag-9] [INFO] [1776296282.150020452] [vision_apriltag_node]: Camera frame: wrist_mounted_camera_color_optical_frame | use_image_header_frame=True
+[vision_apriltag-9] [INFO] [1776296282.151817162] [vision_apriltag_node]: Tag size: 0.025m | pose_cache_retention_s=20.0 | get_pose_wait_timeout_s=5.0 | max_returned_pose_age_s=20.0 | camera_params=[554.25, 554.25, 320.0, 240.0] | families=tag36h11 | quad_decimate=1.0 | requested_backend=opencv | backend=cv2.aruco | opencv_pose_solver=ippe_square | use_image_timestamp_for_tf=False
+[vision_apriltag-9] [INFO] [1776296282.153090625] [vision_apriltag_node]: Top-tag known-plane projection: enabled=True, planes={3: 0.10995, 4: 0.15155}
+[vision_apriltag-9] [INFO] [1776296282.154514660] [vision_apriltag_node]: pupil_apriltags tuning: nthreads=1, quad_sigma=0.0, refine_edges=1, decode_sharpening=0.25, debug=0, preprocess_variants=['raw', 'clahe', 'adaptive', 'clahe_sharp', 'clahe_up2', 'sharp_up2'], tile_search_if_empty=True, tile_search_grid=3x2, tile_search_scale=2.0, tile_search_overlap=0.25
+[vision_apriltag-9] [WARN] [1776296282.156106620] [vision_apriltag_node]: pupil_apriltags is not importable by this node, so detection is using OpenCV fallback only. python=/usr/bin/python3, import_error=No module named 'pupil_apriltags'. If .venv contains pupil_apriltags, rebuild adl_tasks with that venv active or run the module with the venv Python.
+[vision_apriltag-9] [INFO] [1776296282.157549718] [vision_apriltag_node]: Publishing AprilTag debug images on /vision_apriltag/debug_image at up to 1.0 Hz.
+[scene_from_vision-10] [INFO] [1776296282.184119622] [scene_from_vision_node]: Scene From Vision Node Started
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.230558415] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.171] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.237342901] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.177] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.240860218] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.181] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.242830700] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.184] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.246181357] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.187] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.249123642] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.189] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296282.252180339] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.214] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src0 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.214] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@1.214] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@1.214] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[scene_from_vision-10] [INFO] [1776296282.274887789] [scene_from_vision_node]: SceneFromVision: Updating planning scene. Tracking 5 object shape(s). memory_mode=True, scan_duration_s=5.0, scan_min_samples=3, scan_target_samples=8, scan_extend_step_s=1.5, scan_max_extensions=2, scan_prune_unseen_objects=False, continuous_scene_updates=False, latch_first_detection_updates=True, log_object_pose_debug=False, apply_planning_scene_service_updates=True, publish_monitored_planning_scene_updates=True, side_viewpoint=wrist_mounted_camera_color_optical_frame->base_link, reject_table_objects_outside_bounds=False.
+[scene_from_vision-10] [INFO] [1776296282.277573527] [scene_from_vision_node]: SceneFromVision calibration: xy_offset=(0.040, -0.056), z_offset=0.000, yaw_deg=0.00, xy_scale=1.0000, clamp_table_objects_to_table_bounds=False, table_bounds_margin_m=0.030.
+[scene_from_vision-10] [INFO] [1776296282.280324866] [scene_from_vision_node]: SceneFromVision object offsets: remote_axis=y, remote_tag_to_center_sign=-1.0, remote_tag_from_end_m=0.020, remote_world_offset=(-0.040, 0.000), cube_tag_to_center=(0.000, 0.000), cube_world_offset=(-0.020, 0.000), cube_yaw_offset_deg=0.0, medication_world_offset=(-0.160, 0.055), medication_face_to_center_m=0.030, cup_world_offset=(-0.140, 0.055), cup_face_to_center_m=0.037.
+[clear_table-13] [INFO] [1776296282.281719166] [clear_table_node]: Clear Table Node Started
+[clear_table-13] [INFO] [1776296282.405312040] [clear_table_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True) real_hardware_mode=True short_cartesian_mode=hybrid
+[clear_table-13] [INFO] [1776296282.407124109] [clear_table_node]: ADL_DIRECT_FIXED_JOINTS is unset; defaulting fixed-joint direct trajectories to disabled on real hardware (collision-aware MoveIt path first).
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.420820949] [wrist_camera_usb_publisher_node]: Wrist Camera USB Publisher started.
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.423758537] [wrist_camera_usb_publisher_node]: Publishing USB camera frames on /wrist_mounted_camera/image with frame_id=wrist_mounted_camera_color_optical_frame.
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.425972374] [wrist_camera_usb_publisher_node]: Publishing camera info on /wrist_mounted_camera/camera_info from reference intrinsics [554.25, 554.25, 320.0, 240.0] @ 640x480.
+[clear_table-13] [INFO] [1776296282.426392261] [clear_table_node]: Vision Client initialized, waiting for service...
+[clear_table-13] [INFO] [1776296282.427192663] [clear_table_node]: Vision service is ready.
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.428170038] [wrist_camera_usb_publisher_node]: Using explicit camera_matrix for CameraInfo. matrix_size=1280x720, K=[920.874267578125, 0.0, 644.7646484375, 0.0, 921.5654907226562, 343.1528625488281, 0.0, 0.0, 1.0], d=[0.0, 0.0, 0.0, 0.0, 0.0]
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.430657032] [wrist_camera_usb_publisher_node]: Requested source=2 size=1280x720 fps=10.0
+[wrist_camera_usb_publisher-8] [ERROR] [1776296282.432942470] [wrist_camera_usb_publisher_node]: USB camera publisher could not open any camera source. Check VirtualBox USB pass-through and the selected /dev/videoX.
+[clear_table-13] [INFO] [1776296282.442066059] [clear_table_node]: Clear Table Node ready. Waiting for command.
+[clear_table-13] [INFO] [1776296282.442731701] [clear_table_node]: Startup motion disabled at node load; motion begins only after clear_table command.
+[wrist_camera_usb_publisher-8] [WARN] [1776296282.520255103] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.521971382] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.462] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.522535962] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.462] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.523396891] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.463] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.524128033] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.464] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.525149288] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.465] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296282.525929166] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.466] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296282.526704718] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.471] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src1 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@1.471] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@1.471] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@1.471] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296282.600537146] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[give_medication-14] [INFO] [1776296282.602137142] [give_medication_node]: give_medication starting...
+[give_medication-14] [INFO] [1776296282.708457777] [give_medication_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True) real_hardware_mode=True short_cartesian_mode=hybrid
+[give_medication-14] [INFO] [1776296282.709556952] [give_medication_node]: ADL_DIRECT_FIXED_JOINTS is unset; defaulting fixed-joint direct trajectories to disabled on real hardware (collision-aware MoveIt path first).
+[give_medication-14] [INFO] [1776296282.735247290] [give_medication_node]: Vision Client initialized, waiting for service...
+[give_medication-14] [INFO] [1776296282.736418593] [give_medication_node]: Vision service is ready.
+[give_medication-14] [INFO] [1776296282.749670061] [give_medication_node]: give_medication ready.
+[ros2_control_node-1] [WARN] [1776296282.779838331] [controller_manager]: Overrun might occur, Total time : 3728.730 us (Expected < 1000.000 us) --> Read time : 40.697 us, Update time : 27.681 us, Write time : 3660.352 us
+[ros2_control_node-1] [WARN] [1776296282.779927219] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.845251 ms (missed cycles : 4).
+[pick_dropped_bottle-12] [INFO] [1776296282.843582028] [pick_dropped_bottle_node]: PickDroppedBottle starting...
+[adl_controller-11] [INFO] [1776296282.848057482] [adl_controller_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True) real_hardware_mode=True short_cartesian_mode=hybrid
+[adl_controller-11] [INFO] [1776296282.849143900] [adl_controller_node]: ADL_DIRECT_FIXED_JOINTS is unset; defaulting fixed-joint direct trajectories to disabled on real hardware (collision-aware MoveIt path first).
+[adl_controller-11] [INFO] [1776296282.859079959] [adl_controller_node]: ADL controller ready. Waiting for UI/system commands.
+[pick_dropped_bottle-12] [INFO] [1776296282.930752103] [pick_dropped_bottle_node]: MoveItHelper initialized. joint_state_topic=/joint_states_sanitized (sanitized_expected=True) real_hardware_mode=True short_cartesian_mode=hybrid
+[pick_dropped_bottle-12] [INFO] [1776296282.931728963] [pick_dropped_bottle_node]: ADL_DIRECT_FIXED_JOINTS is unset; defaulting fixed-joint direct trajectories to disabled on real hardware (collision-aware MoveIt path first).
+[pick_dropped_bottle-12] [INFO] [1776296282.945039547] [pick_dropped_bottle_node]: Vision Client initialized, waiting for service...
+[pick_dropped_bottle-12] [INFO] [1776296283.446326860] [pick_dropped_bottle_node]: Vision service is ready.
+[pick_dropped_bottle-12] [INFO] [1776296283.454733235] [pick_dropped_bottle_node]: PickDroppedBottle ready. Waiting for command.
+[pick_dropped_bottle-12] [INFO] [1776296283.455420731] [pick_dropped_bottle_node]: Startup motion disabled at node load; motion begins only after pick_dropped_bottle command.
+[ros2_control_node-1] [WARN] [1776296283.782448393] [controller_manager]: Overrun might occur, Total time : 3346.625 us (Expected < 1000.000 us) --> Read time : 41.804 us, Update time : 22.680 us, Write time : 3282.141 us
+[ros2_control_node-1] [WARN] [1776296283.782531985] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.450734 ms (missed cycles : 4).
+[scene_static-7] [WARN] [1776296284.084185768] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-9] [WARN] [1776296284.097752816] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [INFO] [1776296284.393763165] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[ros2_control_node-1] [INFO] [1776296284.393838180] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1776296284.406237845] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_5z2ndwch 
+[spawner-4] [INFO] [1776296284.439613954] [spawner_joint_state_broadcaster]: Loaded joint_state_broadcaster
+[ros2_control_node-1] [INFO] [1776296284.442593719] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[ros2_control_node-1] [INFO] [1776296284.442876580] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[ros2_control_node-1] [INFO] [1776296284.460137760] [controller_manager]: Activating controllers: [ joint_state_broadcaster ]
+[ros2_control_node-1] [INFO] [1776296284.469865414] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1776296284.470476003] [controller_manager]: Overrun might occur, Total time : 5356.836 us (Expected < 1000.000 us) --> Read time : 72.329 us, Update time : 1678.394 us (Switch time : 1629.969 us (Switch chained mode time : 4.680 us, perform mode change time : 5.831 us, Activation time : 1605.006 us, Deactivation time : 2.373 us)), Write time : 3606.113 us
+[spawner-4] [INFO] [1776296284.480803255] [spawner_joint_state_broadcaster]: Configured and activated joint_state_broadcaster
+[wrist_camera_usb_publisher-8] [WARN] [1776296284.521765082] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296284.522884949] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@3.463] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296284.523691064] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@3.464] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296284.525627649] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@3.466] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296284.526362605] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@3.466] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296284.527330032] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@3.467] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296284.528078265] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@3.468] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296284.529146642] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@3.477] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src2 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@3.478] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@3.478] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@3.478] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296284.628073708] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[INFO] [spawner-4]: process has finished cleanly [pid 86572]
+[ros2_control_node-1] [WARN] [1776296284.784250700] [controller_manager]: Overrun might occur, Total time : 3135.866 us (Expected < 1000.000 us) --> Read time : 34.119 us, Update time : 78.269 us, Write time : 3023.478 us
+[ros2_control_node-1] [WARN] [1776296284.784323496] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.241537 ms (missed cycles : 4).
+[INFO] [spawner-16]: process started with pid [86832]
+[INFO] [spawner-17]: process started with pid [86833]
+[INFO] [spawner-18]: process started with pid [86834]
+[INFO] [spawner-19]: process started with pid [86835]
+[ros2_control_node-1] [WARN] [1776296285.785649673] [controller_manager]: Overrun might occur, Total time : 2542.148 us (Expected < 1000.000 us) --> Read time : 34.438 us, Update time : 101.059 us, Write time : 2406.651 us
+[ros2_control_node-1] [WARN] [1776296285.785725159] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.642411 ms (missed cycles : 3).
+[spawner-17] [INFO] [1776296285.902106690] [spawner_twist_controller]: waiting for service /controller_manager/list_controllers to become available...
+[scene_static-7] [WARN] [1776296286.090023465] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-9] [WARN] [1776296286.099240093] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[wrist_camera_usb_publisher-8] [WARN] [1776296286.620046449] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296286.620586277] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@5.561] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296286.621237948] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@5.561] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296286.621865881] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@5.562] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296286.622576734] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@5.563] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296286.623338038] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@5.563] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296286.624279389] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@5.564] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296286.625377237] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@5.571] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src3 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@5.571] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@5.571] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@5.571] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296286.718097066] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [WARN] [1776296286.787882461] [controller_manager]: Overrun might occur, Total time : 2776.956 us (Expected < 1000.000 us) --> Read time : 36.852 us, Update time : 87.149 us, Write time : 2652.955 us
+[ros2_control_node-1] [WARN] [1776296286.787955028] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.873356 ms (missed cycles : 3).
+[ros2_control_node-1] [INFO] [1776296287.416646274] [controller_manager]: Loading controller : 'twist_controller' of type 'picknik_twist_controller/PicknikTwistController'
+[ros2_control_node-1] [INFO] [1776296287.416688030] [controller_manager]: Loading controller 'twist_controller'
+[ros2_control_node-1] [INFO] [1776296287.427117294] [controller_manager]: Controller 'twist_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_5z2ndwch 
+[spawner-17] [INFO] [1776296287.492667055] [spawner_twist_controller]: Loaded twist_controller
+[ros2_control_node-1] [INFO] [1776296287.497582639] [controller_manager]: Configuring controller: 'twist_controller'
+[ros2_control_node-1] [INFO] [1776296287.505167350] [twist_controller]: configure successful
+[spawner-16] [INFO] [1776296287.669763288] [spawner_joint_trajectory_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-17]: process has finished cleanly [pid 86833]
+[ros2_control_node-1] [WARN] [1776296287.788963338] [controller_manager]: Overrun might occur, Total time : 1863.714 us (Expected < 1000.000 us) --> Read time : 30.552 us, Update time : 85.050 us, Write time : 1748.112 us
+[ros2_control_node-1] [WARN] [1776296287.789043570] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 1.961806 ms (missed cycles : 2).
+[scene_static-7] [WARN] [1776296288.096009514] [scene_static_node]: Planning scene service not available, waiting...
+[vision_apriltag-9] [WARN] [1776296288.099175981] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[wrist_camera_usb_publisher-8] [WARN] [1776296288.722766973] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296288.723551511] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@7.663] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296288.724403903] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@7.664] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296288.735355656] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@7.675] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296288.736347279] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@7.676] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296288.737087667] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@7.677] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296288.747018728] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@7.687] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296288.748115984] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@7.706] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src4 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@7.706] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@7.706] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@7.706] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[ros2_control_node-1] [WARN] [1776296288.789220198] [controller_manager]: Overrun might occur, Total time : 2115.592 us (Expected < 1000.000 us) --> Read time : 35.273 us, Update time : 88.222 us, Write time : 1992.097 us
+[ros2_control_node-1] [WARN] [1776296288.789305226] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.223292 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [ERROR] [1776296288.865639275] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [WARN] [1776296289.791944686] [controller_manager]: Overrun might occur, Total time : 2837.153 us (Expected < 1000.000 us) --> Read time : 43.668 us, Update time : 93.363 us, Write time : 2700.122 us
+[ros2_control_node-1] [WARN] [1776296289.792007085] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.925351 ms (missed cycles : 3).
+[vision_apriltag-9] [WARN] [1776296290.099453069] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[scene_static-7] [WARN] [1776296290.099606228] [scene_static_node]: Planning scene service not available, waiting...
+[ros2_control_node-1] [WARN] [1776296290.794691427] [controller_manager]: Overrun might occur, Total time : 2585.868 us (Expected < 1000.000 us) --> Read time : 36.051 us, Update time : 81.869 us, Write time : 2467.948 us
+[ros2_control_node-1] [WARN] [1776296290.794764397] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.682542 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [WARN] [1776296290.820177302] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296290.820989570] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@9.761] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296290.821775435] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@9.762] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296290.822536325] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@9.763] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296290.823389747] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@9.763] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296290.824160512] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@9.764] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296290.824895329] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@9.765] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296290.825866918] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@9.769] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src5 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@9.770] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@9.770] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@9.770] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296290.891201568] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [INFO] [1776296291.428928647] [controller_manager]: Loading controller : 'joint_trajectory_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[ros2_control_node-1] [INFO] [1776296291.428965580] [controller_manager]: Loading controller 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1776296291.436096788] [controller_manager]: Controller 'joint_trajectory_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_5z2ndwch 
+[spawner-16] [INFO] [1776296291.476369799] [spawner_joint_trajectory_controller]: Loaded joint_trajectory_controller
+[ros2_control_node-1] [INFO] [1776296291.479047391] [controller_manager]: Configuring controller: 'joint_trajectory_controller'
+[ros2_control_node-1] [INFO] [1776296291.480405838] [joint_trajectory_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[ros2_control_node-1] [INFO] [1776296291.481363001] [joint_trajectory_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[ros2_control_node-1] [INFO] [1776296291.481601543] [joint_trajectory_controller]: Using 'splines' interpolation method.
+[ros2_control_node-1] [INFO] [1776296291.489864830] [joint_trajectory_controller]: Action status changes will be monitored at 10.00 Hz.
+[ros2_control_node-1] [INFO] [1776296291.511336100] [controller_manager]: Activating controllers: [ joint_trajectory_controller ]
+[ros2_control_node-1] [INFO] [1776296291.727811586] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1776296291.730323720] [controller_manager]: Overrun might occur, Total time : 16212.355 us (Expected < 1000.000 us) --> Read time : 44.922 us, Update time : 13629.510 us (Switch time : 13524.920 us (Switch chained mode time : 4.398 us, perform mode change time : 11958.551 us, Activation time : 1550.996 us, Deactivation time : 1.253 us)), Write time : 2537.923 us
+[spawner-16] [INFO] [1776296291.733607689] [spawner_joint_trajectory_controller]: Configured and activated joint_trajectory_controller
+[ros2_control_node-1] [WARN] [1776296291.795401147] [controller_manager]: Overrun might occur, Total time : 3290.923 us (Expected < 1000.000 us) --> Read time : 44.704 us, Update time : 203.207 us, Write time : 3043.012 us
+[ros2_control_node-1] [WARN] [1776296291.795477239] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.395075 ms (missed cycles : 4).
+[spawner-19] [INFO] [1776296291.887038678] [spawner_fault_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-16]: process has finished cleanly [pid 86832]
+[vision_apriltag-9] [WARN] [1776296292.100284253] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[scene_static-7] [WARN] [1776296292.101797057] [scene_static_node]: Planning scene service not available, waiting...
+[ros2_control_node-1] [INFO] [1776296292.141022896] [controller_manager]: Loading controller : 'fault_controller' of type 'picknik_reset_fault_controller/PicknikResetFaultController'
+[ros2_control_node-1] [INFO] [1776296292.141064732] [controller_manager]: Loading controller 'fault_controller'
+[ros2_control_node-1] [INFO] [1776296292.145768989] [controller_manager]: Controller 'fault_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_5z2ndwch 
+[spawner-19] [INFO] [1776296292.175565319] [spawner_fault_controller]: Loaded fault_controller
+[ros2_control_node-1] [INFO] [1776296292.178141753] [controller_manager]: Configuring controller: 'fault_controller'
+[ros2_control_node-1] [INFO] [1776296292.181475489] [controller_manager]: Activating controllers: [ fault_controller ]
+[ros2_control_node-1] [INFO] [1776296292.389243224] [controller_manager]: Successfully switched controllers!
+[spawner-19] [INFO] [1776296292.394643508] [spawner_fault_controller]: Configured and activated fault_controller
+[spawner-18] [INFO] [1776296292.527414847] [spawner_robotiq_gripper_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-19]: process has finished cleanly [pid 86835]
+[ros2_control_node-1] [WARN] [1776296292.797415570] [controller_manager]: Overrun might occur, Total time : 2310.573 us (Expected < 1000.000 us) --> Read time : 36.611 us, Update time : 219.383 us, Write time : 2054.579 us
+[ros2_control_node-1] [WARN] [1776296292.797490353] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.407713 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [WARN] [1776296292.820074974] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296292.820865020] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@11.761] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296292.821418505] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@11.761] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296292.821991939] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@11.762] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296292.822705602] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@11.763] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296292.823426494] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@11.763] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296292.824193212] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@11.764] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296292.825207542] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@11.770] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src6 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@11.770] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@11.770] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@11.771] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296292.903172005] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [INFO] [1776296293.038345172] [controller_manager]: Loading controller : 'robotiq_gripper_controller' of type 'position_controllers/GripperActionController'
+[ros2_control_node-1] [INFO] [1776296293.038382262] [controller_manager]: Loading controller 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1776296293.048033793] [controller_manager]: Controller 'robotiq_gripper_controller' node arguments: --ros-args --params-file /home/carrt-cse-project/workspace/ros2_kortex_ws/install/adl_tasks/share/adl_tasks/config/ros2_controllers_vbox.yaml --params-file /tmp/launch_params_5z2ndwch 
+[ros2_control_node-1] [WARN] [1776296293.099506169] [robotiq_gripper_controller]: [Deprecated]: the `position_controllers/GripperActionController` and `effort_controllers::GripperActionController` controllers are replaced by 'parallel_gripper_controllers/GripperActionController' controller
+[spawner-18] [INFO] [1776296293.105647930] [spawner_robotiq_gripper_controller]: Loaded robotiq_gripper_controller
+[ros2_control_node-1] [INFO] [1776296293.108779685] [controller_manager]: Configuring controller: 'robotiq_gripper_controller'
+[ros2_control_node-1] [INFO] [1776296293.108953730] [robotiq_gripper_controller]: Action status changes will be monitored at 20.000000 Hz.
+[ros2_control_node-1] [INFO] [1776296293.115238628] [controller_manager]: Activating controllers: [ robotiq_gripper_controller ]
+[ros2_control_node-1] [INFO] [1776296293.325532511] [controller_manager]: Successfully switched controllers!
+[ros2_control_node-1] [WARN] [1776296293.327968473] [controller_manager]: Overrun might occur, Total time : 9864.643 us (Expected < 1000.000 us) --> Read time : 38.632 us, Update time : 7347.317 us (Switch time : 7077.963 us (Switch chained mode time : 1.734 us, perform mode change time : 18.284 us, Activation time : 7051.095 us, Deactivation time : 0.624 us)), Write time : 2478.694 us
+[spawner-18] [INFO] [1776296293.330435883] [spawner_robotiq_gripper_controller]: Configured and activated robotiq_gripper_controller
+[INFO] [spawner-18]: process has finished cleanly [pid 86834]
+[INFO] [move_group-20]: process started with pid [86924]
+[INFO] [rviz2-21]: process started with pid [86925]
+[move_group-20] [INFO] [1776296293.737206854] [move_group.moveit.moveit.ros.rdf_loader]: Loaded robot model in 0.0101008 seconds
+[move_group-20] [INFO] [1776296293.737345105] [move_group.moveit.moveit.core.robot_model]: Loading robot model 'gen3'...
+[move_group-20] [INFO] [1776296293.737369669] [move_group.moveit.moveit.core.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[ros2_control_node-1] [WARN] [1776296293.799869003] [controller_manager]: Overrun might occur, Total time : 2761.404 us (Expected < 1000.000 us) --> Read time : 42.487 us, Update time : 253.592 us, Write time : 2465.325 us
+[ros2_control_node-1] [WARN] [1776296293.799943787] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.861727 ms (missed cycles : 3).
+[move_group-20] [INFO] [1776296293.936025951] [move_group.moveit.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'manipulator': 1 1 1 1 1 1 1
+[vision_apriltag-9] [WARN] [1776296294.097722937] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[scene_static-7] [WARN] [1776296294.110778317] [scene_static_node]: Planning scene service not available, waiting...
+[rviz2-21] [INFO] [1776296294.139896061] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-21] [INFO] [1776296294.139988756] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-21] [INFO] [1776296294.164743521] [rviz2]: Stereo is NOT SUPPORTED
+[move_group-20] [INFO] [1776296294.525381165] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-20] [INFO] [1776296294.525550381] [move_group.moveit.moveit.ros.moveit_cpp]: Listening to 'joint_states' for joint states
+[move_group-20] [INFO] [1776296294.526888517] [move_group.moveit.moveit.ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
+[move_group-20] [INFO] [1776296294.527628529] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
+[move_group-20] [INFO] [1776296294.527661496] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopping existing planning scene publisher.
+[move_group-20] [INFO] [1776296294.527951825] [move_group.moveit.moveit.ros.planning_scene_monitor]: Stopped publishing maintained planning scene.
+[move_group-20] [INFO] [1776296294.528646824] [move_group.moveit.moveit.ros.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-20] [INFO] [1776296294.528743845] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[move_group-20] [INFO] [1776296294.531064475] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to '/planning_scene'
+[move_group-20] [INFO] [1776296294.531102351] [move_group.moveit.moveit.ros.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
+[move_group-20] [INFO] [1776296294.531648530] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'collision_object'
+[move_group-20] [INFO] [1776296294.532403337] [move_group.moveit.moveit.ros.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
+[move_group-20] [WARN] [1776296294.533281159] [move_group.moveit.moveit.ros.occupancy_map_monitor]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
+[move_group-20] [ERROR] [1776296294.533338193] [move_group.moveit.moveit.ros.occupancy_map_monitor]: No 3D sensor plugin(s) defined for octomap updates
+[ros2_control_node-1] [WARN] [1776296294.805337044] [controller_manager]: Overrun might occur, Total time : 7231.618 us (Expected < 1000.000 us) --> Read time : 39.174 us, Update time : 218.384 us, Write time : 6974.060 us
+[ros2_control_node-1] [WARN] [1776296294.805409094] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 7.327058 ms (missed cycles : 8).
+[wrist_camera_usb_publisher-8] [WARN] [1776296294.820106562] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296294.820609324] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@13.761] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296294.821381450] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@13.761] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296294.822236021] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@13.762] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296294.823073728] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@13.763] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296294.823891354] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@13.764] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296294.824379943] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@13.764] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296294.825391637] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@13.771] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src7 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@13.771] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@13.771] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@13.771] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296294.897353478] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[move_group-20] [INFO] [1776296295.002623001] [move_group.moveit.moveit.ros.planning_pipeline]: Successfully loaded planner 'OMPL'
+[move_group-20] [INFO] [1776296295.008218460] [move_group]: Try loading adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-20] [INFO] [1776296295.010577941] [move_group]: Loaded adapter 'default_planning_request_adapters/ResolveConstraintFrames'
+[move_group-20] [INFO] [1776296295.010615725] [move_group]: Try loading adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1776296295.010903118] [move_group]: Loaded adapter 'default_planning_request_adapters/ValidateWorkspaceBounds'
+[move_group-20] [INFO] [1776296295.010919274] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-20] [INFO] [1776296295.010955144] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateBounds'
+[move_group-20] [INFO] [1776296295.010965430] [move_group]: Try loading adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-20] [INFO] [1776296295.010985345] [move_group]: Loaded adapter 'default_planning_request_adapters/CheckStartStateCollision'
+[move_group-20] [INFO] [1776296295.016047621] [move_group]: Try loading adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1776296295.019568522] [move_group]: Loaded adapter 'default_planning_response_adapters/AddTimeOptimalParameterization'
+[move_group-20] [INFO] [1776296295.019604996] [move_group]: Try loading adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-20] [INFO] [1776296295.022800234] [move_group]: Loaded adapter 'default_planning_response_adapters/ValidateSolution'
+[move_group-20] [INFO] [1776296295.022834679] [move_group]: Try loading adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-20] [INFO] [1776296295.023707830] [move_group]: Loaded adapter 'default_planning_response_adapters/DisplayMotionPath'
+[move_group-20] [INFO] [1776296295.075735461] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added FollowJointTrajectory controller for joint_trajectory_controller
+[move_group-20] [INFO] [1776296295.075827844] [move_group.moveit.moveit.plugins.simple_controller_manager]: robotiq_gripper_controller will command a max effort of: 0
+[rviz2-21] Warning: class_loader.impl: SEVERE WARNING!!! A namespace collision has occurred with plugin factory for class rviz_default_plugins::displays::InteractiveMarkerDisplay. New factory will OVERWRITE existing one. This situation occurs when libraries containing plugins are directly linked against an executable (the one running right now generating this message). Please separate plugins out into their own library or just don't link against the library and use either class_loader::ClassLoader/MultiLibraryClassLoader to open.
+[rviz2-21]          at line 321 in /opt/ros/jazzy/include/class_loader/class_loader/class_loader_core.hpp
+[rviz2-21] [WARN] [1776296295.086538421] [rcl.logging_rosout]: Publisher already registered for node name: 'rviz2_moveit'. If this is due to multiple nodes with the same name then all logs for the logger named 'rviz2_moveit' will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[move_group-20] [INFO] [1776296295.129088938] [move_group.moveit.moveit.plugins.simple_controller_manager]: Added GripperCommand controller for robotiq_gripper_controller
+[move_group-20] [INFO] [1776296295.129305188] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1776296295.129349284] [move_group.moveit.moveit.plugins.simple_controller_manager]: Returned 2 controllers in list
+[move_group-20] [INFO] [1776296295.130193068] [move_group.moveit.moveit.ros.trajectory_execution_manager]: Trajectory execution is managing controllers
+[move_group-20] [INFO] [1776296295.130227371] [move_group]: MoveGroup debug mode is ON
+[move_group-20] [INFO] [1776296295.180775281] [move_group.moveit.moveit.ros.move_group.executable]: 
+[move_group-20] 
+[move_group-20] ********************************************************
+[move_group-20] * MoveGroup using: 
+[move_group-20] *     - apply_planning_scene_service
+[move_group-20] *     - clear_octomap_service
+[move_group-20] *     - get_group_urdf
+[move_group-20] *     - load_geometry_from_file
+[move_group-20] *     - CartesianPathService
+[move_group-20] *     - execute_trajectory_action
+[move_group-20] *     - get_planning_scene_service
+[move_group-20] *     - kinematics_service
+[move_group-20] *     - move_action
+[move_group-20] *     - motion_plan_service
+[move_group-20] *     - query_planners_service
+[move_group-20] *     - state_validation_service
+[move_group-20] *     - save_geometry_to_file
+[move_group-20] ********************************************************
+[move_group-20] 
+[move_group-20] [INFO] [1776296295.180853700] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context using pipeline ompl
+[move_group-20] [INFO] [1776296295.180873797] [move_group.moveit.moveit.ros.move_group.context]: MoveGroup context initialization complete
+[move_group-20] [96mLoading 'move_group/ApplyPlanningSceneService'...[0m
+[move_group-20] [96mLoading 'move_group/ClearOctomapService'...[0m
+[move_group-20] [96mLoading 'move_group/GetUrdfService'...[0m
+[move_group-20] [96mLoading 'move_group/LoadGeometryFromFileService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupCartesianPathService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupExecuteTrajectoryAction'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupGetPlanningSceneService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupKinematicsService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupMoveAction'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupPlanService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupQueryPlannersService'...[0m
+[move_group-20] [96mLoading 'move_group/MoveGroupStateValidationService'...[0m
+[move_group-20] [96mLoading 'move_group/SaveGeometryToFileService'...[0m
+[move_group-20] 
+[move_group-20] [92mYou can start planning now![0m
+[move_group-20] 
+[scene_static-7] [INFO] [1776296295.363963297] [scene_static_node]: Planning scene service available. Building static scene...
+[scene_static-7] [INFO] [1776296295.368230888] [scene_static_node]: Static scene built: 21 objects added to MoveIt planning scene.
+[ros2_control_node-1] [WARN] [1776296295.807553995] [controller_manager]: Overrun might occur, Total time : 2449.188 us (Expected < 1000.000 us) --> Read time : 35.292 us, Update time : 225.223 us, Write time : 2188.673 us
+[ros2_control_node-1] [WARN] [1776296295.807626136] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.544213 ms (missed cycles : 3).
+[ros2_control_node-1] [INFO] [1776296295.938377757] [controller_manager]: Received robot description from topic.
+[ros2_control_node-1] [WARN] [1776296295.938423823] [controller_manager]: ResourceManager has already loaded a urdf. Ignoring attempt to reload a robot description.
+[vision_apriltag-9] [WARN] [1776296296.100136666] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296296.812618027] [controller_manager]: Overrun might occur, Total time : 6504.733 us (Expected < 1000.000 us) --> Read time : 37.177 us, Update time : 237.918 us, Write time : 6229.638 us
+[ros2_control_node-1] [WARN] [1776296296.812712237] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 6.630264 ms (missed cycles : 7).
+[wrist_camera_usb_publisher-8] [WARN] [1776296296.920117984] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296296.920922781] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@15.861] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296296.921436149] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@15.861] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296296.921979408] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@15.862] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296296.922548331] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@15.862] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296296.923256865] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@15.863] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296296.924107783] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@15.864] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296296.925438042] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@15.870] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src8 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@15.870] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@15.870] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@15.870] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296296.989467064] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [WARN] [1776296297.812909419] [controller_manager]: Overrun might occur, Total time : 2811.891 us (Expected < 1000.000 us) --> Read time : 26.977 us, Update time : 233.611 us, Write time : 2551.303 us
+[ros2_control_node-1] [WARN] [1776296297.812985883] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.904344 ms (missed cycles : 3).
+[vision_apriltag-9] [WARN] [1776296298.125351981] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[rviz2-21] [ERROR] [1776296298.166439884] [rviz2_moveit.moveit.ros.motion_planning_frame]: Action server: /recognize_objects not available
+[rviz2-21] [INFO] [1776296298.201804456] [rviz2_moveit.moveit.ros.motion_planning_frame]: MoveGroup namespace changed: / -> . Reloading params.
+[rviz2-21] [INFO] [1776296298.290596168] [rviz2_moveit.moveit.ros.rdf_loader]: Loaded robot model in 0.010317 seconds
+[rviz2-21] [INFO] [1776296298.290695779] [rviz2_moveit.moveit.core.robot_model]: Loading robot model 'gen3'...
+[rviz2-21] [INFO] [1776296298.290727609] [rviz2_moveit.moveit.core.robot_model]: No root/virtual joint specified in SRDF. Assuming fixed joint
+[rviz2-21] [INFO] [1776296298.486330911] [rviz2_moveit.moveit.kinematics.kdl_kinematics_plugin]: Joint weights for group 'manipulator': 1 1 1 1 1 1 1
+[ros2_control_node-1] [WARN] [1776296298.816967305] [controller_manager]: Overrun might occur, Total time : 10856.709 us (Expected < 1000.000 us) --> Read time : 48.871 us, Update time : 242.120 us, Write time : 10565.718 us
+[ros2_control_node-1] [WARN] [1776296298.817042014] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 10.959987 ms (missed cycles : 11).
+[rviz2-21] [INFO] [1776296298.969077728] [rviz2_moveit.moveit.ros.planning_scene_monitor]: Starting planning scene monitor
+[rviz2-21] [INFO] [1776296298.970845162] [rviz2_moveit.moveit.ros.planning_scene_monitor]: Listening to '/monitored_planning_scene'
+[wrist_camera_usb_publisher-8] [WARN] [1776296299.020268154] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296299.020878154] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@17.961] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296299.021607209] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@17.962] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296299.022710428] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@17.963] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296299.023568869] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@17.964] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296299.024276002] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@17.964] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296299.024878459] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@17.965] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296299.025949052] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@17.971] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src9 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@17.972] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@17.972] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@17.972] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296299.095730454] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[rviz2-21] [INFO] [1776296299.284828731] [interactive_marker_display_110876782743872]: Connected on namespace: /rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic
+[rviz2-21] [INFO] [1776296299.292292129] [rviz2_moveit.moveit.ros.robot_interaction]: No active joints or end effectors found for group 'gripper'. Make sure that kinematics.yaml is loaded in this node's namespace.
+[rviz2-21] [INFO] [1776296299.293053227] [rviz2_moveit.moveit.ros.robot_interaction]: No active joints or end effectors found for group 'gripper'. Make sure that kinematics.yaml is loaded in this node's namespace.
+[rviz2-21] [INFO] [1776296299.305481176] [rviz2_moveit.moveit.ros.motion_planning_frame]: group gripper
+[rviz2-21] [INFO] [1776296299.305535064] [rviz2_moveit.moveit.ros.motion_planning_frame]: Constructing new MoveGroup connection for group 'gripper' in namespace ''
+[rviz2-21] [INFO] [1776296299.312629794] [interactive_marker_display_110876782743872]: Sending request for interactive markers
+[rviz2-21] [INFO] [1776296299.338414194] [rviz2_moveit.moveit.ros.move_group_interface]: Ready to take commands for planning group gripper.
+[rviz2-21] [INFO] [1776296299.341989816] [rviz2_moveit.moveit.ros.motion_planning_frame]: group gripper
+[rviz2-21] [INFO] [1776296299.346018407] [interactive_marker_display_110876782743872]: Service response received for initialization
+[ros2_control_node-1] [WARN] [1776296299.819178460] [controller_manager]: Overrun might occur, Total time : 3074.971 us (Expected < 1000.000 us) --> Read time : 42.572 us, Update time : 240.080 us, Write time : 2792.319 us
+[ros2_control_node-1] [WARN] [1776296299.819253761] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.172339 ms (missed cycles : 4).
+[vision_apriltag-9] [WARN] [1776296300.097990745] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296300.821109897] [controller_manager]: Overrun might occur, Total time : 3009.611 us (Expected < 1000.000 us) --> Read time : 27.029 us, Update time : 199.434 us, Write time : 2783.148 us
+[ros2_control_node-1] [WARN] [1776296300.821188228] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.106305 ms (missed cycles : 4).
+[wrist_camera_usb_publisher-8] [WARN] [1776296301.020504178] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296301.021326017] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@19.961] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296301.022150783] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@19.962] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296301.025633218] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@19.966] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296301.026509497] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@19.967] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296301.027726938] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@19.968] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296301.029237518] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@19.969] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296301.031797674] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@19.984] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src10 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@19.984] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@19.984] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@19.984] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296301.111644224] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [WARN] [1776296301.822097743] [controller_manager]: Overrun might occur, Total time : 2985.480 us (Expected < 1000.000 us) --> Read time : 45.973 us, Update time : 243.289 us, Write time : 2696.218 us
+[ros2_control_node-1] [WARN] [1776296301.822176700] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.094967 ms (missed cycles : 4).
+[vision_apriltag-9] [WARN] [1776296302.098170543] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296302.824781610] [controller_manager]: Overrun might occur, Total time : 2682.959 us (Expected < 1000.000 us) --> Read time : 27.364 us, Update time : 186.734 us, Write time : 2468.861 us
+[ros2_control_node-1] [WARN] [1776296302.824845706] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.764656 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [WARN] [1776296303.021019177] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296303.021723314] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@21.962] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296303.022420535] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@21.962] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296303.023135746] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@21.970] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296303.030812214] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@21.971] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296303.032342330] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@21.972] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296303.035528665] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@21.975] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296303.038541916] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@21.983] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src11 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@21.983] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@21.983] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@21.983] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296303.118975434] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [WARN] [1776296303.826528318] [controller_manager]: Overrun might occur, Total time : 2426.542 us (Expected < 1000.000 us) --> Read time : 38.352 us, Update time : 209.677 us, Write time : 2178.513 us
+[ros2_control_node-1] [WARN] [1776296303.826590936] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.509586 ms (missed cycles : 3).
+[vision_apriltag-9] [WARN] [1776296304.103865689] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296304.827010566] [controller_manager]: Overrun might occur, Total time : 2909.070 us (Expected < 1000.000 us) --> Read time : 33.670 us, Update time : 279.300 us, Write time : 2596.100 us
+[ros2_control_node-1] [WARN] [1776296304.827072880] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.991644 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [WARN] [1776296305.120818287] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296305.121621281] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@24.062] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296305.122410760] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@24.062] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296305.127312090] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@24.067] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296305.128161879] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@24.068] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296305.128918309] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@24.069] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296305.129634426] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@24.070] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296305.132806938] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@24.088] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src12 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@24.089] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@24.089] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@24.089] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296305.256825935] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [WARN] [1776296305.829909164] [controller_manager]: Overrun might occur, Total time : 2804.018 us (Expected < 1000.000 us) --> Read time : 39.041 us, Update time : 229.677 us, Write time : 2535.300 us
+[ros2_control_node-1] [WARN] [1776296305.830002899] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.920506 ms (missed cycles : 3).
+[vision_apriltag-9] [WARN] [1776296306.098384876] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296306.831586087] [controller_manager]: Overrun might occur, Total time : 2487.814 us (Expected < 1000.000 us) --> Read time : 23.660 us, Update time : 185.019 us, Write time : 2279.135 us
+[ros2_control_node-1] [WARN] [1776296306.831699774] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.617987 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [WARN] [1776296307.222735521] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296307.223495170] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@26.163] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296307.225560878] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@26.170] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296307.230984708] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@26.171] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296307.231781358] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@26.172] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296307.232565978] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@26.173] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296307.233428876] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@26.173] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296307.244714393] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@26.196] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src13 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@26.203] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@26.203] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@26.204] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296307.346921915] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [WARN] [1776296307.831980107] [controller_manager]: Overrun might occur, Total time : 2869.409 us (Expected < 1000.000 us) --> Read time : 39.955 us, Update time : 260.974 us, Write time : 2568.480 us
+[ros2_control_node-1] [WARN] [1776296307.832056124] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.974275 ms (missed cycles : 3).
+[vision_apriltag-9] [WARN] [1776296308.097747807] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296308.833043320] [controller_manager]: Overrun might occur, Total time : 2939.841 us (Expected < 1000.000 us) --> Read time : 32.080 us, Update time : 174.777 us, Write time : 2732.984 us
+[ros2_control_node-1] [WARN] [1776296308.833131660] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.037492 ms (missed cycles : 4).
+[wrist_camera_usb_publisher-8] [WARN] [1776296309.325738829] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296309.326527480] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@28.266] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296309.327285477] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@28.267] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296309.338148245] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@28.278] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296309.339023981] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@28.279] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296309.341761662] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@28.282] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296309.342580388] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@28.283] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296309.348725656] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@28.312] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src14 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@28.312] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@28.312] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@28.312] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296309.498900017] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [WARN] [1776296309.833879222] [controller_manager]: Overrun might occur, Total time : 2763.552 us (Expected < 1000.000 us) --> Read time : 24.214 us, Update time : 208.973 us, Write time : 2530.365 us
+[ros2_control_node-1] [WARN] [1776296309.833988175] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.905203 ms (missed cycles : 3).
+[vision_apriltag-9] [WARN] [1776296310.100924111] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296310.834895952] [controller_manager]: Overrun might occur, Total time : 2788.212 us (Expected < 1000.000 us) --> Read time : 37.723 us, Update time : 237.861 us, Write time : 2512.628 us
+[ros2_control_node-1] [WARN] [1776296310.834988816] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.906600 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [WARN] [1776296311.420335345] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296311.421562231] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@30.362] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296311.422451047] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@30.362] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296311.423128475] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@30.363] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296311.423776688] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@30.364] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296311.425606866] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@30.366] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296311.426510121] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@30.366] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296311.427506712] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@30.372] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src15 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@30.372] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@30.372] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@30.372] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296311.501897695] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [WARN] [1776296311.835037870] [controller_manager]: Overrun might occur, Total time : 2931.111 us (Expected < 1000.000 us) --> Read time : 45.159 us, Update time : 257.362 us, Write time : 2628.590 us
+[ros2_control_node-1] [WARN] [1776296311.835132553] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.049984 ms (missed cycles : 4).
+[vision_apriltag-9] [WARN] [1776296312.097884475] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296312.836915074] [controller_manager]: Overrun might occur, Total time : 2812.315 us (Expected < 1000.000 us) --> Read time : 35.167 us, Update time : 269.736 us, Write time : 2507.412 us
+[ros2_control_node-1] [WARN] [1776296312.836974262] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.892379 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [WARN] [1776296313.421507675] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296313.422240315] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@32.362] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296313.422717360] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@32.363] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296313.423510542] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@32.363] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296313.424189220] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@32.364] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296313.424961718] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@32.365] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296313.425685919] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@32.366] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296313.426745880] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@32.373] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src16 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@32.373] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@32.373] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@32.373] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296313.515850979] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [WARN] [1776296313.837398328] [controller_manager]: Overrun might occur, Total time : 3295.503 us (Expected < 1000.000 us) --> Read time : 32.924 us, Update time : 238.499 us, Write time : 3024.080 us
+[ros2_control_node-1] [WARN] [1776296313.837477973] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.395894 ms (missed cycles : 4).
+[vision_apriltag-9] [WARN] [1776296314.097702289] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296314.838880333] [controller_manager]: Overrun might occur, Total time : 2765.200 us (Expected < 1000.000 us) --> Read time : 35.793 us, Update time : 314.212 us, Write time : 2415.195 us
+[ros2_control_node-1] [WARN] [1776296314.838944695] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.863460 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [WARN] [1776296315.423224956] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296315.424007427] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@34.364] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296315.424814477] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@34.365] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296315.427845140] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@34.368] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296315.429040279] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@34.369] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296315.429893461] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@34.370] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296315.430840486] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@34.371] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296315.432817804] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@34.381] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src17 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@34.381] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@34.381] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@34.381] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296315.544384673] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [WARN] [1776296315.841962848] [controller_manager]: Overrun might occur, Total time : 2843.808 us (Expected < 1000.000 us) --> Read time : 42.636 us, Update time : 258.900 us, Write time : 2542.272 us
+[ros2_control_node-1] [WARN] [1776296315.842063658] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.981893 ms (missed cycles : 3).
+[vision_apriltag-9] [WARN] [1776296316.098386906] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296316.843239324] [controller_manager]: Overrun might occur, Total time : 3138.813 us (Expected < 1000.000 us) --> Read time : 33.839 us, Update time : 264.014 us, Write time : 2840.960 us
+[ros2_control_node-1] [WARN] [1776296316.843316209] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.234844 ms (missed cycles : 4).
+[wrist_camera_usb_publisher-8] [WARN] [1776296317.520044125] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296317.520825740] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@36.461] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296317.521674089] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@36.462] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296317.522584387] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@36.463] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296317.523586691] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@36.464] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296317.525266065] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@36.466] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296317.527306436] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@36.467] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296317.528694322] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@36.473] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src18 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@36.473] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@36.473] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@36.473] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296317.610524989] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [WARN] [1776296317.845926123] [controller_manager]: Overrun might occur, Total time : 2824.647 us (Expected < 1000.000 us) --> Read time : 32.100 us, Update time : 222.686 us, Write time : 2569.861 us
+[ros2_control_node-1] [WARN] [1776296317.845996863] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.914784 ms (missed cycles : 3).
+[vision_apriltag-9] [WARN] [1776296318.100724024] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296318.846986775] [controller_manager]: Overrun might occur, Total time : 2842.060 us (Expected < 1000.000 us) --> Read time : 109.640 us, Update time : 489.221 us, Write time : 2243.199 us
+[ros2_control_node-1] [WARN] [1776296318.847073539] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.991369 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [WARN] [1776296319.622902716] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296319.628073950] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@38.568] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296319.628912862] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@38.569] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296319.629658476] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@38.570] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296319.640183656] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@38.580] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296319.641028190] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@38.581] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296319.645698876] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@38.586] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296319.646772775] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@38.600] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src19 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@38.601] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@38.601] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@38.601] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296319.782491318] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [WARN] [1776296319.846987575] [controller_manager]: Overrun might occur, Total time : 2858.271 us (Expected < 1000.000 us) --> Read time : 39.133 us, Update time : 266.264 us, Write time : 2552.874 us
+[ros2_control_node-1] [WARN] [1776296319.847086383] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.003925 ms (missed cycles : 4).
+[vision_apriltag-9] [WARN] [1776296320.097102672] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296320.847565205] [controller_manager]: Overrun might occur, Total time : 2467.124 us (Expected < 1000.000 us) --> Read time : 18.581 us, Update time : 124.849 us, Write time : 2323.694 us
+[ros2_control_node-1] [WARN] [1776296320.847627263] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.546143 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [WARN] [1776296321.721041048] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296321.722017546] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@40.662] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296321.722974990] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@40.663] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296321.723772666] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@40.664] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296321.724600867] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@40.665] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296321.725651310] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@40.666] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296321.726575549] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@40.667] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296321.727607791] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@40.677] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src20 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@40.678] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@40.679] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@40.679] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [ERROR] [1776296321.824259800] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[ros2_control_node-1] [WARN] [1776296321.849036302] [controller_manager]: Overrun might occur, Total time : 2923.482 us (Expected < 1000.000 us) --> Read time : 41.917 us, Update time : 307.506 us, Write time : 2574.059 us
+[ros2_control_node-1] [WARN] [1776296321.849131909] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 3.049808 ms (missed cycles : 4).
+[vision_apriltag-9] [WARN] [1776296322.101372505] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296322.849678674] [controller_manager]: Overrun might occur, Total time : 2560.240 us (Expected < 1000.000 us) --> Read time : 34.174 us, Update time : 220.269 us, Write time : 2305.797 us
+[ros2_control_node-1] [WARN] [1776296322.849773525] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.691803 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [WARN] [1776296323.820587380] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296323.821334596] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@42.761] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296323.822145327] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@42.762] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296323.823524535] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@42.764] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296323.824204144] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@42.764] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296323.825062523] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@42.765] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296323.826028244] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@42.766] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296323.827359386] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@42.772] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src21 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@42.772] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@42.772] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@42.772] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[ros2_control_node-1] [WARN] [1776296323.852590033] [controller_manager]: Overrun might occur, Total time : 2482.198 us (Expected < 1000.000 us) --> Read time : 40.241 us, Update time : 244.569 us, Write time : 2197.388 us
+[ros2_control_node-1] [WARN] [1776296323.852662012] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.580113 ms (missed cycles : 3).
+[wrist_camera_usb_publisher-8] [ERROR] [1776296323.906049360] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[vision_apriltag-9] [WARN] [1776296324.100284584] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296324.857491776] [controller_manager]: Overrun might occur, Total time : 8361.673 us (Expected < 1000.000 us) --> Read time : 36.398 us, Update time : 261.103 us, Write time : 8064.172 us
+[ros2_control_node-1] [WARN] [1776296324.857575157] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 8.493468 ms (missed cycles : 9).
+[wrist_camera_usb_publisher-8] [WARN] [1776296325.821030261] [wrist_camera_usb_publisher_node]: USB camera publisher: reopening camera source (camera source is closed).
+[wrist_camera_usb_publisher-8] [INFO] [1776296325.823410137] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@44.763] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296325.825155213] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 0.
+[wrist_camera_usb_publisher-8] [ WARN:0@44.765] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video0): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296325.826005323] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 1.
+[wrist_camera_usb_publisher-8] [ WARN:0@44.766] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video1): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296325.826890101] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 3.
+[wrist_camera_usb_publisher-8] [ WARN:0@44.767] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video3): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296325.827725328] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 4.
+[wrist_camera_usb_publisher-8] [ WARN:0@44.768] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video4): can't open camera by index
+[wrist_camera_usb_publisher-8] [INFO] [1776296325.829447168] [wrist_camera_usb_publisher_node]: USB camera publisher: trying camera source index 5.
+[wrist_camera_usb_publisher-8] [ WARN:0@44.769] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video5): can't open camera by index
+[wrist_camera_usb_publisher-8] [WARN] [1776296325.830357068] [wrist_camera_usb_publisher_node]: USB camera publisher: V4L2 probing failed. Retrying default OpenCV backend on index 2.
+[wrist_camera_usb_publisher-8] [ WARN:0@44.777] global ./modules/videoio/src/cap_gstreamer.cpp (2401) handleMessage OpenCV | GStreamer warning: Embedded video playback halted; module v4l2src22 reported: Cannot identify device '/dev/video2'.
+[wrist_camera_usb_publisher-8] [ WARN:0@44.777] global ./modules/videoio/src/cap_gstreamer.cpp (1356) open OpenCV | GStreamer warning: unable to start pipeline
+[wrist_camera_usb_publisher-8] [ WARN:0@44.777] global ./modules/videoio/src/cap_gstreamer.cpp (862) isPipelinePlaying OpenCV | GStreamer warning: GStreamer: pipeline have not been created
+[wrist_camera_usb_publisher-8] [ WARN:0@44.777] global ./modules/videoio/src/cap_v4l.cpp (902) open VIDEOIO(V4L2:/dev/video2): can't open camera by index
+[ros2_control_node-1] [WARN] [1776296325.865295546] [controller_manager]: Overrun might occur, Total time : 11187.826 us (Expected < 1000.000 us) --> Read time : 46.715 us, Update time : 309.835 us, Write time : 10831.276 us
+[ros2_control_node-1] [WARN] [1776296325.865388538] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 11.306141 ms (missed cycles : 12).
+[wrist_camera_usb_publisher-8] [ERROR] [1776296325.928472668] [wrist_camera_usb_publisher_node]: USB camera publisher: camera reopen did not find an open source.
+[vision_apriltag-9] [WARN] [1776296326.097964683] [vision_apriltag_node]: Vision AprilTag: no images received yet on /wrist_mounted_camera/image.
+[ros2_control_node-1] [WARN] [1776296326.866571865] [controller_manager]: Overrun might occur, Total time : 2466.267 us (Expected < 1000.000 us) --> Read time : 35.317 us, Update time : 207.890 us, Write time : 2223.060 us
+[ros2_control_node-1] [WARN] [1776296326.866645576] [controller_manager]: Overrun detected! The controller manager missed its desired rate of 1000 Hz. The loop took 2.563771 ms (missed cycles : 3).
